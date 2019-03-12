@@ -1,0 +1,38 @@
+{
+  "name": "electron-quick-start-typescript",
+  "version": "1.0.0",
+  "description": "A minimal Electron application written with Typescript",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist/main.js",
+    "install": "electron-rebuild"
+  },
+  "repository": "https://github.com/electron/electron-quick-start-typescript",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo",
+    "typescript"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^4.0.8",
+    "electron-rebuild": "^1.8.4",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3"
+  },
+  "dependencies": {
+    "@types/delay": "^3.1.0",
+    "@types/jenkins": "^0.23.1",
+    "@types/serialport": "^7.0.2",
+    "chip.avr.avr109": "^1.1.1",
+    "delay": "^4.1.0",
+    "jenkins": "^0.23.0",
+    "serialport": "^7.1.4"
+  }
+}

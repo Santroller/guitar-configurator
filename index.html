@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Ardwiino Guitar Configurator</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Configurator</h1>
+    <button id="start">Start!</button>
+    <div id="programData" class="hidden">
+      <h1>Please hit the + and - buttons on your guitar, and then click the below button to update.</h1>
+      <button id="program">Program!</button>
+      <h3 id="status"></h3>
+    </div>
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./dist/renderer.js')
+  </script>
+
+</html>

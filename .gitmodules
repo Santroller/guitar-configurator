@@ -1,0 +1,3 @@
+[submodule "npm-arduino-publisher"]
+	path = npm-arduino-publisher
+	url = git@github.com:Quirkbot/npm-arduino-publisher.git
