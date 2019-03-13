@@ -1,85 +1,58 @@
-import * as create from "jenkins";
-import * as SerialPort from "serialport";
 import * as avr from "chip.avr.avr109";
-import * as https from "https";
-import * as url from "url";
 import Delay from "delay";
-let jenkins: create.JenkinsAPI;
+import * as create from "jenkins";
+import * as rp from "request-promise-native";
+import * as SerialPort from "serialport";
+import * as util from "util";
+
+let jenkins: create.JenkinsPromisifiedAPI;
 let fileToUpload: string;
 export function connect() {
-  jenkins = create({baseUrl: "https://ardwiino.tangentmc.net", crumbIssuer: true});
+  jenkins = create({
+    baseUrl: "https://ardwiino.tangentmc.net",
+    crumbIssuer: true,
+    promisify: true,
+  });
 }
-export function build(options : {}, callback : () => void) {
-  console.log(options);
-  jenkins.job.build({
+export async function build(options: {}, status: (status: string) => void,  callback: () => void) {
+  status("Starting build");
+  const queuedBuild = await jenkins.job.build({
     name: "Ardwiino",
-    parameters: {
-      token: "zIa15bDd9lM6SRIdENAU",
-      ...options
-    }
-  }, function (err, data) {
-    if (err) 
-      throw err;
-    jenkins.queue.item(data, async function (err, id) {
-      if (err) 
-        throw err;
-      
-      //Wait until the quiet period ends, and then some more time for the project to start
-      await Delay(id.timestamp - new Date().getTime());
-      await Delay(10000);
-      jenkins.queue.item(data, async function (err, item) {
-        if (err) 
-          throw err;
-        var log = jenkins.build.logStream("Ardwiino", item.executable.number);
+    parameters: {token: "zIa15bDd9lM6SRIdENAU", ...options},
+  });
+  let queueData = await jenkins.queue.item(queuedBuild);
+  while (!queueData.executable) {
+    await Delay(100);
+    queueData = await jenkins.queue.item(queuedBuild);
+  }
+  status("Building firmware");
+  const log: NodeJS.ReadableStream =
+      await jenkins.build.logStream("Ardwiino", queueData.executable.number);
 
-        log.on("error", function (err) {
-          console.log("error", err);
-        });
-
-        log.on("end", function () {
-          https.get(url.parse(`${item.executable.url}/artifact/src/micro/bin/Ardwiino.hex`), function (res) {
-            var data: any = [];
-
-            res.on("data", function (chunk) {
-              data.push(chunk);
-            }).on("end", function () {
-              fileToUpload = Buffer.concat(data).toString("ascii");
-              callback();
-            });
-          });
-        });
-      });
+  log.on("error", function(err) {
+    console.log("error", err);
+  });
+  log.on("end", async function() {
+    status("Firmware built");
+    fileToUpload = await rp({
+      uri: `${queueData.executable.url}/artifact/src/micro/bin/Ardwiino.hex`,
+      encoding: "ascii",
     });
+    callback();
   });
 }
-export function program(status : (status : string) => void) {
-  let sp = new SerialPort("/dev/ttyACM0");
+export async function program(port: string, status: (status: string) => void) {
+  const sp = new SerialPort(port);
   status("initializing");
-  avr.init(sp, {
-    signature: "CATERIN"
-  }, (err, flasher) => {
-    if (err) {
-      throw err;
-    }
-    flasher.erase(function () {
-      status("initialized");
+  const flasher = await util.promisify(avr.init)(sp, {signature: "CATERIN"});
+  await util.promisify(flasher.erase)();
+  status("initialized");
+  await util.promisify(flasher.program)(fileToUpload);
+  status("Programmed! Checking upload.");
+  await util.promisify(flasher.verify)();
+  status("Programming complete!");
+}
 
-      flasher.program(fileToUpload, function (err) {
-        if (err) 
-          throw err;
-        status("Programmed! Checking upload.");
-
-        flasher.verify(function (err) {
-          if (err) {
-            throw err;
-          }
-          flasher.fuseCheck(function (err) {
-            if (err) 
-              throw err;
-            status("Programming complete!");
-          });
-        });
-      });
-    });
-  });
+export function listPorts() {
+  return SerialPort.list();
 }
