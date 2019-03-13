@@ -12,7 +12,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -67,5 +67,7 @@ ipcMain.on('list', async () => {
 ipcMain.on('init', async () => {
   mainWindow.webContents.send('list', await listPorts());
 });
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
+//I hate this, but could not find a way to properley catch some serial port errors
+process.on("unhandledRejection", (error: Error) => {
+  mainWindow.webContents.send('status', error.message);
+});

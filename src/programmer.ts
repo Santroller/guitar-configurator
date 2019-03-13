@@ -43,13 +43,13 @@ export async function build(options: {}, status: (status: string) => void,  call
 }
 export async function program(port: string, status: (status: string) => void) {
   const sp = new SerialPort(port);
-  status("initializing");
+  status("Setting up Programmer");
   const flasher = await util.promisify(avr.init)(sp, {signature: "CATERIN"});
-  await util.promisify(flasher.erase)();
-  status("initialized");
-  await util.promisify(flasher.program)(fileToUpload);
+  await util.promisify(flasher.erase.bind(flasher))();
+  status("Programming...");
+  await util.promisify(flasher.program.bind(flasher))(fileToUpload);
   status("Programmed! Checking upload.");
-  await util.promisify(flasher.verify)();
+  await util.promisify(flasher.verify.bind(flasher))();
   status("Programming complete!");
 }
 

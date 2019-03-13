@@ -27,13 +27,17 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
+    "@types/bootstrap": "^4.3.0",
     "@types/delay": "^3.1.0",
     "@types/jenkins": "^0.23.1",
     "@types/request-promise-native": "^1.0.15",
     "@types/serialport": "^7.0.2",
+    "bootstrap": "^4.3.1",
     "chip.avr.avr109": "^1.1.1",
     "delay": "^4.1.0",
     "jenkins": "^0.23.0",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.7",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "serialport": "^7.1.4"
