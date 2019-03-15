@@ -1,13 +1,38 @@
 {
-  "name": "electron-quick-start-typescript",
+  "name": "guitar-configurator",
   "version": "1.0.0",
-  "description": "A minimal Electron application written with Typescript",
+  "description": "An application for configuring custom guitar hero guitars",
+  "main": "./dist/main.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist && tsc && npm run html",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "start": "npm run build && electron ./dist/main.js",
-    "install": "electron-rebuild"
+    "install": "electron-rebuild",
+    "pack": "electron-builder --dir",
+    "dist": "npm run build && electron-builder -w",
+    "html": "find . -type f \\( -iname '*.html' -o -iname '*.jpg' -o -iname '*.png' \\) -exec cp --parents {} ./dist \\;",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.tangentmc.guitar-configurator",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "dist"
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "asset/icons/app.linux.png",
+      "synopsis": "For testing ng-electron-structure",
+      "category": "Development"
+    }
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",
   "keywords": [
@@ -22,7 +47,9 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^4.0.8",
+    "electron-builder": "^20.39.0",
     "electron-rebuild": "^1.8.4",
+    "rimraf": "^2.6.3",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   },
