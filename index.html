@@ -16,10 +16,30 @@
         background-position: center;
         background-repeat: no-repeat;
       }
+
+      .cap {
+        text-transform: capitalize;
+      }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   </head>
+  <template id="input-pin">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text cap"></span>
+      </div>
+      <select class="form-control"></select>
+    </div>
+  </template>
+  <template id="input-key">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text cap"></span>
+      </div>
+      <input type="text" class="form-control">
+    </div>
+  </template>
 
   <body>
     <div class="container">
@@ -75,78 +95,7 @@
       <div id="page3" class="hidden">
         <div class="text-center">
           <h2>Set your key bindings</h2>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Green Fret</span>
-            </div>
-            <input type="text" id="KEY_GREEN" class="form-control key-in" value="KeyA">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Red Fret</span>
-            </div>
-            <input type="text" id="KEY_RED" class="form-control key-in" value="KeyS">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Yellow Fret</span>
-            </div>
-            <input type="text" id="KEY_YELLOW" class="form-control key-in" value="KeyJ">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Blue Fret</span>
-            </div>
-            <input type="text" id="KEY_BLUE" class="form-control key-in" value="KeyK">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Orange Fret</span>
-            </div>
-            <input type="text" id="KEY_ORANGE" class="form-control key-in" value="KeyL">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Whammy Key</span>
-            </div>
-            <input type="text" id="KEY_WHAMMY" class="form-control key-in" value="Semicolon">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Start Key</span>
-            </div>
-            <input type="text" id="KEY_START" class="form-control key-in" value="Enter">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Select Key</span>
-            </div>
-            <input type="text" id="KEY_SELECT" class="form-control key-in" value="KeyH">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Strum Up Key</span>
-            </div>
-            <input type="text" id="KEY_UP" class="form-control key-in" value="ArrowUp">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Strum Down Key</span>
-            </div>
-            <input type="text" id="KEY_DOWN" class="form-control key-in" value="ArrowDown">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Left Key</span>
-            </div>
-            <input type="text" id="KEY_LEFT" class="form-control key-in" value="ArrowLeft">
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Right Key</span>
-            </div>
-            <input type="text" id="KEY_RIGHT" class="form-control key-in" value="ArrowRight">
-          </div>
+          <div id="key-bindings"></div>
           <a id="bind" class="btn btn-primary">Next</a>
         </div>
       </div>
@@ -161,6 +110,11 @@
         </div>
       </div>
       <div id="page5" class="hidden">
+        <!-- Maybe hide this unless someone states they are an advanced user -->
+        <h2>Set Pin Bindings (Advanced)</h2>
+        <div id="pin-bindings"></div>
+      </div>
+      <div id="page6" class="hidden">
         <div class="text-center">
           <h2>Uploading Configuration</h2>
           <div id="programData" class="hidden">

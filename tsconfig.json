@@ -5,12 +5,13 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "lib": ["es5", "es6", "dom"],
+    "lib": [
+      "es5", "es6", "dom", "es2017"
+    ],
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "downlevelIteration": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

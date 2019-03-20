@@ -2,17 +2,22 @@ import {app, BrowserWindow} from 'electron';
 import {ipcMain} from 'electron';
 import * as path from 'path';
 
-import {build, connect, listPorts, program} from './programmer';
+import {build, connect, getVariables, listPorts, program} from './programmer';
 
 let mainWindow: Electron.BrowserWindow;
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({height: 600, width: 800, frame: false});
+  mainWindow = new BrowserWindow({
+    height: 600,
+    width: 800,
+    frame: false,
+    webPreferences: {nodeIntegration: true}
+  });
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -48,11 +53,14 @@ ipcMain.on('connect', () => {
   connect();
 });
 ipcMain.on('build', (evt: Event, options: any) => {
-  build(options, status => {
-    mainWindow.webContents.send('status', status);
-  }, () => {
-    mainWindow.webContents.send('built');
-  });
+  build(
+      options,
+      status => {
+        mainWindow.webContents.send('status', status);
+      },
+      () => {
+        mainWindow.webContents.send('built');
+      });
 });
 ipcMain.on('program', (evt: Event, port: string) => {
   program(port, status => {
@@ -66,8 +74,10 @@ ipcMain.on('list', async () => {
 
 ipcMain.on('init', async () => {
   mainWindow.webContents.send('list', await listPorts());
+  mainWindow.webContents.send('vars', await getVariables());
 });
-//I hate this, but could not find a way to properley catch some serial port errors
-process.on("unhandledRejection", (error: Error) => {
+// I hate this, but could not find a way to properley catch some serial port
+// errors
+process.on('unhandledRejection', (error: Error) => {
   mainWindow.webContents.send('status', error.message);
 });

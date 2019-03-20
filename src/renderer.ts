@@ -5,7 +5,8 @@ import * as bootstrap from "bootstrap";
 import {ipcRenderer} from "electron";
 import * as SerialPort from "serialport";
 
-import {getKey} from "./keymap";
+import {getKey, getKeyCode} from "./keymap";
+import {pins} from "./pinmap";
 
 let comPort: string = null;
 let options: any = {};
@@ -20,6 +21,30 @@ function qss(qsl : string) {
 }
 function qsh(qsl : string) {
   return qs(qsl).classList.add("hidden");
+}
+function addPinTemplate(pin : any) {
+  const ele = document.importNode((qs("#input-pin")as any).content, true);
+  ele.querySelector("span").innerHTML = pin.name_disp;
+  ele.querySelector("select").value = pin.name;
+  ele.querySelector("select").innerHTML = Object.entries(pins).map(p => `<option class='cap' value="${p[1]}">${p[0]} (${p[1]})</option>`).join("\n");
+  ele.querySelector("select").addEventListener("change", (evt : Event) => {
+    options[pin.name] = (evt.target as any).value;
+  });
+  qs("#pin-bindings").appendChild(ele);
+}
+function addKeyTemplate(pin : any) {
+  const ele = document.importNode((qs("#input-key")as any).content, true);
+  ele.querySelector("span").innerHTML = pin.name_disp;
+  const sel = ele.querySelector("input");
+  sel.id = pin.name;
+  sel.value = getKeyCode(pin.value);
+  sel.addEventListener("keydown", function (evt : KeyboardEvent) {
+    evt = evt || (window.event as KeyboardEvent);
+    (evt.target as any).value = evt.code;
+    evt.preventDefault();
+    options[(evt.target as any).id] = getKey(evt.code);
+  });
+  qs("#key-bindings").appendChild(ele);
 }
 window.onload = () => {
   ipcRenderer.send("init");
@@ -67,7 +92,11 @@ window.onload = () => {
   });
   qsc("#tilt", () => {
     options.MPU_6050_START = 28000 - (qs("#sensitivity")as any).value * 10;
-    qss("#page5");
+    if (options.DEVICE_TYPE == "DIRECT") {
+      qss("#page5");
+    } else {
+      qss("#page6");
+    }
     qsh("#page4");
     ipcRenderer.send("connect");
     ipcRenderer.send("build", options);
@@ -79,12 +108,8 @@ window.onload = () => {
       comPort = (evt.target as any).value;
     });
   });
-  for (const sel of document.querySelectorAll(".key-in") as any) {
-    sel.addEventListener("keydown", function (evt : KeyboardEvent) {
-      evt = evt || (window.event as KeyboardEvent);
-      (evt.target as any).value = evt.code;
-      evt.preventDefault();
-      options[(evt.target as any).id] = getKey(evt.code);
-    });
-  }
+  ipcRenderer.on("vars", (event : Event, vars : any) => {
+    vars.pins.forEach(addPinTemplate.bind(this));
+    vars.keys.forEach(addKeyTemplate.bind(this));
+  });
 };

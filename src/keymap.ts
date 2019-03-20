@@ -108,3 +108,8 @@ const keymap: {
 export function getKey(code: string) {
     return 'HID_KEYBOARD_SC_'+keymap[code];
 }
+
+export function getKeyCode(key: string) {
+  key = key.replace('HID_KEYBOARD_SC_', '');
+  return Object.keys(keymap).find(key2 => keymap[key2] == key);
+}
