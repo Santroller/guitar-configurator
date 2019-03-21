@@ -79,5 +79,5 @@ ipcMain.on('init', async () => {
 // I hate this, but could not find a way to properley catch some serial port
 // errors
 process.on('unhandledRejection', (error: Error) => {
-  mainWindow.webContents.send('status', error.message);
+  mainWindow.webContents.send('error', error.message);
 });

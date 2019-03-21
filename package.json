@@ -11,7 +11,7 @@
     "install": "electron-rebuild",
     "pack": "electron-builder --dir",
     "dist": "npm run build && electron-builder -w",
-    "html": "find . -type f \\( -iname '*.html' -o -iname '*.jpg' -o -iname '*.png' \\) -exec cp --parents {} ./dist \\;",
+    "html": "find . \\( -path './dist' -o -path './node_modules' \\) -prune -o -type f \\( -iname '*.html' -o -iname '*.css' -o -iname '*.jpg' -o -iname '*.png' \\) -exec cp --parents {} ./dist \\;",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {

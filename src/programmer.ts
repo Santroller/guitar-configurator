@@ -17,10 +17,12 @@ function parseVariables(data : string, start : string) {
   section = section.substring(0, section.indexOf("#endif"));
   return section.split("#define ").slice(1).map((s2 : string) => {
     let split = s2.replace(/\n/g, " ").split(" ");
+    let isPin = split[0].indexOf("PIN_") != -1;
     let cleaned_name = split[0].replace("PIN_", "");
     cleaned_name = cleaned_name.replace("KEY_", "");
     return {
       name: split[0],
+      isPin: isPin,
       name_disp: cleaned_name.toLowerCase().replace(/_/g, " "),
       value: split[1],
       comments: split.slice(2).join(" ").replace(/\/\//g, "").trim().replace(/_/g, " ")
@@ -30,7 +32,8 @@ function parseVariables(data : string, start : string) {
 export async function getVariables() {
   return rp("https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/config/config.h").then(data => ({
     keys: parseVariables(data, keys_start),
-    pins: parseVariables(data, pins_start)
+    pins: parseVariables(data, pins_start),
+    mpu: data.substring(data.indexOf("MPU_6050_START")).split(" ")[1].trim()
   }));
 }
 export async function build(options : {}, status : (status : string) => void, callback : () => void) {

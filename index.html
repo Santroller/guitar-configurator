@@ -6,7 +6,7 @@
     <title>Ardwiino Guitar Configurator</title>
     <style>
       .hidden {
-        display: none;
+        display: none !important;
       }
 
       .card-back {
@@ -20,24 +20,34 @@
       .cap {
         text-transform: capitalize;
       }
+
+      body {
+        color: white !important;
+      }
+
+      input,
+      select {
+        color: white !important;
+        background-color: #464646 !important;
+      }
     </style>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
 
   </head>
   <template id="input-pin">
     <div class="input-group mb-3">
-      <div class="input-group-prepend">
+      <div class="input-group-prepend col-3">
         <span class="input-group-text cap"></span>
       </div>
-      <select class="form-control"></select>
+      <select class="form-control col-9"></select>
     </div>
   </template>
   <template id="input-key">
     <div class="input-group mb-3">
-      <div class="input-group-prepend">
+      <div class="input-group-prepend col-2">
         <span class="input-group-text cap"></span>
       </div>
-      <input type="text" class="form-control">
+      <input type="text" class="form-control col-10">
     </div>
   </template>
 
@@ -51,19 +61,19 @@
           <h2>Choose a device type:</h2>
           <div class="card-group">
             <div class="card" style="width: 50%">
-              <div class="card-img-top card-back" style="background-image: url('wii.jpg');"></div>
+              <div class="card-img-top card-back" style="background-image: url('wii.png');"></div>
               <div class="card-body">
                 <h5 class="card-title">Wii Adaptor</h5>
                 <p class="card-text">Configure an Ardwiino powered Wii Adaptor</p>
-                <a id="wii" class="btn btn-primary">Configure</a>
+                <a href="#" id="wii" class="btn btn-primary">Configure</a>
               </div>
             </div>
             <div class="card" style="width: 50%">
-              <img class="card-img-top" src="xplorer.jpg"></img>
+              <img class="card-img-top" src="xplorer.png"></img>
               <div class="card-body">
                 <h5 class="card-title">Guitar</h5>
                 <p class="card-text">Configure a guitar, such as a Flamewake Guitar, or a guitar with replaced electronics.</p>
-                <a id="direct" class="btn btn-primary">Configure</a>
+                <a href="#" id="direct" class="btn btn-primary">Configure</a>
               </div>
             </div>
           </div>
@@ -78,16 +88,21 @@
               <div class="card-body">
                 <h5 class="card-title">XInput Controller</h5>
                 <p class="card-text">Emulates an Xbox controller, works out of the box with Clone Hero.</p>
-                <a id="xin" class="btn btn-primary">Configure</a>
+                <a href="#" id="xin" class="btn btn-primary">Configure</a>
               </div>
             </div>
             <div class="card" style="width: 50%">
-              <img class="card-img-top" src="keyboard.jpg"></img>
+              <img class="card-img-top" src="keyboard.png"></img>
               <div class="card-body">
                 <h5 class="card-title">Keyboard</h5>
                 <p class="card-text">Defaults work with Clone Hero, but this option is more compatible with other games.</p>
-                <a id="kbd" class="btn btn-primary">Configure</a>
+                <a href="#" id="kbd" class="btn btn-primary">Configure</a>
               </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <a href="#" class="back btn btn-primary">Back</a>
             </div>
           </div>
         </div>
@@ -95,37 +110,87 @@
       <div id="page3" class="hidden">
         <div class="text-center">
           <h2>Set your key bindings</h2>
-          <div id="key-bindings"></div>
-          <a id="bind" class="btn btn-primary">Next</a>
+          <div class="card">
+            <div class="card-body">
+              <div id="key-bindings"></div>
+              <div class="card">
+                <div class="card-body">
+                  <a href="#" class="back btn btn-primary">Back</a>
+                  <a href="#" id="bind" class="btn btn-primary">Next</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="page4" class="hidden">
         <div class="text-center">
           <h2>Configure your tilt sensitivity</h2>
-          <input type="range" min="-100" max="100" value="0" class="slider" id="sensitivity" style="width: 100%">
-          <span>Current angle:
-            <span id="sens">0</span></span>
-          <p>Defaults to 0, a lower value will require more of a tilt to activate, while a higher angle will tilt at a lower angle.</p>
-          <a id="tilt" class="btn btn-primary">Next</a>
+          <div class="card">
+            <div class="card-body">
+              <input type="range" min="-100" max="100" value="0" class="slider" id="sensitivity" style="width: 100%">
+              <span>Current angle:
+                <span id="sens">0</span></span>
+              <p>Defaults to 0, a lower value will require more of a tilt to activate, while a higher angle will tilt at a lower angle.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <a href="#" class="back btn btn-primary">Back</a>
+              <a href="#" id="tilt" class="btn btn-primary">Next</a>
+            </div>
+          </div>
         </div>
       </div>
       <div id="page5" class="hidden">
-        <!-- Maybe hide this unless someone states they are an advanced user -->
-        <h2>Set Pin Bindings (Advanced)</h2>
-        <div id="pin-bindings"></div>
+        <div class="text-center">
+          <!-- Maybe hide this unless someone states they are an advanced user -->
+          <h2>Set Pin Bindings (Advanced)</h2>
+          <div class="card">
+            <div class="card-body">
+              <div id="pin-bindings"></div>
+              <div class="input-group mb-3" id="DIRECTION_MODE">
+                <div class="input-group-prepend col-3">
+                  <span class="input-group-text cap">Directional Input Type</span>
+                </div>
+                <select class="form-control col-9">
+                  <option value="JOY">Joystick</option>
+                  <option value="DPAD">DPad</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <a href="#" class="back btn btn-primary">Back</a>
+              <a href="#" id="pinbind" class="btn btn-primary">Next</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="page6" class="hidden">
+      <div id="upload" class="hidden">
         <div class="text-center">
           <h2>Uploading Configuration</h2>
-          <div id="programData" class="hidden">
-            <h3>
-              Please hit the + and - buttons on your guitar, and then click the below button to update.
-            </h1>
-            <button id="program">Program!</button>
-            <button id="refresh">Refresh Devices</button>
-            <select id="ports"></select>
+          <div class="card">
+            <div class="card-body">
+              <div id="programData" class="hidden">
+                <h3>
+                  Please hit the + and - buttons on your guitar, and then click the below button to update.
+                </h1>
+                <button id="program">Program!</button>
+                <button id="refresh">Refresh Devices</button>
+                <select id="ports"></select>
+              </div>
+              <div class="progress">
+                <div id="status" class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
           </div>
-          <div id="status" class="alert alert-primary hidden" role="alert"></div>
+          <div class="card">
+            <div class="card-body">
+              <a href="#" class="back btn btn-primary">Back</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
