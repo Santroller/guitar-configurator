@@ -122,19 +122,17 @@ function bindResponses() {
   ipcRenderer.on('built', () => {
     selectAndShow('#programData');
   });
-  let progress = 0;
+  let progress = -50;
   ipcRenderer.on('status', (event: Event, status: string) => {
     const ste = $('#status');
     ste.html(status);
-    progress += 33;
+    progress += 50;
     if (progress > 100) progress = 0;
     ste.css('width', progress + '%');
-    selectAndShow('#status');
   });
   ipcRenderer.on('error', (event: Event, status: string) => {
     qs('#status').innerHTML = status;
     qs('#status').classList.add('bg-danger');
-    selectAndShow('#status');
   });
 
   ipcRenderer.on('list', (event: Event, ports: SerialPort.PortInfo[]) => {
