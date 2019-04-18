@@ -1,6 +1,6 @@
 {
   "name": "guitar-configurator",
-  "version": "0.0.2-1",
+  "version": "0.0.2-2",
   "description": "An application for configuring custom guitar hero guitars",
   "main": "./dist/main.js",
   "scripts": {
