@@ -3,9 +3,7 @@ import Delay from 'delay';
 import * as create from 'jenkins';
 import * as rp from 'request-promise-native';
 import * as SerialPort from 'serialport';
-import * as usb from 'usb';
 import * as util from 'util';
-import * as xbox from 'xbox-ctrl';
 
 let jenkins: create.JenkinsPromisifiedAPI;
 let fileToUpload: string;
@@ -74,23 +72,8 @@ export async function build(
       uri: `${queueData.executable.url}/artifact/src/micro/bin/Ardwiino.hex`,
       encoding: 'ascii'
     });
-    await bootloader();
     callback();
   });
-}
-export async function bootloader() {
-  if (process.platform === 'win32') {
-    let xbox = await import('xbox-ctrl');
-    xbox.vibrateAll(1);
-  } else {
-    return await new Promise((resolve => {
-      let dev = usb.findByIds(0x1209, 0x2882);
-      dev.open();
-      dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x30, 0, 0, 0, (err, buf) => {
-        resolve();
-      });
-    }))
-  }
 }
 export async function program(port : string, status : (status : string) => void) {
   const sp = new SerialPort(port);
@@ -104,6 +87,6 @@ export async function program(port : string, status : (status : string) => void)
   status('Programming complete!');
 }
 
-export function listPorts() {
-  return SerialPort.list();
+export async function listPorts() {
+  return (await SerialPort.list()).filter(s => s.manufacturer && s.manufacturer.toLowerCase().indexOf("arduino") != -1);
 }

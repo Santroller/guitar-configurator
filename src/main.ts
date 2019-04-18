@@ -2,7 +2,7 @@ import {app, BrowserWindow} from 'electron';
 import {ipcMain} from 'electron';
 import * as path from 'path';
 
-import {build, connect, getVariables, listPorts, program, bootloader} from './programmer';
+import {build, connect, getVariables, listPorts, program} from './programmer';
 
 let mainWindow: Electron.BrowserWindow;
 function createWindow() {
@@ -10,8 +10,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
-    frame: false,
-    webPreferences: {nodeIntegration: true}
+    webPreferences: {nodeIntegration: true},
   });
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
@@ -27,6 +26,9 @@ function createWindow() {
   });
 }
 
+app.on('browser-window-created',function(e,window) {
+  window.setMenuBarVisibility(false);
+});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -74,16 +76,10 @@ ipcMain.on('program', (evt: Event, port: string) => {
 ipcMain.on('list', async () => {
   mainWindow.webContents.send('list', await listPorts());
 });
-ipcMain.on('bootloader', async () => {
-  await bootloader();
-  setTimeout(async ()=> {
-    mainWindow.webContents.send('list', await listPorts());
-  },500)
-});
 ipcMain.on('init', async () => {
+  setInterval(async ()=>mainWindow.webContents.send('list', await listPorts()), 100);
   mainWindow.webContents.send('list', await listPorts());
   mainWindow.webContents.send('vars', await getVariables());
-  await bootloader();
 });
 // I hate this, but could not find a way to properley catch some serial port
 // errors

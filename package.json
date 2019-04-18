@@ -59,12 +59,11 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "copyfiles": "^2.1.0",
-    "electron": "^4.0.8",
+    "electron": "^4.1.4",
     "electron-builder": "^20.39.0",
-    "electron-rebuild": "^1.8.4",
     "rimraf": "^2.6.3",
-    "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.3"
   },
   "dependencies": {
     "@types/bootstrap": "^4.3.0",
@@ -73,20 +72,15 @@
     "@types/node-hid": "^0.7.0",
     "@types/request-promise-native": "^1.0.15",
     "@types/serialport": "^7.0.2",
-    "@types/usb": "^1.5.1",
     "bootstrap": "^4.3.1",
     "chip.avr.avr109": "^1.1.1",
-    "delay": "^4.1.0",
+    "delay": "^4.2.0",
     "jenkins": "^0.23.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "npm-platform-dependencies": "^0.1.0",
-    "popper.js": "^1.14.7",
+    "popper.js": "^1.15.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "serialport": "^7.1.4",
-    "usb": "^1.5.0"
-  },
-  "win32Dependencies": {
-    "xbox-ctrl": "latest"
+    "serialport": "^7.1.4"
   }
 }

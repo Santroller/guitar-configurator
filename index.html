@@ -68,19 +68,21 @@
               <div class="card-img-top card-back" style="background-image: url('wii.png');"></div>
               <div class="card-body">
                 <h5 class="card-title">Wii Adaptor</h5>
-                <p class="card-text">Configure an Ardwiino powered Wii Adaptor</p>
+                <p class="card-text">Configure an Ardwiino powered Wii Adaptor.</p>
               </div>
-
-              <a href="#" id="wii" class="btn btn-primary">Configure</a>
+              <div>
+                <a href="#" id="wii" class="btn btn-primary" style="width: 49%">Continue Wii (3.3 volts)</a>
+                <a href="#" id="wii2" class="btn btn-primary" style="width: 49%">Continue Wii (5 volts)</a>
+              </div>
             </div>
             <div class="card" style="width: 50%">
               <div class="card-img-top card-back" style="background-image: url('xplorer.png');"></div>
               <div class="card-body">
-                <h5 class="card-title">Guitar</h5>
+                <h5 class="card-title">Hardwired Guitar</h5>
                 <p class="card-text">Configure a guitar, such as a Flamewake Guitar, or a guitar with replaced electronics.</p>
-                
+
               </div>
-              <a href="#" id="direct" class="btn btn-primary">Configure</a>
+              <a href="#" id="direct" class="btn btn-primary">Continue with a Hardwired Guitar</a>
             </div>
           </div>
         </div>
@@ -94,18 +96,18 @@
               <div class="card-body">
                 <h5 class="card-title">XInput Controller</h5>
                 <p class="card-text">Emulates an Xbox controller, works out of the box with Clone Hero.</p>
-                
+
               </div>
-              <a href="#" id="xin" class="btn btn-primary">Configure</a>
+              <a href="#" id="xin" class="btn btn-primary">Continue with a XInput output</a>
             </div>
             <div class="card" style="width: 50%">
               <div class="card-img-top card-back" style="background-image: url('keyboard.png');"></div>
               <div class="card-body">
                 <h5 class="card-title">Keyboard</h5>
                 <p class="card-text">Defaults work with Clone Hero, but this option is more compatible with other games.</p>
-                
+
               </div>
-              <a href="#" id="kbd" class="btn btn-primary">Configure</a>
+              <a href="#" id="kbd" class="btn btn-primary">Continue with a Keyboard output</a>
             </div>
           </div>
           <div class="card">
@@ -148,10 +150,11 @@
               </div>
               <div class="input-group mb-3 tilt" id="TILT_ANGLE">
                 <div class="input-group-prepend col-3">
-                  <span class="input-group-text cap">Tilt Angle:  <span id="sens" style="padding-left: 5px;">0</span></span>
+                  <span class="input-group-text cap">Tilt Angle:
+                    <span id="sens" style="padding-left: 5px;">0</span></span>
                 </div>
                 <input type="range" min="-100" max="100" value="0" class="slider form-control col-9" id="sensitivity" style="width: 100%">
-                
+
               </div>
               <p class="tilt">Defaults to 0, a lower value will require more of a tilt to activate, while a higher angle will tilt at a lower angle.</p>
 
@@ -198,11 +201,8 @@
             <div class="card-body">
               <div id="programData" class="hidden">
                 <h5>
-                  Pick your device from below and hit program, automatic detection was not found.
+                  Waiting for a guitar in firmware update mode. Please hit plus and minus to trigger firmware update mode. If this doesn't work, short reset to ground twice.
                 </h5>
-                <button id="program" class="btn btn-primary">Program!</button>
-                <button id="refresh" class="btn btn-primary">Refresh Devices</button>
-                <select id="ports" class="form-control" style="width: auto !important; display: initial !important;"></select>
               </div>
               <div class="progress mt-3">
                 <div id="status" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -211,7 +211,7 @@
           </div>
           <div class="card">
             <div class="card-body">
-              <a href="#" class="back btn btn-primary">Back</a>
+              <button id="restart" href="#" class="btn btn-primary" disabled="disabled">Restart</button>
             </div>
           </div>
         </div>
