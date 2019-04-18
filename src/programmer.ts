@@ -88,5 +88,5 @@ export async function program(port : string, status : (status : string) => void)
 }
 
 export async function listPorts() {
-  return (await SerialPort.list()).filter(s => s.manufacturer && s.manufacturer.toLowerCase().indexOf("arduino") != -1);
+  return (await SerialPort.list()).filter(s => s.vendorId && s.vendorId == "2341");
 }

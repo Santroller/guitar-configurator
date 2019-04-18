@@ -28,6 +28,7 @@ function createWindow() {
 
 app.on('browser-window-created',function(e,window) {
   window.setMenuBarVisibility(false);
+  window.maximize();
 });
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -77,7 +78,7 @@ ipcMain.on('list', async () => {
   mainWindow.webContents.send('list', await listPorts());
 });
 ipcMain.on('init', async () => {
-  setInterval(async ()=>mainWindow.webContents.send('list', await listPorts()), 100);
+  setInterval(async ()=>mainWindow && mainWindow.webContents.send('list', await listPorts()), 100);
   mainWindow.webContents.send('list', await listPorts());
   mainWindow.webContents.send('vars', await getVariables());
 });

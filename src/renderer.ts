@@ -15,7 +15,7 @@ let currentPage: string = "#page1";
 let lastPage: string[] = [];
 let defaultMPU: number;
 let built: boolean = false;
-let building: boolean = false;
+let uploading: boolean = false;
 let progress = -20;
 let serialPort: SerialPort;
 function qs(qs : string, ele : Element | Document = document) {
@@ -39,8 +39,9 @@ function showPage(next : string) {
   selectAndShow(next);
   currentPage = next;
   if (next == "#upload") {
+    selectAndHide("#programData");
     built = false;
-    building = false;
+    uploading = false;
     ipcRenderer.send("connect");
     ipcRenderer.send("build", options);
     const ste = $("#status");
@@ -163,11 +164,12 @@ function bindResponses() {
   });
 
   ipcRenderer.on("list", (event : Event, ports : SerialPort.PortInfo[]) => {
-    if (built) {
+    if (built && !uploading) {
       if (ports.length == 0) {
         selectAndShow("#programData");
-      } else if (!building) {
-        building = true;
+      } else {
+        selectAndHide("#programData");
+        uploading = true;
         comPort = ports[0].comName;
         ipcRenderer.send("program", comPort);
         qs("#status").classList.remove("bg-warning");
