@@ -11,7 +11,7 @@
     "install": "electron-rebuild",
     "pack": "electron-builder --dir",
     "dist": "npm run build && build --publish onTagOrDraft",
-    "html": "copyfiles -u 1 assets/* dist",
+    "html": "copyfiles -u 1 assets/* dist && copyfiles index.html dist",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
