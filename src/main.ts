@@ -89,4 +89,5 @@ ipcMain.on('init', async () => {
 // errors
 process.on('unhandledRejection', (error: Error) => {
   mainWindow.webContents.send('error', error.message);
+  console.log(error);
 });

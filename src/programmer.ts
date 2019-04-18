@@ -5,6 +5,7 @@ import * as rp from "request-promise-native";
 import * as SerialPort from "serialport";
 import * as util from "util";
 import * as usb from "usb";
+import * as HID from "node-hid";
 
 let jenkins: create.JenkinsPromisifiedAPI;
 let fileToUpload: string;
@@ -64,11 +65,13 @@ export async function build(options : {}, status : (status : string) => void, ca
   });
 }
 export function bootloader(callback: ()=>void) {
-  let dev = usb.findByIds(0x1209, 0x2882);
-    dev.open();
-    dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x30, 0, 0, 0, (err, buf) => {
-      callback();
-    });
+  var device = new HID.HID(0x1209, 0x2882);
+  device.write([0x30, 0x01, 0x01, 0x05, 0xff, 0xff]);
+  // let dev = usb.findByIds(0x1209, 0x2882);
+  //   dev.open();
+  //   dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x30, 0, 0, 0, (err, buf) => {
+  //     callback();
+  //   });
 }
 export async function program(port : string, status : (status : string) => void) {
   const sp = new SerialPort(port);
