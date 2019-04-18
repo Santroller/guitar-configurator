@@ -4,6 +4,7 @@ import * as create from "jenkins";
 import * as rp from "request-promise-native";
 import * as SerialPort from "serialport";
 import * as util from "util";
+import * as usb from "usb";
 
 let jenkins: create.JenkinsPromisifiedAPI;
 let fileToUpload: string;
@@ -59,8 +60,15 @@ export async function build(options : {}, status : (status : string) => void, ca
   log.on("end", async function () {
     status("Firmware built");
     fileToUpload = await rp({uri: `${queueData.executable.url}/artifact/src/micro/bin/Ardwiino.hex`, encoding: "ascii"});
-    callback();
+    bootloader(callback);
   });
+}
+export function bootloader(callback: ()=>void) {
+  let dev = usb.findByIds(0x1209, 0x2882);
+    dev.open();
+    dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x30, 0, 0, 0, (err, buf) => {
+      callback();
+    });
 }
 export async function program(port : string, status : (status : string) => void) {
   const sp = new SerialPort(port);

@@ -10,7 +10,7 @@
     "start": "npm run build && electron ./dist/main.js",
     "install": "electron-rebuild",
     "pack": "electron-builder --dir",
-    "dist": "npm run build && electron-builder -w",
+    "dist": "npm run build && build --publish onTagOrDraft",
     "html": "find . \\( -path './dist' -o -path './node_modules' \\) -prune -o -type f \\( -iname '*.html' -o -iname '*.css' -o -iname '*.jpg' -o -iname '*.png' \\) -exec cp --parents {} ./dist \\;",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -22,16 +22,15 @@
     "win": {
       "target": "nsis"
     },
-    "files": [
-      "dist"
-    ],
+    "files": ["dist"],
     "linux": {
-      "target": [
-        "AppImage"
-      ],
+      "target": ["AppImage"],
       "icon": "asset/icons/app.linux.png",
       "synopsis": "For testing ng-electron-structure",
       "category": "Development"
+    },
+    "directories": {
+      "output": "release"
     }
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",
@@ -59,6 +58,7 @@
     "@types/jenkins": "^0.23.1",
     "@types/request-promise-native": "^1.0.15",
     "@types/serialport": "^7.0.2",
+    "@types/usb": "^1.5.1",
     "bootstrap": "^4.3.1",
     "chip.avr.avr109": "^1.1.1",
     "delay": "^4.1.0",
@@ -67,6 +67,7 @@
     "popper.js": "^1.14.7",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "serialport": "^7.1.4"
+    "serialport": "^7.1.4",
+    "usb": "^1.5.0"
   }
 }

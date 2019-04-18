@@ -2,7 +2,7 @@ import {app, BrowserWindow} from 'electron';
 import {ipcMain} from 'electron';
 import * as path from 'path';
 
-import {build, connect, getVariables, listPorts, program} from './programmer';
+import {build, connect, getVariables, listPorts, program, bootloader} from './programmer';
 
 let mainWindow: Electron.BrowserWindow;
 function createWindow() {
@@ -60,6 +60,9 @@ ipcMain.on('build', (evt: Event, options: any) => {
       },
       () => {
         mainWindow.webContents.send('built');
+        setTimeout(async ()=> {
+          mainWindow.webContents.send('list', await listPorts());
+        },500)
       });
 });
 ipcMain.on('program', (evt: Event, port: string) => {
@@ -71,7 +74,13 @@ ipcMain.on('program', (evt: Event, port: string) => {
 ipcMain.on('list', async () => {
   mainWindow.webContents.send('list', await listPorts());
 });
-
+ipcMain.on('bootloader', async () => {
+  bootloader(() => {
+    setTimeout(async ()=> {
+      mainWindow.webContents.send('list', await listPorts());
+    },500)
+  });
+});
 ipcMain.on('init', async () => {
   mainWindow.webContents.send('list', await listPorts());
   mainWindow.webContents.send('vars', await getVariables());

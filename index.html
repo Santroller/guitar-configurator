@@ -30,6 +30,7 @@
         color: white !important;
         background-color: #464646 !important;
       }
+
       .progress {
         background-color: #6d6d6d !important;
       }
@@ -128,13 +129,28 @@
       </div>
       <div id="page4" class="hidden">
         <div class="text-center">
-          <h2>Configure your tilt sensitivity</h2>
+          <h2>Configure tilt</h2>
           <div class="card">
             <div class="card-body">
-              <input type="range" min="-100" max="100" value="0" class="slider" id="sensitivity" style="width: 100%">
-              <span>Current angle:
-                <span id="sens">0</span></span>
-              <p>Defaults to 0, a lower value will require more of a tilt to activate, while a higher angle will tilt at a lower angle.</p>
+              <div class="input-group mb-3" id="TILT_SENSOR">
+                <div class="input-group-prepend col-3">
+                  <span class="input-group-text cap">Tilt Sensor Type</span>
+                </div>
+                <select class="form-control col-9">
+                  <option value="MPU_6050">MPU 6050 Gyroscope</option>
+                  <option value="DIRECT">Gravity Sensor</option>
+                  <option value="NONE">No tilt</option>
+                </select>
+              </div>
+              <div class="input-group mb-3 tilt" id="TILT_ANGLE">
+                <div class="input-group-prepend col-3">
+                  <span class="input-group-text cap">Tilt Angle:  <span id="sens" style="padding-left: 5px;">0</span></span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="slider form-control col-9" id="sensitivity" style="width: 100%">
+                
+              </div>
+              <p class="tilt">Defaults to 0, a lower value will require more of a tilt to activate, while a higher angle will tilt at a lower angle.</p>
+
             </div>
           </div>
           <div class="card">
@@ -177,14 +193,14 @@
           <div class="card">
             <div class="card-body">
               <div id="programData" class="hidden">
-                <h3>
-                  Please hit the + and - buttons on your guitar, and then click the below button to update.
-                </h1>
-                <button id="program">Program!</button>
-                <button id="refresh">Refresh Devices</button>
-                <select id="ports"></select>
+                <h5>
+                  Pick your device from below and hit program, automatic detection was not found.
+                </h5>
+                <button id="program" class="btn btn-primary">Program!</button>
+                <button id="refresh" class="btn btn-primary">Refresh Devices</button>
+                <select id="ports" class="form-control" style="width: auto !important; display: initial !important;"></select>
               </div>
-              <div class="progress">
+              <div class="progress mt-3">
                 <div id="status" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
