@@ -27,9 +27,10 @@
       "target": [
         "AppImage", "deb", "snap", "tar.gz"
       ],
-      "icon": "asset/icons/app.linux.png",
-      "synopsis": "For testing ng-electron-structure",
-      "category": "Development"
+      "icon": "asset/icons/png/512x512.png",
+      "synopsis": "An application for configuring custom guitar hero guitars",
+      "category": "Settings",
+      "maintainer": "sanjay900 <sanjay.govind9@gmail.com>"
     },
     "directories": {
       "output": "release"
@@ -44,7 +45,11 @@
     "demo",
     "typescript"
   ],
-  "author": "GitHub",
+  "author": {
+    "name": "Sanjay Govind",
+    "email": "sanjay.govind9@gmail.com",
+    "url": "https://tangentmc.net"
+  },
   "license": "CC0-1.0",
   "devDependencies": {
     "copyfiles": "^2.1.0",
