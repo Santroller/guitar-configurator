@@ -22,10 +22,6 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
-      - libgnome-keyring-dev
-      - xz-utils
-      - xorriso
       - libusb-dev
       - libudev-dev
 
