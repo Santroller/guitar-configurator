@@ -11,7 +11,7 @@
     "install": "electron-rebuild",
     "pack": "electron-builder --dir",
     "dist": "npm run build && build --publish onTagOrDraft",
-    "html": "copyfiles -u 1 html/* dist",
+    "html": "copyfiles -u 1 assets/* dist",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
@@ -20,14 +20,12 @@
       "category": "public.app-category.utilities"
     },
     "win": {
-      "target": "nsis"
+      "target": ["msi", "portable"]
     },
-    "files": [
-      "dist"
-    ],
+    "files": ["dist"],
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage", "deb", "snap", "tar.gz"
       ],
       "icon": "asset/icons/app.linux.png",
       "synopsis": "For testing ng-electron-structure",
