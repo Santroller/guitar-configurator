@@ -3,8 +3,8 @@
 // All of the Node.js APIs are available in this process.
 import * as bootstrap from 'bootstrap';
 import {ipcRenderer} from 'electron';
-import * as SerialPort from 'serialport';
 import * as $ from 'jquery';
+import * as SerialPort from 'serialport';
 
 import {getKey, getKeyCode} from './keymap';
 import {pins} from './pinmap';
@@ -14,6 +14,8 @@ let options: any = {};
 let currentPage: string = '#page1';
 let lastPage: string[] = [];
 let defaultMPU: number;
+let portList: SerialPort.PortInfo[] = [];
+let built = false;
 function qs(qs: string, ele: Element|Document = document) {
   return ele.querySelector(qs);
 }
@@ -35,15 +37,15 @@ function showPage(next: string) {
   selectAndHide(currentPage);
   selectAndShow(next);
   currentPage = next;
+  if (next == '#upload') {
+    ipcRenderer.send('connect');
+    ipcRenderer.send('build', options);
+  }
 }
 function bindNextPage(button: string, next: string, cb: () => void = () => {}) {
   bindClick(button, () => {
     cb();
     showPage(next);
-    if (next == '#upload') {
-      ipcRenderer.send('connect');
-      ipcRenderer.send('build', options);
-    }
   });
 }
 function addPinTemplate(pin: any, isJoy: boolean) {
@@ -117,17 +119,21 @@ function bindPages() {
       selectAndShow((currentPage = lastPage.pop()));
     });
   });
+  qs('#TILT_SENSOR select').addEventListener('change', (evt: Event) => {
+    options['TILT_SENSOR'] = (evt.target as HTMLInputElement).value;
+    const isEnabled = options['TILT_SENSOR'] != 'NONE';
+    Array.from(document.querySelectorAll('.tilt')).forEach(s => s.classList[isEnabled?'remove':'add']('hidden'));
+  });
 }
 function bindResponses() {
   ipcRenderer.on('built', () => {
-    selectAndShow('#programData');
+    built = true;
   });
   let progress = -50;
   ipcRenderer.on('status', (event: Event, status: string) => {
     const ste = $('#status');
     ste.html(status);
-    progress += 50;
-    if (progress > 100) progress = 0;
+    progress += 25;
     ste.css('width', progress + '%');
   });
   ipcRenderer.on('error', (event: Event, status: string) => {
@@ -136,7 +142,18 @@ function bindResponses() {
   });
 
   ipcRenderer.on('list', (event: Event, ports: SerialPort.PortInfo[]) => {
-    comPort = ports[0].comName;
+    if (!built) {
+      comPort = ports[0].comName;
+    } else {
+      let portsFound = ports.filter(port => portList.indexOf(port) < 0);
+      if (portsFound.length > 0) {
+        comPort = ports.filter(port => portList.indexOf(port) < 0)[0].comName;
+        ipcRenderer.send('program', comPort);
+      } else {
+        selectAndShow('#programData');
+      }
+    }
+    portList = ports;
     qs('#ports').innerHTML =
         ports.map(port => makeOption(port.comName, port.comName)).join('\n');
     qs('#ports').addEventListener('change', (evt: Event) => {
