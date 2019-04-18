@@ -11,8 +11,7 @@ function createWindow() {
     height: 600,
     width: 800,
     frame: false,
-    webPreferences: {nodeIntegration: true},
-    icon: path.join(__dirname, 'assets/icons/png/64x64.png')
+    webPreferences: {nodeIntegration: true}
   });
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
