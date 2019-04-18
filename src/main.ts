@@ -75,15 +75,15 @@ ipcMain.on('list', async () => {
   mainWindow.webContents.send('list', await listPorts());
 });
 ipcMain.on('bootloader', async () => {
-  bootloader(() => {
-    setTimeout(async ()=> {
-      mainWindow.webContents.send('list', await listPorts());
-    },500)
-  });
+  await bootloader();
+  setTimeout(async ()=> {
+    mainWindow.webContents.send('list', await listPorts());
+  },500)
 });
 ipcMain.on('init', async () => {
   mainWindow.webContents.send('list', await listPorts());
   mainWindow.webContents.send('vars', await getVariables());
+  await bootloader();
 });
 // I hate this, but could not find a way to properley catch some serial port
 // errors
