@@ -49,7 +49,7 @@ function showPage(next : string) {
     progress = -20;
     ste.html("");
     ste.css("width", progress + "%");
-    $('#reset').prop('disabled', true);
+    $('#restart').prop('disabled', true);
   }
 }
 function bindNextPage(button : string, next : string, cb : () => void = () => {}) {
@@ -152,8 +152,8 @@ function bindResponses() {
     const ste = $("#status");
     ste.html(status);
     progress += 20;
-    if (progress == 100) {
-      $('#reset').prop('disabled', false);
+    if (status.toLowerCase().indexOf("programming complete") != -1) {
+      $('#restart').prop('disabled', false);
     }
     ste.css("width", progress + "%");
   });
