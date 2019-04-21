@@ -92,7 +92,7 @@ function addKeyTemplate(pin : any) {
     let target = evt.target as HTMLInputElement;
     target.value = evt.code;
     evt.preventDefault();
-    options["KEY_" + target.id] = getKey(evt.code);
+    options[target.id] = getKey(evt.code);
   });
   qs("#key-bindings").appendChild(ele);
 }
