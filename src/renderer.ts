@@ -66,7 +66,7 @@ function addPinTemplate(pin : any, isJoy : boolean) {
     qs("select", ele).innerHTML = Object.entries(pins).map(p => makeOption(p[1] + "", `${p[0]} (${p[1]})`)).join("\n");
     (qs("select", ele)as HTMLInputElement).value = pin.value;
     qs("select", ele).addEventListener("change", (evt : Event) => {
-      options["PIN_" + pin.name] = (evt.target as HTMLInputElement).value;
+      options[pin.name] = (evt.target as HTMLInputElement).value;
     });
     if (pin.name.indexOf("JOY") != -1) {
       qs("div", ele).classList.add("joy");
