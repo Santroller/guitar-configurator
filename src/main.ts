@@ -2,7 +2,7 @@ import {app, BrowserWindow} from 'electron';
 import {ipcMain} from 'electron';
 import * as path from 'path';
 
-import {program, read, write, searchForGuitar, readFreq} from './programmer';
+import { program, read, write, searchForGuitar, readFreq, jumpToMain } from './programmer';
 
 let mainWindow: Electron.BrowserWindow;
 function createWindow() {
@@ -78,17 +78,20 @@ ipcMain.on('list', async () => {
   // mainWindow.webContents.send('list', await listPorts());
 });
 ipcMain.on('init', async () => {
-  mainWindow.webContents.send('guitar', searchForGuitar());
+  mainWindow.webContents.send('guitar', await searchForGuitar());
   // console.log(await readFreq());
   // setInterval(async ()=>mainWindow && mainWindow.webContents.send('list', await listPorts()), 100);
   // mainWindow.webContents.send('list', await listPorts());
   // mainWindow.webContents.send('vars', await getVariables());
   // const ports = await listPorts();
-  // let data = await read(ports[0].comName);
-  // data.subtype = 7;
-  // await write(ports[0].comName, data);
-  // data = await read(ports[0].comName);
-  // console.log(data);
+  let data = await read();
+  data.output_type = 1;
+  await write(data);
+  jumpToMain();
+  await searchForGuitar()
+  data = await read();
+  console.log(data);
+  jumpToMain();
 });
 // I hate this, but could not find a way to properley catch some serial port
 // errors
