@@ -1,92 +1,129 @@
-import * as avr from 'chip.avr.avr109';
-import Delay from 'delay';
-import * as create from 'jenkins';
-import * as rp from 'request-promise-native';
-import * as SerialPort from 'serialport';
-import * as util from 'util';
+import * as avr from "chip.avr.avr109";
+import Delay from "delay";
+import * as SerialPort from "serialport";
+import * as usb from "usb";
 
-let jenkins: create.JenkinsPromisifiedAPI;
-let fileToUpload: string;
-export function connect() {
-  jenkins = create({
-    baseUrl: 'https://ardwiino.tangentmc.net',
-    crumbIssuer: true,
-    promisify: true
-  });
-}
-const pins_start = 'DEVICE_TYPE == DIRECT\n';
-const keys_start = 'OUTPUT_TYPE == KEYBOARD\n';
-function parseVariables(data: string, start: string) {
-  var section = data.substring(data.indexOf(start) + start.length);
-  section = section.substring(0, section.indexOf('#endif'));
-  return section.split('#define ').slice(1).map((s2: string) => {
-    let split = s2.replace(/\n/g, ' ').split(' ');
-    let isPin = split[0].indexOf('PIN_') != -1;
-    let cleaned_name = split[0].replace('PIN_', '');
-    cleaned_name = cleaned_name.replace('KEY_', '');
-    return {
-      name: split[0],
-      isPin: isPin,
-      name_disp: cleaned_name.toLowerCase().replace(/_/g, ' '),
-      value: split[1],
-      comments: split.slice(2)
-                    .join(' ')
-                    .replace(/\/\//g, '')
-                    .trim()
-                    .replace(/_/g, ' ')
-    };
-  });
-}
-export async function getVariables() {
-  return rp('https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/config/config.h')
-      .then(data => ({
-              keys: parseVariables(data, keys_start),
-              pins: parseVariables(data, pins_start),
-              mpu: data.substring(data.indexOf('MPU_6050_START'))
-                       .split(' ')[1]
-                       .trim()
-            }));
-}
-export async function build(
-    options: {}, status: (status: string) => void, callback: () => void) {
-  status('Starting build');
-  const queuedBuild = await jenkins.job.build({
-    name: 'Ardwiino',
-    parameters: {token: 'zIa15bDd9lM6SRIdENAU', ...options}
-  });
-  let queueData = await jenkins.queue.item(queuedBuild);
-  while (!queueData.executable) {
-    await Delay(100);
-    queueData = await jenkins.queue.item(queuedBuild);
-  }
-  status('Building firmware');
-  const log: NodeJS.ReadableStream =
-      await jenkins.build.logStream('Ardwiino', queueData.executable.number);
-
-  log.on('error', function(err) {
-    console.log('error', err);
-  });
-  log.on('end', async function() {
-    status('Firmware built');
-    fileToUpload = await rp({
-      uri: `${queueData.executable.url}/artifact/src/micro/bin/Ardwiino.hex`,
-      encoding: 'ascii'
-    });
-    callback();
-  });
-}
+import {EepromConfig, readData, writeData} from "./eeprom";
+export type Guitar = {
+  found: boolean;
+  dfu: boolean;
+  pins: EepromConfig;
+};
 export async function program(port : string, status : (status : string) => void) {
-  const sp = new SerialPort(port);
-  status('Setting up Programmer');
-  const flasher = await util.promisify(avr.init)(sp, {signature: 'CATERIN'});
-  await util.promisify(flasher.erase.bind(flasher))();
-  status('Programming...');
-  await util.promisify(flasher.program.bind(flasher))(fileToUpload);
-  status('Programmed! Checking upload.');
-  await util.promisify(flasher.verify.bind(flasher))();
-  status('Programming complete!');
+  // TODO once we have a build server set up that pushes releases, then replace
+  // TODO if we go this route, we need to save some sort of protocol version so that updates to the config don't cause problems.
+  // TODO also, check if this requires writing back the eeprom or not.
+  // TODO also, use readFreq in cases where we have that ability.
+  // this with something that just grabs the latest firmware and uploads.
+  // const sp = new SerialPort(port);
+  // status("Setting up Programmer");
+  // const flasher = await util.promisify(avr.init)(sp, {signature: "CATERIN"});
+  // await util.promisify(flasher.erase.bind(flasher))();
+  // status("Programming...");
+  // await util.promisify(flasher.program.bind(flasher))(fileToUpload);
+  // status("Programmed! Checking upload.");
+  // await util.promisify(flasher.verify.bind(flasher))();
+  // status("Programming complete!");
+  // await sp.close();
 }
 
-export async function listPorts() {
-  return (await SerialPort.list()).filter(s => s.vendorId && s.vendorId == "2341");
+export async function readFreq(): Promise<number> {
+  let device = await findDevice();
+  return await new Promise((resolve, reject) => {
+    const sp = new SerialPort(device.comName);
+    sp.on("data", function (data) {
+      sp.close();
+      resolve(parseInt(data + ""));
+    });
+    sp.write("f", function (err) {
+      if (err) {
+        sp.close();
+        reject(err);
+      }
+    });
+  });
+}
+
+export async function read(): Promise<EepromConfig> {
+  let device = await findDevice();
+  return await new Promise((resolve, reject) => {
+    const sp = new SerialPort(device.comName);
+    sp.on("data", function (data) {
+      sp.close();
+      resolve(readData(data));
+    });
+    sp.write("r", function (err) {
+      if (err) {
+        sp.close();
+        reject(err);
+      }
+    });
+  });
+}
+
+export async function write(data : EepromConfig) {
+  let device = await findDevice();
+  return await new Promise((resolve, reject) => {
+    const sp = new SerialPort(device.comName);
+    sp.write([
+      "w".charCodeAt(0), ...writeData(data)
+    ], function (err) {
+      sp.close();
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+function jumpToProgrammer() {
+  return new Promise((resolve, reject) => {
+    let dev = usb.findByIds(0x1209, 0x2882);
+    dev.open();
+    dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x31, 0, 0, 0, (err, buf) => {
+      dev.close();
+      resolve();
+    });
+  });
+}
+
+export async function jumpToMain() {
+  let device = await findDevice();
+  return await new Promise((resolve, reject) => {
+    const sp = new SerialPort(device.comName);
+    sp.write("b", function (err) {
+      sp.close();
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+export async function findDevice() {
+  return (await SerialPort.list()).filter(s => s.vendorId && s.vendorId == "1209" && s.productId && s.productId == "2882")[0];
+}
+
+export async function findDFUDevice() {
+  return (await SerialPort.list()).filter(s => s.vendorId && (s.vendorId == "2341" || s.vendorId == "1b4f" || s.vendorId == "2a03"))[0];
+}
+
+export function searchForGuitar(): Promise<Guitar> {
+  return new Promise(resolve => {
+    const interval = setInterval(async () => {
+      if (await findDevice()) {
+        resolve({found: true, dfu: false, pins: await read()});
+        clearInterval(interval);
+      } else if (await findDFUDevice()) {
+        resolve({found: true, dfu: true, pins: null});
+        clearInterval(interval);
+      } else if (usb.findByIds(0x1209, 0x2882) && process.platform !== "win32") {
+        jumpToProgrammer();
+      }
+    }, 500);
+  });
 }

@@ -2,7 +2,7 @@ import {app, BrowserWindow} from 'electron';
 import {ipcMain} from 'electron';
 import * as path from 'path';
 
-import {build, connect, getVariables, listPorts, program} from './programmer';
+import {program, read, write, searchForGuitar, readFreq} from './programmer';
 
 let mainWindow: Electron.BrowserWindow;
 function createWindow() {
@@ -53,20 +53,20 @@ app.on('activate', () => {
 });
 
 ipcMain.on('connect', () => {
-  connect();
+  // connect();
 });
 ipcMain.on('build', (evt: Event, options: any) => {
-  build(
-      options,
-      status => {
-        mainWindow.webContents.send('status', status);
-      },
-      () => {
-        mainWindow.webContents.send('built');
-        setTimeout(async ()=> {
-          mainWindow.webContents.send('list', await listPorts());
-        },500)
-      });
+  // build(
+  //     options,
+  //     status => {
+  //       mainWindow.webContents.send('status', status);
+  //     },
+  //     () => {
+  //       mainWindow.webContents.send('built');
+  //       setTimeout(async ()=> {
+  //         mainWindow.webContents.send('list', await listPorts());
+  //       },500)
+  //     });
 });
 ipcMain.on('program', (evt: Event, port: string) => {
   program(port, status => {
@@ -75,12 +75,20 @@ ipcMain.on('program', (evt: Event, port: string) => {
 });
 
 ipcMain.on('list', async () => {
-  mainWindow.webContents.send('list', await listPorts());
+  // mainWindow.webContents.send('list', await listPorts());
 });
 ipcMain.on('init', async () => {
-  setInterval(async ()=>mainWindow && mainWindow.webContents.send('list', await listPorts()), 100);
-  mainWindow.webContents.send('list', await listPorts());
-  mainWindow.webContents.send('vars', await getVariables());
+  mainWindow.webContents.send('guitar', searchForGuitar());
+  // console.log(await readFreq());
+  // setInterval(async ()=>mainWindow && mainWindow.webContents.send('list', await listPorts()), 100);
+  // mainWindow.webContents.send('list', await listPorts());
+  // mainWindow.webContents.send('vars', await getVariables());
+  // const ports = await listPorts();
+  // let data = await read(ports[0].comName);
+  // data.subtype = 7;
+  // await write(ports[0].comName, data);
+  // data = await read(ports[0].comName);
+  // console.log(data);
 });
 // I hate this, but could not find a way to properley catch some serial port
 // errors

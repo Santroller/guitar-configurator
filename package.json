@@ -60,7 +60,7 @@
   "devDependencies": {
     "copyfiles": "^2.1.0",
     "electron": "^4.1.4",
-    "electron-builder": "^20.39.0",
+    "electron-builder": "^20.40.2",
     "rimraf": "^2.6.3",
     "tslint": "^5.16.0",
     "typescript": "^3.4.3"
@@ -72,7 +72,10 @@
     "@types/node-hid": "^0.7.0",
     "@types/request-promise-native": "^1.0.15",
     "@types/serialport": "^7.0.2",
+    "@types/usb": "^1.5.1",
+    "binary": "^0.3.0",
     "bootstrap": "^4.3.1",
+    "c-struct": "0.0.5",
     "chip.avr.avr109": "^1.1.1",
     "delay": "^4.2.0",
     "jenkins": "^0.23.0",
@@ -81,6 +84,7 @@
     "popper.js": "^1.15.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "serialport": "^7.1.4"
+    "serialport": "^7.1.4",
+    "usb": "^1.5.0"
   }
 }
