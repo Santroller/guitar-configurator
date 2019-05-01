@@ -113,6 +113,7 @@ export async function findDFUDevice() {
 }
 
 export function searchForGuitar(): Promise<Guitar> {
+  var jumped = false;
   return new Promise(resolve => {
     const interval = setInterval(async () => {
       if (await findDevice()) {
@@ -121,8 +122,9 @@ export function searchForGuitar(): Promise<Guitar> {
       } else if (await findDFUDevice()) {
         resolve({found: true, dfu: true, pins: null});
         clearInterval(interval);
-      } else if (usb.findByIds(0x1209, 0x2882) && process.platform !== "win32") {
+      } else if (usb.findByIds(0x1209, 0x2882) && process.platform !== "win32" && !jumped) {
         jumpToProgrammer();
+        jumped = true;
       }
     }, 500);
   });

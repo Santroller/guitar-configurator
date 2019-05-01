@@ -84,14 +84,11 @@ ipcMain.on('init', async () => {
   // mainWindow.webContents.send('list', await listPorts());
   // mainWindow.webContents.send('vars', await getVariables());
   // const ports = await listPorts();
-  let data = await read();
-  data.output_type = 1;
-  await write(data);
-  jumpToMain();
-  await searchForGuitar()
-  data = await read();
-  console.log(data);
-  jumpToMain();
+  // let data = await read();
+  // data.tilt_type = 1;
+  // data.mpu_6050_calibration = 0;
+  // await write(data);
+  // jumpToMain();
 });
 // I hate this, but could not find a way to properley catch some serial port
 // errors

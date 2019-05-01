@@ -1,9 +1,17 @@
-import * as _ from 'c-struct';
+import * as _ from "c-struct";
 export type EepromConfig = {
-  output_type: number; input_type: number; tilt_type: number; subtype: number;
+  protocol_version: number;
+  output_type: number;
+  input_type: number;
+  tilt_type: number;
+  subtype: number;
   pollrate: number;
   pins: {
-    green: number; red: number; yellow: number; blue: number; orange: number;
+    green: number;
+    red: number;
+    yellow: number;
+    blue: number;
+    orange: number;
     start: number;
     select: number;
     whammy: number;
@@ -20,7 +28,11 @@ export type EepromConfig = {
   mpu_6050_calibration: number;
   frets_led_mode: number;
   keys: {
-    green: number; red: number; yellow: number; blue: number; orange: number;
+    green: number;
+    red: number;
+    yellow: number;
+    blue: number;
+    orange: number;
     up: number;
     down: number;
     left: number;
@@ -31,6 +43,7 @@ export type EepromConfig = {
   };
 };
 var eepromSchema = new _.Schema({
+  protocol_version: _.type.uint8,
   output_type: _.type.uint8,
   input_type: _.type.uint8,
   tilt_type: _.type.uint8,
@@ -72,12 +85,12 @@ var eepromSchema = new _.Schema({
     whammy: _.type.uint8
   }
 });
-_.register('EepromConfig', eepromSchema);
+_.register("EepromConfig", eepromSchema);
 
-export function readData(data: Buffer): EepromConfig {
-  return _.unpackSync('EepromConfig', data);
+export function readData(data : Buffer): EepromConfig {
+  return _.unpackSync("EepromConfig", data);
 }
 
-export function writeData(data: EepromConfig): Buffer {
-  return _.packSync('EepromConfig', data);
+export function writeData(data : EepromConfig): Buffer {
+  return _.packSync("EepromConfig", data);
 }
