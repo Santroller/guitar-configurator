@@ -9,7 +9,7 @@ import * as SerialPort from "serialport";
 import {getKey, getKeyCode} from "./keymap";
 import {pins} from "./pinmap";
 
-let comPort: string = null;
+let comPort: string | null = null;
 let options: any = {};
 let currentPage: string = "#page1";
 let lastPage: string[] = [];
@@ -17,7 +17,6 @@ let defaultMPU: number;
 let built: boolean = false;
 let uploading: boolean = false;
 let progress = -20;
-let serialPort: SerialPort;
 function qs(qs : string, ele : Element | Document = document) {
   return ele.querySelector(qs);
 }

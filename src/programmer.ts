@@ -1,17 +1,17 @@
-import * as avr from "chip.avr.avr109";
-import Delay from "delay";
-import * as SerialPort from "serialport";
-import * as usb from "usb";
+import * as avr from 'chip.avr.avr109';
+import Delay from 'delay';
+import * as SerialPort from 'serialport';
+import * as usb from 'usb';
 
-import {EepromConfig, readData, writeData} from "./eeprom";
+import {defaultConfig, EepromConfig, readData, writeData} from './eeprom';
+
 export type Guitar = {
-  found: boolean;
-  dfu: boolean;
-  pins: EepromConfig;
+  found: boolean; dfu: boolean; pins: EepromConfig;
 };
-export async function program(port : string, status : (status : string) => void) {
+export async function program(port: string, status: (status: string) => void) {
   // TODO once we have a build server set up that pushes releases, then replace
-  // TODO if we go this route, we need to save some sort of protocol version so that updates to the config don't cause problems.
+  // TODO if we go this route, we need to save some sort of protocol version so
+  // that updates to the config don't cause problems.
   // TODO also, check if this requires writing back the eeprom or not.
   // TODO also, use readFreq in cases where we have that ability.
   // this with something that just grabs the latest firmware and uploads.
@@ -31,11 +31,11 @@ export async function readFreq(): Promise<number> {
   let device = await findDevice();
   return await new Promise((resolve, reject) => {
     const sp = new SerialPort(device.comName);
-    sp.on("data", function (data) {
+    sp.on('data', function(data) {
       sp.close();
-      resolve(parseInt(data + ""));
+      resolve(parseInt(data + ''));
     });
-    sp.write("f", function (err) {
+    sp.write('f', function(err) {
       if (err) {
         sp.close();
         reject(err);
@@ -48,11 +48,11 @@ export async function read(): Promise<EepromConfig> {
   let device = await findDevice();
   return await new Promise((resolve, reject) => {
     const sp = new SerialPort(device.comName);
-    sp.on("data", function (data) {
+    sp.on('data', function(data) {
       sp.close();
       resolve(readData(data));
     });
-    sp.write("r", function (err) {
+    sp.write('r', function(err) {
       if (err) {
         sp.close();
         reject(err);
@@ -61,13 +61,13 @@ export async function read(): Promise<EepromConfig> {
   });
 }
 
-export async function write(data : EepromConfig) {
+export async function write(data: EepromConfig) {
   let device = await findDevice();
   return await new Promise((resolve, reject) => {
     const sp = new SerialPort(device.comName);
-    sp.write([
-      "w".charCodeAt(0), ...writeData(data)
-    ], function (err) {
+    console.log('w');
+    console.log(writeData(data));
+    sp.write(['w'.charCodeAt(0), ...writeData(data)], function(err) {
       sp.close();
       if (err) {
         reject(err);
@@ -77,7 +77,20 @@ export async function write(data : EepromConfig) {
     });
   });
 }
-
+export async function jumpToBootloader() {
+  let device = await findDFUDevice();
+  return await new Promise((resolve, reject) => {
+    const sp = new SerialPort(device.comName, {baudRate: 1200});
+    sp.set({dtr: false, rts: false}, () => {
+      setTimeout(() => {
+        sp.set({dtr: true, rts: true}, () => {
+          sp.close();
+          resolve();
+        });
+      }, 50);
+    });
+  });
+}
 function jumpToProgrammer() {
   return new Promise((resolve, reject) => {
     let dev = usb.findByIds(0x1209, 0x2882);
@@ -93,7 +106,7 @@ export async function jumpToMain() {
   let device = await findDevice();
   return await new Promise((resolve, reject) => {
     const sp = new SerialPort(device.comName);
-    sp.write("b", function (err) {
+    sp.write('b', function(err) {
       sp.close();
       if (err) {
         reject(err);
@@ -105,11 +118,18 @@ export async function jumpToMain() {
 }
 
 export async function findDevice() {
-  return (await SerialPort.list()).filter(s => s.vendorId && s.vendorId == "1209" && s.productId && s.productId == "2882")[0];
+  return (await SerialPort.list())
+      .filter(
+          s => s.vendorId && s.vendorId == '1209' && s.productId &&
+              s.productId == '2882')[0];
 }
 
 export async function findDFUDevice() {
-  return (await SerialPort.list()).filter(s => s.vendorId && (s.vendorId == "2341" || s.vendorId == "1b4f" || s.vendorId == "2a03"))[0];
+  return (await SerialPort.list())
+      .filter(
+          s => s.vendorId &&
+              (s.vendorId == '2341' || s.vendorId == '1b4f' ||
+               s.vendorId == '2a03'))[0];
 }
 
 export function searchForGuitar(): Promise<Guitar> {
@@ -117,12 +137,15 @@ export function searchForGuitar(): Promise<Guitar> {
   return new Promise(resolve => {
     const interval = setInterval(async () => {
       if (await findDevice()) {
+        clearInterval(interval);
         resolve({found: true, dfu: false, pins: await read()});
-        clearInterval(interval);
       } else if (await findDFUDevice()) {
-        resolve({found: true, dfu: true, pins: null});
         clearInterval(interval);
-      } else if (usb.findByIds(0x1209, 0x2882) && process.platform !== "win32" && !jumped) {
+        await jumpToBootloader();
+        resolve({found: true, dfu: true, pins: defaultConfig});
+      } else if (
+          usb.findByIds(0x1209, 0x2882) && process.platform !== 'win32' &&
+          !jumped) {
         jumpToProgrammer();
         jumped = true;
       }

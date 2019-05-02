@@ -1,10 +1,45 @@
 import * as _ from "c-struct";
+
+export enum Subtype {
+  Gamepad = 1,
+  Wheel,
+  ArcadeStick,
+  ArcadePad,
+  FlightStick,
+  DancePad,
+  Guitar,
+  GuitarAlternate,
+  Drum,
+  GuitarBass = 11,
+  ArdcadePad = 10
+}
+export enum TiltSensor {
+  None,
+  MPU6050,
+  Switch
+}
+export enum InputType {
+  None,
+  Wii,
+  Direct = 2
+}
+export enum OutputType {
+  Serial,
+  XInput,
+  Keyboard,
+  Gamepad
+}
+export enum JoyType {
+  None,
+  Dpad,
+  Joy
+}
 export type EepromConfig = {
   protocol_version: number;
-  output_type: number;
-  input_type: number;
-  tilt_type: number;
-  subtype: number;
+  output_type: OutputType;
+  input_type: InputType;
+  tilt_type: TiltSensor;
+  subtype: Subtype;
   pollrate: number;
   pins: {
     green: number;
@@ -23,10 +58,10 @@ export type EepromConfig = {
     joy_y: number;
     gravity: number;
   };
-  direction_mode: number;
+  direction_mode: JoyType;
   whammy_calibration: number;
   mpu_6050_calibration: number;
-  frets_led_mode: number;
+  frets_led_mode: boolean;
   keys: {
     green: number;
     red: number;
@@ -93,4 +128,47 @@ export function readData(data : Buffer): EepromConfig {
 
 export function writeData(data : EepromConfig): Buffer {
   return _.packSync("EepromConfig", data);
+}
+export var defaultConfig: EepromConfig = {
+  protocol_version: 0,
+  output_type: OutputType.XInput,
+  input_type: InputType.None,
+  tilt_type: TiltSensor.None,
+  subtype: Subtype.Guitar,
+  pollrate: 1,
+  pins: {
+    green: 4,
+    red: 5,
+    yellow: 7,
+    blue: 6,
+    orange: 8,
+    start: 16,
+    select: 9,
+    whammy: 18,
+    strum_up: 14,
+    strum_down: 15,
+    dpad_left: 10,
+    dpad_right: 21,
+    joy_x: 19,
+    joy_y: 20,
+    gravity: 11,
+  },
+  direction_mode: JoyType.None,
+  whammy_calibration: 0,
+  mpu_6050_calibration: 0,
+  frets_led_mode: false,
+  keys: {
+    green: 0x04,
+    red: 0x16,
+    yellow: 0x0d,
+    blue: 0x0e,
+    orange: 0x0f,
+    up: 0x33,
+    down: 0x28,
+    left: 0x0b,
+    right: 0x50,
+    start: 0x4f,
+    select: 0x52,
+    whammy: 0x51,
+  },
 }
