@@ -25,6 +25,8 @@ export async function program(port: string, status: (status: string) => void) {
   // await util.promisify(flasher.verify.bind(flasher))();
   // status("Programming complete!");
   // await sp.close();
+  //TODO: we could probably replace chip.avr.avr109 with https://www.npmjs.com/package/avrboy-arduino/
+  //TODO: as it supports flashing anything. Its also possible this deals with the reset logic too, which would be a bonus.
 }
 
 export async function readFreq(): Promise<number> {
