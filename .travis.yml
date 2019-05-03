@@ -26,9 +26,5 @@ addons:
       - libusb-dev
       - libudev-dev
 
-install:
-  - nvm install 10
-  - npm install
-
 script:
 - npm run dist
