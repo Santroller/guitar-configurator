@@ -1,19 +1,70 @@
 {
-  "name": "guitar-configurator",
-  "version": "0.0.2-6",
+  "name": "electron-webpack-quick-start",
+  "version": "0.1.0-0",
+  "license": "MIT",
   "description": "An application for configuring custom guitar hero guitars",
-  "main": "./dist/main.js",
   "scripts": {
-    "build": "rimraf dist && tsc && npm run html",
-    "watch": "tsc -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "npm run build && electron ./dist/main.js",
-    "pack": "electron-builder --dir",
-    "dist": "npm run build && build --publish onTagOrDraft",
-    "html": "copyfiles -u 1 assets/* dist && copyfiles index.html dist",
-    "postinstall": "npmpd && electron-builder install-app-deps"
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder && build --publish onTagOrDraft",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "postinstall": "electron-builder install-app-deps"
   },
+  "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "@types/pty.js": "^0.2.35",
+    "@types/react": "^16.8.16",
+    "@types/react-dom": "^16.8.4",
+    "@types/request-promise-native": "^1.0.16",
+    "@types/serialport": "^7.0.3",
+    "@types/tmp": "^0.1.0",
+    "@types/usb": "^1.5.1",
+    "c-struct": "^0.0.5",
+    "delay": "^4.2.0",
+    "electron-util": "^0.11.0",
+    "node-intelhex": "^2.0.4",
+    "pty.js": "https://github.com/risacher/pty.js",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "request-promise-native": "^1.0.7",
+    "serialport": "^7.1.5",
+    "source-map-support": "^0.5.10",
+    "tmp": "^0.1.0",
+    "typeface-roboto": "^0.0.54",
+    "usb": "^1.5.0"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "electron": "4.0.1",
+    "electron-builder": "20.38.4",
+    "electron-webpack": "^2.6.2",
+    "electron-webpack-ts": "^3.1.1",
+    "typescript": "^3.4.5",
+    "webpack": "4.28.4"
+  },
+  "author": {
+    "name": "Sanjay Govind",
+    "email": "sanjay.govind9@gmail.com",
+    "url": "https://tangentmc.net"
+  },
+  "repository": "https://github.com/sanjay900/guitar-configurator",
   "build": {
+    "extraResources": [
+      {
+        "from": "./binaries",
+        "to": "binaries",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asarUnpack": [
+      "binaries/avrdude/**"
+    ],
     "appId": "com.tangentmc.guitar-configurator",
     "mac": {
       "category": "public.app-category.utilities"
@@ -31,8 +82,7 @@
       "target": [
         "AppImage",
         "deb",
-        "snap",
-        "tar.gz"
+        "snap"
       ],
       "synopsis": "An application for configuring custom guitar hero guitars",
       "category": "Settings",
@@ -41,50 +91,5 @@
     "directories": {
       "output": "release"
     }
-  },
-  "repository": "https://github.com/sanjay900/guitar-configurator",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo",
-    "typescript"
-  ],
-  "author": {
-    "name": "Sanjay Govind",
-    "email": "sanjay.govind9@gmail.com",
-    "url": "https://tangentmc.net"
-  },
-  "license": "CC0-1.0",
-  "devDependencies": {
-    "copyfiles": "^2.1.0",
-    "electron": "^4.1.4",
-    "electron-builder": "^20.40.2",
-    "rimraf": "^2.6.3",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.3"
-  },
-  "dependencies": {
-    "@types/bootstrap": "^4.3.0",
-    "@types/delay": "^3.1.0",
-    "@types/jenkins": "^0.23.1",
-    "@types/node-hid": "^0.7.0",
-    "@types/request-promise-native": "^1.0.15",
-    "@types/serialport": "^7.0.2",
-    "@types/usb": "^1.5.1",
-    "binary": "^0.3.0",
-    "bootstrap": "^4.3.1",
-    "c-struct": "0.0.5",
-    "chip.avr.avr109": "^1.1.1",
-    "delay": "^4.2.0",
-    "jenkins": "^0.23.0",
-    "jquery": "^3.4.0",
-    "npm-platform-dependencies": "^0.1.0",
-    "popper.js": "^1.15.0",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7",
-    "serialport": "^7.1.4",
-    "usb": "^1.5.0"
   }
 }
