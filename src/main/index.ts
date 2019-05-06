@@ -2,11 +2,13 @@
 
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
+import {ipcMain} from 'electron';
 import {format as formatUrl} from 'url';
-import { searchForGuitar } from './programmer';
+import {searchForGuitar, program} from './programmer';
+import {defaultConfig} from './eeprom';
+import {InputType, MemoryLocation} from '../common/avr-types';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
 // global reference to mainWindow (necessary to prevent window from being
 // garbage collected)
 let mainWindow: BrowserWindow|null;
@@ -57,7 +59,20 @@ app.on('activate', () => {
   }
 });
 // create main BrowserWindow when electron is ready
-app.on('ready', async () => {
+app.on('ready', () => {
   mainWindow = createMainWindow();
-  console.log(await searchForGuitar());
+});
+
+ipcMain.on('search', async () => {
+  mainWindow!.webContents.send('guitar', await searchForGuitar());
+});
+
+ipcMain.on('program', async () => {
+  let config = defaultConfig;
+  config.input_type = InputType.Wii;
+  await program(
+      'uno-usb', 0, config,
+      (location: MemoryLocation, percentage: number, time: string) => {
+        mainWindow!.webContents.send('program', {location, percentage, time});
+      });
 });

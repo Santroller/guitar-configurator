@@ -1,29 +1,24 @@
+import * as delay from 'delay';
 import * as fs from 'fs';
 import * as path from 'path';
 import {spawn} from 'pty.js';
 import * as rp from 'request-promise-native';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
-import * as delay from 'delay';
 
-import {Board, boards, findConnectedDevice, getAvrdudeArgs} from './boards';
-import {defaultConfig, EepromConfig, generateEEP, readData} from './eeprom';
+import {Board, EepromConfig, Guitar, MemoryLocation, ProgressCallback} from '../common/avr-types';
 
-export enum MemoryLocation {
-  FLASH = 'flash',
-  EEPROM = 'eeprom'
-}
+import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
+import {defaultConfig, generateEEP, readData} from './eeprom';
+
 export enum MemoryAction {
   READ = 'r',
   WRITE = 'w'
 }
-export type ProgressCallback =
-    (location: MemoryLocation, percentage: number, time: string) => void;
-export type Guitar = {
-  newBoard: boolean; pins: EepromConfig; type: Board;
-};
 
 function findBinary(...args: string[]) {
+  // When running from an asar, the files get extracted to one place, otherwise,
+  // they are run directly
   if (process.mainModule!.filename.indexOf('app.asar') === -1) {
     return path.join(__dirname, '..', '..', 'binaries', ...args);
   }
@@ -38,6 +33,8 @@ export function spawnAvrDude(
       reject('no device found');
       return;
     }
+    // If no board is passed in, then we generate one based on what is plugged
+    // in.
     board = board || connected;
     board.com = connected.com;
     const avrdudePath =
@@ -112,12 +109,14 @@ export async function program(
 }
 
 export function jumpToBootloader() {
-  //win32 doesnt support control transfers.
+  // win32 doesnt support control transfers.
   if (process.platform === 'win32') return;
   return new Promise((resolve, reject) => {
     try {
       let dev = usb.findByIds(0x1209, 0x2882);
       dev.open();
+      // The ardwiino firmware responds to a control transfer of 0x30 by jumping
+      // to the bootloader.
       dev.controlTransfer(usb.LIBUSB_ENDPOINT_IN, 0x30, 0, 0, 0, (err, buf) => {
         dev.close();
         setTimeout(resolve, 500);

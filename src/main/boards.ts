@@ -1,10 +1,8 @@
 
 import * as SerialPort from 'serialport';
 import {jumpToBootloader} from './programmer';
-export interface Board {
-  name: string, baud: number, productId: string[], protocol: string,
-      processor: string, com?: string;
-}
+import { Board } from '../common/avr-types';
+//A list of board definitions. note that we don't actually ever want to autodetect the main uno processor, so it has no ids.
 export var boards: {[name: string]: Board} = {
   'uno-usb': {
     name: 'uno-usb',
@@ -16,7 +14,7 @@ export var boards: {[name: string]: Board} = {
   'uno-main': {
     name: 'uno-main',
     baud: 115200,
-    productId: ['0043', '7523', '0001', 'ea60'],
+    productId: [],
     protocol: 'arduino',
     processor: 'atmega328p'
   },
