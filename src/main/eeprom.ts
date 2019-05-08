@@ -66,7 +66,10 @@ export function generateEEP(data: EepromConfig) {
   }
   return ret.toUpperCase();
 }
-
+export enum Signatures {
+  FLAMEWAKE=0xFEA123,
+  REGULAR=0xF1A3E48
+}
 export var defaultConfig: EepromConfig = {
   protocol_version: 0,
   output_type: OutputType.XInput,
@@ -110,5 +113,5 @@ export var defaultConfig: EepromConfig = {
     whammy: 0x51,
   },
   cpu_freq: 1600000,
-  signature: 0xFEA123
+  signature: Signatures.REGULAR
 }

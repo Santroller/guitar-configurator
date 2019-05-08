@@ -10,11 +10,11 @@ export interface Board {
   processor: string;
   com?: string;
 }
-export type ProgressCallback = (location : MemoryLocation, percentage : number, time : string) => void;
+export type ProgressCallback = (percentage : number, state: string) => void;
 export type Guitar = {
-  newBoard: boolean;
-  pins: EepromConfig;
-  type: Board;
+  type: DeviceType;
+  config: EepromConfig;
+  board: Board;
 };
 export enum Subtype {
   Gamepad = 1,
@@ -49,6 +49,11 @@ export enum JoyType {
   None,
   Dpad,
   Joy
+}
+export enum DeviceType {
+  Guitar=0xFEA123,
+  FlameWake=0xF1A3E48,
+  Unprogrammed=0x00
 }
 export type EepromConfig = {
   protocol_version: number;

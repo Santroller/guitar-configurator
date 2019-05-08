@@ -1,17 +1,16 @@
-'use strict';
+"use strict";
 
-import {app, BrowserWindow} from 'electron';
-import * as path from 'path';
-import {ipcMain} from 'electron';
-import {format as formatUrl} from 'url';
-import {searchForGuitar, program} from './programmer';
-import {defaultConfig} from './eeprom';
-import {InputType, MemoryLocation} from '../common/avr-types';
+import {app, BrowserWindow} from "electron";
+import * as path from "path";
+import {ipcMain} from "electron";
+import {format as formatUrl} from "url";
+import {searchForGuitar, program} from "./programmer";
+import {Guitar} from "../common/avr-types";
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isDevelopment = process.env.NODE_ENV !== "production";
 // global reference to mainWindow (necessary to prevent window from being
 // garbage collected)
-let mainWindow: BrowserWindow|null;
+let mainWindow: BrowserWindow | null;
 
 function createMainWindow() {
   const window = new BrowserWindow();
@@ -23,17 +22,17 @@ function createMainWindow() {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
     window.loadURL(formatUrl({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file',
+      pathname: path.join(__dirname, "index.html"),
+      protocol: "file",
       slashes: true
     }));
   }
 
-  window.on('closed', () => {
+  window.on("closed", () => {
     mainWindow = null;
   });
 
-  window.webContents.on('devtools-opened', () => {
+  window.webContents.on("devtools-opened", () => {
     window.focus();
     setImmediate(() => {
       window.focus();
@@ -43,15 +42,15 @@ function createMainWindow() {
 }
 
 // quit application when all windows are closed
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // on macOS it is common for applications to stay open until the user
   // explicitly quits
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // on macOS it is common to re-create a window even after all windows have
   // been closed
   if (mainWindow === null) {
@@ -59,20 +58,33 @@ app.on('activate', () => {
   }
 });
 // create main BrowserWindow when electron is ready
-app.on('ready', () => {
+app.on("ready", () => {
   mainWindow = createMainWindow();
 });
 
-ipcMain.on('search', async () => {
-  mainWindow!.webContents.send('guitar', await searchForGuitar());
+ipcMain.on("search", async () => {
+  mainWindow !.webContents.send("guitar", await searchForGuitar());
 });
 
-ipcMain.on('program', async () => {
-  let config = defaultConfig;
-  config.input_type = InputType.Wii;
-  await program(
-      'uno-usb', 0, config,
-      (location: MemoryLocation, percentage: number, time: string) => {
-        mainWindow!.webContents.send('program', {location, percentage, time});
+ipcMain.on("program", async (evt : Event, guitar : Guitar) => {
+  // We need to program the correct board, and, if we are programming an uno, we
+  // need to scale all percentages so that 100% is programming both controllers.
+  if (guitar.board.name.indexOf("uno") != -1) {
+    await program("uno-main", 0, guitar.config, (percentage : number, state : string) => {
+      mainWindow !.webContents.send("program", {
+        percentage: percentage / 2,
+        state
       });
+    });
+    await program("uno-usb", 0, guitar.config, (percentage : number, state : string) => {
+      mainWindow !.webContents.send("program", {
+        percentage: percentage / 2 + 50,
+        state
+      });
+    });
+  } else {
+    await program(guitar.board.name, guitar.config.cpu_freq, guitar.config, (percentage : number, state : string) => {
+      mainWindow !.webContents.send("program", {percentage, state});
+    });
+  }
 });

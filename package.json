@@ -20,6 +20,7 @@
     "@types/serialport": "^7.0.3",
     "@types/tmp": "^0.1.0",
     "@types/usb": "^1.5.1",
+    "axios": "^0.18.0",
     "c-struct": "^0.0.5",
     "delay": "^4.2.0",
     "electron-util": "^0.11.0",

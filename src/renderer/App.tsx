@@ -34,6 +34,7 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     ipcRenderer.on("guitar", (event: Event, guitar : Guitar) => {
       this.setState({guitar});
+      console.log(guitar);
     });
     ipcRenderer.send("search");
   }
@@ -47,18 +48,19 @@ class App extends React.Component<Props, State> {
         </div>
         <p>
           Welcome to the Ardwiino Guitar configuration tool.
-          <br/>Please connect your Ardwiino Guitar, or a new Arduino.{" "}
+          <br/>Please connect your Ardwiino Guitar, or a new Arduino.
           {process.platform === "win32" && "If you are configuring an existing guitar, please press start and select on your guitar"}
-          <br/>{this.state.guitar && this.state.guitar.type.name=='micro'?"Found Ardwiino powered by Arduino micro":"Found Ardwiino powered by Arduino Uno"}
+          <br/>{this.state.guitar && (this.state.guitar.board.name=='micro'?"Found Ardwiino powered by Arduino micro":"Found Ardwiino powered by Arduino Uno")}
+          <br/>{this.state.guitar && this.state.guitar.type.toString()}
         </p>
       </header>
     </div>);
   }
   render() {
-    // if (!this.state.guitar) {
+    if (!this.state.guitar) {
       return this.renderMain();
-    // }
-    // return <Program guitar={this.state.guitar}/>;
+    }
+    return <Program guitar={this.state.guitar}/>;
   }
 }
 
