@@ -28,6 +28,7 @@
     "pty.js": "https://github.com/risacher/pty.js",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-markdown": "^4.0.8",
     "react-redux": "^7.0.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
@@ -44,6 +45,7 @@
     "electron-builder": "20.38.4",
     "electron-webpack": "^2.6.2",
     "electron-webpack-ts": "^3.1.1",
+    "raw-loader": "^2.0.0",
     "typescript": "^3.4.5",
     "webpack": "4.28.4"
   },

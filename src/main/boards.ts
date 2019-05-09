@@ -44,6 +44,7 @@ export async function findConnectedDevice(): Promise<Board|undefined> {
     for (let board of Object.values(boards)) {
       if (board.productId.indexOf(port.productId!) != -1) {
         board.com = port.comName;
+        board.manufacturer = port.manufacturer;
         return board;
       }
     }

@@ -7,11 +7,15 @@ import * as rp from 'request-promise-native';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
 
-import {Board, DeviceType, EepromConfig, Guitar, MemoryLocation, ProgressCallback} from '../common/avr-types';
+import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback} from '../common/avr-types';
 
 import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
 import {defaultConfig, generateEEP, readData} from './eeprom';
 
+export enum MemoryLocation {
+  FLASH = 'flash',
+  EEPROM = 'eeprom'
+}
 export enum MemoryAction {
   READ = 'r',
   WRITE = 'w'
@@ -46,10 +50,10 @@ export function spawnAvrDude(
     let loc = 0;
     proc.stdout.on('data', function(chunk: string) {
       if (chunk.indexOf('writing') != -1 && loc != 0) {
-        loc += 100/args.length;
+        loc += 100 / args.length;
       }
       if (chunk.indexOf('reading on-chip') != -1) {
-        loc += 100/args.length;
+        loc += 100 / args.length;
       }
       let data = /(Writing|Reading) \| #+\s+\| (\d+)% (\d.\d+s)/g.exec(chunk);
       if (data) {
@@ -91,24 +95,31 @@ async function retrieveHex(file: string, progress: ProgressCallback) {
 }
 // If we pass in a frequency of zero, we are ignoring the freq parameter.
 export async function program(
-    device: string, freq: number, config: EepromConfig,
+    device: string, guitar: Guitar,
     progress: ProgressCallback) {
-  const flash_data = await retrieveHex(
-      `ardwiino-${device}${- freq || ''}.hex`, (p, s) => progress(p / 2, s));
-  const file_flash = tmp.fileSync();
-  const stream_flash = fs.createWriteStream(null!, {fd: file_flash.fd});
-  await flash_data.pipe(stream_flash);
-  let args = avrdudeMemoryArgs(
-      MemoryLocation.FLASH, MemoryAction.WRITE, file_flash.name);
-  if (device != "uno-main") {
+  let args: string[] = [];
+  if (guitar.updating) {
+    let freq = device == 'micro' ? -guitar.config.cpu_freq : '';
+    const flash_data = await retrieveHex(
+        `ardwiino-${device}${freq}.hex`, (p, s) => progress(p / 2, s));
+    const file_flash = tmp.fileSync();
+    const stream_flash = fs.createWriteStream(null!, {fd: file_flash.fd});
+    await flash_data.pipe(stream_flash);
+    args = avrdudeMemoryArgs(
+               MemoryLocation.FLASH, MemoryAction.WRITE, file_flash.name)
+               .concat(args);
+  }
+  if (device != 'uno-main') {
     const file_eep = tmp.fileSync();
     const stream_eep = fs.createWriteStream(null!, {fd: file_eep.fd});
-    stream_eep.write(generateEEP(config));
+    stream_eep.write(generateEEP(guitar.config));
     args = avrdudeMemoryArgs(
                MemoryLocation.EEPROM, MemoryAction.WRITE, file_eep.name)
                .concat(args);
   }
-  boards[device].com = (await searchForACM()).com;
+  if (args.length == 0) return;
+  guitar.board = boards[device];
+  guitar.board.com = (await findAndJumpBootloader()).com;
   await spawnAvrDude(args, boards[device], (p, s) => progress(p / 2 + 50, s));
 }
 
@@ -139,14 +150,14 @@ export function detectType(config: EepromConfig): DeviceType {
   }
   return DeviceType.Guitar;
 }
-export async function searchForACM(): Promise<Board> {
+export async function findAndJumpBootloader(): Promise<Board> {
   await jumpToBootloader();
   let board = await findConnectedDevice();
   if (board) {
     return board;
   }
   await delay(500);
-  return searchForACM();
+  return findAndJumpBootloader();
 }
 export async function searchForGuitar(): Promise<Guitar> {
   await jumpToBootloader();
@@ -154,12 +165,8 @@ export async function searchForGuitar(): Promise<Guitar> {
   if (board) {
     let config = await readEeprom(() => {}, board);
     let type = detectType(config);
-    if (type == DeviceType.Unprogrammed) {
-      config = defaultConfig;
-    }
-    if (config) {
-      return {type, config, board};
-    }
+    let updating = type == DeviceType.Unprogrammed;
+    return {type, config: updating ? defaultConfig : config, board, updating};
   }
   await delay(500);
   return searchForGuitar();

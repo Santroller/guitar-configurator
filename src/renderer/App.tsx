@@ -5,7 +5,9 @@ import "./App.css";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import {ipcRenderer} from "electron";
 import {Guitar} from "../common/avr-types";
-import Program from "./Program";
+import UnoInstall from "./UnoInstall";
+import MicroInstall from "./MicroInstall";
+import { Button } from "@material-ui/core";
 const styles = ({palette, spacing} : Theme) => createStyles({
   root: {
     display: "flex",
@@ -32,13 +34,15 @@ class App extends React.Component<Props, State> {
     this.setState({});
   }
   componentDidMount() {
-    ipcRenderer.on("guitar", (event: Event, guitar : Guitar) => {
+    ipcRenderer.on("guitar", (event : Event, guitar : Guitar) => {
       this.setState({guitar});
-      console.log(guitar);
     });
     ipcRenderer.send("search");
   }
-  renderMain() {
+  startConfiguring() {
+    //route to config page
+  }
+  render() {
     const {classes} = this.props;
     return (<div className="App">
       <header className="App-header">
@@ -48,19 +52,19 @@ class App extends React.Component<Props, State> {
         </div>
         <p>
           Welcome to the Ardwiino Guitar configuration tool.
-          <br/>Please connect your Ardwiino Guitar, or a new Arduino.
-          {process.platform === "win32" && "If you are configuring an existing guitar, please press start and select on your guitar"}
-          <br/>{this.state.guitar && (this.state.guitar.board.name=='micro'?"Found Ardwiino powered by Arduino micro":"Found Ardwiino powered by Arduino Uno")}
-          <br/>{this.state.guitar && this.state.guitar.type.toString()}
+          <br/>Please connect your Ardwiino Guitar, or a new Arduino. {process.platform === "win32" && "If you are configuring an existing guitar, please press start and select on your guitar"}
+          <br/> {
+            this.state.guitar && (
+              this.state.guitar.board.name == "micro"
+              ? "Found Ardwiino powered by Arduino micro"
+              : "Found Ardwiino powered by Arduino Uno")
+          }
+          <br/>
+          <br/>
+          {this.state.guitar && (<Button variant="contained" onClick={this.startConfiguring}>Start configuring</Button>)}
         </p>
       </header>
     </div>);
-  }
-  render() {
-    if (!this.state.guitar) {
-      return this.renderMain();
-    }
-    return <Program guitar={this.state.guitar}/>;
   }
 }
 
