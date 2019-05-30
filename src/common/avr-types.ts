@@ -1,4 +1,4 @@
-
+import {config_t} from "./generated";
 export interface Board {
   name: string;
   baud: number;
@@ -8,9 +8,12 @@ export interface Board {
   com?: string;
   manufacturer?: string;
 }
-export type ProgressCallback = (percentage: number, state: string) => void;
+export type ProgressCallback = (percentage : number, state : string) => void;
 export type Guitar = {
-  type: DeviceType; config: EepromConfig; board: Board; updating: boolean;
+  type: DeviceType;
+  config: EepromConfig;
+  board: Board;
+  updating: boolean;
 };
 export enum Subtype {
   Gamepad = 1,
@@ -28,7 +31,7 @@ export enum Subtype {
 export enum TiltSensor {
   None,
   MPU6050,
-  Switch
+  Gravity
 }
 export enum InputType {
   None,
@@ -41,48 +44,29 @@ export enum OutputType {
   Keyboard,
   Gamepad
 }
-export enum JoyType {
-  None,
-  Dpad,
-  Joy
-}
 export enum DeviceType {
-  Guitar = 0xFEA123,
-  FlameWake = 0xF1A3E48,
+  Guitar = 0xfea123,
+  FlameWake = 0xf1a3e48,
   Unprogrammed = 0x00
 }
-export type EepromConfig = {
-  protocol_version: number; output_type: OutputType; input_type: InputType;
+export enum GyroOrientation {
+  PositiveZ = 0,
+  NegativeZ = 1,
+  PositiveY = 2,
+  NegativeY = 3,
+  PositiveX = 4,
+  NegativeX = 5
+}
+
+export enum PinConstants {
+  InvalidPin = 0xff
+}
+
+//Swap any non-number types for their enum variants.
+export type EepromConfig = config_t & {
+  output_type: OutputType;
+  input_type: InputType;
   tilt_type: TiltSensor;
   subtype: Subtype;
-  pollrate: number;
-  pins: {
-    green: number; red: number; yellow: number; blue: number; orange: number;
-    start: number;
-    select: number;
-    whammy: number;
-    strum_up: number;
-    strum_down: number;
-    dpad_left: number;
-    dpad_right: number;
-    joy_x: number;
-    joy_y: number;
-    gravity: number;
-  };
-  direction_mode: JoyType;
-  whammy_calibration: number;
-  mpu_6050_calibration: number;
-  frets_led_mode: boolean;
-  keys: {
-    green: number; red: number; yellow: number; blue: number; orange: number;
-    up: number;
-    down: number;
-    left: number;
-    right: number;
-    start: number;
-    select: number;
-    whammy: number;
-  };
-  cpu_freq: number;
-  signature: number;
+  mpu_6050_orientation: GyroOrientation;
 };
