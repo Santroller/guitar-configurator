@@ -47,7 +47,7 @@ function generatePart(indent, root, partFunction, extra) {
     }
     return `${indentStr}${root.variable}: ${genenerated}${indentStr}},\n`;
   } else {
-    return `${indentStr}${root.variable}: ${partFunction(root, extra)},\n`;
+    return `${indentStr}${root.variable}: ${partFunction(root, indent+1, extra)},\n`;
   }
 }
 
@@ -68,14 +68,20 @@ function generateTypes(root) {
 }
 
 //Pass this into generatePart to generate a default eeprom config
-function generateDefault(root, extra) {
-  const {tokens, enumMembers, defaults} = extra;
+function generateDefault(root, indent, {tokens, enumMembers, defaults}) {
   while (tokens[0].tokenClass != "CONSTANT" && tokens[0].tokenClass != "IDENTIFIER") {
     tokens.shift();
   }
   let value = tokens.shift().lexeme;
   if (defaults[value]) {
-    value = defaults[value][0].lexeme;
+    value = generatePart(indent, root, generateDefault, {
+      tokens: defaults[value],
+      enumMembers,
+      defaults
+    });
+    //Since we are using generatePart, we generate more than we need, so we need to slice it out.
+    //: takes care of dropping a duplicate variable decleration, and value.length-2 drops an extra newline.
+    value = value.slice(value.indexOf(":")+2,value.length-2);
   }
   const valueLC = value.toLowerCase().replace(/_/g, "");
   return (value = enumMembers[valueLC] || value);
@@ -188,12 +194,10 @@ async function generateDefaultConfig(root) {
 
 //Process the Ardwiino source + avr-types and spit out a few typescript files that we can use in the rest of the code base.
 async function convert() {
-  let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
-  let defines_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defines.h`));
   let root = await generateConfigTree();
   let {schemaDefinitions, typeDefinitions} = await generateDefinitions(0, root);
   let defaultConfig = await generateDefaultConfig(root);
-
+  
   fs.writeFileSync("src/common/generated.ts", typeDefinitions);
   fs.writeFileSync("src/main/generated.ts", `import * as _ from 'c-struct';
 import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
