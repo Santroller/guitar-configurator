@@ -4,16 +4,14 @@ const fs = require("fs");
 const parser = require("node-c-parser");
 const tsParser = require("typescript-parser");
 const config_url = "https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/";
-async function generateTypes() {
+
+//Process eeprom.h, and turn it into a tree
+async function generateConfigTree() {
   let eeprom_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.h`));
-  let schemas = "";
-  let types = "";
-  let currentSchema = "";
-  let currentType = "";
   let reading = false;
-  let foundTypes = [];
-  let typeDefinitions = {};
+  let types = {};
   let currentDefinitions = [];
+  //Walk through tokens, and read in struct sections, turning them into types.
   for (let i = 0; i < eeprom_h.length; i++) {
     const token = eeprom_h[i];
     if (token.lexeme == "struct") {
@@ -22,36 +20,66 @@ async function generateTypes() {
     if (reading && token.lexeme == "ATTR_PACKED") {
       const typeName = eeprom_h[++i].lexeme;
       reading = false;
-      foundTypes.push(typeName);
-      schemas += `export const ${typeName} = {\n${currentSchema}}\n`;
-      types += `export type ${typeName} = {\n${currentType}}\n`;
-      typeDefinitions[typeName] = currentDefinitions;
-      currentSchema = "";
-      currentType = "";
+      types[typeName] = currentDefinitions;
       currentDefinitions = [];
     }
     if (reading && token.tokenClass == "IDENTIFIER") {
       let type = token.lexeme;
       let schemaType = type;
       let varName = eeprom_h[++i].lexeme;
-      if (foundTypes.indexOf(type) == -1) {
-        schemaType = `_.type.${type}`;
-      }
-      currentSchema += `  ${varName}: ${schemaType},\n`;
-      if (type.startsWith("uint")) {
-        type = "number";
-      } else if (type.startsWith("bool")) {
-        type = "boolean";
-      }
-      currentDefinitions.push({varName, type});
-      currentType += `\t${varName}: ${type},\n`;
+      currentDefinitions.push({
+        variable: varName,
+        type: types[type] || type
+      });
     }
   }
-  return {schemas, types, typeDefinitions};
+  //config_t is the root config
+  return types.config_t;
 }
 
-async function generateBaseConfig(typeDefinitions) {
-  let configDefintions = [...typeDefinitions.config_t];
+//Generate a part of the config, by walking down the tree.
+function generatePart(indent, root, partFunction, ...extra) {
+  let indentStr = "\t".repeat(indent);
+  if (Array.isArray(root)) {
+    let genenerated = "{\n";
+    for (let type of root) {
+      genenerated += `${indentStr}${generatePart(indent + 1, type, partFunction, extra)}`;
+    }
+    return `${indentStr}${genenerated}};\n`;
+  }
+  if (Array.isArray(root.type)) {
+    let genenerated = "{\n";
+    for (let type of root.type) {
+      genenerated += `${generatePart(indent + 1, type, partFunction, extra)}`;
+    }
+    return `${indentStr}${root.variable}: ${genenerated}${indentStr}},\n`;
+  } else {
+    return `${indentStr}${root.variable}: ${partFunction(root, extra)},\n`;
+  }
+}
+
+function generateSchema(root) {
+  return `_.type.${root.type}`;
+}
+
+function generateTypes(root) {
+  let type = root.type;
+  if (type.startsWith("uint") || type.startsWith("int")) {
+    type = "number";
+  } else if (type.startsWith("bool")) {
+    type = "boolean";
+  }
+  return type;
+}
+
+function generateDefinitions(indent, root) {
+  let schemaDefinitions = `export const GeneratedEEPROMConfig = ${generatePart(indent, root, generateSchema)}`;
+  let typeDefinitions = `export type GeneratedEEPROMConfig = ${generatePart(indent, root, generateTypes)}`;
+  return {schemaDefinitions, typeDefinitions};
+}
+
+async function generateBaseConfig(root) {
+  let configDefinitions = [...root];
   let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
   let reading = false;
   let current_config = [];
@@ -62,8 +90,8 @@ async function generateBaseConfig(typeDefinitions) {
       break;
     }
     if (reading && token.tokenClass == "IDENTIFIER") {
-      let config = configDefintions.shift();
-      current_config.push({type: config.type, variable: config.varName, value: token.lexeme});
+      let config = configDefinitions.shift();
+      current_config.push({type: config.type, variable: config.variable, value: token.lexeme});
     }
   }
   return current_config;
@@ -95,6 +123,13 @@ async function processDefaultsH() {
     }
   }
   defines[current] = data;
+  //F_CPU is never actually defined, but we need to define it somewhere
+  defines["F_CPU"] = [
+    {
+      lexeme: "-1",
+      tokenClass: "CONSTANT"
+    }
+  ];
   return defines;
 }
 
@@ -114,56 +149,52 @@ async function processEnumTypes() {
   }
   return enumMembers;
 }
-async function processDefaults(indent, type, tree, enumMembers, typeDefinitions, defaults) {
+async function processDefaults(indent, type, tokens, enumMembers, defaults) {
   let indentStr = "\t".repeat(indent);
-  while (tree[0].tokenClass != "CONSTANT" && tree[0].tokenClass != "IDENTIFIER") {
-    tree.shift();
-  }
-  if (typeDefinitions[type.type]) {
+  if (type.type instanceof Array) {
     //We have a inner definition, so we should convert it
     let inner = "";
-    for (let typeDef of typeDefinitions[type.type]) {
-      inner += await processDefaults(indent + 1, typeDef, tree, enumMembers, typeDefinitions, defaults);
+    for (let typeDef of type.type) {
+      inner += await processDefaults(indent + 1, typeDef, tokens, enumMembers, defaults);
     }
-    return `${indentStr}${type.varName}: {\n${inner}${indentStr}},\n`;
+    return `${indentStr}${type.variable}: {\n${inner}${indentStr}},\n`;
   } else {
-    let value = tree.shift().lexeme;
-    if(defaults[value]) {
+    while (tokens[0].tokenClass != "CONSTANT" && tokens[0].tokenClass != "IDENTIFIER") {
+      tokens.shift();
+    }
+    let value = tokens.shift().lexeme;
+    if (defaults[value]) {
       value = defaults[value][0].lexeme;
     }
     const valueLC = value.toLowerCase().replace(/_/g, "");
     value = enumMembers[valueLC] || value;
-    return `${indentStr}${type.varName}: ${value},\n`;
+    return `${indentStr}${type.variable}: ${value},\n`;
   }
 }
-async function generateDefaults(typeDefinitions) {
+async function generateDefaultConfig(root) {
   let enumMembers = await processEnumTypes();
   let defaults = await processDefaultsH();
-  let current_config = await generateBaseConfig(typeDefinitions);
-  let defaultTS = "";
-  for (let i = 0; i < current_config.length; i++) {
-    let {variable, value} = current_config[i];
-    if (value == "F_CPU") {
-      defaultTS += `${variable}: -1,\n`;
-      continue;
-    }
-    defaultTS += await processDefaults(0, typeDefinitions.config_t[i], defaults[value], enumMembers, typeDefinitions, defaults);
+  let currentConfig = await generateBaseConfig(root);
+  let defaultConfig = "";
+  for (let i = 0; i < currentConfig.length; i++) {
+    let {value} = currentConfig[i];
+    defaultConfig += await processDefaults(1, currentConfig[i], defaults[value], enumMembers, defaults);
   }
-  return defaultTS;
+  return defaultConfig;
 }
 async function convert() {
   let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
   let defines_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defines.h`));
-  let {schemas, types, typeDefinitions} = await generateTypes();
+  let root = await generateConfigTree();
+  let {schemaDefinitions, typeDefinitions} = await generateDefinitions(0, root);
+  let defaultConfig = await generateDefaultConfig(root);
 
-  let defaultTS = await generateDefaults(typeDefinitions);
-  fs.writeFileSync("src/common/generated.ts", types);
+  fs.writeFileSync("src/common/generated.ts", typeDefinitions);
   fs.writeFileSync("src/main/generated.ts", `import * as _ from 'c-struct';
 import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
-${schemas}
+${schemaDefinitions}
 export var defaultConfig: EepromConfig = {
-${defaultTS}
-};`);
+${defaultConfig}};`);
 }
 
 convert();
