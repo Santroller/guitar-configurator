@@ -40,14 +40,15 @@ async function generateConfigTree() {
 //Generate a part of the config, by walking down the tree.
 function generatePart(indent, root, partFunction, extra) {
   let indentStr = "  ".repeat(indent);
-  if (Array.isArray(root.type)) {
+  //When dealing with generating defaults, we only want to handle things here if a { is found, otherwise the generateDefault will handle things.
+  if (Array.isArray(root.type) && (!extra || extra.tokens[0].tokenClass == "{")) {
     let genenerated = "{\n";
     for (let type of root.type) {
       genenerated += `${generatePart(indent + 1, type, partFunction, extra)}`;
     }
     return `${indentStr}${root.variable}: ${genenerated}${indentStr}},\n`;
   } else {
-    return `${indentStr}${root.variable}: ${partFunction(root, indent+1, extra)},\n`;
+    return `${indentStr}${root.variable}: ${partFunction(root, indent + 1, extra)},\n`;
   }
 }
 
@@ -73,22 +74,24 @@ function generateDefault(root, indent, {tokens, enumMembers, defaults}) {
     tokens.shift();
   }
   let value = tokens.shift().lexeme;
+  //If a variable is found that matches this value, swap it out with the variable. 
+  //note that we should also parse the variable, to deal with recursive variable definitions
   if (defaults[value]) {
-    value = generatePart(indent, root, generateDefault, {
-      tokens: defaults[value],
+    value = generatePart(indent - 1, root, generateDefault, {
+      tokens: [...defaults[value]],
       enumMembers,
       defaults
     });
     //Since we are using generatePart, we generate more than we need, so we need to slice it out.
     //: takes care of dropping a duplicate variable decleration, and value.length-2 drops an extra newline.
-    value = value.slice(value.indexOf(":")+2,value.length-2);
+    value = value.slice(value.indexOf(":") + 2, value.length - 2);
   }
   const valueLC = value.toLowerCase().replace(/_/g, "");
   return (value = enumMembers[valueLC] || value);
 }
 
 //Generate both schema and typescript definitions
-function generateDefinitions(indent, root) {
+function generateDefinitions(root) {
   let schemaDefinitions = "export const EepromSchema = {\n";
   let typeDefinitions = "export type config_t = {\n";
   for (let type of root) {
@@ -189,15 +192,15 @@ async function generateDefaultConfig(root) {
       defaults
     });
   }
-  return defaultConfig +"};";
+  return defaultConfig + "};";
 }
 
 //Process the Ardwiino source + avr-types and spit out a few typescript files that we can use in the rest of the code base.
 async function convert() {
   let root = await generateConfigTree();
-  let {schemaDefinitions, typeDefinitions} = await generateDefinitions(0, root);
+  let {schemaDefinitions, typeDefinitions} = await generateDefinitions(root);
   let defaultConfig = await generateDefaultConfig(root);
-  
+
   fs.writeFileSync("src/common/generated.ts", typeDefinitions);
   fs.writeFileSync("src/main/generated.ts", `import * as _ from 'c-struct';
 import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
