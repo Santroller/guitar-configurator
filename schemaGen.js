@@ -39,7 +39,7 @@ async function generateConfigTree() {
 
 //Generate a part of the config, by walking down the tree.
 function generatePart(indent, root, partFunction, extra) {
-  let indentStr = "\t".repeat(indent);
+  let indentStr = "  ".repeat(indent);
   if (Array.isArray(root.type)) {
     let genenerated = "{\n";
     for (let type of root.type) {
