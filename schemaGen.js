@@ -1,114 +1,169 @@
 // Generate TS classes based upon the C code from the Ardwiino lib
-let rp = require("request-promise");
-let fs = require("fs");
-
-// Convert a single line from a c struct decleration to a c-struct decleration
-function schemafy(c) {
-  return c.replace(/uint(\S+)_t ([^;]+);/g, "$2: _.type.uint$1,").replace(/bool ([^;]+);/g, "$1: _.type.bool,").replace(/(\S+)_t ([^;]+);/g, "$2: $1_t,");
+const rp = require("request-promise");
+const fs = require("fs");
+const parser = require("node-c-parser");
+const tsParser = require("typescript-parser");
+const config_url = "https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/";
+async function generateTypes() {
+  let eeprom_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.h`));
+  let schemas = "";
+  let types = "";
+  let currentSchema = "";
+  let currentType = "";
+  let reading = false;
+  let foundTypes = [];
+  let typeDefinitions = {};
+  let currentDefinitions = [];
+  for (let i = 0; i < eeprom_h.length; i++) {
+    const token = eeprom_h[i];
+    if (token.lexeme == "struct") {
+      reading = true;
+    }
+    if (reading && token.lexeme == "ATTR_PACKED") {
+      const typeName = eeprom_h[++i].lexeme;
+      reading = false;
+      foundTypes.push(typeName);
+      schemas += `export const ${typeName} = {\n${currentSchema}}\n`;
+      types += `export type ${typeName} = {\n${currentType}}\n`;
+      typeDefinitions[typeName] = currentDefinitions;
+      currentSchema = "";
+      currentType = "";
+      currentDefinitions = [];
+    }
+    if (reading && token.tokenClass == "IDENTIFIER") {
+      let type = token.lexeme;
+      let schemaType = type;
+      let varName = eeprom_h[++i].lexeme;
+      if (foundTypes.indexOf(type) == -1) {
+        schemaType = `_.type.${type}`;
+      }
+      currentSchema += `  ${varName}: ${schemaType},\n`;
+      if (type.startsWith("uint")) {
+        type = "number";
+      } else if (type.startsWith("bool")) {
+        type = "boolean";
+      }
+      currentDefinitions.push({varName, type});
+      currentType += `\t${varName}: ${type},\n`;
+    }
+  }
+  return {schemas, types, typeDefinitions};
 }
 
-// Convert a single line from a c struct decleration to a typescript
-function typeify(c) {
-  return c.replace(/uint(\S+)_t ([^;]+);/g, "$2: number,").replace(/bool ([^;]+);/g, "$1: boolean,").replace(/(\S+)_t ([^;]+);/g, "$2: $1_t,");
+async function generateBaseConfig(typeDefinitions) {
+  let configDefintions = [...typeDefinitions.config_t];
+  let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
+  let reading = false;
+  let current_config = [];
+  for (let i = 0; i < eeprom_c.length; i++) {
+    const token = eeprom_c[i];
+    reading |= token.tokenClass == "{";
+    if (token.tokenClass == "}") {
+      break;
+    }
+    if (reading && token.tokenClass == "IDENTIFIER") {
+      let config = configDefintions.shift();
+      current_config.push({type: config.type, variable: config.varName, value: token.lexeme});
+    }
+  }
+  return current_config;
 }
 
-// Convert a variable definition to its typescript variant
-function processDef(varAssignment, varType, ts) {
-  if (varAssignment.indexOf("{") != -1) {
-    let type = new RegExp(`export type ${varType} = ([^;]+);`).exec(ts)[1];
-    let data = varAssignment.slice(1);
-    while (type.indexOf("number") != -1 || type.indexOf("boolean") != -1 || type.indexOf("_t") != -1) {
-      let next = /(number|boolean|(\S+_t))/.exec(type)[1];
-      //We have found an embedded definition, so we call this function again to process it.
-      if (next.endsWith("_t")) {
-        type = type.replace(next, processDef(data.slice(0, data.indexOf("}") + 1), next, ts));
-        data = data.slice(data.indexOf("}") + 2);
-      } else {
-        type = type.replace(next, data.slice(1, data.indexOf(",")));
-        data = data.slice(data.indexOf(",") + 1);
+async function processDefaultsH() {
+  let defaults_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defaults.h`));
+  let defines = {};
+  let data = [];
+  let current;
+  for (let i = 0; i < defaults_h.length; i++) {
+    const token = defaults_h[i];
+    //Skip preprocessor ifdefs
+    if (token.lexeme.indexOf("if") != -1) {
+      continue;
+    }
+    if (token.lexeme.indexOf("defined") != -1) {
+      i += 3;
+      continue;
+    }
+    if (token.lexeme == "define") {
+      if (current) {
+        defines[current] = data;
+        data = [];
+      }
+      current = defaults_h[++i].lexeme;
+    } else if (current) {
+      data.push(token);
+    }
+  }
+  defines[current] = data;
+  return defines;
+}
+
+async function processEnumTypes() {
+  const tsTypes = await new tsParser.TypescriptParser().parseFile("src/common/avr-types.ts", "workspace root");
+  let enums = {};
+  let enumMembers = {};
+  for (let decl of tsTypes.declarations) {
+    if (decl.members) {
+      for (let member of decl.members) {
+        const memberLC = member.toLowerCase();
+        const declLC = decl.name.toLowerCase();
+        enumMembers[memberLC] = `${decl.name}.${member}`;
+        enumMembers[memberLC + declLC] = `${decl.name}.${member}`;
       }
     }
-    return type;
+  }
+  return enumMembers;
+}
+async function processDefaults(indent, type, tree, enumMembers, typeDefinitions, defaults) {
+  let indentStr = "\t".repeat(indent);
+  while (tree[0].tokenClass != "CONSTANT" && tree[0].tokenClass != "IDENTIFIER") {
+    tree.shift();
+  }
+  if (typeDefinitions[type.type]) {
+    //We have a inner definition, so we should convert it
+    let inner = "";
+    for (let typeDef of typeDefinitions[type.type]) {
+      inner += await processDefaults(indent + 1, typeDef, tree, enumMembers, typeDefinitions, defaults);
+    }
+    return `${indentStr}${type.varName}: {\n${inner}${indentStr}},\n`;
   } else {
-    return varAssignment;
+    let value = tree.shift().lexeme;
+    if(defaults[value]) {
+      value = defaults[value][0].lexeme;
+    }
+    const valueLC = value.toLowerCase().replace(/_/g, "");
+    value = enumMembers[valueLC] || value;
+    return `${indentStr}${type.varName}: ${value},\n`;
   }
 }
-
+async function generateDefaults(typeDefinitions) {
+  let enumMembers = await processEnumTypes();
+  let defaults = await processDefaultsH();
+  let current_config = await generateBaseConfig(typeDefinitions);
+  let defaultTS = "";
+  for (let i = 0; i < current_config.length; i++) {
+    let {variable, value} = current_config[i];
+    if (value == "F_CPU") {
+      defaultTS += `${variable}: -1,\n`;
+      continue;
+    }
+    defaultTS += await processDefaults(0, typeDefinitions.config_t[i], defaults[value], enumMembers, typeDefinitions, defaults);
+  }
+  return defaultTS;
+}
 async function convert() {
-  let data = await rp("https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/eeprom.h");
-  let cEEPROMData;
-  let re = /typedef struct ({[^}\r]+}) ATTR_PACKED ([^;]+);/g;
-  let c_struct_ts = "";
-  let ts_types = "";
-  while ((cEEPROMData = re.exec(data))) {
-    c_struct_ts += `export const ${cEEPROMData[2]} = ${schemafy(cEEPROMData[1])};\n`;
-    ts_types += `export type ${cEEPROMData[2]} = ${typeify(cEEPROMData[1])};\n`;
-  }
-  fs.writeFileSync("src/common/generated.ts", ts_types);
-  let defines = await rp("https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/defines.h");
-  let defaults = await rp("https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/defaults.h");
-  data = await rp("https://raw.githubusercontent.com/sanjay900/Ardwiino/master/src/shared/config/eeprom.c");
-  let conf = /export type config_t = ([^;]+);/.exec(ts_types);
-  //Look for variable definitions in both the typescript types, and the c eeprom
-  re = /([^ {},]+)[,}]/g;
-  re2 = /([^ {},]+): ([^{},]+),/g;
-  let tsTypeData;
-  let output = "";
-  //Loop through both the typescript and c eeprom at the same time, as we need info from both files
-  while ((cEEPROMData = re.exec(data)) && (tsTypeData = re2.exec(conf))) {
-    let definition = new RegExp(`#\\s*define ${cEEPROMData[1]} ([^#]+)`).exec(defaults);
-    if (definition) {
-      // Convert from prettyprinted newline to a single line
-      definition = definition[1].replace(/\s*\\\s*\n\s*/g, " ").trim();
-      // Drop any other data (aka comments) on other lines
-      if (definition.indexOf("\n") > 0) {
-        definition = definition.slice(0, definition.indexOf("\n"));
-      }
-      // The c structs don't store field names, so we have to bring that back
-      // again. We do this by pulling in field names from the previous converted typescript file.
-      output += `${tsTypeData[1]}: ${processDef(definition, tsTypeData[2], ts_types)},\n`;
-    } else {
-      // F_CPU is never defined, set a nonsensical default so we can check it
-      // is defined later.
-      output += `${tsTypeData[1]}: -1,\n`;
-    }
-  }
-  //Look for a basic variable decleration that will probably be a ifdef definition
-  re = /([A-Z][A-Z_0-9]+)(?:[, ]|$)/gm;
-  let types = fs.readFileSync("src/common/avr-types.ts") + "";
-  let ifdef;
-  tsTypeData = [];
-  // Read every enum type from avr-types
-  while ((ifdef = re.exec(output))) {
-    tsTypeData.push(ifdef);
-  }
-  // Loop through and replace ifdef defines with their enum counterparts.
-  for (ifdef of tsTypeData) {
-    //Try to find a matching definition for a variable
-    let definition = new RegExp(`#\\s*define ${ifdef[1]} ([^#]+)`).exec(defaults);
-    if (definition) {
-      definition = definition[1];
-      if (definition.indexOf("\n") > 0) {
-        definition = definition.slice(0, definition.indexOf("\n"));
-      }
-      output = output.replace(ifdef[1], definition);
-    } else {
-      //No ifdef was found in the defaults file. This means we are probably dealing with something out of the defines.h file.
-      //Instead of hardcoding constants from that file, look for the varible in one of the manually defined enums in avr-types
-      let definition = new RegExp(`export enum ([^ ]+) {[^}]*(${ifdef[1].replace("_", "")})[^}]*`, "im").exec(types);
-      //Some things (such as subtypes) end with an _subtype, that doesn't exist in the enum, so we erase these if we don't find a match above.
-      definition = definition || new RegExp(`export enum ([^ ]+) {[^}]*(${ifdef[1].slice(0, ifdef[1].lastIndexOf("_")).replace("_", "")})[^}]*`, "im").exec(types);
-      if (definition) {
-        //Swap the ifdef for a enum definition
-        output = output.replace(ifdef[1], `${definition[1]}.${definition[2]}`);
-      }
-    }
-  }
-  //Generate the file. Add some required imports and then dump in the generated output.
+  let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
+  let defines_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defines.h`));
+  let {schemas, types, typeDefinitions} = await generateTypes();
+
+  let defaultTS = await generateDefaults(typeDefinitions);
+  fs.writeFileSync("src/common/generated.ts", types);
   fs.writeFileSync("src/main/generated.ts", `import * as _ from 'c-struct';
-import { EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
-${c_struct_ts}
-export var defaultConfig: EepromConfig = {\n${output}\n};`);
+import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
+${schemas}
+export var defaultConfig: EepromConfig = {
+${defaultTS}
+};`);
 }
 
 convert();
