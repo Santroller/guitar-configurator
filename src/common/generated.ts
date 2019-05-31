@@ -1,4 +1,4 @@
-export type GeneratedEEPROMConfig = {
+export type config_t = {
 	version: number,
 	output_type: number,
 	input_type: number,

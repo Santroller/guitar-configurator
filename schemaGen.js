@@ -33,20 +33,13 @@ async function generateConfigTree() {
       });
     }
   }
-  //config_t is the root config
+  //config_t is the root config, and it contains the rest of the tree as a result.
   return types.config_t;
 }
 
 //Generate a part of the config, by walking down the tree.
-function generatePart(indent, root, partFunction, ...extra) {
+function generatePart(indent, root, partFunction, extra) {
   let indentStr = "\t".repeat(indent);
-  if (Array.isArray(root)) {
-    let genenerated = "{\n";
-    for (let type of root) {
-      genenerated += `${indentStr}${generatePart(indent + 1, type, partFunction, extra)}`;
-    }
-    return `${indentStr}${genenerated}};\n`;
-  }
   if (Array.isArray(root.type)) {
     let genenerated = "{\n";
     for (let type of root.type) {
@@ -58,10 +51,12 @@ function generatePart(indent, root, partFunction, ...extra) {
   }
 }
 
+//Pass this into generatePart to generate a schema
 function generateSchema(root) {
   return `_.type.${root.type}`;
 }
 
+//Pass this into generatePart to generate a typescript definition
 function generateTypes(root) {
   let type = root.type;
   if (type.startsWith("uint") || type.startsWith("int")) {
@@ -72,12 +67,34 @@ function generateTypes(root) {
   return type;
 }
 
+//Pass this into generatePart to generate a default eeprom config
+function generateDefault(root, extra) {
+  const {tokens, enumMembers, defaults} = extra;
+  while (tokens[0].tokenClass != "CONSTANT" && tokens[0].tokenClass != "IDENTIFIER") {
+    tokens.shift();
+  }
+  let value = tokens.shift().lexeme;
+  if (defaults[value]) {
+    value = defaults[value][0].lexeme;
+  }
+  const valueLC = value.toLowerCase().replace(/_/g, "");
+  return (value = enumMembers[valueLC] || value);
+}
+
+//Generate both schema and typescript definitions
 function generateDefinitions(indent, root) {
-  let schemaDefinitions = `export const GeneratedEEPROMConfig = ${generatePart(indent, root, generateSchema)}`;
-  let typeDefinitions = `export type GeneratedEEPROMConfig = ${generatePart(indent, root, generateTypes)}`;
+  let schemaDefinitions = "export const EepromSchema = {\n";
+  let typeDefinitions = "export type config_t = {\n";
+  for (let type of root) {
+    schemaDefinitions += `${generatePart(1, type, generateSchema)}`;
+    typeDefinitions += `${generatePart(1, type, generateTypes)}`;
+  }
+  schemaDefinitions += `};\n`;
+  typeDefinitions += `};\n`;
   return {schemaDefinitions, typeDefinitions};
 }
 
+//merge together eeprom.c and the root tree, to get a version of eeprom.c with types
 async function generateBaseConfig(root) {
   let configDefinitions = [...root];
   let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
@@ -97,6 +114,7 @@ async function generateBaseConfig(root) {
   return current_config;
 }
 
+//Process defaults.h and build up a list of all defines
 async function processDefaultsH() {
   let defaults_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defaults.h`));
   let defines = {};
@@ -133,6 +151,7 @@ async function processDefaultsH() {
   return defines;
 }
 
+//Process avr-types and build a list of enum types that we can easily substitute in later
 async function processEnumTypes() {
   const tsTypes = await new tsParser.TypescriptParser().parseFile("src/common/avr-types.ts", "workspace root");
   let enums = {};
@@ -149,39 +168,25 @@ async function processEnumTypes() {
   }
   return enumMembers;
 }
-async function processDefaults(indent, type, tokens, enumMembers, defaults) {
-  let indentStr = "\t".repeat(indent);
-  if (type.type instanceof Array) {
-    //We have a inner definition, so we should convert it
-    let inner = "";
-    for (let typeDef of type.type) {
-      inner += await processDefaults(indent + 1, typeDef, tokens, enumMembers, defaults);
-    }
-    return `${indentStr}${type.variable}: {\n${inner}${indentStr}},\n`;
-  } else {
-    while (tokens[0].tokenClass != "CONSTANT" && tokens[0].tokenClass != "IDENTIFIER") {
-      tokens.shift();
-    }
-    let value = tokens.shift().lexeme;
-    if (defaults[value]) {
-      value = defaults[value][0].lexeme;
-    }
-    const valueLC = value.toLowerCase().replace(/_/g, "");
-    value = enumMembers[valueLC] || value;
-    return `${indentStr}${type.variable}: ${value},\n`;
-  }
-}
+
+//Use everything we have build above to walk through most files and build a default configuration based on eeprom.c
 async function generateDefaultConfig(root) {
   let enumMembers = await processEnumTypes();
   let defaults = await processDefaultsH();
   let currentConfig = await generateBaseConfig(root);
-  let defaultConfig = "";
+  let defaultConfig = "export const defaultConfig: EepromConfig = {\n";
   for (let i = 0; i < currentConfig.length; i++) {
     let {value} = currentConfig[i];
-    defaultConfig += await processDefaults(1, currentConfig[i], defaults[value], enumMembers, defaults);
+    defaultConfig += await generatePart(1, currentConfig[i], generateDefault, {
+      tokens: defaults[value],
+      enumMembers,
+      defaults
+    });
   }
-  return defaultConfig;
+  return defaultConfig +"};";
 }
+
+//Process the Ardwiino source + avr-types and spit out a few typescript files that we can use in the rest of the code base.
 async function convert() {
   let eeprom_c = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/eeprom.c`));
   let defines_h = parser.lexer.lexUnit.tokenize(await rp(`${config_url}/defines.h`));
@@ -193,8 +198,8 @@ async function convert() {
   fs.writeFileSync("src/main/generated.ts", `import * as _ from 'c-struct';
 import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
 ${schemaDefinitions}
-export var defaultConfig: EepromConfig = {
-${defaultConfig}};`);
+${defaultConfig}
+`);
 }
 
 convert();

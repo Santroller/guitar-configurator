@@ -1,6 +1,6 @@
 import * as _ from 'c-struct';
 import { DeviceType, EepromConfig, OutputType, InputType, TiltSensor, Subtype, GyroOrientation, PinConstants } from '../common/avr-types';
-export const GeneratedEEPROMConfig = {
+export const EepromSchema = {
 	version: _.type.uint8_t,
 	output_type: _.type.uint8_t,
 	input_type: _.type.uint8_t,
@@ -84,7 +84,7 @@ export const GeneratedEEPROMConfig = {
 	signature: _.type.uint32_t,
 };
 
-export var defaultConfig: EepromConfig = {
+export const defaultConfig: EepromConfig = {
 	version: 0,
 	output_type: OutputType.XInput,
 	input_type: InputType.Direct,

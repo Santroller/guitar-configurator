@@ -3,11 +3,11 @@ import * as hex from "node-intelhex";
 
 import {EepromConfig} from "../common/avr-types";
 
-import {config_t, defaultConfig} from "./generated";
+import {EepromSchema, defaultConfig} from "./generated";
 export {
   defaultConfig
 };
-const eepromSchema = new _.Schema(config_t);
+const eepromSchema = new _.Schema(EepromSchema);
 _.register("EepromConfig", eepromSchema);
 
 export function readData(data : Buffer): EepromConfig {
