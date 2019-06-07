@@ -166,6 +166,13 @@ export async function searchForGuitar(): Promise<Guitar> {
     let config = await readEeprom(() => {}, board);
     let type = detectType(config);
     let updating = type == DeviceType.Unprogrammed;
+    if (updating) {
+      config = defaultConfig;
+    }
+    //The uno is always 16000000
+    if (board.name.indexOf("uno") != -1 && updating) {
+      config.cpu_freq = 16000000;
+    }
     return {type, config: updating ? defaultConfig : config, board, updating};
   }
   await delay(500);

@@ -4,7 +4,10 @@ import {Guitar} from "../common/avr-types";
 import {LinearProgress} from "@material-ui/core";
 import {ipcRenderer} from "electron";
 import {GetApp} from "@material-ui/icons";
-const styles = ({palette, spacing} : Theme) => createStyles({
+import { connect } from "react-redux";
+import { MainState } from "./types";
+import { RouteComponentProps } from "react-router-dom";
+const styles = ({spacing} : Theme) => createStyles({
   root: {
     display: "flex",
     alignItems: "center"
@@ -21,8 +24,8 @@ const styles = ({palette, spacing} : Theme) => createStyles({
     width: "75vw"
   }
 });
-interface Props extends WithStyles < typeof styles > {
-  guitar: Guitar;
+interface Props extends RouteComponentProps, WithStyles < typeof styles > {
+  guitar?: Guitar;
 }
 interface State {
   percentage: number;
@@ -33,6 +36,10 @@ class Program extends React.Component<Props, State> {
     this.setState({percentage: 0});
   }
   componentDidMount() {
+    if (!this.props.guitar) {
+      this.props.history.push("/");
+      return;
+    }
     ipcRenderer.on("program", (event : Event, state : State) => {
       this.setState(state);
     });
@@ -52,4 +59,10 @@ class Program extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Program);
+const mapStateToProps = (state: MainState) => {
+  return {
+    guitar: state.guitar
+  }
+}
+export default connect(mapStateToProps)(withStyles(styles)(Program));
+

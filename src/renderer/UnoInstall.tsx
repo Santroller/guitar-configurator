@@ -1,10 +1,13 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import {withStyles, createStyles, Theme, WithStyles} from "@material-ui/core/styles";
 import "./App.css";
 import {Typography, Link, CircularProgress} from "@material-ui/core";
-import {blueGrey} from "@material-ui/core/colors";
 import {ipcRenderer} from "electron";
 import {Guitar} from "../common/avr-types";
+import { RouteComponentProps } from "react-router-dom";
+import { MainState } from "./types";
+import { ActionTypes, loadGuitar } from "./actions";
+import { connect } from "react-redux";
 const styles = ({palette, spacing} : Theme) => createStyles({
   root: {
     display: "flex",
@@ -14,27 +17,20 @@ const styles = ({palette, spacing} : Theme) => createStyles({
     margin: spacing.unit,
     position: "relative"
   },
-  progress: {
-    color: blueGrey[500],
-    position: "absolute",
-    top: -6,
-    left: -6,
-    zIndex: 1
-  },
   text: {
     width: "80%"
   }
 });
-interface Props extends WithStyles < typeof styles > {}
+interface Props extends RouteComponentProps, WithStyles < typeof styles > {
+  guitar?: Guitar;
+  loadGuitar: (guitar: Guitar) => void;
+}
 
 class UnoInstall extends React.Component < Props, {} > {
-  componentWillMount() {
-    this.setState({});
-  }
   componentDidMount() {
     ipcRenderer.on("guitar", (event : Event, guitar : Guitar) => {
       if (guitar.board.manufacturer == "NicoHood") {
-        //Route to the programmer.
+        this.props.loadGuitar(guitar);
       } else {
         ipcRenderer.send("search");
       }
@@ -42,12 +38,15 @@ class UnoInstall extends React.Component < Props, {} > {
   }
   render() {
     const {classes} = this.props;
+    if (this.props.guitar && this.props.guitar.board.manufacturer == "NicoHood") {
+      this.props.history.push("/config");
+    }
     return (<div className="App">
       <header className="App-header">
-        <div className={classes.wrapper}>
-          <img src={require("./images/icon.png")} className="App-logo" alt="logo"/>
-          <CircularProgress className={classes.progress} size="100%"/>
-        </div>
+      <div className={classes.wrapper}>
+        <img src={require("./images/controller.png")} className="App-logo" alt="logo"/>
+        <CircularProgress size="40vmin"/>
+      </div>
         <p className={classes.text}>
           <Typography variant="h5">
             Your Arduino Uno requires a custom bootloader in order to be detected as a controller. Please follow this&nbsp;
@@ -61,4 +60,14 @@ class UnoInstall extends React.Component < Props, {} > {
   }
 }
 
-export default withStyles(styles)(UnoInstall);
+const mapStateToProps = (state: MainState) => {
+  return {
+    guitar: state.guitar
+  }
+}
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
+  return {
+    loadGuitar: (guitar: Guitar)=>dispatch(loadGuitar(guitar))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UnoInstall));

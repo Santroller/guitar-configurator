@@ -18,8 +18,8 @@ async function generateConfigTree() {
       reading = true;
     }
     if (reading && token.lexeme == "ATTR_PACKED") {
-      const typeName = eeprom_h[++i].lexeme;
       reading = false;
+      const typeName = eeprom_h[++i].lexeme;
       types[typeName] = currentDefinitions;
       currentDefinitions = [];
     }
@@ -54,7 +54,10 @@ function generatePart(indent, root, partFunction, extra) {
 
 //Pass this into generatePart to generate a schema
 function generateSchema(root) {
-  return `_.type.${root.type}`;
+  if (root.type == "bool") {
+    return '_.type.uint8';
+  }
+  return `_.type.${root.type.replace("_t","")}`;
 }
 
 //Pass this into generatePart to generate a typescript definition

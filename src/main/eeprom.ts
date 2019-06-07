@@ -7,9 +7,7 @@ import {EepromSchema, defaultConfig} from "./generated";
 export {
   defaultConfig
 };
-const eepromSchema = new _.Schema(EepromSchema);
-_.register("EepromConfig", eepromSchema);
-
+_.register("EepromConfig", new _.Schema(EepromSchema));
 export function readData(data : Buffer): EepromConfig {
   return _.unpackSync("EepromConfig", data);
 }

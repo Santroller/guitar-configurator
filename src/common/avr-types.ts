@@ -19,14 +19,13 @@ export enum Subtype {
   Gamepad = 1,
   Wheel,
   ArcadeStick,
-  ArcadePad,
   FlightStick,
   DancePad,
   Guitar,
   GuitarAlternate,
   Drum,
   GuitarBass = 11,
-  ArdcadePad = 10
+  ArdcadePad = 19
 }
 export enum TiltSensor {
   None,
