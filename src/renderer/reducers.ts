@@ -7,7 +7,7 @@ export function mainReducer(state = initialState,action: ActionTypes): MainState
     switch(action.type) {
         case LOAD_GUITAR:
         return {
-            guitar: action.payload
+            guitar: {...action.payload}
         }
         default: return state
     }

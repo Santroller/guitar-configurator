@@ -29,7 +29,7 @@ interface Props extends RouteComponentProps, WithStyles < typeof styles > {
 }
 function setFreq(freq: number, props: Props) {
   props.guitar!.config.cpu_freq = freq;
-  loadGuitar(props.guitar!);
+  props.loadGuitar(props.guitar!);
 }
 const MicroInstall: React.FunctionComponent<Props> = props => {
   const {classes} = props;

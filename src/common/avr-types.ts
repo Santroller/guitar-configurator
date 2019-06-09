@@ -38,8 +38,7 @@ export enum InputType {
   Direct = 2
 }
 export enum OutputType {
-  Serial,
-  XInput,
+  XInput = 1,
   Keyboard,
   Gamepad
 }
@@ -68,4 +67,5 @@ export type EepromConfig = config_t & {
   tilt_type: TiltSensor;
   subtype: Subtype;
   mpu_6050_orientation: GyroOrientation;
+  [key: string]: any;
 };
