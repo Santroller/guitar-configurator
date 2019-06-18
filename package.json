@@ -1,6 +1,6 @@
 {
   "name": "ardwiino",
-  "version": "0.1.0-6",
+  "version": "0.1.0-7",
   "license": "MIT",
   "description": "An application for configuring custom guitar hero guitars",
   "scripts": {
