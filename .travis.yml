@@ -8,7 +8,7 @@ matrix:
     - os: osx
     - os: windows
       filter_secrets: false
-      before_install: >
+      before_install: |
         export NODEPATH=$(where.exe node.exe)
         export PROJECTDIR=$(pwd)
         export YARNCACHE=$(yarn cache dir)

@@ -6,10 +6,10 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { MainState } from "./types";
 import { loadGuitar, ActionTypes } from "./actions";
-import { List, ListItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Button } from "@material-ui/core";
 import { VideogameAsset, SettingsInputComponent, Games, Settings, Keyboard, RotateRight, GetApp } from "@material-ui/icons";
 import { generateSelect } from "./utils";
-const styles = ({ palette, spacing }: Theme) => createStyles({
+const styles = ({ spacing }: Theme) => createStyles({
   root: {
     display: "flex",
     alignItems: "center"
