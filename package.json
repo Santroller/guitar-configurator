@@ -60,9 +60,6 @@
     "webpack": "4.28.4"
   },
   "electronWebpack": {
-    "renderer": {
-      "webpackConfig": "webpack.server.js"
-    },
     "whiteListedModules": [
       "react-redux"
     ]
@@ -96,9 +93,6 @@
         "portable"
       ]
     },
-    "files": [
-      "dist"
-    ],
     "linux": {
       "target": [
         "AppImage",
@@ -108,9 +102,6 @@
       "synopsis": "An application for configuring custom guitar hero guitars",
       "category": "Settings",
       "maintainer": "sanjay900 <sanjay.govind9@gmail.com>"
-    },
-    "directories": {
-      "output": "release"
     }
   }
 }
