@@ -14,7 +14,6 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
-    "@types/pty.js": "^0.2.35",
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.8.4",
     "@types/react-redux": "^7.0.9",
@@ -28,7 +27,7 @@
     "delay": "^4.2.0",
     "electron-util": "^0.11.0",
     "node-intelhex": "^2.0.4",
-    "pty.js": "https://github.com/risacher/pty.js",
+    "node-pty": "^0.8.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-markdown": "^4.0.8",

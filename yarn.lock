@@ -819,12 +819,6 @@
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
 
-"@types/pty.js@^0.2.35":
-  version "0.2.35"
-  resolved "https://registry.yarnpkg.com/@types/pty.js/-/pty.js-0.2.35.tgz#07022b0fd3fa4d2b649d01cafbd5479726a4bd00"
-  dependencies:
-    "@types/node" "*"
-
 "@types/react-dom@^16.8.4":
   version "16.8.4"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.4.tgz#7fb7ba368857c7aa0f4e4511c4710ca2c5a12a88"
@@ -3118,10 +3112,6 @@ extend@^3.0.0, extend@~3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
 
-extend@~1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/extend/-/extend-1.2.1.tgz#a0f5fd6cfc83a5fe49ef698d60ec8a624dd4576c"
-
 extglob@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/extglob/-/extglob-2.0.4.tgz#ad00fe4dc612a9232e8718711dc5cb5ab0285543"
@@ -4869,7 +4859,11 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-nan@>=2.12.1, nan@^2.12.1, nan@^2.13.2, nan@^2.8.0:
+nan@2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.12.1.tgz#7b1aa193e9aa86057e3c7bbd0ac448e770925552"
+
+nan@^2.12.1, nan@^2.13.2, nan@^2.8.0:
   version "2.13.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.2.tgz#f51dc7ae66ba7d5d55e1e6d4d8092e802c9aefe7"
 
@@ -5052,6 +5046,12 @@ node-pre-gyp@^0.12.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+node-pty@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-0.8.1.tgz#94b457bec013e7a09b8d9141f63b0787fa25c23f"
+  dependencies:
+    nan "2.12.1"
 
 node-releases@^1.1.3:
   version "1.1.3"
@@ -5901,13 +5901,6 @@ pseudomap@^1.0.2:
 psl@^1.1.24, psl@^1.1.28:
   version "1.1.31"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.1.31.tgz#e9aa86d0101b5b105cbe93ac6b784cd547276184"
-
-"pty.js@https://github.com/risacher/pty.js":
-  version "0.3.1"
-  resolved "https://github.com/risacher/pty.js#9301b803f322f30938d02f26729c6f3a9c3f7124"
-  dependencies:
-    extend "~1.2.1"
-    nan ">=2.12.1"
 
 public-encrypt@^4.0.0:
   version "4.0.3"

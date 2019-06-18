@@ -1,8 +1,8 @@
 import * as axios from 'axios';
 import * as delay from 'delay';
 import * as fs from 'fs';
+import {spawn} from 'node-pty';
 import * as path from 'path';
-import {spawn} from 'pty.js';
 import * as rp from 'request-promise-native';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
@@ -38,7 +38,7 @@ export function spawnAvrDude(
         findBinary('avrdude', process.platform + '-' + process.arch, 'avrdude');
     let proc = spawn(
         avrdudePath,
-        ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args]);
+        ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args], {});
     proc.on('exit', function(exitCode: number) {
       if (exitCode == 0) {
         resolve();
@@ -48,7 +48,7 @@ export function spawnAvrDude(
     });
 
     let loc = 0;
-    proc.stdout.on('data', function(chunk: string) {
+    proc.on('data', function(chunk: string) {
       if (chunk.indexOf('writing') != -1 && loc != 0) {
         loc += 100 / args.length;
       }
@@ -95,8 +95,7 @@ async function retrieveHex(file: string, progress: ProgressCallback) {
 }
 // If we pass in a frequency of zero, we are ignoring the freq parameter.
 export async function program(
-    device: string, guitar: Guitar,
-    progress: ProgressCallback) {
+    device: string, guitar: Guitar, progress: ProgressCallback) {
   let args: string[] = [];
   if (guitar.updating) {
     let freq = device == 'micro' ? -guitar.config.cpu_freq : '';
@@ -169,8 +168,8 @@ export async function searchForGuitar(): Promise<Guitar> {
     if (updating) {
       config = defaultConfig;
     }
-    //The uno is always 16000000
-    if (board.name.indexOf("uno") != -1 && updating) {
+    // The uno is always 16000000
+    if (board.name.indexOf('uno') != -1 && updating) {
       config.cpu_freq = 16000000;
     }
     return {type, config: updating ? defaultConfig : config, board, updating};
