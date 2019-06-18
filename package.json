@@ -1,6 +1,6 @@
 {
   "name": "ardwiino",
-  "version": "0.1.0-4",
+  "version": "0.1.0-5",
   "license": "MIT",
   "description": "An application for configuring custom guitar hero guitars",
   "scripts": {
@@ -71,17 +71,8 @@
   },
   "repository": "https://github.com/sanjay900/guitar-configurator",
   "build": {
-    "extraResources": [
-      {
-        "from": "./binaries",
-        "to": "binaries",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
     "asarUnpack": [
-      "binaries/avrdude/**"
+      "src/main/binaries/**"
     ],
     "appId": "com.tangentmc.guitar-configurator",
     "mac": {
