@@ -1,5 +1,4 @@
-'use strict';
-
+require("hazardous");
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {ipcMain} from 'electron';

@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as rp from 'request-promise-native';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
+declare const __static: string;
 
 import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback} from '../common/avr-types';
 
@@ -22,12 +23,7 @@ export enum MemoryAction {
 }
 
 function findBinary(...args: string[]) {
-  // When running from an asar, the files get extracted to one place, otherwise,
-  // they are run directly
-  if (process.mainModule!.filename.indexOf('app.asar') === -1) {
-    return path.join(__dirname, '..', '..', 'binaries', ...args);
-  }
-  return path.join(__dirname, '..', 'binaries', ...args);
+  return path.join(__static, 'binaries', ...args);
 }
 export function spawnAvrDude(
     args: string[], board: Board, progress: ProgressCallback): Promise<void> {

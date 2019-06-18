@@ -1706,6 +1706,10 @@ callbackify@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/callbackify/-/callbackify-1.1.0.tgz#d2a36986d28aa69714526c111209beeb9979d31e"
 
+callsite@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/callsite/-/callsite-1.0.0.tgz#280398e5d664bd74038b6f0905153e6e8af1bc20"
+
 camel-case@3.0.x:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camel-case/-/camel-case-3.0.0.tgz#ca3c3688a4e9cf3a4cda777dc4dcbc713249cf73"
@@ -3613,6 +3617,12 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
+
+hazardous@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/hazardous/-/hazardous-0.3.0.tgz#f72212ef349039de7f5b7a86589de7662a870222"
+  dependencies:
+    callsite "^1.0.0"
 
 he@1.2.x:
   version "1.2.0"

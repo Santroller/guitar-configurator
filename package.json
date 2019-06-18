@@ -26,6 +26,7 @@
     "c-struct": "^0.0.5",
     "delay": "^4.2.0",
     "electron-util": "^0.11.0",
+    "hazardous": "^0.3.0",
     "node-intelhex": "^2.0.4",
     "node-pty": "^0.8.1",
     "react": "^16.8.6",
@@ -72,7 +73,7 @@
   "repository": "https://github.com/sanjay900/guitar-configurator",
   "build": {
     "asarUnpack": [
-      "src/main/binaries/**"
+      "**/app/static/binaries/*"
     ],
     "appId": "com.tangentmc.guitar-configurator",
     "mac": {
