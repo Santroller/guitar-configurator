@@ -25,7 +25,6 @@ interface Props extends WithStyles<typeof styles> {
 }
 class Welcome extends React.Component<Props> {
   componentDidMount() {
-    ipcRenderer.on("test", console.log);
     ipcRenderer.on("guitar", (event: Event, guitar: Guitar) => {
       this.props.loadGuitar(guitar);
     });

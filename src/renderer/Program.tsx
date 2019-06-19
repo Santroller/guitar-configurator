@@ -54,6 +54,7 @@ class Program extends React.Component<Props, State> {
           <LinearProgress className={classes.progress} variant="determinate" value={this.state.percentage} />
           <h3>{this.state.state == "avrdude" ? "Uploading" : "Downloading"}... ({this.state.percentage.toFixed(1)}%)</h3>
           {this.state.percentage >= 100 && <Button variant="contained" component={props => <Link {...props} to={"/config"} />}><GetApp /> Back to configuration</Button>}
+          {this.state.percentage == 0 && process.platform == "win32" &&<p>Please press start and select on your controller</p>}
         </div>
       </header>
     </div>);

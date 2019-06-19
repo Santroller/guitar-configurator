@@ -5,7 +5,6 @@ import {ipcMain} from 'electron';
 import {format as formatUrl} from 'url';
 import {searchForGuitar, program} from './programmer';
 import {Guitar} from '../common/avr-types';
-import { findConnectedDevice } from './boards';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // global reference to mainWindow (necessary to prevent window from being
@@ -64,7 +63,6 @@ app.on('ready', () => {
 });
 
 ipcMain.on('search', async () => {
-  mainWindow!.webContents.send('test', await findConnectedDevice());
   mainWindow!.webContents.send('guitar', await searchForGuitar());
 });
 

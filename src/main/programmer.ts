@@ -21,7 +21,12 @@ export enum MemoryAction {
   READ = 'r',
   WRITE = 'w'
 }
-
+function getExtension() {
+  if (process.platform == "win32") {
+    return ".exe";
+  }
+  return "";
+}
 function findBinary(...args: string[]) {
   return path.join(__static, 'binaries', ...args);
 }
@@ -33,7 +38,7 @@ export function spawnAvrDude(
     const avrdudePath =
         findBinary('avrdude', process.platform + '-' + process.arch, 'avrdude');
     let proc = spawn(
-        avrdudePath,
+        avrdudePath+getExtension(),
         ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args], {});
     proc.on('exit', function(exitCode: number) {
       if (exitCode == 0) {
@@ -62,7 +67,7 @@ export function spawnAvrDude(
 }
 function avrdudeMemoryArgs(
     location: MemoryLocation, action: MemoryAction, file: string) {
-  return ['-U', `${location}:${action}:${file}`];
+  return ['-U', `${location}:${action}:${file}:r`];
 }
 export async function readEeprom(
     progress: ProgressCallback, board: Board): Promise<EepromConfig> {
