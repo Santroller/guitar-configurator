@@ -13,6 +13,18 @@ import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback} from '../comm
 import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
 import {defaultConfig, generateEEP, readData} from './eeprom';
 
+export enum AvrFileFormat {
+  IntelHex = 'i',
+  MotorolaSRecord = 's',
+  RawBinary = 'r',
+  Elf = 'e',
+  Immediate = 'm',
+  AutoDetect = 'a',
+  Decimal = 'd',
+  Hex = 'h',
+  Octal = 'o',
+  Binary = 'b'
+}
 export enum MemoryLocation {
   FLASH = 'flash',
   EEPROM = 'eeprom'
@@ -67,7 +79,11 @@ export function spawnAvrDude(
 }
 function avrdudeMemoryArgs(
     location: MemoryLocation, action: MemoryAction, file: string) {
-  return ['-U', `${location}:${action}:${file}:r`];
+      if (action == MemoryAction.READ) {
+        return ['-U', `${location}:${action}:${file}:${AvrFileFormat.RawBinary}`];
+      } else {
+        return ['-U', `${location}:${action}:${file}:${AvrFileFormat.AutoDetect}`];
+      }
 }
 export async function readEeprom(
     progress: ProgressCallback, board: Board): Promise<EepromConfig> {

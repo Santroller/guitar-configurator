@@ -33,6 +33,7 @@ function setFreq(freq: number, props: Props) {
 }
 const MicroInstall: React.FunctionComponent<Props> = props => {
   const {classes} = props;
+  console.log(props);
   if (!props.guitar) props.history.push("/");
   if (props.guitar!.config.cpu_freq != 0) props.history.push("/config");
   return (<div>

@@ -27,6 +27,7 @@ class Welcome extends React.Component<Props> {
   componentDidMount() {
     ipcRenderer.on("guitar", (event: Event, guitar: Guitar) => {
       this.props.loadGuitar(guitar);
+      console.log(guitar);
     });
     ipcRenderer.send("search");
   }

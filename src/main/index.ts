@@ -13,8 +13,8 @@ let mainWindow: BrowserWindow|null;
 
 function createMainWindow() {
   const window = new BrowserWindow();
-  window.webContents.openDevTools();
 
+  window.webContents.openDevTools();
   if (isDevelopment) {
     window.webContents.openDevTools();
   }
