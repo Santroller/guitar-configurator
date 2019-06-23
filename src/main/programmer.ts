@@ -148,7 +148,7 @@ export function detectType(config: EepromConfig): DeviceType {
       return parseInt(signature);
     }
   }
-  return DeviceType.Guitar;
+  return DeviceType.Unprogrammed;
 }
 export async function findAndJumpBootloader(): Promise<Board> {
   await jumpToBootloader();
@@ -163,17 +163,18 @@ export async function searchForGuitar(): Promise<Guitar> {
   await jumpToBootloader();
   let board = await findConnectedDevice();
   if (board) {
-    let config = await readEeprom(() => {}, board);
+    let config = await readEeprom(()=>{}, board);
     let type = detectType(config);
     let updating = type == DeviceType.Unprogrammed;
     if (updating) {
       config = defaultConfig;
+      // The uno is always 16000000
+      if (board.name.indexOf('uno') != -1) {
+        config.cpu_freq = 16000000;
+      }
     }
-    // The uno is always 16000000
-    if (board.name.indexOf('uno') != -1 && updating) {
-      config.cpu_freq = 16000000;
-    }
-    return {type, config: updating ? defaultConfig : config, board, updating};
+    console.log(type, config, board, updating);
+    return {type, config, board, updating};
   }
   await delay(500);
   return searchForGuitar();

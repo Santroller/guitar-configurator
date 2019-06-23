@@ -34,7 +34,7 @@ class Welcome extends React.Component<Props> {
     return "/install/" + (this.props.guitar && this.props.guitar.board.name.split("-")[0]);
   }
   getImage() {
-    if (this.props.guitar && Subtype[this.props.guitar!.config.subtype].indexOf("Guitar") != -1) {
+    if (this.props.guitar && !this.props.guitar!.updating && Subtype[this.props.guitar!.config.subtype].indexOf("Guitar") != -1) {
       return (<img src={require("./images/icon.png")} className="App-logo" alt="logo" />);
     }
     return (<img src={require("./images/controller.png")} className="App-logo" alt="logo" />);

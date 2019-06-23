@@ -7,14 +7,14 @@ export var boards: {[name: string]: Board} = {
   'uno-usb': {
     name: 'uno-usb',
     baud: 57600,
-    productId: ['0043', '7523', '0001', 'ea60'],
+    productId: [],
     protocol: 'avr109',
     processor: 'atmega16u2'
   },
   'uno-main': {
     name: 'uno-main',
     baud: 115200,
-    productId: [],
+    productId: ['0043', '7523', '0001', 'ea60'],
     protocol: 'arduino',
     processor: 'atmega328p'
   },
