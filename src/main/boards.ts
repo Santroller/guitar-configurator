@@ -51,3 +51,7 @@ export async function findConnectedDevice(): Promise<Board|undefined> {
   }
   return undefined;
 }
+
+export function hasMultipleChips(board: Board) {
+  return board.name.indexOf('uno') != -1;
+}

@@ -34,10 +34,10 @@ export enum MemoryAction {
   WRITE = 'w'
 }
 function getExtension() {
-  if (process.platform == "win32") {
-    return ".exe";
+  if (process.platform == 'win32') {
+    return '.exe';
   }
-  return "";
+  return '';
 }
 function findBinary(...args: string[]) {
   return path.join(__static, 'binaries', ...args);
@@ -50,8 +50,9 @@ export function spawnAvrDude(
     const avrdudePath =
         findBinary('avrdude', process.platform + '-' + process.arch, 'avrdude');
     let proc = spawn(
-        avrdudePath+getExtension(),
+        avrdudePath + getExtension(),
         ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args], {});
+        console.log(['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args]);
     proc.on('exit', function(exitCode: number) {
       if (exitCode == 0) {
         resolve();
@@ -138,6 +139,17 @@ export async function program(
   guitar.board.com = (await findAndJumpBootloader()).com;
   await spawnAvrDude(args, boards[device], (p, s) => progress(p / 2 + 50, s));
 }
+export async function programHoodloader(guitar: Guitar, progress: ProgressCallback) {
+  let args: string[] = [];
+  if (guitar.updating) {
+    let file_flash = path.join(
+        __static, 'firmwares', 'hoodloader-' + guitar.board.name + '.hex');
+    args =
+        avrdudeMemoryArgs(MemoryLocation.FLASH, MemoryAction.WRITE, file_flash)
+            .concat(args);
+  }
+  await spawnAvrDude(args, guitar.board, (p, s) => progress(p, s));
+}
 
 export function jumpToBootloader() {
   // win32 doesnt support control transfers.
@@ -179,7 +191,7 @@ export async function searchForGuitar(): Promise<Guitar> {
   await jumpToBootloader();
   let board = await findConnectedDevice();
   if (board) {
-    let config = await readEeprom(()=>{}, board);
+    let config = await readEeprom(() => {}, board);
     let type = detectType(config);
     let updating = type == DeviceType.Unprogrammed;
     if (updating) {
@@ -189,7 +201,6 @@ export async function searchForGuitar(): Promise<Guitar> {
         config.cpu_freq = 16000000;
       }
     }
-    console.log(type, config, board, updating);
     return {type, config, board, updating};
   }
   await delay(500);

@@ -1,10 +1,11 @@
-require("hazardous");
+require('hazardous');
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {ipcMain} from 'electron';
 import {format as formatUrl} from 'url';
-import {searchForGuitar, program} from './programmer';
+import {searchForGuitar, program, programHoodloader} from './programmer';
 import {Guitar} from '../common/avr-types';
+import {hasMultipleChips} from './boards';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // global reference to mainWindow (necessary to prevent window from being
@@ -63,13 +64,20 @@ app.on('ready', () => {
 });
 
 ipcMain.on('search', async () => {
-  mainWindow!.webContents.send('guitar', await searchForGuitar());
+  const guitar = await searchForGuitar();
+  mainWindow!.webContents.send('guitar', guitar);
 });
+
+ipcMain.on('programHoodloader', async (evt: Event, guitar: Guitar) => {
+  await programHoodloader(guitar, (percentage: number, state: string) => {
+    mainWindow!.webContents.send('program', {percentage, state});
+  });
+})
 
 ipcMain.on('program', async (evt: Event, guitar: Guitar) => {
   let boards = [guitar.board.name];
   // There are two boards on the uno, so program both.
-  if (guitar.board.name.indexOf('uno') != -1) {
+  if (hasMultipleChips(guitar.board)) {
     boards = ['uno-main', 'uno-usb'];
   }
   let current = 0;
