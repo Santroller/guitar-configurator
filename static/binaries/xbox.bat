@@ -1,0 +1,1 @@
+devcon\x64\devcon.exe update c:\Windows\INF\xusb22.inf "USB\VID_1209&PID_2882"
