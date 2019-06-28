@@ -25,6 +25,7 @@
     "axios": "^0.18.0",
     "c-struct": "^0.0.5",
     "delay": "^4.2.0",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-util": "^0.11.0",
     "hazardous": "^0.3.0",
     "node-intelhex": "^2.0.4",
@@ -44,6 +45,7 @@
     "tmp": "^0.1.0",
     "typeface-roboto": "^0.0.54",
     "typescript-parser": "^2.6.1",
+    "update-electron-app": "^1.4.2",
     "usb": "^1.5.0"
   },
   "devDependencies": {

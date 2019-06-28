@@ -31,6 +31,11 @@ interface Props extends RouteComponentProps, WithStyles<typeof styles> {
 }
 const Configuration: React.FunctionComponent<Props> = props => {
   if (!props.guitar) props.history.push("/");
+  if (props.guitar!.board.processor == "atmega8u2") {
+    return (
+      <div>You currently have an Arduino Uno connected that is Revision 2 or lower. Currently, this is an unsupported device.</div>
+    )
+  }
   return (<div>
     <List component="nav">
       <ListItem button>

@@ -13,7 +13,7 @@ const App: React.FunctionComponent = () => (
       <header />
       <Route path="/" exact component={Welcome} />
       <Route path="/install/micro" component={MicroInstall} />
-      <Route path="/install/uno" component={HoodloaderProgram} />
+      <Route path="/install/uno" exact component={HoodloaderProgram} />
       <Route path="/install/program" component={Program} />
       <Route path="/config" component={Config} />
     </MemoryRouter>

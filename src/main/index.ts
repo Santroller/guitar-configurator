@@ -1,4 +1,5 @@
 require('hazardous');
+require('update-electron-app')({repo: "sanjay900/guitar-configurator"})
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {ipcMain} from 'electron';
@@ -6,6 +7,7 @@ import {format as formatUrl} from 'url';
 import {searchForGuitar, program, programHoodloader} from './programmer';
 import {Guitar} from '../common/avr-types';
 import {hasMultipleChips} from './boards';
+if(require('electron-squirrel-startup')) app.quit();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // global reference to mainWindow (necessary to prevent window from being
@@ -13,6 +15,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 let mainWindow: BrowserWindow|null;
 
 function createMainWindow() {
+
   const window = new BrowserWindow();
 
   window.webContents.openDevTools();

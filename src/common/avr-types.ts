@@ -7,6 +7,7 @@ export interface Board {
   processor: string;
   com?: string;
   manufacturer?: string;
+  cleanName: string;
 }
 export type ProgressCallback = (percentage : number, state : string) => void;
 export type Guitar = {

@@ -41,9 +41,9 @@ class Welcome extends React.Component<Props> {
     return (<img src={require("./images/controller.png")} className="App-logo" alt="logo" />);
   }
   getStatus() {
-    if (this.props.guitar && !this.props.guitar.updating) {
+    if (this.props.guitar) {
       if (this.props.guitar.updating) {
-        return (<p>Detected Arduino {this.props.guitar.board.name.charAt(0) + this.props.guitar.board.name.split("-")[0].substring(1)}</p>);
+        return (<p>Detected {this.props.guitar.board.cleanName}</p>);
       }
       return (<p>Detected {Subtype[this.props.guitar!.config.subtype]}</p>);
     }
