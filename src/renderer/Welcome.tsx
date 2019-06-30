@@ -47,11 +47,7 @@ class Welcome extends React.Component<Props> {
       }
       return (<p>Detected {Subtype[this.props.guitar!.config.subtype]}</p>);
     }
-    let ret = (<p>Please connect your Ardwiino Controller, or a new Arduino.</p>);
-    if (process.platform == "win32") {
-      return (<div>{ret}<br /><p>If you are configuring an existing controller, please press start and select on your controller</p></div>);
-    }
-    return ret;
+    return (<p>Please connect your Ardwiino Controller, or a new Arduino.</p>);
   }
   render() {
     const { classes } = this.props;
@@ -61,6 +57,7 @@ class Welcome extends React.Component<Props> {
         <CircularProgress size="40vmin" />
       </div>
       <p>Welcome to the Ardwiino Controller configuration tool.</p>
+      <p>Please note that this tool only supports a single controller at a time.</p>
       {this.getStatus()}
       {this.props.guitar && (<Button variant="contained" component={props => <Link {...props} to={this.getTo()} />}>Start configuring</Button>)}
     </div>);

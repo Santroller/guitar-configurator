@@ -5,8 +5,10 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
 declare const __static: string;
+const VID = 0x1209;
+const PID = 0x2882;
 
-import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback} from '../common/avr-types';
+import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback, OutputType} from '../common/avr-types';
 
 import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
 import {defaultConfig, generateEEP, readData} from './eeprom';
@@ -63,12 +65,11 @@ function getProgress(args: string[], progress: ProgressCallback) {
 function spawnAvrDude(
     args: string[], board: Board,
     chunkProcessor: (chunk: string) => void): Promise<void> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve) => {
     const avrdudePath = findBinary('avrdude');
-    console.log(['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args]);
     let proc = spawn(
         avrdudePath + getExtension(),
-        ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args], {});
+        [...getAvrdudeArgs(board), ...args], {});
     let msg = "";
     proc.on('data', (chunk)=>{
       chunkProcessor(chunk);
@@ -127,7 +128,7 @@ export async function program(
       args, boards[device],
       getProgress(args, (p, s) => progress(p / 2 + 50, s)));
       
-  await swapToXInput();
+  await restoreController(guitar);
     
 }
 
@@ -138,6 +139,7 @@ export async function getConnectedBoard(board: Board) {
     if (chunk.includes('probably')) {
       partId = chunk.split('probably ')[1].trim().slice(0, -1);
     }
+    //Also record if we have a uno with the hoodloader bootloader.
     if (chunk.includes('HL2.0.5')) {
       board.hasBootloader = true;
     }
@@ -165,40 +167,60 @@ export async function programHoodloader(
   await spawnAvrDude(
       args, guitar.board, getProgress(args, (p, s) => progress(p, s)));
 }
+
+/**
+ * Change drivers for all connected controllers
+ */
 export function runDevCon(inf: string) {
   if (process.platform != 'win32') return;
-  //We should also swap to a regular hid in cases where we arent using hid
   return new Promise(async (resolve) => {
-    await delay(500);
-    const devConPath = findBinary('devcon.exe');
-    let proc = spawn(devConPath, ['update', inf, 'USB\\VID_1209&PID_2882'], {});
-    proc.on('exit', resolve);
-    proc.on('data', console.log);
+    let cb = function (device: usb.Device) {
+      usb.removeListener('attach', cb);
+      if (device.deviceDescriptor.idVendor == VID && device.deviceDescriptor.idProduct == PID) {
+        const devConPath = findBinary('devcon.exe');
+        let proc = spawn(devConPath, ['update', inf, `USB\\VID_${VID.toString(16)}&PID_${PID.toString(16)}`], {});
+        proc.on('exit', resolve);
+      }
+    }
+    let dev = usb.findByIds(VID, PID);
+    if (dev) {
+      cb(dev);
+    } else {
+      usb.on('attach', cb)
+    }
   });
 }
 export async function swapToWinUSB() {
   if (process.platform != 'win32') return;
+  //Zadic will create a libusb inf file for us, and register certificitates to the local machine
   let inf = path.join(infDir.name, 'usb_driver', 'libusb_device.inf');
+  //Zadic inf is missing, create it
   if (!fs.existsSync(inf)) {
+    //Call zadic
     await new Promise(async (resolve) => {
       const zadicPath = findBinary('zadic.exe');
-      let proc = spawn(zadicPath, ['--vid', '0x1209', '--pid', '0x2882', '--usealldevices', '--noprompt'], {cwd: infDir.name});
+      let proc = spawn(zadicPath, ['--vid', `${VID}`, '--pid', `${PID}`, '--usealldevices', '--noprompt'], {cwd: infDir.name});
       proc.on('exit', resolve);
-      proc.on('data', console.log);
     });
   }
+  //Run devcon so it can change the drivers to the generated one
   await runDevCon(inf);
 }
-export async function swapToXInput() {
+export async function restoreController(guitar: Guitar) {
   if (process.platform != 'win32') return;
-  await runDevCon('c:\\Windows\\INF\\xusb22.inf');
+  if (guitar.config.output_type == OutputType.XInput) {
+    await runDevCon('c:\\Windows\\INF\\xusb22.inf');
+  } else {
+    await runDevCon('c:\\Windows\\INF\\input.inf');
+  }
 }
 export async function jumpToBootloader() {
   await new Promise(async (resolve) => {
     try {
-      let dev = usb.findByIds(0x1209, 0x2882);
+      let dev = usb.findByIds(VID, PID);
       if (!dev) {
         resolve();
+        return;
       }
       dev.open();
       // The ardwiino firmware responds to a control transfer of 0x30 by jumping
