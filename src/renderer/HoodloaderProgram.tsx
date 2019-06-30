@@ -43,7 +43,7 @@ class HoodloaderProgram extends React.Component<Props, State> {
             this.props.history.push("/");
             return;
         }
-        if (this.props.guitar!.board.manufacturer == "NicoHood") {
+        if (this.props.guitar!.board.hasBootloader) {
             this.props.history.push("/config");
             return;
         }
@@ -51,9 +51,8 @@ class HoodloaderProgram extends React.Component<Props, State> {
             this.setState(state);
             if (state.percentage >= 100) {
                 ipcRenderer.on("guitar", (event: Event, guitar: Guitar) => {
-                    if (guitar.board.manufacturer == "NicoHood") {
+                    if (guitar.board.hasBootloader) {
                         this.props.loadGuitar(guitar);
-
                     } else {
                         ipcRenderer.send("search");
                     }
@@ -80,7 +79,7 @@ class HoodloaderProgram extends React.Component<Props, State> {
         </div>)
     }
     render() {
-        if (this.props.guitar!.board.manufacturer == "NicoHood") {
+        if (this.props.guitar!.board.hasBootloader) {
             this.props.history.push("/config");
         }
         const { classes } = this.props;

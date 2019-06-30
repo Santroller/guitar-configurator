@@ -1,7 +1,8 @@
 
 import * as SerialPort from 'serialport';
-import {jumpToBootloader, getConnectedPart} from './programmer';
+import {jumpToBootloader} from './programmer';
 import { Board } from '../common/avr-types';
+
 //A list of board definitions. note that we don't actually ever want to autodetect the usb uno processor, so it has no ids.
 export var boards: {[name: string]: Board} = {
   'uno-usb': {
@@ -10,7 +11,8 @@ export var boards: {[name: string]: Board} = {
     productId: [],
     protocol: 'avr109',
     processor: 'atmega16u2',
-    cleanName: 'Arduino Uno'
+    cleanName: 'Arduino Uno',
+    hasBootloader: false
   },
   'uno-main': {
     name: 'uno-main',
@@ -18,7 +20,8 @@ export var boards: {[name: string]: Board} = {
     productId: ['0043', '7523', '0001', 'ea60'],
     protocol: 'arduino',
     processor: 'atmega328p',
-    cleanName: 'Arduino Uno'
+    cleanName: 'Arduino Uno',
+    hasBootloader: false
   },
   'micro': {
     name: 'micro',
@@ -28,13 +31,14 @@ export var boards: {[name: string]: Board} = {
     ],
     protocol: 'avr109',
     processor: 'atmega32u4',
-    cleanName: 'Arduino Micro'
+    cleanName: 'Arduino Micro',
+    hasBootloader: true
   }
 };
 
 export function getAvrdudeArgs(board: Board): string[] {
   return [
-    `-p${board.processor}`, '-P', 'usb', `-c${board.protocol}`,
+    `-p${board.processor}`, `-c${board.protocol}`,
     `-b${board.baud}`, `-P${board.com}`
   ];
 }
@@ -47,9 +51,8 @@ export async function findConnectedDevice(): Promise<Board|undefined> {
     for (let board of Object.values(boards)) {
       if (board.productId.indexOf(port.productId!) != -1) {
         board.com = port.comName;
-        board.manufacturer = port.manufacturer;
-        //The uno has multiple processors. Ask avrdude which processor we have.
-        board.processor = await getConnectedPart(board) || board.processor;
+        //At this point in time, we do not know if the bootloader is valid on boards with multiple processors.
+        board.hasBootloader = !board.name.includes("-");
         return board;
       }
     }

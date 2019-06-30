@@ -6,8 +6,8 @@ export interface Board {
   protocol: string;
   processor: string;
   com?: string;
-  manufacturer?: string;
   cleanName: string;
+  hasBootloader: boolean;
 }
 export type ProgressCallback = (percentage : number, state : string) => void;
 export type Guitar = {

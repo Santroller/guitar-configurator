@@ -11,6 +11,8 @@ import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback} from '../comm
 import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
 import {defaultConfig, generateEEP, readData} from './eeprom';
 
+
+let infDir = tmp.dirSync();
 export enum AvrFileFormat {
   IntelHex = 'i',
   MotorolaSRecord = 's',
@@ -63,25 +65,27 @@ function spawnAvrDude(
     chunkProcessor: (chunk: string) => void): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const avrdudePath = findBinary('avrdude');
+    console.log(['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args]);
     let proc = spawn(
         avrdudePath + getExtension(),
         ['-C', `${avrdudePath}.conf`, ...getAvrdudeArgs(board), ...args], {});
+    let msg = "";
+    proc.on('data', (chunk)=>{
+      chunkProcessor(chunk);
+      msg += chunk + "\n";
+    });  
     proc.on('exit', function(exitCode: number) {
-      if (exitCode == 0) {
-        resolve();
-      } else {
-        reject(`non-zero exit code: ${exitCode}`);
+      if (exitCode != 0) {
+        console.log(`Avrdude exited with ${exitCode}, output: ${msg}`);
       }
+      resolve();
     });
-    proc.on('data', chunkProcessor);
   });
 }
 function avrdudeMemoryArgs(
     location: MemoryLocation, action: MemoryAction, file: string) {
   if (action == MemoryAction.READ) {
-    return [
-      '-F', '-U', `${location}:${action}:${file}:${AvrFileFormat.RawBinary}`
-    ];
+    return ['-U', `${location}:${action}:${file}:${AvrFileFormat.RawBinary}`];
   } else {
     return ['-U', `${location}:${action}:${file}:${AvrFileFormat.AutoDetect}`];
   }
@@ -122,14 +126,20 @@ export async function program(
   await spawnAvrDude(
       args, boards[device],
       getProgress(args, (p, s) => progress(p / 2 + 50, s)));
+      
+  await swapToXInput();
+    
 }
 
-export async function getConnectedPart(board: Board) {
+export async function getConnectedBoard(board: Board) {
   let partId;
   // Avrdude will take a guess at which part is connected. Record that guess
   await spawnAvrDude([], board, chunk => {
-    if (chunk.indexOf('probably') != -1) {
+    if (chunk.includes('probably')) {
       partId = chunk.split('probably ')[1].trim().slice(0, -1);
+    }
+    if (chunk.includes('HL2.0.5')) {
+      board.hasBootloader = true;
     }
   });
   // The guess however is only a part id, so we need to resolve it back to the
@@ -137,7 +147,11 @@ export async function getConnectedPart(board: Board) {
   let avrConfig = fs.readFileSync(findBinary('avrdude.conf'), 'utf8');
   let part =
       new RegExp(partId + '";[\\s\\S]\\s+desc\\s+= "([^"]+)').exec(avrConfig);
-  return part && part[1].toLowerCase();
+  if (!part) {
+    return board;
+  }
+  board.processor = part && part[1].toLowerCase();
+  return board;
 }
 
 export async function programHoodloader(
@@ -151,13 +165,41 @@ export async function programHoodloader(
   await spawnAvrDude(
       args, guitar.board, getProgress(args, (p, s) => progress(p, s)));
 }
-
-export function jumpToBootloader() {
-  // win32 doesnt support control transfers.
-  if (process.platform === 'win32') return;
-  return new Promise((resolve, reject) => {
+export function runDevCon(inf: string) {
+  if (process.platform != 'win32') return;
+  //We should also swap to a regular hid in cases where we arent using hid
+  return new Promise(async (resolve) => {
+    await delay(500);
+    const devConPath = findBinary('devcon.exe');
+    let proc = spawn(devConPath, ['update', inf, 'USB\\VID_1209&PID_2882'], {});
+    proc.on('exit', resolve);
+    proc.on('data', console.log);
+  });
+}
+export async function swapToWinUSB() {
+  if (process.platform != 'win32') return;
+  let inf = path.join(infDir.name, 'usb_driver', 'libusb_device.inf');
+  if (!fs.existsSync(inf)) {
+    await new Promise(async (resolve) => {
+      const zadicPath = findBinary('zadic.exe');
+      let proc = spawn(zadicPath, ['--vid', '0x1209', '--pid', '0x2882', '--usealldevices', '--noprompt'], {cwd: infDir.name});
+      proc.on('exit', resolve);
+      proc.on('data', console.log);
+    });
+  }
+  await runDevCon(inf);
+}
+export async function swapToXInput() {
+  if (process.platform != 'win32') return;
+  await runDevCon('c:\\Windows\\INF\\xusb22.inf');
+}
+export async function jumpToBootloader() {
+  await new Promise(async (resolve) => {
     try {
       let dev = usb.findByIds(0x1209, 0x2882);
+      if (!dev) {
+        resolve();
+      }
       dev.open();
       // The ardwiino firmware responds to a control transfer of 0x30 by jumping
       // to the bootloader.
@@ -166,6 +208,10 @@ export function jumpToBootloader() {
         setTimeout(resolve, 500);
       });
     } catch (ex) {
+      //On windows, we need to install libusb drivers, so if it fails to open, try installing the libusb drivers
+      if (process.platform === 'win32') {
+        await swapToWinUSB(); 
+      }
       resolve();
     }
   });
@@ -192,23 +238,28 @@ export async function searchForGuitar(): Promise<Guitar> {
   await jumpToBootloader();
   let board = await findConnectedDevice();
   if (board) {
-    let config;
+    let config = defaultConfig;
     // For the uno (and anything else with two processors) the config is always
     // stored on the usb portion
-    if (board.name.endsWith('-main') && board.manufacturer == 'NicoHood') {
+    if (board.name.endsWith('-main')) {
       let board2 = boards[board.name.split('-')[0] + '-usb'];
       board2.com = board.com;
-      config = await readEeprom(() => {}, board2);
-    } else {
-      config = await readEeprom(() => {}, board);
+      //Get avrdude to fill in information we can't easily guess
+      board = await getConnectedBoard(board2);
+      await findAndJumpBootloader();
     }
-    let type = detectType(config);
-    let updating = type == DeviceType.Unprogrammed;
-    if (updating) {
-      config = defaultConfig;
-      // The uno is always 16000000
-      if (board.name.indexOf('uno') != -1) {
-        config.cpu_freq = 16000000;
+    let updating = false;
+    let type = DeviceType.Unprogrammed;
+    if (board.hasBootloader) {
+      config = await readEeprom(() => {}, board);
+      type = detectType(config);
+      updating = type == DeviceType.Unprogrammed;
+      if (updating) {
+        config = defaultConfig;
+        // The uno is always 16000000
+        if (board.name.indexOf('uno') != -1) {
+          config.cpu_freq = 16000000;
+        }
       }
     }
     return {type, config, board, updating};
