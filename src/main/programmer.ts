@@ -1,20 +1,20 @@
 import * as delay from 'delay';
 import * as fs from 'fs';
-import {spawn} from 'node-pty';
+import { spawn } from 'node-pty';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import * as usb from 'usb';
 declare const __static: string;
-const VID = 0x1209;
-const PID = 0x2882;
+export const VID = 0x1209;
+export const PID = 0x2882;
 
-import {Board, DeviceType, EepromConfig, Guitar, ProgressCallback, OutputType} from '../common/avr-types';
+import { Board, DeviceType, EepromConfig, Guitar, ProgressCallback } from '../common/avr-types';
 
-import {boards, findConnectedDevice, getAvrdudeArgs} from './boards';
-import {defaultConfig, generateEEP, readData} from './eeprom';
+import { boards, findConnectedDevice, getAvrdudeArgs } from './boards';
+import { defaultConfig, generateEEP, readData } from './eeprom';
+import { restoreController, swapToWinUSB } from './programmerWindows';
 
-
-let infDir = tmp.dirSync();
+export type BinaryExecution = Promise<{ code: number, msg: string }>;
 export enum AvrFileFormat {
   IntelHex = 'i',
   MotorolaSRecord = 's',
@@ -43,48 +43,44 @@ function getExtension() {
 }
 function findBinary(...args: string[]) {
   return path.join(
-      __static, 'binaries', process.platform + '-' + process.arch, ...args);
+    __static, 'binaries', process.platform + '-' + process.arch, ...args);
 }
-function getProgress(args: string[], progress: ProgressCallback) {
+function getProgress(progress: ProgressCallback) {
   let loc = 0;
-  return (chunk: string) => {
+  return (chunk: string, chunkCount: number) => {
+    console.log(chunkCount);
     if (chunk.indexOf('writing') != -1 && loc != 0) {
-      loc += 100 / args.length;
+      loc += 100 / chunkCount;
     }
     if (chunk.indexOf('reading on-chip') != -1) {
-      loc += 100 / args.length;
+      loc += 100 / chunkCount;
     }
     let data = /(Writing|Reading) \| #+\s+\| (\d+)% (\d.\d+s)/g.exec(chunk);
     if (data) {
       let p = parseInt(data[2]);
-      p /= args.length;
+      p /= chunkCount;
       progress(p + loc, 'avrdude');
     }
   }
 }
-function spawnAvrDude(
-    args: string[], board: Board,
-    chunkProcessor: (chunk: string) => void): Promise<void> {
+export function executeBinary(binary: string, args: string[], onData?: (chunk: string) => void, workingDir?: string): BinaryExecution {
   return new Promise(async (resolve) => {
-    const avrdudePath = findBinary('avrdude');
-    let proc = spawn(
-        avrdudePath + getExtension(),
-        [...getAvrdudeArgs(board), ...args], {});
+    let proc = spawn(findBinary(binary) + getExtension(), args, workingDir ? { cwd: workingDir } : {});
     let msg = "";
-    proc.on('data', (chunk)=>{
-      chunkProcessor(chunk);
+    proc.on('data', (chunk) => {
+      onData && onData(chunk);
       msg += chunk + "\n";
-    });  
-    proc.on('exit', function(exitCode: number) {
-      if (exitCode != 0) {
-        console.log(`Avrdude exited with ${exitCode}, output: ${msg}`);
-      }
-      resolve();
+    });
+    proc.on('exit', function (exitCode: number) {
+      resolve({ code: exitCode, msg: `${binary} ${args.join(" ")} exited with ${exitCode}, output: ${msg}` });
     });
   });
 }
+function spawnAvrDude(args: string[], board: Board, onData: (chunk: string, argCount: number) => void) {
+  return executeBinary('avrdude', [...getAvrdudeArgs(board), ...args], data => onData(data, args.length));
+}
 function avrdudeMemoryArgs(
-    location: MemoryLocation, action: MemoryAction, file: string) {
+  location: MemoryLocation, action: MemoryAction, file: string) {
   if (action == MemoryAction.READ) {
     return ['-U', `${location}:${action}:${file}:${AvrFileFormat.RawBinary}`];
   } else {
@@ -92,46 +88,45 @@ function avrdudeMemoryArgs(
   }
 }
 export async function readEeprom(
-    progress: ProgressCallback, board: Board): Promise<EepromConfig> {
+  progress: ProgressCallback, board: Board): Promise<EepromConfig> {
   const file = tmp.fileSync();
-  let args =
-      avrdudeMemoryArgs(MemoryLocation.EEPROM, MemoryAction.READ, file.name);
-  await spawnAvrDude(args, board, getProgress(args, progress));
+  await spawnAvrDude(avrdudeMemoryArgs(MemoryLocation.EEPROM, MemoryAction.READ, file.name), board, getProgress(progress));
   return readData(fs.readFileSync(file.name));
 }
 // If we pass in a frequency of zero, we are ignoring the freq parameter.
 export async function program(
-    device: string, guitar: Guitar, progress: ProgressCallback) {
+  device: string, guitar: Guitar, progress: ProgressCallback) {
   let args: string[] = [];
   if (guitar.updating) {
     let file_flash = path.join(
-        __static, 'firmwares', 'ardwiino',
-        `ardwiino-${guitar.board.name}-${guitar.board.processor}-${
-            guitar.config.cpu_freq}.hex`);
-    args =
-        avrdudeMemoryArgs(MemoryLocation.FLASH, MemoryAction.WRITE, file_flash)
-            .concat(args);
+      __static, 'firmwares', 'ardwiino',
+      `ardwiino-${guitar.board.name}-${guitar.board.processor}-${
+      guitar.config.cpu_freq}.hex`);
+    args = avrdudeMemoryArgs(MemoryLocation.FLASH, MemoryAction.WRITE, file_flash);
   }
   // In dual cpu arduinos, we only need to flash the eeprom of the first chip
   if (!device.endsWith('-main')) {
     const file_eep = tmp.fileSync();
-    const stream_eep = fs.createWriteStream(null!, {fd: file_eep.fd});
+    const stream_eep = fs.createWriteStream(null!, { fd: file_eep.fd });
     stream_eep.write(generateEEP(guitar.config));
     args = avrdudeMemoryArgs(
-               MemoryLocation.EEPROM, MemoryAction.WRITE, file_eep.name)
-               .concat(args);
+      MemoryLocation.EEPROM, MemoryAction.WRITE, file_eep.name)
+      .concat(args);
   }
   if (args.length == 0) return;
   guitar.board = boards[device];
   guitar.board.com = (await findAndJumpBootloader()).com;
   await spawnAvrDude(
-      args, boards[device],
-      getProgress(args, (p, s) => progress(p / 2 + 50, s)));
-      
+    args, boards[device],
+    getProgress((p, s) => progress(p / 2 + 50, s)));
+
   await restoreController(guitar);
-    
+
 }
 
+/**
+ * Work out what kind of board is connected. Handles working out processor types, and if we are using hoodloader.
+ */
 export async function getConnectedBoard(board: Board) {
   let partId;
   // Avrdude will take a guess at which part is connected. Record that guess
@@ -148,7 +143,7 @@ export async function getConnectedBoard(board: Board) {
   // parts real name.
   let avrConfig = fs.readFileSync(findBinary('avrdude.conf'), 'utf8');
   let part =
-      new RegExp(partId + '";[\\s\\S]\\s+desc\\s+= "([^"]+)').exec(avrConfig);
+    new RegExp(partId + '";[\\s\\S]\\s+desc\\s+= "([^"]+)').exec(avrConfig);
   if (!part) {
     return board;
   }
@@ -157,63 +152,23 @@ export async function getConnectedBoard(board: Board) {
 }
 
 export async function programHoodloader(
-    guitar: Guitar, progress: ProgressCallback) {
-  let args: string[] = [];
+  guitar: Guitar, progress: ProgressCallback) {
   let file_flash = path.join(
-      __static, 'firmwares', 'hoodloader',
-      `hoodloader-${guitar.board.name}.hex`);
-  args = avrdudeMemoryArgs(MemoryLocation.FLASH, MemoryAction.WRITE, file_flash)
-             .concat(args);
+    __static, 'firmwares', 'hoodloader',
+    `hoodloader-${guitar.board.name}.hex`);
   await spawnAvrDude(
-      args, guitar.board, getProgress(args, (p, s) => progress(p, s)));
+    avrdudeMemoryArgs(
+      MemoryLocation.FLASH,
+      MemoryAction.WRITE,
+      file_flash
+    ),
+    guitar.board,
+    getProgress(
+      (p, s) => progress(p, s)
+    )
+  );
 }
 
-/**
- * Change drivers for all connected controllers
- */
-export function runDevCon(inf: string) {
-  if (process.platform != 'win32') return;
-  return new Promise(async (resolve) => {
-    let cb = function (device: usb.Device) {
-      usb.removeListener('attach', cb);
-      if (device.deviceDescriptor.idVendor == VID && device.deviceDescriptor.idProduct == PID) {
-        const devConPath = findBinary('devcon.exe');
-        let proc = spawn(devConPath, ['update', inf, `USB\\VID_${VID.toString(16)}&PID_${PID.toString(16)}`], {});
-        proc.on('exit', resolve);
-      }
-    }
-    let dev = usb.findByIds(VID, PID);
-    if (dev) {
-      cb(dev);
-    } else {
-      usb.on('attach', cb)
-    }
-  });
-}
-export async function swapToWinUSB() {
-  if (process.platform != 'win32') return;
-  //Zadic will create a libusb inf file for us, and register certificitates to the local machine
-  let inf = path.join(infDir.name, 'usb_driver', 'libusb_device.inf');
-  //Zadic inf is missing, create it
-  if (!fs.existsSync(inf)) {
-    //Call zadic
-    await new Promise(async (resolve) => {
-      const zadicPath = findBinary('zadic.exe');
-      let proc = spawn(zadicPath, ['--vid', `${VID}`, '--pid', `${PID}`, '--usealldevices', '--noprompt'], {cwd: infDir.name});
-      proc.on('exit', resolve);
-    });
-  }
-  //Run devcon so it can change the drivers to the generated one
-  await runDevCon(inf);
-}
-export async function restoreController(guitar: Guitar) {
-  if (process.platform != 'win32') return;
-  if (guitar.config.output_type == OutputType.XInput) {
-    await runDevCon('c:\\Windows\\INF\\xusb22.inf');
-  } else {
-    await runDevCon('c:\\Windows\\INF\\input.inf');
-  }
-}
 export async function jumpToBootloader() {
   await new Promise(async (resolve) => {
     try {
@@ -232,7 +187,7 @@ export async function jumpToBootloader() {
     } catch (ex) {
       //On windows, we need to install libusb drivers, so if it fails to open, try installing the libusb drivers
       if (process.platform === 'win32') {
-        await swapToWinUSB(); 
+        await swapToWinUSB();
       }
       resolve();
     }
@@ -273,7 +228,7 @@ export async function searchForGuitar(): Promise<Guitar> {
     let updating = false;
     let type = DeviceType.Unprogrammed;
     if (board.hasBootloader) {
-      config = await readEeprom(() => {}, board);
+      config = await readEeprom(() => { }, board);
       type = detectType(config);
       updating = type == DeviceType.Unprogrammed;
       if (updating) {
@@ -284,7 +239,7 @@ export async function searchForGuitar(): Promise<Guitar> {
         }
       }
     }
-    return {type, config, board, updating};
+    return { type, config, board, updating };
   }
   await delay(500);
   return searchForGuitar();
