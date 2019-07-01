@@ -88,7 +88,7 @@ export const defaultConfig: EepromConfig = {
   version: 0,
   output_type: OutputType.XInput,
   input_type: InputType.Direct,
-  tilt_type: TiltSensor.MPU6050,
+  tilt_type: TiltSensor.None,
   subtype: Subtype.Guitar,
   pollrate: 1,
   pins: {
@@ -124,7 +124,7 @@ export const defaultConfig: EepromConfig = {
     rt: false,
     l_x: false,
     l_y: false,
-    r_x: false,
+    r_x: true,
     r_y: false,
   },
   threshold_trigger: 12767,

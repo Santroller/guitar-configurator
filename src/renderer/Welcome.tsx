@@ -27,12 +27,14 @@ class Welcome extends React.Component<Props> {
   componentDidMount() {
     ipcRenderer.on("guitar", (event: Event, guitar: Guitar) => {
       this.props.loadGuitar(guitar);
-      console.log(guitar);
     });
     ipcRenderer.send("search");
   }
   getTo() {
-    return "/install/" + (this.props.guitar && this.props.guitar.board.name.split("-")[0]);
+    if (this.props.guitar!.board) {
+      return "/install/" + (this.props.guitar && this.props.guitar.board.name.split("-")[0]);
+    }
+    return "/config";
   }
   getImage() {
     if (this.props.guitar && !this.props.guitar!.updating && Subtype[this.props.guitar!.config.subtype].indexOf("Guitar") != -1) {
@@ -42,12 +44,20 @@ class Welcome extends React.Component<Props> {
   }
   getStatus() {
     if (this.props.guitar) {
-      if (this.props.guitar.updating) {
-        return (<p>Detected {this.props.guitar.board.cleanName}</p>);
+      if (this.props.guitar.board) {
+        if (this.props.guitar.board.processor == "atmega8u2") {
+          return (
+            <p>You currently have an Arduino Uno connected that is Revision 2 or lower. Currently, this is an unsupported device.</p>
+          )
+        }
+        return (<p>Detected {this.props.guitar.board!.cleanName}</p>);
       }
       return (<p>Detected {Subtype[this.props.guitar!.config.subtype]}</p>);
     }
     return (<p>Please connect your Ardwiino Controller, or a new Arduino.</p>);
+  }
+  supported() {
+    return this.props.guitar && (!this.props.guitar.board || this.props.guitar.board.processor != "atmega8u2");
   }
   render() {
     const { classes } = this.props;
@@ -59,7 +69,7 @@ class Welcome extends React.Component<Props> {
       <p>Welcome to the Ardwiino Controller configuration tool.</p>
       <p>Please note that this tool only supports a single controller at a time.</p>
       {this.getStatus()}
-      {this.props.guitar && (<Button variant="contained" component={props => <Link {...props} to={this.getTo()} />}>Start configuring</Button>)}
+      {this.props.guitar && this.supported() && (<Button variant="contained" component={props => <Link {...props} to={this.getTo()} />}>Start configuring</Button>)}
     </div>);
   }
 }

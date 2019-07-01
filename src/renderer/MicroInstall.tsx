@@ -33,9 +33,8 @@ function setFreq(freq: number, props: Props) {
 }
 const MicroInstall: React.FunctionComponent<Props> = props => {
   const {classes} = props;
-  console.log(props);
   if (!props.guitar) props.history.push("/");
-  if (props.guitar!.config.cpu_freq != 0) props.history.push("/config");
+  if (props.guitar!.config.cpu_freq != 0) props.history.push("/install/program");
   return (<div>
       <div className={classes.wrapper}>
         <img src={require("./images/controller.png")} className="App-logo" alt="logo"/>

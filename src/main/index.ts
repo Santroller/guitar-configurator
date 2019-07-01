@@ -1,13 +1,14 @@
 require('hazardous');
-require('update-electron-app')({repo: "sanjay900/guitar-configurator"})
-import {app, BrowserWindow} from 'electron';
+require('update-electron-app')({repo: 'sanjay900/guitar-configurator'})
+import{app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {ipcMain} from 'electron';
 import {format as formatUrl} from 'url';
-import {searchForGuitar, program, programHoodloader} from './programmer';
+import {searchForGuitar, writeConfig} from './programmer';
 import {Guitar} from '../common/avr-types';
 import {hasMultipleChips} from './boards';
-if(require('electron-squirrel-startup')) app.quit();
+import {programHoodloader, program, findAndJumpBootloader, searchForProgrammer} from './programmerFirmware';
+if (require('electron-squirrel-startup')) app.quit();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // global reference to mainWindow (necessary to prevent window from being
@@ -15,7 +16,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 let mainWindow: BrowserWindow|null;
 
 function createMainWindow() {
-
   const window = new BrowserWindow();
 
   window.webContents.openDevTools();
@@ -67,8 +67,7 @@ app.on('ready', () => {
 });
 
 ipcMain.on('search', async () => {
-  const guitar = await searchForGuitar();
-  mainWindow!.webContents.send('guitar', guitar);
+  searchForGuitar(guitar => mainWindow!.webContents.send('guitar', guitar));
 });
 
 ipcMain.on('programHoodloader', async (evt: Event, guitar: Guitar) => {
@@ -76,12 +75,20 @@ ipcMain.on('programHoodloader', async (evt: Event, guitar: Guitar) => {
     mainWindow!.webContents.send('program', {percentage, state});
   });
 })
-
+ipcMain.on('uploadConfig', (evt: Event, guitar: Guitar) => {
+  return writeConfig(guitar.config);
+})
 ipcMain.on('program', async (evt: Event, guitar: Guitar) => {
+  if (!guitar.board) {
+    await findAndJumpBootloader();
+    let prog = await searchForProgrammer();
+    guitar.board = prog!.board!;
+  }
   let boards = [guitar.board.name];
   // There are two boards on the uno, so program both.
   if (hasMultipleChips(guitar.board)) {
-    boards = ['uno-main', 'uno-usb'];
+    let dev = guitar.board.name.split("-")[0];
+    boards = [dev+'-main', guitar.board.name];
   }
   let current = 0;
   for (let board of boards) {

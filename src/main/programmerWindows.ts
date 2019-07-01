@@ -4,8 +4,9 @@ import * as tmp from 'tmp';
 import * as usb from 'usb';
 import * as fs from 'fs';
 import * as path from 'path';
-import { BinaryExecution, VID, PID, executeBinary } from './programmer';
+import { VID, PID } from './programmer';
 import { Guitar, OutputType } from '../common/avr-types';
+import { BinaryExecution, executeBinary } from './programmerUtils';
 let infDir = tmp.dirSync();
 
 /**

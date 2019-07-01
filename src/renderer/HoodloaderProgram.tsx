@@ -39,22 +39,25 @@ class HoodloaderProgram extends React.Component<Props, State> {
         state: ""
     }
     componentDidMount() {
-        if (!this.props.guitar) {
+        if (!this.props.guitar || !this.props.guitar.board) {
             this.props.history.push("/");
             return;
         }
-        if (this.props.guitar!.board.hasBootloader) {
-            this.props.history.push("/config");
-            return;
+        if (this.props.guitar.board.hasBootloader) {
+            if (this.props.guitar.updating) {
+                this.props.history.push("/install/program");
+                return;
+            } else {
+                this.props.history.push("/config");
+                return;
+            }
         }
         ipcRenderer.on("program", (event: Event, state: State) => {
             this.setState(state);
             if (state.percentage >= 100) {
                 ipcRenderer.on("guitar", (event: Event, guitar: Guitar) => {
-                    if (guitar.board.hasBootloader) {
+                    if (guitar.board && guitar.board.hasBootloader) {
                         this.props.loadGuitar(guitar);
-                    } else {
-                        ipcRenderer.send("search");
                     }
                 });
                 ipcRenderer.send("search");
@@ -79,8 +82,8 @@ class HoodloaderProgram extends React.Component<Props, State> {
         </div>)
     }
     render() {
-        if (this.props.guitar!.board.hasBootloader) {
-            this.props.history.push("/config");
+        if (this.props.guitar!.board && this.props.guitar!.board.hasBootloader) {
+            this.props.history.push("/install/program");
         }
         const { classes } = this.props;
         return (

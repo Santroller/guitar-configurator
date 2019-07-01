@@ -2,19 +2,22 @@ import {config_t} from "./generated";
 export interface Board {
   name: string;
   baud: number;
+  hex: string;
   productId: string[];
   protocol: string;
   processor: string;
+  cpuFrequency?: number;
   com?: string;
   cleanName: string;
   hasBootloader: boolean;
+  signature: number[];
 }
 export type ProgressCallback = (percentage : number, state : string) => void;
 export type Guitar = {
   type: DeviceType;
   config: EepromConfig;
-  board: Board;
   updating: boolean;
+  board?: Board;
 };
 export enum Subtype {
   Gamepad = 1,

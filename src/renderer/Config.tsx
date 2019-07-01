@@ -9,6 +9,7 @@ import { loadGuitar, ActionTypes } from "./actions";
 import { List, ListItem, ListItemIcon, ListItemText, Button } from "@material-ui/core";
 import { VideogameAsset, SettingsInputComponent, Games, Settings, Keyboard, RotateRight, GetApp } from "@material-ui/icons";
 import { generateSelect } from "./utils";
+import { ipcRenderer } from "electron";
 const styles = ({ spacing }: Theme) => createStyles({
   root: {
     display: "flex",
@@ -30,11 +31,9 @@ interface Props extends RouteComponentProps, WithStyles<typeof styles> {
   loadGuitar: (guitar: Guitar) => void;
 }
 const Configuration: React.FunctionComponent<Props> = props => {
-  if (!props.guitar) props.history.push("/");
-  if (props.guitar!.board.processor == "atmega8u2") {
-    return (
-      <div>You currently have an Arduino Uno connected that is Revision 2 or lower. Currently, this is an unsupported device.</div>
-    )
+  if (!props.guitar) {
+    props.history.push("/");
+    return (<div></div>);
   }
   return (<div>
     <List component="nav">
@@ -43,53 +42,47 @@ const Configuration: React.FunctionComponent<Props> = props => {
           <SettingsInputComponent />
         </ListItemIcon>
         <ListItemText primary="Input Type" />
-        {generateSelect("input_type", props.guitar!, props.loadGuitar, InputType)}
+        {generateSelect("input_type", props.guitar, props.loadGuitar, InputType)}
       </ListItem>
       <ListItem button>
         <ListItemIcon>
           <VideogameAsset />
         </ListItemIcon>
         <ListItemText primary="Output Type" />
-        {generateSelect("output_type", props.guitar!, props.loadGuitar, OutputType)}
+        {generateSelect("output_type", props.guitar, props.loadGuitar, OutputType)}
       </ListItem>
       <ListItem button>
         <ListItemIcon>
           <Games />
         </ListItemIcon>
         <ListItemText primary="Controller Type" />
-        {generateSelect("subtype", props.guitar!, props.loadGuitar, Subtype)}
+        {generateSelect("subtype", props.guitar, props.loadGuitar, Subtype)}
       </ListItem>
-      {props.guitar!.config.input_type == InputType.Direct && (<ListItem button>
+      {props.guitar.config.input_type == InputType.Direct && (<ListItem button>
         <ListItemIcon>
           <Settings />
         </ListItemIcon>
         <ListItemText primary="Pin Bindings" />
       </ListItem>)}
 
-      {props.guitar!.config.output_type == OutputType.Keyboard && (<ListItem button>
+      {props.guitar.config.output_type == OutputType.Keyboard && (<ListItem button>
         <ListItemIcon>
           <Keyboard />
         </ListItemIcon>
         <ListItemText primary="Keyboard binding" />
       </ListItem>)}
 
-      {Subtype[props.guitar!.config.subtype].indexOf("Guitar") != -1 && (<ListItem button>
+      {Subtype[props.guitar.config.subtype].indexOf("Guitar") != -1 && (<ListItem button>
         <ListItemIcon>
           <RotateRight />
         </ListItemIcon>
         <ListItemText primary="Tilt configuration" />
-        {generateSelect("tilt_type", props.guitar!, props.loadGuitar, TiltSensor)}
+        {generateSelect("tilt_type", props.guitar, props.loadGuitar, TiltSensor)}
       </ListItem>)}
     </List>
-    <Button variant="contained" component={props => <Link {...props} to={"/install/program"} />}><GetApp /> Program Controller</Button>
+    <Button variant="contained" onClick={() => ipcRenderer.send("uploadConfig", props.guitar)}><GetApp /> Send Configuration To Controller</Button>
+    <Button variant="contained" component={props => <Link {...props} to={"/install/program"} />}><GetApp /> Update Firmware</Button>
   </div>);
-  // Note: We should detect flamewake guitars and hide irrelevant settings from users.
-  // Do we want guis to be dialogs, or seperate screens?
-  // Controller Binding GUI (With axis inversion support, and face button backlighting) (Hide unless DIRECT)
-  // Pin Config GUI (Also, pick here whether using dpad or joystick) (Hide unless DIRECT)
-  // Keyboard Config GUI (Hide unless keyboard)
-  // Tilt Support including configuration of MPU orientation, Also support MPU or gravity (Hide unless GUITAR)
-  // Tilt support also should support adjusting tilt activation, and maybe even an auto activation level if we figure out how to do that
 };
 
 const mapStateToProps = (state: MainState) => {

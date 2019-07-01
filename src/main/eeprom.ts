@@ -8,6 +8,7 @@ export {
   defaultConfig
 };
 _.register("EepromConfig", new _.Schema(EepromSchema));
+export const EepromConfigLength = generateEEP(defaultConfig).length;
 export function readData(data: Buffer): EepromConfig {
   return _.unpackSync("EepromConfig", data);
 }
