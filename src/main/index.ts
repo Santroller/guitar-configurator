@@ -8,6 +8,7 @@ import {searchForGuitar, writeConfig} from './programmer';
 import {Guitar} from '../common/avr-types';
 import {hasMultipleChips} from './boards';
 import {programHoodloader, program, findAndJumpBootloader, searchForProgrammer} from './programmerFirmware';
+import { restoreController } from './programmerWindows';
 if (require('electron-squirrel-startup')) app.quit();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -77,6 +78,10 @@ ipcMain.on('programHoodloader', async (evt: Event, guitar: Guitar) => {
 })
 ipcMain.on('uploadConfig', (evt: Event, guitar: Guitar) => {
   return writeConfig(guitar.config);
+})
+ipcMain.on('revertController', async (evt: Event, guitar: Guitar) => {
+  await restoreController(guitar);
+  process.exit(0);
 })
 ipcMain.on('program', async (evt: Event, guitar: Guitar) => {
   if (!guitar.board) {

@@ -31,6 +31,9 @@ interface Props extends RouteComponentProps, WithStyles<typeof styles> {
   loadGuitar: (guitar: Guitar) => void;
 }
 const Configuration: React.FunctionComponent<Props> = props => {
+  function finish() {
+    ipcRenderer.send("revertController", props.guitar);
+  }
   if (!props.guitar) {
     props.history.push("/");
     return (<div></div>);
@@ -82,6 +85,7 @@ const Configuration: React.FunctionComponent<Props> = props => {
     </List>
     <Button variant="contained" onClick={() => ipcRenderer.send("uploadConfig", props.guitar)}><GetApp /> Send Configuration To Controller</Button>
     <Button variant="contained" component={props => <Link {...props} to={"/install/program"} />}><GetApp /> Update Firmware</Button>
+    <Button variant="contained" component={props => <Link {...props} to={"/"} />}><GetApp />  Finish Configuring</Button>
   </div>);
 };
 

@@ -1,11 +1,11 @@
-import {spawn, IPty} from 'node-pty';
+import { spawn, IPty } from 'node-pty';
 import * as path from 'path';
 import * as usb from 'usb';
 
-import {PID, VID} from './programmer';
-import {swapToWinUSB} from './programmerWindows';
+import { PID, VID } from './programmer';
+import { swapToWinUSB } from './programmerWindows';
 
-export type BinaryExecution = Promise<{code: number, msg: string}>;
+export type BinaryExecution = Promise<{ code: number, msg: string }>;
 declare const __static: string;
 
 /**
@@ -27,25 +27,25 @@ export function findBinary(...args: string[]) {
  *     terminated.
  */
 export function executeBinary(
-    binary: string, args: string[], onData?: (chunk: string, proc: IPty) => void,
-    workingDir?: string): BinaryExecution {
+  binary: string, args: string[], onData?: (chunk: string, proc: IPty) => void,
+  workingDir?: string): BinaryExecution {
   return new Promise(async (resolve) => {
     const extension = process.platform == 'win32' ? '.exe' : '';
-    let cwd = workingDir && {cwd: workingDir} || {};
+    let cwd = workingDir && { cwd: workingDir } || {};
     let proc = spawn(findBinary(binary) + extension, args, cwd);
     let msg = '';
     proc.on('data', (chunk) => {
       onData && onData(chunk, proc);
       msg += chunk + '\n';
     });
-    proc.on('exit', exitCode => resolve({code: exitCode, msg}));
+    proc.on('exit', exitCode => resolve({ code: exitCode, msg }));
   });
 }
 
 
 export function controlTransfer(
-    id: number, direction: number,
-    lengthOrData: Buffer|number): Promise<Buffer> {
+  id: number, direction: number,
+  lengthOrData: Buffer | number): Promise<Buffer> {
   return new Promise(async (resolve) => {
     try {
       let dev = usb.findByIds(VID, PID);
@@ -54,10 +54,10 @@ export function controlTransfer(
         return;
       }
       dev.open();
-      // The ardwiino firmware responds to a control transfer of 0x30 by jumping
-      // to the bootloader.
       dev.controlTransfer(direction, id, 0, 0, lengthOrData, (err, buf) => {
-        dev.close();
+        try {
+          dev.close()
+        } catch (ex) { }
         resolve(buf);
       });
     } catch (ex) {

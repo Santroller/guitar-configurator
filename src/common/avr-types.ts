@@ -49,7 +49,8 @@ export enum OutputType {
 export enum DeviceType {
   Guitar = 0xfea123,
   FlameWake = 0xf1a3e48,
-  Unprogrammed = 0x00
+  Unprogrammed = 0x00,
+  Unknown = 0x01
 }
 export enum GyroOrientation {
   PositiveZ = 0,

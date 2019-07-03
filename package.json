@@ -47,7 +47,8 @@
     "typescript-parser": "^2.6.1",
     "update-electron-app": "^1.4.2",
     "usb": "^1.5.0",
-    "usb-detection": "^4.3.0"
+    "usb-detection": "^4.3.0",
+    "xinput": "https://github.com/sanjay900/xinputjs"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.0.0",
