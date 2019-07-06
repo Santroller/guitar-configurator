@@ -32,16 +32,9 @@ async function runDevCon(inf: string): BinaryExecution {
 
 export async function swapToWinUSB() {
     if (process.platform != 'win32') return;
-    //Zadic will create a libusb inf file for us, and register certificitates to the local machine
-    let inf = path.join(infDir.name, 'usb_driver', 'libusb_device.inf');
-    //Zadic inf is missing, create it
-    if (!fs.existsSync(inf)) {
-        //Call zadic
-        await executeBinary('zadic', ['--vid', `${VID}`, '--pid', `${PID}`, '--usealldevices', '--noprompt'], () => { }, infDir.name);
-    }
-    //Run devcon so it can change the drivers to the generated one
+    //Run devcon so it can change the drivers to winusb
     //Return code 1 means requires reboot / needs replug
-    if ((await runDevCon(inf)).code == 1) {
+    if ((await runDevCon('c:\\Windows\\INF\\winusb.inf')).code == 1) {
         //TODO: in this case, tell the user to unplug and replug.
         console.log("Unplug, replug.");
         await new Promise((resolve) => {

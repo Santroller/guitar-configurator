@@ -9,7 +9,7 @@ import { readData, EepromConfigLength, writeData, defaultConfig } from './eeprom
 import { searchForProgrammer } from './programmerFirmware';
 import { controlTransfer } from './programmerUtils';
 import { swapToWinUSB } from './programmerWindows';
-import * as xinput from "xinput";
+// import * as xinput from "xinput";
 usbDetection.startMonitoring();
 
 export async function readConfig(): Promise<EepromConfig> {
@@ -37,42 +37,45 @@ export async function searchForGuitar(cb: (guitar: Guitar) => void) {
     usbDetection.find(device.deviceDescriptor.idVendor, device.deviceDescriptor.idProduct, (err, dev)=>{
       console.log(dev);
       console.log(device);
+      //TODO there is no easy way to tell if we are referring to the same device.
+      //TODO can we write our own version of either usbDetection or node-usb that has all this on one?
+      //TODO Also, we only need to do this for controllers, we can just do a seperate list collection for serial devices.
     });
-    // if (device.deviceDescriptor.idVendor == VID &&
-    //   device.deviceDescriptor.idProduct == PID) {
-    //   usb.removeListener('attach', devCb);
-    //   found = true;
-    //   if (process.platform == 'win32') {
-    //     console.log(device);
-    //     //For xinput, we have the ability to work out what kind of device we are using.
-    //     let found = false;
-    //     [0, 1, 2, 3].forEach(id => {
-    //       if (xinput.IsConnected(id)) {
-    //         let config = defaultConfig;
-    //         config.subtype = xinput.GetCapabilities(id).subType;
-    //         cb({ type: DeviceType.Unknown, config, updating: false });
-    //         found = true;
-    //       }
-    //     })
-    //     if (!found) {
-    //       let config = defaultConfig;
-    //       config.subtype = Subtype.Gamepad;
-    //       cb({ type: DeviceType.Unknown, config, updating: false });
-    //     }
-    //   } else {
-    //     // await swapToWinUSB();
-    //     let config = await readConfig();
-    //     let type = detectType(config);
-    //     cb({ type, config, updating: false });
-    //   }
-    // } else if (!init) {
-    //   setTimeout(async () => {
-    //     let unprogrammed = await searchForProgrammer();
-    //     if (unprogrammed) {
-    //       cb(unprogrammed);
-    //     }
-    //   }, 500);
-    // }
+    if (device.deviceDescriptor.idVendor == VID &&
+      device.deviceDescriptor.idProduct == PID) {
+      usb.removeListener('attach', devCb);
+      found = true;
+      if (process.platform == 'win32') {
+        console.log(device);
+        //For xinput, we have the ability to work out what kind of device we are using.
+        let found = false;
+        [0, 1, 2, 3].forEach(id => {
+          if (xinput.IsConnected(id)) {
+            let config = defaultConfig;
+            config.subtype = xinput.GetCapabilities(id).subType;
+            cb({ type: DeviceType.Unknown, config, updating: false });
+            found = true;
+          }
+        })
+        if (!found) {
+          let config = defaultConfig;
+          config.subtype = Subtype.Gamepad;
+          cb({ type: DeviceType.Unknown, config, updating: false });
+        }
+      } else {
+        await swapToWinUSB();
+        let config = await readConfig();
+        let type = detectType(config);
+        cb({ type, config, updating: false });
+      }
+    } else if (!init) {
+      setTimeout(async () => {
+        let unprogrammed = await searchForProgrammer();
+        if (unprogrammed) {
+          cb(unprogrammed);
+        }
+      }, 500);
+    }
   };
   usb.getDeviceList().forEach(devCb);
   if (found) return;
