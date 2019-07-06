@@ -12,13 +12,16 @@ let infDir = tmp.dirSync();
 /**
  * Change drivers for all connected controllers
  */
-async function runDevCon(inf: string): BinaryExecution {
+async function runDevCon(command: string, inf?: string): BinaryExecution {
     if (process.platform != 'win32') return { code: 0, msg: "" };
     return await new Promise((resolve) => {
         let cb = async function (device: usb.Device) {
             if (device.deviceDescriptor.idVendor == VID && device.deviceDescriptor.idProduct == PID) {
                 usb.removeListener('attach', cb);
-                resolve(await executeBinary('devcon', ['update', inf, `USB\\VID_${VID.toString(16)}&PID_${PID.toString(16)}`]));
+                let args = [command];
+                if (command == 'update') args.push(inf);
+                args.push(`USB\\VID_${VID.toString(16)}&PID_${PID.toString(16)}`);
+                resolve(await executeBinary('devcon', args));
             }
         }
         let dev = usb.findByIds(VID, PID);
@@ -32,9 +35,17 @@ async function runDevCon(inf: string): BinaryExecution {
 
 export async function swapToWinUSB() {
     if (process.platform != 'win32') return;
-    //Run devcon so it can change the drivers to winusb
+    //Zadic will create a libusb inf file for us, and register certificitates to the local machine
+    let inf = path.join(infDir.name, 'usb_driver', 'libusb_device.inf');
+    //Zadic inf is missing, create it
+    if (!fs.existsSync(inf)) {
+        //Call zadic
+        await executeBinary('zadic', ['--vid', `${VID}`, '--pid', `${PID}`, '--usealldevices', '--noprompt'], () => { }, infDir.name);
+    }
+    await runDevCon('disable');
+    //Run devcon so it can change the drivers to the generated one
     //Return code 1 means requires reboot / needs replug
-    if ((await runDevCon('c:\\Windows\\INF\\winusb.inf')).code == 1) {
+    if ((await runDevCon('update', inf)).code == 1) {
         //TODO: in this case, tell the user to unplug and replug.
         console.log("Unplug, replug.");
         await new Promise((resolve) => {
@@ -53,12 +64,13 @@ export async function swapToWinUSB() {
             usb.on('detach', cb);
         });
     }
+    await runDevCon('enable');
 }
 export async function restoreController(guitar: Guitar) {
     if (process.platform != 'win32') return;
     if (guitar.config.output_type == OutputType.XInput) {
-        await runDevCon('c:\\Windows\\INF\\xusb22.inf');
+        await runDevCon('update', 'c:\\Windows\\INF\\xusb22.inf');
     } else {
-        await runDevCon('c:\\Windows\\INF\\input.inf');
+        await runDevCon('update', 'c:\\Windows\\INF\\input.inf');
     }
 }
