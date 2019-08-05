@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/controller.png</file>
+        <file>images/icon.png</file>
+        <file>images/keyboard.png</file>
+        <file>images/wii.png</file>
+        <file>images/xbox.png</file>
+        <file>images/xplorer.png</file>
+    </qresource>
+</RCC>
