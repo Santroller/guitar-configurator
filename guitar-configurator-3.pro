@@ -32,4 +32,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     port.h \
-    portscanner.h
+    portscanner.h \
+    submodules/Ardwiino/src/shared/config/config.h \
+    submodules/Ardwiino/src/shared/config/defaults.h \
+    submodules/Ardwiino/src/shared/config/defines.h \
+    submodules/Ardwiino/src/shared/controller/controller.h

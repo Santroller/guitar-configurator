@@ -7,5 +7,8 @@
         <file>images/wii.png</file>
         <file>images/xbox.png</file>
         <file>images/xplorer.png</file>
+        <file>Welcome.qml</file>
+        <file>Configure.qml</file>
+        <file>Programmer.qml</file>
     </qresource>
 </RCC>

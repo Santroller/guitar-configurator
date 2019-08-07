@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    PortScanner* scanner = new PortScanner();
+    auto* scanner = new PortScanner();
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("universal");
     QQmlApplicationEngine engine;
@@ -21,5 +21,5 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    return app.exec();
+    return QGuiApplication::exec();
 }
