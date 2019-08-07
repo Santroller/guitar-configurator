@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include "ardwiinolookup.h"
+#include "submodules/Ardwiino/src/shared/config/config.h"
+#include "submodules/Ardwiino/src/shared/controller/controller.h"
 
 class Port : public QObject
 {
