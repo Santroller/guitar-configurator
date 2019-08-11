@@ -95,7 +95,7 @@ const board_t ArdwiinoLookup::boards[4] = {
 const board_t* ArdwiinoLookup::detectBoard(const QSerialPortInfo* serialPortInfo) {
     for (const auto& board: boards) {
         for (auto& pid : board.productIDs) {
-            if (pid == serialPortInfo->productIdentifier()) {
+            if (pid && pid == serialPortInfo->productIdentifier()) {
                 return &board;
             }
         }

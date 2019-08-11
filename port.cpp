@@ -19,7 +19,6 @@ Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(par
             }
         } else {
             board = ArdwiinoLookup::detectBoard(serialPortInfo);
-            qDebug() << board;
             if (board != nullptr) {
                 m_description = board->name;
             }
