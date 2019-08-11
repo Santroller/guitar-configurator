@@ -35,6 +35,7 @@ private:
     QString m_port;
     QSerialPort* m_serialPort;
     QByteArray readData;
+    const board_t* board;
     bool m_isArdwiino;
 };
 

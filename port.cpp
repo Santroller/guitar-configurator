@@ -1,19 +1,28 @@
 #include "port.h"
+#include "QDebug"
 Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(parent)
 {
     if (serialPortInfo) {
         m_port = serialPortInfo->portName();
-        m_isArdwiino = serialPortInfo->vendorIdentifier() == 0x1209 && serialPortInfo->productIdentifier() == 0x2882;
-        m_serialPort = new QSerialPort(*serialPortInfo);
-        m_description = "Ardwiino - Reading Controller Information";
-        QObject::connect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
-        QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
-        if (!m_serialPort->open(QIODevice::ReadWrite)) {
-            m_serialPort->close();
-            return;
+        m_isArdwiino = ArdwiinoLookup::isArdwiino(serialPortInfo);
+        if (m_isArdwiino) {
+            m_serialPort = new QSerialPort(*serialPortInfo);
+            m_description = "Ardwiino - Reading Controller Information";
+            QObject::connect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
+            QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
+            if (!m_serialPort->open(QIODevice::ReadWrite)) {
+                m_serialPort->close();
+                return;
+            } else {
+                m_serialPort->write("r");
+                m_serialPort->waitForBytesWritten(-1);
+            }
         } else {
-            m_serialPort->write("r");
-            m_serialPort->waitForBytesWritten(-1);
+            board = ArdwiinoLookup::detectBoard(serialPortInfo);
+            qDebug() << board;
+            if (board != nullptr) {
+                m_description = board->name;
+            }
         }
     } else {
         m_description = "Searching for devices";

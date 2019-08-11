@@ -1,9 +1,5 @@
 #include "ardwiinolookup.h"
-
-ArdwiinoLookup::ArdwiinoLookup()
-{
-
-}
+#include "QDebug"
 QString ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) {
     switch (type) {
     case DIRECT:
@@ -81,4 +77,28 @@ QString ArdwiinoLookup::lookupType(uint8_t type) {
     default:
         return "Unknown Type";
     }
+}
+
+//Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
+bool ArdwiinoLookup::isArdwiino(const QSerialPortInfo* serialPortInfo) {
+    return serialPortInfo->vendorIdentifier() == SONY_VID || (serialPortInfo->vendorIdentifier() == ARDWIINO_VID && serialPortInfo->productIdentifier() == ARDWIINO_PID);
+}
+
+const board_t ArdwiinoLookup::boards[4] = {
+    {"uno-usb","Arduino Uno DFU",57600,{},"dfu","atmega16u2",160000000,true,{0x1e,0x94,0x89}},
+    {"uno-main","Arduino Uno",115200,{0x0043, 0x7523, 0x0001, 0xea60},"avr109","atmega16u2",160000000,true,{0x1e, 0x95, 0x0F}},
+    {"micro","Arduino Pro Micro",57600,{0x9203, 0x9204,0x9205, 0x9206},"avr109","atmega32u4",160000000,true,{0x1e, 0x95, 0x87}},
+    {"micro","Arduino Leonardo",57600,{0x0036, 0x8036, 0x800c},"avr109","atmega32u4",160000000,true,{0x1e, 0x95, 0x87}},
+};
+
+
+const board_t* ArdwiinoLookup::detectBoard(const QSerialPortInfo* serialPortInfo) {
+    for (const auto& board: boards) {
+        for (auto& pid : board.productIDs) {
+            if (pid == serialPortInfo->productIdentifier()) {
+                return &board;
+            }
+        }
+    }
+    return nullptr;
 }
