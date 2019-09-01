@@ -18,9 +18,10 @@ Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(par
                 m_serialPort->waitForBytesWritten(-1);
             }
         } else {
-            board = ArdwiinoLookup::detectBoard(serialPortInfo);
-            if (board != nullptr) {
-                m_description = board->name;
+            auto b = ArdwiinoLookup::detectBoard(serialPortInfo);
+            if (b != nullptr) {
+                m_board = *b;
+                m_description = m_board.name;
             }
         }
     } else {

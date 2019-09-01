@@ -1,6 +1,3 @@
 [submodule "submodules/Ardwiino"]
 	path = submodules/Ardwiino
 	url = https://github.com/sanjay900/Ardwiino
-[submodule "submodules/avrdude"]
-	path = submodules/avrdude
-	url = https://github.com/sigmike/avrdude

@@ -135,8 +135,11 @@ Page {
         anchors.top: devices.bottom
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        enabled: false
-        onClicked: devices.model[devices.currentIndex].isArdwiino? mainStack.push("Configure.qml"):mainStack.push("Programmer.qml")
+        enabled: true
+        onClicked: {
+            scanner.selected = devices.model[devices.currentIndex];
+            scanner.selected.isArdwiino? mainStack.push("Configure.qml"):mainStack.push("Programmer.qml")
+        }
         states: [
             State {
                 name: "enabled"; when: devices.model[devices.currentIndex].getPort() !== "searching"

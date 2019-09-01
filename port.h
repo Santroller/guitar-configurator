@@ -22,6 +22,15 @@ public slots:
     QString description() const {
         return m_description;
     }
+    board_t board() const {
+        return m_board;
+    }
+    QString boardName() const {
+        return m_board.hexFile;
+    }
+    void setBoardFreq(uint freq) {
+        m_board.cpuFrequency = freq;
+    }
     bool isArdwiino() const {
         return m_isArdwiino;
     }
@@ -35,7 +44,7 @@ private:
     QString m_port;
     QSerialPort* m_serialPort;
     QByteArray readData;
-    const board_t* board;
+    board_t m_board;
     bool m_isArdwiino;
 };
 

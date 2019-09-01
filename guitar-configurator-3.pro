@@ -16,7 +16,8 @@ SOURCES += \
         ardwiinolookup.cpp \
         main.cpp \
         port.cpp \
-        portscanner.cpp
+        portscanner.cpp \
+        programmer.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,7 +36,14 @@ HEADERS += \
     ardwiinolookup.h \
     port.h \
     portscanner.h \
+    programmer.h \
     submodules/Ardwiino/src/shared/config/config.h \
     submodules/Ardwiino/src/shared/config/defaults.h \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h
+
+copydata.commands = $(COPY_DIR) $$PWD/binaries $$OUT_PWD
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
