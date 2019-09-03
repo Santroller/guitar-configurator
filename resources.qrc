@@ -21,6 +21,5 @@
         <file>port.h</file>
         <file>portscanner.cpp</file>
         <file>portscanner.h</file>
-        <file>qrc_qml.cpp</file>
     </qresource>
 </RCC>

@@ -20,9 +20,11 @@ void PortScanner::checkPorts() {
         m_model.push_back(new Port(nullptr));
     }
     for (const QSerialPortInfo &serialPortInfo : serialPortInfos) {
+        auto port = new Port(&serialPortInfo);
+        if (port->getPort() == nullptr) continue;
         auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.portName();});
         if (find == m_model.end()) {
-            m_model.push_back(new Port(&serialPortInfo));
+            m_model.push_back(port);
         }
     }
     emit modelChanged(m_model);

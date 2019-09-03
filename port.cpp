@@ -22,6 +22,10 @@ Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(par
             if (b != nullptr) {
                 m_board = *b;
                 m_description = m_board.name;
+            } else {
+                //Skip unknown arduinos
+                //TODO: (Would it be better to show them but disable their selection?)
+                m_port = nullptr;
             }
         }
     } else {
