@@ -3,10 +3,10 @@
 Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(parent)
 {
     if (serialPortInfo) {
-        m_port = serialPortInfo->portName();
+        m_port = serialPortInfo->systemLocation();
         m_isArdwiino = ArdwiinoLookup::isArdwiino(serialPortInfo);
+        m_serialPort = new QSerialPort(*serialPortInfo);
         if (m_isArdwiino) {
-            m_serialPort = new QSerialPort(*serialPortInfo);
             m_description = "Ardwiino - Reading Controller Information";
             QObject::connect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
             QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
@@ -21,7 +21,7 @@ Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(par
             auto b = ArdwiinoLookup::detectBoard(serialPortInfo);
             if (b != nullptr) {
                 m_board = *b;
-                m_description = m_board.name;
+                m_description = m_board.name + " - "+m_port;
             } else {
                 //Skip unknown arduinos
                 //TODO: (Would it be better to show them but disable their selection?)
@@ -38,6 +38,22 @@ void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
     if (serialPortError != QSerialPort::SerialPortError::NoError) {
         m_description = "Ardwiino - Error Communicating";
+        m_serialPort->close();
+    }
+}
+
+void Port::prepareUpload() {
+    m_serialPort->open(QIODevice::ReadWrite);
+    m_serialPort->setBaudRate(1200);
+    m_serialPort->setDataTerminalReady(true);
+    m_serialPort->setDataTerminalReady(false);
+    m_serialPort->close();
+}
+
+void Port::stopScanning() {
+    if (m_isArdwiino) {
+        QObject::disconnect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
+        QObject::disconnect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         m_serialPort->close();
     }
 }
@@ -61,4 +77,5 @@ void Port::update() {
     readData.clear();
     emit descriptionChanged(m_description);
 }
+
 

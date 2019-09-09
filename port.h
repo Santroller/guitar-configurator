@@ -15,10 +15,15 @@ class Port : public QObject
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
 public:
     explicit Port(const QSerialPortInfo *serialPortInfo, QObject *parent = nullptr);
+    board_t getBoard() const {
+        return m_board;
+    }
+    void prepareUpload();
 signals:
     void descriptionChanged(QString newValue);
 
 public slots:
+    void stopScanning();
     QString description() const {
         return m_description;
     }

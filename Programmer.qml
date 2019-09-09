@@ -10,7 +10,6 @@ Page {
     ColumnLayout {
         id: column
         anchors.fill: parent
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
         Image {
             id: image
@@ -102,6 +101,7 @@ Page {
                 id: button
                 text: qsTr("Start Programming")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: programmer.program(scanner.selected)
             }
 
 

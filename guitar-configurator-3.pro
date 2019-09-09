@@ -45,10 +45,12 @@ HEADERS += \
 
 makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
 copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+copydata2.commands = $(COPY_DIR) $$PWD/binaries $$OUT_PWD/binariesAll
 copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
-first.depends = $(first) copydata makeArd copyfirmware
+first.depends = $(first) copydata makeArd copyfirmware copydata2
 export(first.depends)
+export(copydata2.commands)
 export(copydata.commands)
 export(makeArd.commands)
 export(copyfirmware.commands)
-QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware
+QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware copydata2
