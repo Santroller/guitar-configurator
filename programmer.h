@@ -10,6 +10,7 @@ class Programmer : public QObject
     Q_PROPERTY(QString process_out MEMBER m_process_out NOTIFY processOutChanged)
 public:
     explicit Programmer(QObject *parent = nullptr);
+    void execute();
 signals:
     void processOutChanged(QString newValue);
 public slots:

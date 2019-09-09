@@ -10,10 +10,6 @@
         <file>Welcome.qml</file>
         <file>Configure.qml</file>
         <file>Programmer.qml</file>
-        <file>submodules/Ardwiino/src/shared/config/config.h</file>
-        <file>submodules/Ardwiino/src/shared/config/defaults.h</file>
-        <file>submodules/Ardwiino/src/shared/config/defines.h</file>
-        <file>submodules/Ardwiino/src/shared/controller/controller.h</file>
         <file>ardwiinolookup.cpp</file>
         <file>ardwiinolookup.h</file>
         <file>main.cpp</file>

@@ -43,7 +43,7 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h
 
-copydata.commands = $(COPY_DIR) $$PWD/binaries $$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)

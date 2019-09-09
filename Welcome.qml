@@ -16,13 +16,13 @@ Page {
             Layout.alignment: Qt.AlignHCenter
             source: "images/controller.png"
             fillMode: Image.PreserveAspectFit
-            Layout.preferredHeight: applicationWindow.height/3
+            Layout.maximumHeight: applicationWindow.height/3
+            Layout.maximumWidth: applicationWindow.height/3
         }
 
         Label {
             id: title
             text: qsTr("Welcome to the Ardwiino Configuration Tool")
-            font.pointSize: 30
             textFormat: Text.PlainText
             renderType: Text.QtRendering
             lineHeight: 1
@@ -123,6 +123,17 @@ Page {
             }
         }
 
+        ComboBox {
+            id: devices
+            Layout.columnSpan: 1
+            Layout.rowSpan: 1
+            Layout.fillWidth: true
+            focusPolicy: Qt.TabFocus
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            textRole: "description"
+            model: scanner.model
+        }
+
         Button {
             id: welcomeContinue
             text: qsTr("Continue")
@@ -144,13 +155,6 @@ Page {
             ]
         }
 
-        ComboBox {
-            id: devices
-            focusPolicy: Qt.TabFocus
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            textRole: "description"
-            model: scanner.model
-        }
 
 
 
@@ -288,7 +292,9 @@ Page {
 
 
 
+
+
 /*##^## Designer {
-    D{i:0;autoSize:true;height:768;width:300}
+    D{i:0;autoSize:true;height:1080;width:1920}
 }
  ##^##*/
