@@ -43,8 +43,12 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h
 
+makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
 copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
-first.depends = $(first) copydata
+copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
+first.depends = $(first) copydata makeArd copyfirmware
 export(first.depends)
 export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
+export(makeArd.commands)
+export(copyfirmware.commands)
+QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware
