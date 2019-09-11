@@ -10,7 +10,7 @@ void PortScanner::checkPorts() {
     for (QObject *obj : m_model) {
         auto port = static_cast<Port*>(obj);
         if (port->getPort() == "searching") continue;
-        if (std::find_if(serialPortInfos.begin(), serialPortInfos.end(), [port](const QSerialPortInfo &serialPortInfo){return port->getPort() == serialPortInfo.portName();}) == serialPortInfos.end()) {
+        if (std::find_if(serialPortInfos.begin(), serialPortInfos.end(), [port](const QSerialPortInfo &serialPortInfo){return port->getPort() == serialPortInfo.systemLocation();}) == serialPortInfos.end()) {
             m_model.removeOne(port);
         }
     }
@@ -22,9 +22,10 @@ void PortScanner::checkPorts() {
     for (const QSerialPortInfo &serialPortInfo : serialPortInfos) {
         auto port = new Port(&serialPortInfo);
         if (port->getPort() == nullptr) continue;
-        auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.portName();});
+        auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();});
         if (find == m_model.end()) {
             m_model.push_back(port);
+            port->open(&serialPortInfo);
         }
     }
     emit modelChanged(m_model);

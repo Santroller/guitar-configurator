@@ -19,6 +19,8 @@ public:
         return m_board;
     }
     void prepareUpload();
+    void findNew();
+    void open(const QSerialPortInfo *serialPortInfo);
 signals:
     void descriptionChanged(QString newValue);
 
@@ -44,12 +46,14 @@ public slots:
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     void update();
+    bool findNewAsync();
 private:
     QString m_description;
     QString m_port;
     QSerialPort* m_serialPort;
     QByteArray readData;
     board_t m_board;
+    QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
 };
 

@@ -10,5 +10,6 @@
         <file>Welcome.qml</file>
         <file>Configure.qml</file>
         <file>Programmer.qml</file>
+        <file>images/dfu.png</file>
     </qresource>
 </RCC>

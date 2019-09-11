@@ -17,7 +17,8 @@ SOURCES += \
         main.cpp \
         port.cpp \
         portscanner.cpp \
-        programmer.cpp
+        programmer.cpp \
+        status.cpp
 
 RESOURCES += \
     resources.qrc
@@ -38,6 +39,7 @@ HEADERS += \
     port.h \
     portscanner.h \
     programmer.h \
+    status.h \
     submodules/Ardwiino/src/shared/config/config.h \
     submodules/Ardwiino/src/shared/config/defaults.h \
     submodules/Ardwiino/src/shared/config/defines.h \

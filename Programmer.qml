@@ -3,6 +3,7 @@ import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import QtQuick.Controls.Universal 2.13
 import QtQuick.Layouts 1.13
+import net.tangentmc 1.0
 
 Page {
     id: page
@@ -79,16 +80,51 @@ Page {
 
             }
 
+            ColumnLayout {
+                visible: programmer.status === Status.DFU_CONNECT
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                id: dfu
+                Label {
+                    id: label6
+                    text: qsTr("Please bridge the reset and ground pins shown below")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                }
+                Image {
+                    id: dfuImg
+                    Layout.alignment: Qt.AlignHCenter
+                    source: "images/dfu.png"
+                    fillMode: Image.PreserveAspectFit
+                    Layout.maximumHeight: applicationWindow.height/3
+                    Layout.maximumWidth: applicationWindow.width/3
+                }
+            }
+            Label {
+                visible: programmer.status === Status.DFU_DISCONNECT
+                id: label7
+                text: qsTr("Please disconnect and reconnect your device.")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Timer {
+                    id: timer
+                    interval: 100
+                    running: programmer.status === Status.DFU_DISCONNECT
+                    repeat: true
+                    onTriggered: {
+                        if (scanner.selected.findNewAsync()) {
+                            programmer.program(scanner.selected);
+                        }
+                    }
+                }
+            }
+
             Label {
                 id: label2
                 text: qsTr("Programming Progress")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
-
             ProgressBar {
                 id: progressBar
                 Layout.fillWidth: true
-                value: 0
+                value: programmer.process_percent
             }
 
             Rectangle {
@@ -102,6 +138,15 @@ Page {
                 text: qsTr("Start Programming")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: programmer.program(scanner.selected)
+                enabled: programmer.status === Status.WAIT_AVRDUDE
+            }
+
+            Button {
+                id: cntBtn
+                text: qsTr("Start Configuring")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: programmer.program(scanner.selected)
+                enabled: programmer.status === Status.COMPLETE
             }
 
 
@@ -114,7 +159,7 @@ Page {
             Layout.fillHeight: true
             contentHeight: -1
             contentWidth: -1
-
+            onContentHeightChanged: console.log("test")
             TextArea {
                 id: toolOutput
                 text: programmer.process_out
@@ -122,6 +167,7 @@ Page {
                 readOnly: true
                 wrapMode: Text.NoWrap
             }
+
         }
 
     }

@@ -5,6 +5,7 @@
 #include <QQmlContext>
 #include "portscanner.h"
 #include "programmer.h"
+#include "status.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("universal");
     QQmlApplicationEngine engine;
+    qmlRegisterUncreatableType<Status>("net.tangentmc", 1, 0, "Status",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<Status::Value>("Status::Value");
     auto* scanner = new PortScanner();
     auto* programmer = new Programmer();
     engine.rootContext()->setContextProperty("scanner", scanner);

@@ -32,6 +32,8 @@ public:
     static bool isArdwiino(const QSerialPortInfo *info);
     static const board_t boards[4];
     static const board_t* detectBoard(const QSerialPortInfo *serialPortInfo);
+    static const board_t retriveDFUVariant(const board_t board);
+    static bool hasDFUVariant(const board_t board);
 };
 
 #endif // ARDWIINOLOOKUP_H
