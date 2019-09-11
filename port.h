@@ -2,6 +2,7 @@
 #define PORT_H
 
 #include <QObject>
+#include <QDebug>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include "ardwiinolookup.h"
@@ -13,6 +14,7 @@ class Port : public QObject
     Q_OBJECT
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
+    Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -22,11 +24,12 @@ public:
     void prepareUpload();
     void findNew();
     void open(const QSerialPortInfo &serialPortInfo);
+    void close();
 signals:
     void descriptionChanged(QString newValue);
+    void dfuFound(bool found);
 
 public slots:
-    void stopScanning();
     QString description() const {
         return m_description;
     }
@@ -46,8 +49,8 @@ public slots:
         return m_port;
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
-    void update();
     bool findNewAsync();
+    void update();
 private:
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
@@ -57,6 +60,8 @@ private:
     board_t m_board;
     QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
+    bool m_hasDFU;
+    bool readDFU;
 };
 
 #endif // PORT_H

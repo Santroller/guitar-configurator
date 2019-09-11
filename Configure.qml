@@ -53,7 +53,7 @@ Page {
             id: restore
             text: qsTr("Restore Device back to Arduino")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            visible: scanner.selected.boardName() !== "micro"
+            visible: scanner.selected.hasDFU
             onClicked: {
                 programmer.setRestoring(true);
                 mainStack.push("Programmer.qml");

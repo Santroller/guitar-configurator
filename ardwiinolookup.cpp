@@ -18,7 +18,7 @@ QString ArdwiinoLookup::lookupType(uint8_t type) {
 bool ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) {
     return serialPortInfo.vendorIdentifier() == SONY_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
-
+const board_t ArdwiinoLookup::empty =  {"","",0,{},"","",0,""};
 const board_t ArdwiinoLookup::boards[4] = {
     {"uno-usb","Arduino Uno DFU",57600,{},"dfu","atmega16u2",16000000,"Arduino-COMBINED-dfu-usbserial-atmega16u2-Uno-Rev3"},
     {"uno-main","Arduino Uno",115200,{0x0043, 0x7523, 0x0001, 0xea60},"arduino","atmega328p",16000000,""},

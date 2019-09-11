@@ -33,6 +33,7 @@ public:
     static const board_t* detectBoard(const QSerialPortInfo &serialPortInfo);
     static const board_t retriveDFUVariant(const board_t board);
     static bool hasDFUVariant(const board_t board);
+    static const board_t empty;
 };
 
 #endif // ARDWIINOLOOKUP_H

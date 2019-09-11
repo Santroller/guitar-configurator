@@ -11,6 +11,7 @@ Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT
 {
 
 }
+
 board_t Programmer::detectBoard() {
     board_t board = ArdwiinoLookup::retriveDFUVariant(m_port->getBoard());
     if (!m_restore) {
@@ -141,6 +142,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     case Status::AVRDUDE:
         if (ArdwiinoLookup::hasDFUVariant(m_port->getBoard())) {
             m_status = Status::DFU_CONNECT;
+            m_port->close();
             programDFU();
         } else {
             m_status = Status::COMPLETE;
