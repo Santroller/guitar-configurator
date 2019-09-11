@@ -103,13 +103,6 @@ bool Port::findNewAsync() {
 void Port::update() {
     readData.append(m_serialPort->readAll());
     if (!readDFU) {
-        //The first message is ocassionally read as if we are programming. In that case, read dfu params again.
-        if (readData.contains("ma")) {
-            readData.clear();
-            m_serialPort->flush();
-            m_serialPort->write("f");
-            return;
-        }
         readDFU = true;
         m_hasDFU = readData.contains("DFU");
         readData.clear();
