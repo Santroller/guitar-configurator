@@ -37,7 +37,7 @@ public slots:
         return m_board;
     }
     QString boardName() const {
-        return m_board.hexFile;
+        return m_board.name;
     }
     void setBoardFreq(uint freq) {
         m_board.cpuFrequency = freq;

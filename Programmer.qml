@@ -39,7 +39,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             ColumnLayout {
-                visible: scanner.selected.boardName() === "micro" && programmer.status === Status.WAIT_AVRDUDE
+                visible: scanner.selected.boardName() === "Arduino Pro Micro" && programmer.status === Status.WAIT_AVRDUDE
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
