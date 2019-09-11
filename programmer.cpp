@@ -94,17 +94,17 @@ void Programmer::program(Port* port) {
     if (m_status == Status::DFU_DISCONNECT) {
         m_status = Status::COMPLETE;
     }
-    qDebug() << m_status;
-    statusChanged(m_status);
+    emit statusChanged(m_status);
+    emit statusVChanged(getStatusDescription());
 }
 
 void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
+    (void)exitStatus;
     QObject::disconnect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::disconnect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::disconnect(m_process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
     QObject::disconnect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
 
-    qDebug() << exitStatus;
     switch (m_status) {
     case Status::AVRDUDE:
         if (ArdwiinoLookup::hasDFUVariant(m_port->getBoard())) {
@@ -112,6 +112,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
             programDFU();
         } else {
             m_status = Status::COMPLETE;
+            m_port->findNew();
         }
         break;
     case Status::DFU_CONNECT:
@@ -135,7 +136,8 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         break;
 
     }
-    statusChanged(m_status);
+    emit statusChanged(m_status);
+    emit statusVChanged(getStatusDescription());
 }
 
 void Programmer::onReady() {
@@ -149,4 +151,5 @@ void Programmer::onReady() {
     m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;
     emit processOutChanged(m_process_out);
     emit processPercentChanged(m_process_percent);
+    emit statusVChanged(getStatusDescription());
 }

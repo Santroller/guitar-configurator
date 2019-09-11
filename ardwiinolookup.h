@@ -29,9 +29,9 @@ class ArdwiinoLookup
 public:
     static QString lookupExtension(uint8_t type, uint16_t device);
     static QString lookupType(uint8_t type);
-    static bool isArdwiino(const QSerialPortInfo *info);
+    static bool isArdwiino(const QSerialPortInfo &info);
     static const board_t boards[4];
-    static const board_t* detectBoard(const QSerialPortInfo *serialPortInfo);
+    static const board_t* detectBoard(const QSerialPortInfo &serialPortInfo);
     static const board_t retriveDFUVariant(const board_t board);
     static bool hasDFUVariant(const board_t board);
 };

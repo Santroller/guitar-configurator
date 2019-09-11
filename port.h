@@ -14,13 +14,14 @@ class Port : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
 public:
-    explicit Port(const QSerialPortInfo *serialPortInfo, QObject *parent = nullptr);
+    explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
+    explicit Port(QObject *parent = nullptr);
     board_t getBoard() const {
         return m_board;
     }
     void prepareUpload();
     void findNew();
-    void open(const QSerialPortInfo *serialPortInfo);
+    void open(const QSerialPortInfo &serialPortInfo);
 signals:
     void descriptionChanged(QString newValue);
 
@@ -48,6 +49,7 @@ public slots:
     void update();
     bool findNewAsync();
 private:
+    void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
     QString m_port;
     QSerialPort* m_serialPort;

@@ -29,6 +29,17 @@ Page {
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
         }
+        Label {
+            id: status
+            text: scanner.selected.description
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pointSize: 30
+            fontSizeMode: Text.FixedSize
+        }
 
         Button {
             id: configureContinue

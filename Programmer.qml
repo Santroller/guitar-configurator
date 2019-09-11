@@ -39,7 +39,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             ColumnLayout {
-                visible: scanner.selected.boardName() === "micro"
+                visible: scanner.selected.boardName() === "micro" && programmer.status === Status.WAIT_AVRDUDE
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -116,9 +116,25 @@ Page {
                 }
             }
 
+            Button {
+                id: button
+                text: qsTr("Start Programming")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: programmer.program(scanner.selected)
+                visible: programmer.status === Status.WAIT_AVRDUDE
+            }
+
+            Button {
+                id: cntBtn
+                text: qsTr("Start Configuring")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: mainStack.push("Configure.qml")
+                enabled: programmer.status === Status.COMPLETE
+            }
+
             Label {
-                id: label2
-                text: qsTr("Programming Progress")
+                id: labelStatus
+                text: programmer.statusDescription
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
             ProgressBar {
@@ -127,47 +143,21 @@ Page {
                 value: programmer.process_percent
             }
 
-            Rectangle {
-                id: rectangle1
-                color: "#00000000"
-                border.color: "#00000000"
+            ScrollView {
+                id: scrollView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                contentHeight: -1
+                contentWidth: -1
+                TextArea {
+                    id: toolOutput
+                    text: programmer.process_out
+                    activeFocusOnPress: false
+                    readOnly: true
+                    wrapMode: Text.NoWrap
+                }
+
             }
-
-            Button {
-                id: button
-                text: qsTr("Start Programming")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.program(scanner.selected)
-                enabled: programmer.status === Status.WAIT_AVRDUDE
-            }
-
-            Button {
-                id: cntBtn
-                text: qsTr("Start Configuring")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.program(scanner.selected)
-                enabled: programmer.status === Status.COMPLETE
-            }
-
-
-
-        }
-
-        ScrollView {
-            id: scrollView
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            contentHeight: -1
-            contentWidth: -1
-            onContentHeightChanged: console.log("test")
-            TextArea {
-                id: toolOutput
-                text: programmer.process_out
-                activeFocusOnPress: false
-                readOnly: true
-                wrapMode: Text.NoWrap
-            }
-
         }
 
     }

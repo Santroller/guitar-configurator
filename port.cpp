@@ -1,29 +1,34 @@
 #include "port.h"
 #include "QDebug"
 #include "QThread"
-Port::Port(const QSerialPortInfo *serialPortInfo, QObject *parent) : QObject(parent)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent)
 {
-    if (serialPortInfo) {
-        m_isArdwiino = ArdwiinoLookup::isArdwiino(serialPortInfo);
-        if (m_isArdwiino) {
-            m_description = "Ardwiino - Reading Controller Information";
-            m_port = serialPortInfo->systemLocation();
-        } else {
-            auto b = ArdwiinoLookup::detectBoard(serialPortInfo);
-            if (b != nullptr) {
-                m_board = *b;
-                m_port = serialPortInfo->systemLocation();
-                m_description = m_board.name + " - "+m_port;
-            }
-        }
+    rescan(serialPortInfo);
+}
+
+Port::Port(QObject *parent) : QObject(parent)
+{
+    m_description = "Searching for devices";
+    m_port = "searching";
+}
+
+void Port::rescan(const QSerialPortInfo &serialPortInfo) {
+    m_isArdwiino = ArdwiinoLookup::isArdwiino(serialPortInfo);
+    if (m_isArdwiino) {
+        m_description = "Ardwiino - Reading Controller Information";
+        m_port = serialPortInfo.systemLocation();
     } else {
-        m_description = "Searching for devices";
-        m_port = "searching";
+        auto b = ArdwiinoLookup::detectBoard(serialPortInfo);
+        if (b != nullptr) {
+            m_board = *b;
+            m_port = serialPortInfo.systemLocation();
+            m_description = m_board.name + " - "+m_port;
+        }
     }
 }
 
-void Port::open(const QSerialPortInfo *serialPortInfo) {
-    m_serialPort = new QSerialPort(*serialPortInfo);
+void Port::open(const QSerialPortInfo &serialPortInfo) {
+    m_serialPort = new QSerialPort(serialPortInfo);
     if (m_isArdwiino) {
         QObject::connect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
         QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
@@ -38,7 +43,7 @@ void Port::open(const QSerialPortInfo *serialPortInfo) {
 
 void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
-    if (serialPortError != QSerialPort::SerialPortError::NoError) {
+    if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
         m_description = "Ardwiino - Error Communicating";
         m_serialPort->close();
     }
@@ -79,9 +84,11 @@ bool Port::findNewAsync() {
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
     m_port_list = newSp;
     if (diff.size() != 0) {
-        m_serialPort = new QSerialPort(diff.front());
-        m_port = diff.front().systemLocation();
+        auto info = diff.front();
         QThread::currentThread()->msleep(400);
+        m_port = info.systemLocation();
+        rescan(info);
+        open(info);
         return true;
     }
     return false;

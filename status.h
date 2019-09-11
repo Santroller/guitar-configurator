@@ -19,6 +19,11 @@ public:
     };
 
     Q_ENUM(Value)
+
+    static QString toString(Value value) {
+        return values[value];
+    }
+    const static QString values[8];
 };
 
 #endif // STATUS_H
