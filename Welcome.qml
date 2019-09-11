@@ -142,6 +142,7 @@ Page {
             onClicked: {
                 scanner.selected = devices.model[devices.currentIndex];
                 scanner.selected.stopScanning();
+                programmer.setRestoring(false);
                 scanner.selected.isArdwiino? mainStack.push("Configure.qml"):mainStack.push("Programmer.qml")
             }
             states: [

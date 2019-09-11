@@ -30,6 +30,16 @@ Page {
             Layout.maximumWidth: applicationWindow.width/3
         }
         Label {
+            id: dev
+            text: qsTr("Connected Device: ")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            fontSizeMode: Text.FixedSize
+        }
+        Label {
             id: status
             text: scanner.selected.description
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -37,7 +47,6 @@ Page {
             font.bold: true
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 30
             fontSizeMode: Text.FixedSize
         }
 

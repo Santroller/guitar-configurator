@@ -20,8 +20,7 @@ typedef struct {
     QString protocol;
     QString processor;
     uint cpuFrequency;
-    bool hasBootloader;
-    uint8_t signature[3];
+    QString originalFirmware;
 } board_t;
 
 class ArdwiinoLookup

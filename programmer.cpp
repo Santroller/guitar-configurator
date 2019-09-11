@@ -7,13 +7,16 @@
 #include <QRegularExpression>
 #include <ardwiinolookup.h>
 
-Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT_AVRDUDE)
+Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT_AVRDUDE), m_restore(false)
 {
 
 }
 void Programmer::programDFU() {
     board_t board = ArdwiinoLookup::retriveDFUVariant(m_port->getBoard());
     QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency);
+    if (m_restore) {
+        hexFile = board.originalFirmware;
+    }
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
     m_process_out.clear();

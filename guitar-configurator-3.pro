@@ -17,8 +17,7 @@ SOURCES += \
         main.cpp \
         port.cpp \
         portscanner.cpp \
-        programmer.cpp \
-        status.cpp
+        programmer.cpp
 
 RESOURCES += \
     resources.qrc
@@ -36,6 +35,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     ardwiinolookup.h \
+    controllers.h \
+    input_types.h \
+    joy_types.h \
+    mpu_orientations.h \
     port.h \
     portscanner.h \
     programmer.h \
@@ -43,16 +46,19 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/config.h \
     submodules/Ardwiino/src/shared/config/defaults.h \
     submodules/Ardwiino/src/shared/config/defines.h \
-    submodules/Ardwiino/src/shared/controller/controller.h
+    submodules/Ardwiino/src/shared/controller/controller.h \
+    tilt_types.h \
+    wii_extensions.h
 
 makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
 copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
 copydata2.commands = $(COPY_DIR) $$PWD/binaries $$OUT_PWD/binariesAll
 copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
-first.depends = $(first) copydata makeArd copyfirmware copydata2
+copyfirmware2.commands = $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware
+first.depends = $(first) copydata makeArd copyfirmware copyfirmware2 copydata2
 export(first.depends)
 export(copydata2.commands)
 export(copydata.commands)
 export(makeArd.commands)
 export(copyfirmware.commands)
-QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware copydata2
+QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware copyfirmware2 copydata2
