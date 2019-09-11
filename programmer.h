@@ -32,7 +32,14 @@ public slots:
     }
     void setRestoring(bool restore) {
         m_restore = restore;
+        m_status = Status::WAIT_AVRDUDE;
+        m_process_out = "";
+        m_process_percent = 0;
         emit restoreChanged(restore);
+        emit statusChanged(m_status);
+        emit statusVChanged(getStatusDescription());
+        emit processOutChanged(m_process_out);
+        emit processPercentChanged(m_process_percent);
     }
 private:
     void programDFU();
@@ -43,5 +50,6 @@ private:
     Status::Value m_status;
     Port* m_port;
     bool m_restore;
+    board_t detectBoard();
 };
 #endif // PROGRAMMER_H

@@ -49,7 +49,16 @@ Page {
             horizontalAlignment: Text.AlignHCenter
             fontSizeMode: Text.FixedSize
         }
-
+        Button {
+            id: restore
+            text: qsTr("Restore Device back to Arduino")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            visible: scanner.selected.boardName() !== "micro"
+            onClicked: {
+                programmer.setRestoring(true);
+                mainStack.push("Programmer.qml");
+            }
+        }
         Button {
             id: configureContinue
             text: qsTr("Continue")

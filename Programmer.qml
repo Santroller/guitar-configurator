@@ -126,7 +126,7 @@ Page {
 
             Button {
                 id: cntBtn
-                text: qsTr(programmer.restore?"Start Configuring":"Finish restore")
+                text: qsTr(programmer.restore?"Finish Restore":"Start Configuring")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: programmer.restore?mainStack.push("Welcome.qml"):mainStack.push("Configure.qml")
                 enabled: programmer.status === Status.COMPLETE

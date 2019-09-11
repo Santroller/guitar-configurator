@@ -11,10 +11,33 @@ Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT
 {
 
 }
-void Programmer::programDFU() {
+board_t Programmer::detectBoard() {
     board_t board = ArdwiinoLookup::retriveDFUVariant(m_port->getBoard());
+    if (!m_restore) {
+        return board;
+    }
+    board = ArdwiinoLookup::boards[0];
+    auto dir = QDir(QCoreApplication::applicationDirPath());
+    dir.cd("binaries");
+    m_port->prepareUpload();
+    for (board_t board: ArdwiinoLookup::boards) {
+        if (board.originalFirmware == "") continue;
+        m_process = new QProcess();
+        m_process->setWorkingDirectory(dir.path());
+        connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
+        m_process->start(dir.filePath("dfu-programmer"), {board.processor, "get"});
+        m_process->waitForFinished();
+        if (m_process->exitCode() == 0) {
+            return board;
+        }
+    }
+    return board;
+}
+void Programmer::programDFU() {
+    board_t board = detectBoard();
     QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency);
     if (m_restore) {
+        board = ArdwiinoLookup::boards[0];
         hexFile = board.originalFirmware;
     }
     auto dir = QDir(QCoreApplication::applicationDirPath());
@@ -42,6 +65,7 @@ void Programmer::programDFU() {
         break;
     case Status::DFU_FLASH:
         l.push_back("flash");
+        l.push_back("--suppress-bootloader-mem");
         l.push_back(file+".hex");
         break;
     default:
@@ -92,7 +116,12 @@ void Programmer::programAvrDude() {
 void Programmer::program(Port* port) {
     m_port = port;
     if (m_status == Status::WAIT_AVRDUDE) {
-        programAvrDude();
+        if (m_restore) {
+            m_status = Status::DFU_CONNECT;
+            programDFU();
+        } else {
+            programAvrDude();
+        }
     }
     if (m_status == Status::DFU_DISCONNECT) {
         m_status = Status::COMPLETE;
@@ -125,7 +154,11 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         programDFU();
         break;
     case Status::DFU_ERASE:
-        m_status = Status::DFU_EEPROM;
+        if (m_restore) {
+            m_status = Status::DFU_FLASH;
+        } else {
+            m_status = Status::DFU_EEPROM;
+        }
         programDFU();
         break;
     case Status::DFU_EEPROM:
@@ -148,10 +181,14 @@ void Programmer::onReady() {
     QString out2 = m_process->readAllStandardError();
     m_process_out += out2;
     m_process_out += out;
-    bool hasDfu = ArdwiinoLookup::hasDFUVariant(m_port->getBoard());
-    //Each # counts for 2%, and there are 5 steps, so 500% total. 2/500 rescales that back to 100%.
-    m_process_percent += out2.count('#')*((100.0/50.0)/500.0) * (hasDfu?0.5:1);
-    m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;
+    if (m_restore) {
+        m_process_percent += out2.count('>')*((100.0/32.0)/200.0);
+    } else {
+        bool hasDfu = ArdwiinoLookup::hasDFUVariant(m_port->getBoard());
+        //Each # counts for 2%, and there are 5 steps, so 500% total. 2/500 rescales that back to 100%.
+        m_process_percent += out2.count('#')*((100.0/50.0)/500.0) * (hasDfu?0.5:1);
+        m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;
+    }
     emit processOutChanged(m_process_out);
     emit processPercentChanged(m_process_percent);
     emit statusVChanged(getStatusDescription());

@@ -20,7 +20,7 @@ bool ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) {
 }
 
 const board_t ArdwiinoLookup::boards[4] = {
-    {"uno-usb","Arduino Uno DFU",57600,{},"dfu","atmega16u2",16000000,"Arduino-COMBINED-dfu-usbserial-atmega16u2-Uno-Rev3.hex"},
+    {"uno-usb","Arduino Uno DFU",57600,{},"dfu","atmega16u2",16000000,"Arduino-COMBINED-dfu-usbserial-atmega16u2-Uno-Rev3"},
     {"uno-main","Arduino Uno",115200,{0x0043, 0x7523, 0x0001, 0xea60},"arduino","atmega328p",16000000,""},
     {"micro","Arduino Pro Micro",57600,{0x9203, 0x9204,0x9205, 0x9206, 0x9207, 0x9208},"avr109","atmega32u4",8000000,""},
     {"micro","Arduino Leonardo",57600,{0x0036, 0x8036, 0x800c},"avr109","atmega32u4",16000000,""},
