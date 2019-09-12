@@ -6,6 +6,8 @@
 #include "portscanner.h"
 #include "programmer.h"
 #include "status.h"
+#include "input_types.h"
+#include "controllers.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,7 +17,17 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     qmlRegisterUncreatableType<Status>("net.tangentmc", 1, 0, "Status",
                                             "Not creatable as it is an enum type.");
-    qRegisterMetaType<Status::Value>("Status::Value");
+    qRegisterMetaType<InputTypes::Value>("Status::Value");
+    qmlRegisterUncreatableType<InputTypes>("net.tangentmc", 1, 0, "InputTypes",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<InputTypes::Value>("InputTypes::Value");
+    qmlRegisterUncreatableType<Controllers>("net.tangentmc", 1, 0, "Controllers",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<Controllers::Value>("Controllers::Value");
+    qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QJSValue {
+        Q_UNUSED(engine)
+        return scriptEngine->newQObject(ArdwiinoLookup::getInstance());
+    });
     auto* scanner = new PortScanner();
     auto* programmer = new Programmer();
     engine.rootContext()->setContextProperty("scanner", scanner);

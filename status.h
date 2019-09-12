@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 
-class Status
+class Status : public QObject
 {
     Q_GADGET
 public:

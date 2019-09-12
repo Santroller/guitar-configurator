@@ -137,6 +137,7 @@ Page {
                 text: programmer.statusDescription
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
+
             ProgressBar {
                 id: progressBar
                 Layout.fillWidth: true

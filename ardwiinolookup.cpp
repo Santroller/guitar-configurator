@@ -1,8 +1,10 @@
 #include "ardwiinolookup.h"
 #include "QDebug"
-#include "controllers.h"
 #include "wii_extensions.h"
 #include "input_types.h"
+ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
+
+}
 QString ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) {
     InputTypes::Value vtype = InputTypes::Value(type);
     if (vtype == InputTypes::WII_TYPE) {
@@ -11,13 +13,14 @@ QString ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) {
     return InputTypes::toString(vtype);
 }
 QString ArdwiinoLookup::lookupType(uint8_t type) {
-    return Controllers::toString(Controllers::Value(type));
+    return getControllerName(Controllers::Value(type));
 }
 
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 bool ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) {
     return serialPortInfo.vendorIdentifier() == SONY_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
+ArdwiinoLookup* ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty =  {"","",0,{},"","",0,""};
 const board_t ArdwiinoLookup::boards[4] = {
     {"uno-usb","Arduino Uno DFU",57600,{},"dfu","atmega16u2",16000000,"Arduino-COMBINED-dfu-usbserial-atmega16u2-Uno-Rev3"},
@@ -59,4 +62,13 @@ const board_t* ArdwiinoLookup::detectBoard(const QSerialPortInfo& serialPortInfo
         }
     }
     return nullptr;
+}
+ArdwiinoLookup* ArdwiinoLookup::getInstance() {
+    if (!ArdwiinoLookup::instance) {
+        ArdwiinoLookup::instance = new ArdwiinoLookup();
+    }
+    return ArdwiinoLookup::instance;
+}
+QString ArdwiinoLookup::getControllerTypeName(Controllers::Value value) {
+    return Controllers::toString(value);
 }

@@ -140,7 +140,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
 
     switch (m_status) {
     case Status::AVRDUDE:
-        if (ArdwiinoLookup::hasDFUVariant(m_port->getBoard())) {
+        if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
             m_status = Status::DFU_CONNECT;
             m_port->close();
             programDFU();
@@ -186,7 +186,7 @@ void Programmer::onReady() {
     if (m_restore) {
         m_process_percent += out2.count('>')*((100.0/32.0)/200.0);
     } else {
-        bool hasDfu = ArdwiinoLookup::hasDFUVariant(m_port->getBoard());
+        bool hasDfu = ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard());
         //Each # counts for 2%, and there are 5 steps, so 500% total. 2/500 rescales that back to 100%.
         m_process_percent += out2.count('#')*((100.0/50.0)/500.0) * (hasDfu?0.5:1);
         m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;

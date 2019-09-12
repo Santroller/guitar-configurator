@@ -17,7 +17,7 @@ void Port::close() {
     m_serialPort->close();
 }
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
-    m_isArdwiino = ArdwiinoLookup::isArdwiino(serialPortInfo);
+    m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
     if (m_isArdwiino) {
         m_description = "Ardwiino - Reading Controller Information";
         m_port = serialPortInfo.systemLocation();
@@ -129,8 +129,8 @@ void Port::readDescription() {
         read('r', readData, sizeof(config_t));
         memcpy(&controller, readData.data(), sizeof(controller_t));
     }
-    m_description = "Ardwiino - "+ ArdwiinoLookup::lookupType(m_config.sub_type);
-    m_description += " - " + ArdwiinoLookup::lookupExtension(m_config.input_type, controller.device_info);
+    m_description = "Ardwiino - "+ ArdwiinoLookup::getInstance()->lookupType(m_config.sub_type);
+    m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config.input_type, controller.device_info);
     m_description += " - " + m_port;
     emit descriptionChanged(m_description);
 }
