@@ -57,10 +57,27 @@ public slots:
     Controllers::Value getType() const {
         return Controllers::Value(m_config.sub_type);
     }
+    MPU6050Orientations::Value getOrientation() const {
+        return MPU6050Orientations::Value(m_config.mpu_6050_orientation);
+    }
+    InputTypes::Value getInputType() const {
+        return InputTypes::Value(m_config.input_type);
+    }
+    TiltTypes::Value getTiltType() const {
+        return TiltTypes::Value(m_config.tilt_type);
+    }
     void setType(Controllers::Value value) {
         m_config.sub_type = value;
-        descriptionChanged(m_description);
         imageChanged(getImage());
+    }
+    void setInputType(InputTypes::Value value) {
+        m_config.input_type = value;
+    }
+    void setTiltType(TiltTypes::Value value) {
+        m_config.tilt_type = value;
+    }
+    void setOrientation(MPU6050Orientations::Value value) {
+        m_config.mpu_6050_orientation = value;
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     bool findNewAsync();

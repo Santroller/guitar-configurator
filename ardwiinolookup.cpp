@@ -69,6 +69,3 @@ ArdwiinoLookup* ArdwiinoLookup::getInstance() {
     }
     return ArdwiinoLookup::instance;
 }
-QString ArdwiinoLookup::getControllerTypeName(Controllers::Value value) {
-    return Controllers::toString(value);
-}

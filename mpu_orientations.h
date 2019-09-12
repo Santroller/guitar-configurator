@@ -27,5 +27,6 @@ public:
         case Value::POSITIVE_X_TYPE: return "Rotation around X, Positive";
         case Value::NEGATIVE_X_TYPE: return "Rotation around X, Negative";
         }
+        return "Unknown rotation";
     }
 };

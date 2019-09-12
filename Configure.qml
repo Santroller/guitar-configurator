@@ -60,13 +60,64 @@ Page {
         }
 
         ComboBox {
+            id: orientationBox
+            Layout.fillWidth: true
+            textRole: "key"
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: {
+                let model = [];
+                for (let i = 0; i <= MPU6050Orientations.END; i++) {
+                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
+                }
+                return model
+            }
+            currentIndex: scanner.selected.getOrientation();
+
+            onCurrentIndexChanged: scanner.selected.setOrientation(comboBox.model[comboBox.currentIndex].value)
+        }
+
+        ComboBox {
+            id: tiltBox
+            Layout.fillWidth: true
+            textRole: "key"
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: {
+                let model = [];
+                for (let i = 0; i <= TiltTypes.END; i++) {
+                    model.push({key: ArdwiinoLookup.getTiltTypeName(i), value:i});
+                }
+                return model
+            }
+            currentIndex: scanner.selected.getTiltType();
+
+            onCurrentIndexChanged: scanner.selected.setTiltType(comboBox.model[comboBox.currentIndex].value)
+        }
+
+        ComboBox {
+            id: inputBox
+            Layout.fillWidth: true
+            textRole: "key"
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: {
+                let model = [];
+                for (let i = 0; i <= InputTypes.END; i++) {
+                    model.push({key: ArdwiinoLookup.getInputTypeName(i), value:i});
+                }
+                return model
+            }
+            currentIndex: scanner.selected.getInputType();
+
+            onCurrentIndexChanged: scanner.selected.setInputType(comboBox.model[comboBox.currentIndex].value)
+        }
+
+        ComboBox {
             id: comboBox
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: {
                 let model = [];
-                for (let i = 0; i < Controllers.END; i++) {
+                for (let i = 0; i <= Controllers.END; i++) {
                     let name = ArdwiinoLookup.getControllerTypeName(i);
                     if (name !== "Unknown Controller") {
                         model.push({key: name, value:i});

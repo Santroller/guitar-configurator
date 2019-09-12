@@ -25,6 +25,12 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Controllers>("net.tangentmc", 1, 0, "Controllers",
                                             "Not creatable as it is an enum type.");
     qRegisterMetaType<Controllers::Value>("Controllers::Value");
+    qmlRegisterUncreatableType<TiltTypes>("net.tangentmc", 1, 0, "TiltTypes",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<TiltTypes::Value>("TiltTypes::Value");
+    qmlRegisterUncreatableType<MPU6050Orientations>("net.tangentmc", 1, 0, "MPU6050Orientations",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<MPU6050Orientations::Value>("MPU6050Orientations::Value");
     qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QJSValue {
         Q_UNUSED(engine)
         return scriptEngine->newQObject(ArdwiinoLookup::getInstance());

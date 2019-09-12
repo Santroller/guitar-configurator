@@ -18,10 +18,11 @@ public:
 
     static QString toString(Value value) {
         switch(value) {
-        case Value::NONE_SENSOR: return "No Sensor";
+        case Value::NONE_SENSOR: return "Disable Tilt";
         case Value::MPU_6050_SENSOR: return "MPU 6050 Based Sensor";
         case Value::GRAVITY_SENSOR: return "Digital Sensor";
         case Value::ANALOGUE_SENSOR: return "Analogue Sensor";
         }
+        return "No Sensor";
     }
 };
