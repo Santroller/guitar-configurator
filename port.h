@@ -25,6 +25,7 @@ public:
     void findNew();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
+    void writeConfig();
 signals:
     void descriptionChanged(QString newValue);
     void dfuFound(bool found);
@@ -50,18 +51,18 @@ public slots:
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     bool findNewAsync();
-    void update();
+    void readDescription();
 private:
+    void read(char id, QByteArray& location, unsigned long size);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
     QString m_port;
     QSerialPort* m_serialPort;
-    QByteArray readData;
     board_t m_board;
     QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
     bool m_hasDFU;
-    bool readDFU;
+    config_t m_config;
 };
 
 #endif // PORT_H

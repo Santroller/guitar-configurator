@@ -1,12 +1,13 @@
 #include "port.h"
 #include "QDebug"
 #include "QThread"
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty),readDFU(false)
+#include "input_types.h"
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty),readDFU(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -30,16 +31,29 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     }
     emit descriptionChanged(m_description);
 }
-
+void Port::read(char id, QByteArray &readData, unsigned long size) {
+    readData.clear();
+    m_serialPort->flush();
+    m_serialPort->write(&id);
+    m_serialPort->waitForBytesWritten();
+    do {
+        m_serialPort->waitForReadyRead();
+        readData.push_back(m_serialPort->readAll());
+    } while (readData.length() < static_cast<signed>(size));
+}
 void Port::open(const QSerialPortInfo &serialPortInfo) {
     m_serialPort = new QSerialPort(serialPortInfo);
     if (m_isArdwiino) {
-        QObject::connect(m_serialPort, &QSerialPort::readyRead, this, &Port::update);
-        QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         m_serialPort->setBaudRate(57600);
+        QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         if (m_serialPort->open(QIODevice::ReadWrite)) {
-            m_serialPort->flush();
-            m_serialPort->write("f");
+            QByteArray readData;
+            read('f', readData, 0);
+            m_hasDFU = readData.contains("DFU");
+            emit dfuFound(m_hasDFU);
+            read('c', readData, sizeof(config_t));
+            memcpy(&m_config, readData.data(), sizeof(config_t));
+            readDescription();
         } else {
             m_serialPort->close();
         }
@@ -100,32 +114,24 @@ bool Port::findNewAsync() {
     return false;
 }
 
-void Port::update() {
-    readData.append(m_serialPort->readAll());
-    if (!readDFU) {
-        readDFU = true;
-        m_hasDFU = readData.contains("DFU");
-        readData.clear();
-        m_serialPort->flush();
-        m_serialPort->write("r");
-        emit dfuFound(m_hasDFU);
-        return;
-    }
-    if (readData.length() < static_cast<signed>(sizeof(config_t) + sizeof(controller_t))) {
-        return;
-    }
-    m_description = "Unknown Device - " + m_port;
-
-    config_t config;
-    controller_t controller;
-    memcpy(&config, readData.data(), sizeof(config_t));
-    memcpy(&controller, readData.data()+sizeof(config_t), sizeof(controller_t));
-    m_description = "Ardwiino - "+ ArdwiinoLookup::lookupType(config.sub_type);
-    m_description += " - " + ArdwiinoLookup::lookupExtension(config.input_type, controller.device_info);
-    m_description += " - " + m_port;
+void Port::writeConfig() {
+    char data[sizeof(char)+sizeof(config_t)] = {'w'};
+    memcpy(data+sizeof(char), &m_config, sizeof(config_t));
     m_serialPort->flush();
-    m_serialPort->write("r");
-    readData.clear();
+    m_serialPort->write(data);
+    m_serialPort->waitForBytesWritten();
+}
+
+void Port::readDescription() {
+    controller_t controller;
+    if (InputTypes::Value(m_config.input_type) == InputTypes::WII_TYPE) {
+        QByteArray readData;
+        read('r', readData, sizeof(config_t));
+        memcpy(&controller, readData.data(), sizeof(controller_t));
+    }
+    m_description = "Ardwiino - "+ ArdwiinoLookup::lookupType(m_config.sub_type);
+    m_description += " - " + ArdwiinoLookup::lookupExtension(m_config.input_type, controller.device_info);
+    m_description += " - " + m_port;
     emit descriptionChanged(m_description);
 }
 
