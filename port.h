@@ -14,6 +14,7 @@ class Port : public QObject
     Q_OBJECT
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
+    Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
@@ -25,12 +26,13 @@ public:
     void findNew();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
-    void writeConfig();
 signals:
     void descriptionChanged(QString newValue);
+    void imageChanged(QString newValue);
     void dfuFound(bool found);
 
 public slots:
+    void writeConfig();
     QString description() const {
         return m_description;
     }
@@ -49,10 +51,22 @@ public slots:
     QString getPort() const {
         return m_port;
     }
+    QString getImage() const {
+        return Controllers::getImage(Controllers::Value(m_config.sub_type));
+    }
+    Controllers::Value getType() const {
+        return Controllers::Value(m_config.sub_type);
+    }
+    void setType(Controllers::Value value) {
+        m_config.sub_type = value;
+        descriptionChanged(m_description);
+        imageChanged(getImage());
+    }
     void handleError(QSerialPort::SerialPortError serialPortError);
     bool findNewAsync();
     void readDescription();
 private:
+    void readData();
     void read(char id, QByteArray& location, unsigned long size);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
@@ -62,6 +76,7 @@ private:
     QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
     bool m_hasDFU;
+    config_t m_config_device;
     config_t m_config;
 };
 

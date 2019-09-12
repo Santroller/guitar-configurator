@@ -11,7 +11,7 @@ Page {
     ColumnLayout {
         id: column
         anchors.fill: parent
-
+        //TODO: we should just display an upload symbol on this page instead.
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter

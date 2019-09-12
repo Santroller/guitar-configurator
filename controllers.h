@@ -28,7 +28,41 @@ public:
     };
 
     Q_ENUM(Value)
-
+    static QString getImage(Value value) {
+        switch(value) {
+        case XINPUT_GAMEPAD:
+            return "images/xbox.png";
+        case XINPUT_WHEEL:
+            return "images/xbox.png";
+        case XINPUT_ARCADE_STICK:
+            return "images/arcadestick.png";
+        case XINPUT_FLIGHT_STICK:
+            return "images/flightstick.png";
+        case XINPUT_DANCE_PAD:
+            return "images/ddr.png";
+        case XINPUT_GUITAR:
+        case XINPUT_GUITAR_ALTERNATE:
+        case XINPUT_GUITAR_BASS:
+            return "images/guitar.png";
+        case XINPUT_DRUM:
+            return "images/rb-drums.png";
+        case XINPUT_ARCADE_PAD:
+            return "images/arcadestick.png";
+        case KEYBOARD:
+            return "keyboard.png";
+        case SWITCH_GAMEPAD:
+            return "images/controller.png";
+        case PS3_GAMEPAD:
+            return "images/controller.png";
+        case PS3_GUITAR_GH:
+        case PS3_GUITAR_RB:
+            return "images/guitar.png";
+        case PS3_DRUM_GH:
+        case PS3_DRUM_RB:
+            return "images/rb-drums.png";
+        }
+        return "images/controller.png";
+    }
     static QString toString(Value value) {
         switch(value) {
         case XINPUT_GAMEPAD:

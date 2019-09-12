@@ -6,10 +6,14 @@
         <file>images/keyboard.png</file>
         <file>images/wii.png</file>
         <file>images/xbox.png</file>
-        <file>images/xplorer.png</file>
+        <file>images/guitar.png</file>
         <file>Welcome.qml</file>
         <file>Configure.qml</file>
         <file>Programmer.qml</file>
         <file>images/dfu.png</file>
+        <file>images/arcadestick.png</file>
+        <file>images/ddr.png</file>
+        <file>images/flightstick.png</file>
+        <file>images/rb-drums.png</file>
     </qresource>
 </RCC>

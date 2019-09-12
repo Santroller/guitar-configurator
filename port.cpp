@@ -41,19 +41,23 @@ void Port::read(char id, QByteArray &readData, unsigned long size) {
         readData.push_back(m_serialPort->readAll());
     } while (readData.length() < static_cast<signed>(size));
 }
+void Port::readData() {
+    QByteArray readData;
+    read('f', readData, 0);
+    m_hasDFU = readData.contains("DFU");
+    emit dfuFound(m_hasDFU);
+    read('c', readData, sizeof(config_t));
+    memcpy(&m_config, readData.data(), sizeof(config_t));
+    memcpy(&m_config_device, readData.data(), sizeof(config_t));
+    readDescription();
+}
 void Port::open(const QSerialPortInfo &serialPortInfo) {
     m_serialPort = new QSerialPort(serialPortInfo);
     if (m_isArdwiino) {
         m_serialPort->setBaudRate(57600);
         QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         if (m_serialPort->open(QIODevice::ReadWrite)) {
-            QByteArray readData;
-            read('f', readData, 0);
-            m_hasDFU = readData.contains("DFU");
-            emit dfuFound(m_hasDFU);
-            read('c', readData, sizeof(config_t));
-            memcpy(&m_config, readData.data(), sizeof(config_t));
-            readDescription();
+            readData();
         } else {
             m_serialPort->close();
         }
@@ -115,22 +119,24 @@ bool Port::findNewAsync() {
 }
 
 void Port::writeConfig() {
-    char data[sizeof(char)+sizeof(config_t)] = {'w'};
-    memcpy(data+sizeof(char), &m_config, sizeof(config_t));
+    char data[1+sizeof(config_t)] = {'w'};
+    memcpy(&data[1], &m_config, sizeof(config_t));
     m_serialPort->flush();
-    m_serialPort->write(data);
+    m_serialPort->write(data, sizeof(data));
     m_serialPort->waitForBytesWritten();
+    m_serialPort->close();
+    findNew();
 }
 
 void Port::readDescription() {
     controller_t controller;
-    if (InputTypes::Value(m_config.input_type) == InputTypes::WII_TYPE) {
+    if (InputTypes::Value(m_config_device.input_type) == InputTypes::WII_TYPE) {
         QByteArray readData;
         read('r', readData, sizeof(config_t));
         memcpy(&controller, readData.data(), sizeof(controller_t));
     }
-    m_description = "Ardwiino - "+ ArdwiinoLookup::getInstance()->lookupType(m_config.sub_type);
-    m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config.input_type, controller.device_info);
+    m_description = "Ardwiino - "+ ArdwiinoLookup::getInstance()->lookupType(m_config_device.sub_type);
+    m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.input_type, controller.device_info);
     m_description += " - " + m_port;
     emit descriptionChanged(m_description);
 }

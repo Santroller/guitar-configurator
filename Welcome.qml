@@ -14,7 +14,11 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: "images/controller.png"
+            source: {
+                let index = devices.currentIndex;
+                if (index === -1) return "images/controller.png";
+                return devices.model[index].image;
+            }
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.height/3

@@ -13,7 +13,7 @@ QString ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) {
     return InputTypes::toString(vtype);
 }
 QString ArdwiinoLookup::lookupType(uint8_t type) {
-    return getControllerName(Controllers::Value(type));
+    return Controllers::toString(Controllers::Value(type));
 }
 
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.

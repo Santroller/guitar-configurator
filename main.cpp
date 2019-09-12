@@ -8,6 +8,7 @@
 #include "status.h"
 #include "input_types.h"
 #include "controllers.h"
+#include "submodules/Ardwiino/src/shared/config/config.h"
 
 int main(int argc, char *argv[])
 {

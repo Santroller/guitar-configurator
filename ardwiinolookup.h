@@ -39,7 +39,7 @@ public slots:
     QString lookupType(uint8_t type);
     bool isArdwiino(const QSerialPortInfo &info);
     bool hasDFUVariant(const board_t board);
-    QString getControllerName(Controllers::Value value);
+    QString getControllerTypeName(Controllers::Value value);
 private:
     static ArdwiinoLookup* instance;
 };

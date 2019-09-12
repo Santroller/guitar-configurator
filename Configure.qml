@@ -24,7 +24,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: "images/controller.png"
+            source: scanner.selected.image
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
@@ -74,6 +74,9 @@ Page {
                 }
                 return model
             }
+            currentIndex: comboBox.model.findIndex(s => s.value === scanner.selected.getType());
+
+            onCurrentIndexChanged: scanner.selected.setType(comboBox.model[comboBox.currentIndex].value)
         }
 
         Button {
@@ -88,10 +91,10 @@ Page {
         }
         Button {
             id: configureContinue
-            text: qsTr("Continue")
+            text: qsTr("Write")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             enabled: true
-            onClicked: mainStack.push()
+            onClicked: scanner.selected.writeConfig();
         }
 
 
