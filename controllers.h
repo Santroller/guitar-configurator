@@ -49,7 +49,7 @@ public:
         case XINPUT_ARCADE_PAD:
             return "images/arcadestick.png";
         case KEYBOARD:
-            return "keyboard.png";
+            return "images/keyboard.png";
         case SWITCH_GAMEPAD:
             return "images/controller.png";
         case PS3_GAMEPAD:

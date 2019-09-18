@@ -65,7 +65,7 @@ Page {
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: {
-                let model = [];
+                let model = []; 
                 for (let i = 0; i <= MPU6050Orientations.END; i++) {
                     model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
                 }
@@ -73,7 +73,7 @@ Page {
             }
             currentIndex: scanner.selected.getOrientation();
 
-            onCurrentIndexChanged: scanner.selected.setOrientation(comboBox.model[comboBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.setOrientation(orientationBox.model[orientationBox.currentIndex].value)
         }
 
         ComboBox {
@@ -90,7 +90,7 @@ Page {
             }
             currentIndex: scanner.selected.getTiltType();
 
-            onCurrentIndexChanged: scanner.selected.setTiltType(comboBox.model[comboBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.setTiltType(tiltBox.model[tiltBox.currentIndex].value)
         }
 
         ComboBox {
@@ -107,7 +107,7 @@ Page {
             }
             currentIndex: scanner.selected.getInputType();
 
-            onCurrentIndexChanged: scanner.selected.setInputType(comboBox.model[comboBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.setInputType(inputBox.model[inputBox.currentIndex].value)
         }
 
         ComboBox {

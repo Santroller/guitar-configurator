@@ -7,7 +7,6 @@ class InputTypes
     Q_GADGET
 public:
     enum Value {
-        INPUTTYPE(NONE),
         INPUTTYPE(WII),
         INPUTTYPE(DIRECT),
         END=DIRECT_TYPE
@@ -17,7 +16,6 @@ public:
 
     static QString toString(Value value) {
         switch(value) {
-        case Value::NONE_TYPE: return "No Controller Type";
         case Value::WII_TYPE: return "Wii Extension Adaptor";
         case Value::DIRECT_TYPE: return "Directly Wired Controller";
         }
