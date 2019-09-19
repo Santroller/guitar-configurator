@@ -7,6 +7,7 @@
 #include "programmer.h"
 #include "status.h"
 #include "input_types.h"
+#include "joy_types.h"
 #include "controllers.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 
@@ -31,6 +32,9 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<MPU6050Orientations>("net.tangentmc", 1, 0, "MPU6050Orientations",
                                             "Not creatable as it is an enum type.");
     qRegisterMetaType<MPU6050Orientations::Value>("MPU6050Orientations::Value");
+    qmlRegisterUncreatableType<JoyTypes>("net.tangentmc", 1, 0, "JoyTypes",
+                                            "Not creatable as it is an enum type.");
+    qRegisterMetaType<JoyTypes::Value>("JoyTypes::Value");
     qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QJSValue {
         Q_UNUSED(engine)
         return scriptEngine->newQObject(ArdwiinoLookup::getInstance());

@@ -37,6 +37,7 @@ HEADERS += \
     ardwiinolookup.h \
     controllers.h \
     input_types.h \
+    joy_types.h \
     mpu_orientations.h \
     port.h \
     portscanner.h \

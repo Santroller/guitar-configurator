@@ -10,6 +10,7 @@
 #include "submodules/Ardwiino/src/shared/controller/controller.h"
 #include "controllers.h"
 #include "input_types.h"
+#include "joy_types.h"
 #include "mpu_orientations.h"
 #include "tilt_types.h"
 #define ARDWIINO_VID 0x1209
@@ -49,6 +50,9 @@ public slots:
     }
     inline QString getInputTypeName(InputTypes::Value value) {
         return InputTypes::toString(value);
+    }
+    inline QString getJoyTypeName(JoyTypes::Value value) {
+        return JoyTypes::toString(value);
     }
     inline QString getOrientationName(MPU6050Orientations::Value value) {
         return MPU6050Orientations::toString(value);

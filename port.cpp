@@ -120,6 +120,68 @@ bool Port::findNewAsync() {
     return false;
 }
 
+void Port::loadPins() {
+    m_pins["up"] = m_config.pins.up;
+    m_pins["down"] = m_config.pins.down;
+    m_pins["left"] = m_config.pins.left;
+    m_pins["right"] = m_config.pins.right;
+    m_pins["start"] = m_config.pins.start;
+    m_pins["back"] = m_config.pins.back;
+    m_pins["left_stick"] = m_config.pins.left_stick;
+    m_pins["right_stick"] = m_config.pins.right_stick;
+    m_pins["LB"] = m_config.pins.LB;
+    m_pins["RB"] = m_config.pins.RB;
+    m_pins["home"] = m_config.pins.home;
+    m_pins["unused"] = m_config.pins.unused;
+    m_pins["a"] = m_config.pins.a;
+    m_pins["b"] = m_config.pins.b;
+    m_pins["x"] = m_config.pins.x;
+    m_pins["y"] = m_config.pins.y;
+    m_pins["lt"] = m_config.pins.lt;
+    m_pins["rt"] = m_config.pins.rt;
+    m_pins["l_x"] = m_config.pins.l_x;
+    m_pins["l_y"] = m_config.pins.l_y;
+    m_pins["r_x"] = m_config.pins.r_x;
+    m_pins["r_y"] = m_config.pins.r_y;
+    m_pin_inverts["lt"] = m_config.inversions.lt;
+    m_pin_inverts["rt"] = m_config.inversions.rt;
+    m_pin_inverts["l_x"] = m_config.inversions.l_x;
+    m_pin_inverts["l_y"] = m_config.inversions.l_y;
+    m_pin_inverts["r_x"] = m_config.inversions.r_x;
+    m_pin_inverts["r_y"] = m_config.inversions.r_y;
+}
+
+void Port::savePins() {
+    m_config.pins.up = uint8_t(m_pins["up"].toUInt());
+    m_config.pins.down = uint8_t(m_pins["down"].toUInt());
+    m_config.pins.left = uint8_t(m_pins["left"].toUInt());
+    m_config.pins.right = uint8_t(m_pins["right"].toUInt());
+    m_config.pins.start = uint8_t(m_pins["start"].toUInt());
+    m_config.pins.back = uint8_t(m_pins["back"].toUInt());
+    m_config.pins.left_stick = uint8_t(m_pins["left_stick"].toUInt());
+    m_config.pins.right_stick = uint8_t(m_pins["right_stick"].toUInt());
+    m_config.pins.LB = uint8_t(m_pins["LB"].toUInt());
+    m_config.pins.RB = uint8_t(m_pins["RB"].toUInt());
+    m_config.pins.home = uint8_t(m_pins["home"].toUInt());
+    m_config.pins.unused = uint8_t(m_pins["unused"].toUInt());
+    m_config.pins.a = uint8_t(m_pins["a"].toUInt());
+    m_config.pins.b = uint8_t(m_pins["b"].toUInt());
+    m_config.pins.x = uint8_t(m_pins["x"].toUInt());
+    m_config.pins.y = uint8_t(m_pins["y"].toUInt());
+    m_config.pins.lt = uint8_t(m_pins["lt"].toUInt());
+    m_config.pins.rt = uint8_t(m_pins["rt"].toUInt());
+    m_config.pins.l_x = uint8_t(m_pins["l_x"].toUInt());
+    m_config.pins.l_y = uint8_t(m_pins["l_y"].toUInt());
+    m_config.pins.r_x = uint8_t(m_pins["r_x"].toUInt());
+    m_config.pins.r_y = uint8_t(m_pins["r_y"].toUInt());
+    m_config.inversions.lt = m_pin_inverts["lt"].toBool();
+    m_config.inversions.rt = m_pin_inverts["rt"].toBool();
+    m_config.inversions.l_x = m_pin_inverts["l_x"].toBool();
+    m_config.inversions.l_y = m_pin_inverts["l_y"].toBool();
+    m_config.inversions.r_x = m_pin_inverts["r_x"].toBool();
+    m_config.inversions.r_y = m_pin_inverts["r_y"].toBool();
+}
+
 void Port::writeConfig() {
     char data[1+sizeof(config_t)] = {'w'};
     memcpy(&data[1], &m_config, sizeof(config_t));

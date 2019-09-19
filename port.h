@@ -14,9 +14,12 @@ class Port : public QObject
     Q_OBJECT
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
+    Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
+    Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
+    Q_PROPERTY(QString currentPin MEMBER m_currentPin NOTIFY currentPinChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -30,6 +33,9 @@ public:
 signals:
     void descriptionChanged(QString newValue);
     void imageChanged(QString newValue);
+    void pinsChanged(QVariantMap newValue);
+    void pinInvertsChanged(QVariantMap newValue);
+    void currentPinChanged(QString newValue);
     void boardImageChanged(QString newValue);
     void dfuFound(bool found);
 
@@ -49,6 +55,9 @@ public slots:
     }
     bool isArdwiino() const {
         return m_isArdwiino;
+    }
+    bool isGuitar() const {
+        return ArdwiinoLookup::getInstance()->getControllerTypeName(getType()).toLower().contains("guitar");
     }
     QString getPort() const {
         return m_port;
@@ -87,6 +96,8 @@ public slots:
     void handleError(QSerialPort::SerialPortError serialPortError);
     bool findNewAsync();
     void readDescription();
+    void loadPins();
+    void savePins();
 private:
     void readData();
     void read(char id, QByteArray& location, unsigned long size);
@@ -100,6 +111,9 @@ private:
     bool m_hasDFU;
     config_t m_config_device;
     config_t m_config;
+    QVariantMap m_pins;
+    QVariantMap m_pin_inverts;
+    QString m_currentPin;
 };
 
 #endif // PORT_H

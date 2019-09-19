@@ -134,7 +134,8 @@ Page {
             text: qsTr("Bind")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
-                mainStack.push("Arduino.qml");
+                scanner.selected.loadPins();
+                mainStack.push("Bindings.qml");
             }
         }
         Button {

@@ -59,93 +59,108 @@ Page {
             }
         }
 
-        ComboBox {
-            id: orientationBox
-            Layout.fillWidth: true
-            textRole: "key"
+
+        Repeater {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = []; 
-                for (let i = 0; i <= MPU6050Orientations.END; i++) {
-                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
-                }
-                return model
+            property var guitarLabels : {
+                "up": "Strum Up",
+                "down": "Strum Down",
+                "left": "DPad Left",
+                "right": "DPad Right",
+                "start": "Start Button",
+                "back": "Select Button",
+                "home": "Home Button",
+                "a": "Green Fret",
+                "b": "Red Fret",
+                "y": "Yellow Fret",
+                "x": "Blue Fret",
+                "LB": "Orange Fret",
+                "l_x": "Joystick X Axis",
+                "l_y": "Joystick Y Axis",
+                "r_x": "Whammy",
+                "r_y": "Tilt Axis",
             }
-            currentIndex: scanner.selected.getOrientation();
 
-            onCurrentIndexChanged: scanner.selected.setOrientation(orientationBox.model[orientationBox.currentIndex].value)
-        }
+            property var defLabels: {
+                "up": "Strum Up",
+                "down": "Strum Down",
+                "left": "DPad Left",
+                "right": "DPad Right",
+                "start": "Start Button",
+                "back": "Back Button",
+                "left_stick": "Left Stick Click",
+                "right_stick": "Right Stick Click",
+                "LB": "Left Bumper",
+                "RB": "Right Bumper",
+                "home": "Home Button",
+                "a": "A Button",
+                "b": "B Button",
+                "x": "X Button",
+                "y": "Y Button",
+                "lt": "Left Shoulder Button",
+                "rt": "Right Shoulder Button",
+                "l_x": "Left Joystick X Axis",
+                "l_y": "Left Joystick Y Axis",
+                "r_x": "Right Joystick X Axis",
+                "r_y": "Right Joystick Y Axis",
 
-        ComboBox {
-            id: tiltBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= TiltTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getTiltTypeName(i), value:i});
-                }
-                return model
             }
-            currentIndex: scanner.selected.getTiltType();
 
-            onCurrentIndexChanged: scanner.selected.setTiltType(tiltBox.model[tiltBox.currentIndex].value)
-        }
+            property var labels: scanner.selected.isGuitar()?guitarLabels:defLabels;
 
-        ComboBox {
-            id: inputBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= InputTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getInputTypeName(i), value:i});
-                }
-                return model
-            }
-            currentIndex: scanner.selected.getInputType();
+            model: Object.keys(labels).length
+            id: rp
 
-            onCurrentIndexChanged: scanner.selected.setInputType(inputBox.model[inputBox.currentIndex].value)
-        }
-
-        ComboBox {
-            id: comboBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= Controllers.END; i++) {
-                    let name = ArdwiinoLookup.getControllerTypeName(i);
-                    if (name !== "Unknown Controller") {
-                        model.push({key: name, value:i});
+            RowLayout {
+               property var key: Object.keys(rp.labels)[index]
+               property var name: rp.labels[key]
+               id:rl
+               Label {
+                    id: label
+                    text: rl.name
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+               }
+               Button {
+                    id: bt
+                    text: scanner.selected.pins[rl.key]
+                    onClicked: {
+                        scanner.selected.currentPin = rl.key;
+                        mainStack.push("PinSelect.qml");
                     }
+               }
+               Switch {
+                   enabled: scanner.selected.pin_inverts.hasOwnProperty(rl.key)
+                   visible: scanner.selected.pin_inverts.hasOwnProperty(rl.key)
+                   checked: !!scanner.selected.pin_inverts[rl.key]
+                   onCheckedChanged: {
+                       var pins = scanner.selected.pin_inverts;
+                       pins[rl.key] = checked;
+                       scanner.selected.pin_inverts = pins;
+                   }
+               }
+            }
+        }
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Button {
+                id: configureContinue
+                text: qsTr("Save Bindings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.pop();
                 }
-                return model
             }
-            currentIndex: comboBox.model.findIndex(s => s.value === scanner.selected.getType());
 
-            onCurrentIndexChanged: scanner.selected.setType(comboBox.model[comboBox.currentIndex].value)
-        }
-
-        Button {
-            id: restore
-            text: qsTr("Restore Device back to Arduino")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            visible: scanner.selected.hasDFU
-            onClicked: {
-                programmer.setRestoring(true);
-                mainStack.push("Programmer.qml");
+            Button {
+                id: cancel
+                text: qsTr("Cancel")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.pop();
+                }
             }
-        }
-        Button {
-            id: configureContinue
-            text: qsTr("Write")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            enabled: true
-            onClicked: scanner.selected.writeConfig();
         }
 
 
