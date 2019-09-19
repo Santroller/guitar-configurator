@@ -13,128 +13,34 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.image
+            source: scanner.selected.boardImage
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
         }
-        Label {
-            id: dev
-            text: qsTr("Connected Device: ")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-            font.bold: true
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            fontSizeMode: Text.FixedSize
-        }
+
         RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: status
-                text: scanner.selected.description
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                wrapMode: Text.WordWrap
-                font.bold: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                fontSizeMode: Text.FixedSize
-            }
             Button {
-                id: refreshBt
-                text: qsTr("Refresh")
+                id: configureContinue
+                text: qsTr("Set Pin")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.getStatusDescription()
-            }
-        }
+                onClicked: {
 
-        ComboBox {
-            id: orientationBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = []; 
-                for (let i = 0; i <= MPU6050Orientations.END; i++) {
-                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
+        //                scanner.selected.writeConfig();
+                    mainStack.pop();
                 }
-                return model
             }
-            currentIndex: scanner.selected.getOrientation();
 
-            onCurrentIndexChanged: scanner.selected.setOrientation(orientationBox.model[orientationBox.currentIndex].value)
-        }
 
-        ComboBox {
-            id: tiltBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= TiltTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getTiltTypeName(i), value:i});
+            Button {
+                id: cancel
+                text: qsTr("Cancel")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.pop();
                 }
-                return model
             }
-            currentIndex: scanner.selected.getTiltType();
-
-            onCurrentIndexChanged: scanner.selected.setTiltType(tiltBox.model[tiltBox.currentIndex].value)
-        }
-
-        ComboBox {
-            id: inputBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= InputTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getInputTypeName(i), value:i});
-                }
-                return model
-            }
-            currentIndex: scanner.selected.getInputType();
-
-            onCurrentIndexChanged: scanner.selected.setInputType(inputBox.model[inputBox.currentIndex].value)
-        }
-
-        ComboBox {
-            id: comboBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= Controllers.END; i++) {
-                    let name = ArdwiinoLookup.getControllerTypeName(i);
-                    if (name !== "Unknown Controller") {
-                        model.push({key: name, value:i});
-                    }
-                }
-                return model
-            }
-            currentIndex: comboBox.model.findIndex(s => s.value === scanner.selected.getType());
-
-            onCurrentIndexChanged: scanner.selected.setType(comboBox.model[comboBox.currentIndex].value)
-        }
-
-        Button {
-            id: restore
-            text: qsTr("Restore Device back to Arduino")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            visible: scanner.selected.hasDFU
-            onClicked: {
-                programmer.setRestoring(true);
-                mainStack.push("Programmer.qml");
-            }
-        }
-        Button {
-            id: configureContinue
-            text: qsTr("Write")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            enabled: true
-            onClicked: scanner.selected.writeConfig();
         }
 
 

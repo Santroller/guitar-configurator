@@ -129,7 +129,14 @@ Page {
 
             onCurrentIndexChanged: scanner.selected.setType(comboBox.model[comboBox.currentIndex].value)
         }
-
+        Button {
+            id: bind
+            text: qsTr("Bind")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                mainStack.push("Arduino.qml");
+            }
+        }
         Button {
             id: restore
             text: qsTr("Restore Device back to Arduino")

@@ -27,6 +27,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
             m_board = *b;
             m_port = serialPortInfo.systemLocation();
             m_description = m_board.name + " - "+m_port;
+            boardImageChanged(getBoardImage());
         }
     }
     emit descriptionChanged(m_description);
@@ -45,6 +46,8 @@ void Port::readData() {
     QByteArray readData;
     read('f', readData, 0);
     m_board = ArdwiinoLookup::findByBoard(readData);
+    m_hasDFU = ArdwiinoLookup::getInstance()->hasDFUVariant(m_board);
+    boardImageChanged(getBoardImage());
     read('c', readData, sizeof(config_t));
     memcpy(&m_config, readData.data(), sizeof(config_t));
     memcpy(&m_config_device, readData.data(), sizeof(config_t));
@@ -134,7 +137,7 @@ void Port::readDescription() {
         read('r', readData, sizeof(config_t));
         memcpy(&controller, readData.data(), sizeof(controller_t));
     }
-    m_description = "Ardwiino - "+ ArdwiinoLookup::getInstance()->lookupType(m_config_device.sub_type);
+    m_description = "Ardwiino - "+ m_board.name+" - "+ArdwiinoLookup::getInstance()->lookupType(m_config_device.sub_type);
     m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.input_type, controller.device_info);
     m_description += " - " + m_port;
     emit descriptionChanged(m_description);

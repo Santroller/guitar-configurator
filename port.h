@@ -15,6 +15,7 @@ class Port : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
+    Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
@@ -29,6 +30,7 @@ public:
 signals:
     void descriptionChanged(QString newValue);
     void imageChanged(QString newValue);
+    void boardImageChanged(QString newValue);
     void dfuFound(bool found);
 
 public slots:
@@ -53,6 +55,9 @@ public slots:
     }
     QString getImage() const {
         return Controllers::getImage(Controllers::Value(m_config.sub_type));
+    }
+    QString getBoardImage() const {
+        return m_board.image;
     }
     Controllers::Value getType() const {
         return Controllers::Value(m_config.sub_type);
@@ -92,6 +97,7 @@ private:
     board_t m_board;
     QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
+    bool m_hasDFU;
     config_t m_config_device;
     config_t m_config;
 };

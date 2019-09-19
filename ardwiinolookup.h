@@ -25,6 +25,7 @@ typedef struct {
     QString processor;
     uint cpuFrequency;
     QString originalFirmware;
+    QString image;
 } board_t;
 
 class ArdwiinoLookup: public QObject
