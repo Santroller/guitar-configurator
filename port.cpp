@@ -44,8 +44,7 @@ void Port::read(char id, QByteArray &readData, unsigned long size) {
 void Port::readData() {
     QByteArray readData;
     read('f', readData, 0);
-    m_hasDFU = readData.contains("DFU");
-    emit dfuFound(m_hasDFU);
+    m_board = ArdwiinoLookup::findByBoard(readData);
     read('c', readData, sizeof(config_t));
     memcpy(&m_config, readData.data(), sizeof(config_t));
     memcpy(&m_config_device, readData.data(), sizeof(config_t));

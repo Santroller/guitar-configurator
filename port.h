@@ -92,7 +92,6 @@ private:
     board_t m_board;
     QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
-    bool m_hasDFU;
     config_t m_config_device;
     config_t m_config;
 };

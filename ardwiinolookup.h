@@ -37,6 +37,7 @@ public:
     static const board_t retriveDFUVariant(const board_t board);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject *parent = nullptr);
+    static const board_t findByBoard(QString board);
 public slots:
     QString lookupExtension(uint8_t type, uint16_t device);
     QString lookupType(uint8_t type);

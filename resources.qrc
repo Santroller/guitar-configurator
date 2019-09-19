@@ -15,5 +15,7 @@
         <file>images/ddr.png</file>
         <file>images/flightstick.png</file>
         <file>images/rb-drums.png</file>
+        <file>Bindings.qml</file>
+        <file>Arduino.qml</file>
     </qresource>
 </RCC>
