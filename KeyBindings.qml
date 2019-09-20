@@ -65,6 +65,7 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            property var currentValue: ""
             property var keyMap: {
                 0x04: [Qt.Key_A],
                 0x05: [Qt.Key_B],
@@ -162,37 +163,26 @@ Page {
                 0xF4: [Qt.Key_Search],
                 0xF8: [Qt.Key_Sleep],
                 0xFB: [Qt.Key_Calculator],
-                0x27: [Qt.Key_0,Qt.Key_ParenRight],
-                0x59: [Qt.Key_1|Qt.KeypadModifier],
-                0x5A: [Qt.Key_2|Qt.KeypadModifier],
-                0x5B: [Qt.Key_3|Qt.KeypadModifier],
-                0x5C: [Qt.Key_4|Qt.KeypadModifier],
-                0x5D: [Qt.Key_5|Qt.KeypadModifier],
-                0x5E: [Qt.Key_6|Qt.KeypadModifier],
-                0x5F: [Qt.Key_7|Qt.KeypadModifier],
-                0x60: [Qt.Key_8|Qt.KeypadModifier],
-                0x61: [Qt.Key_9|Qt.KeypadModifier],
-                0x62: [Qt.Key_0|Qt.KeypadModifier],
-                0x55: [Qt.Key_Asterisk|Qt.KeypadModifier],
-                0xB6: [Qt.Key_ParenLeft|Qt.KeypadModifier],
-                0xB7: [Qt.Key_ParenRight|Qt.KeypadModifier],
-                0x58: [Qt.Key_Enter|Qt.KeypadModifier],
-                0x56: [Qt.Key_Minus|Qt.KeypadModifier],
-                0x67: [Qt.Key_Equal|Qt.KeypadModifier],
-                0x57: [Qt.Key_Plus|Qt.KeypadModifier],
-                0x85: [Qt.Key_Comma|Qt.KeypadModifier],
-                0x63: [Qt.Key_Period|Qt.KeypadModifier],
-                0x54: [Qt.Key_Slash|Qt.KeypadModifier],
-                0x62: [Qt.Key_Insert|Qt.KeypadModifier],
-                0x5F: [Qt.Key_Home|Qt.KeypadModifier],
-                0x61: [Qt.Key_PageUp|Qt.KeypadModifier],
-                0x63: [Qt.Key_Delete|Qt.KeypadModifier],
-                0x59: [Qt.Key_End|Qt.KeypadModifier],
-                0x5B: [Qt.Key_PageDown|Qt.KeypadModifier],
-                0x5E: [Qt.Key_Right|Qt.KeypadModifier],
-                0x5C: [Qt.Key_Left|Qt.KeypadModifier],
-                0x5A: [Qt.Key_Down|Qt.KeypadModifier],
-                0x60: [Qt.Key_Up|Qt.KeypadModifier],
+                0x55: [Qt.Key_Asterisk | Qt.KeypadModifier],
+                0xB6: [Qt.Key_ParenLeft | Qt.KeypadModifier],
+                0xB7: [Qt.Key_ParenRight | Qt.KeypadModifier],
+                0x58: [Qt.Key_Enter | Qt.KeypadModifier],
+                0x56: [Qt.Key_Minus | Qt.KeypadModifier],
+                0x67: [Qt.Key_Equal | Qt.KeypadModifier],
+                0x57: [Qt.Key_Plus | Qt.KeypadModifier],
+                0x85: [Qt.Key_Comma | Qt.KeypadModifier],
+                0x54: [Qt.Key_Slash | Qt.KeypadModifier],
+                0x59: [Qt.Key_1 | Qt.KeypadModifier, Qt.Key_End | Qt.KeypadModifier],
+                0x5A: [Qt.Key_2 | Qt.KeypadModifier, Qt.Key_Down | Qt.KeypadModifier],
+                0x5B: [Qt.Key_3 | Qt.KeypadModifier, Qt.Key_PageDown | Qt.KeypadModifier],
+                0x5C: [Qt.Key_4 | Qt.KeypadModifier, Qt.Key_Left | Qt.KeypadModifier],
+                0x5D: [Qt.Key_5 | Qt.KeypadModifier],
+                0x5E: [Qt.Key_6 | Qt.KeypadModifier, Qt.Key_Right | Qt.KeypadModifier],
+                0x5F: [Qt.Key_7 | Qt.KeypadModifier, Qt.Key_Home | Qt.KeypadModifier],
+                0x60: [Qt.Key_8 | Qt.KeypadModifier, Qt.Key_Up | Qt.KeypadModifier],
+                0x61: [Qt.Key_9 | Qt.KeypadModifier, Qt.Key_PageUp | Qt.KeypadModifier],
+                0x62: [Qt.Key_0 | Qt.KeypadModifier, Qt.Key_Insert | Qt.KeypadModifier],
+                0x63: [Qt.Key_Period | Qt.KeypadModifier, Qt.Key_Delete | Qt.KeypadModifier],
                 0x1E: [Qt.Key_1, Qt.Key_Exclam],
                 0x1F: [Qt.Key_2, Qt.Key_At],
                 0x20: [Qt.Key_3, Qt.Key_NumberSign],
@@ -202,6 +192,7 @@ Page {
                 0x24: [Qt.Key_7, Qt.Key_Ampersand],
                 0x25: [Qt.Key_8, Qt.Key_Asterisk],
                 0x26: [Qt.Key_9, Qt.Key_ParenLeft],
+                0x27: [Qt.Key_0,Qt.Key_ParenRight],
                 0x2D: [Qt.Key_Minus, Qt.Key_Underscore],
                 0x2E: [Qt.Key_Equal, Qt.Key_Plus],
                 0x2F: [Qt.Key_BracketLeft, Qt.Key_BraceLeft],
@@ -286,10 +277,11 @@ Page {
                     id: bt
                     text: scanner.selected.pins[key] === 255 ? "No Key" : ArdwiinoLookup.getKeyName(gl.keyMap[scanner.selected.pins[key]])
                     onClicked: {
+                        gl.currentValue = scanner.selected.pins[key];
                         scanner.selected.currentKey = key;
                     }
                     Keys.onPressed: {
-
+                        gl.currentValue = Object.keys(gl.keyMap).find(m => gl.keyMap[m].includes(event.key | (event.modifiers & Qt.KeypadModifier))) || gl.currentValue;
                     }
                 }
             }
@@ -298,11 +290,46 @@ Page {
 
         Dialog {
             id: pinDialog
-            title: "Select a Pin"
+            title: "Press a Key"
             visible: scanner.selected.currentKey
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             modal: true
+            ColumnLayout {
+                Label {
+                    text: qsTr("Current Key: "+((!scanner.selected.currentKey)?"Not Set":gl.currentValue === 0xFF ? "No Key" : ArdwiinoLookup.getKeyName(gl.keyMap[gl.currentValue])))
+                }
+                RowLayout {
+                    Button {
+                        text: qsTr("Save Key")
+                        onClicked: {
+                            var pins = scanner.selected.pins;
+                            pins[scanner.selected.currentKey] = gl.currentValue;
+                            scanner.selected.pins = pins;
+                            scanner.selected.currentKey = "";
+                            pinDialog.accept()
+                        }
+                    }
+                    Button {
+                        onClicked: {
+                            var pins = scanner.selected.pins;
+                            pins[scanner.selected.currentKey] = 0xFF;
+                            scanner.selected.pins = pins;
+                            scanner.selected.currentKey = "";
+                            pinDialog.accept()
+                        }
+                        text: qsTr("Disable Key")
+                    }
+                    Button {
+                        onClicked: {
+                            scanner.selected.currentKey = "";
+                            pinDialog.accept()
+                        }
+                        text: qsTr("Cancel")
+                    }
+                }
+            }
+
         }
 
         RowLayout {
