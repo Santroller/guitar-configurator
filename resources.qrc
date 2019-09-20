@@ -20,5 +20,6 @@
         <file>images/leonardo.png</file>
         <file>images/micro.png</file>
         <file>images/uno.png</file>
+        <file>KeyBindings.qml</file>
     </qresource>
 </RCC>

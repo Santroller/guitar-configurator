@@ -110,7 +110,6 @@ Page {
                 "l_y": "Left Joystick Y Axis",
                 "r_x": "Right Joystick X Axis",
                 "r_y": "Right Joystick Y Axis",
-
             }
             property var labels: scanner.selected.isGuitar()?guitarLabels:defLabels;
             Label {
@@ -132,6 +131,7 @@ Page {
                 wrapMode: Text.WordWrap
             }
             Repeater {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Object.keys(gl.labels).length
                 Label {
                     Layout.row: index+1
@@ -148,6 +148,7 @@ Page {
                 }
             }
             Repeater {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Object.keys(gl.labels).length
                 Button {
                     Layout.row: index+1
@@ -159,11 +160,11 @@ Page {
                     text: gl.current[scanner.selected.pins[key]] || scanner.selected.pins[key]
                     onClicked: {
                         scanner.selected.currentPin = key;
-                        mainStack.push("PinSelect.qml");
                     }
                 }
             }
             Repeater {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Object.keys(gl.labels).length
                 Switch {
                     Layout.row: index+1
@@ -182,6 +183,18 @@ Page {
                 }
             }
 
+        }
+
+        Dialog {
+            id: pinDialog
+            title: "Select a Pin"
+            visible: scanner.selected.currentPin
+            x: (parent.width - width) / 2
+            y: (parent.height - height) / 2
+            modal: true
+            Loader {
+                source:"PinSelect.qml";
+            }
         }
 
         RowLayout {

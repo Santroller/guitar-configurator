@@ -20,6 +20,11 @@ class Port : public QObject
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(QString currentPin MEMBER m_currentPin NOTIFY currentPinChanged)
+    Q_PROPERTY(QString currentKey MEMBER m_currentKey NOTIFY currentKeyChanged)
+    Q_PROPERTY(InputTypes::Value inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
+    Q_PROPERTY(Controllers::Value type READ getType WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(MPU6050Orientations::Value orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
+    Q_PROPERTY(TiltTypes::Value tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -36,7 +41,12 @@ signals:
     void pinsChanged(QVariantMap newValue);
     void pinInvertsChanged(QVariantMap newValue);
     void currentPinChanged(QString newValue);
+    void currentKeyChanged(QString newValue);
     void boardImageChanged(QString newValue);
+    void inputTypeChanged(InputTypes::Value newValue);
+    void typeChanged(Controllers::Value newValue);
+    void orientationChanged(MPU6050Orientations::Value newValue);
+    void tiltTypeChanged(TiltTypes::Value newValue);
     void dfuFound(bool found);
 
 public slots:
@@ -83,21 +93,28 @@ public slots:
     void setType(Controllers::Value value) {
         m_config.sub_type = value;
         imageChanged(getImage());
+        typeChanged(value);
     }
     void setInputType(InputTypes::Value value) {
         m_config.input_type = value;
+        inputTypeChanged(value);
+
     }
     void setTiltType(TiltTypes::Value value) {
         m_config.tilt_type = value;
+        tiltTypeChanged(value);
     }
     void setOrientation(MPU6050Orientations::Value value) {
         m_config.mpu_6050_orientation = value;
+        orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     bool findNewAsync();
     void readDescription();
     void loadPins();
     void savePins();
+    void loadKeys();
+    void saveKeys();
 private:
     void readData();
     void read(char id, QByteArray& location, unsigned long size);
@@ -114,6 +131,7 @@ private:
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
     QString m_currentPin;
+    QString m_currentKey;
 };
 
 #endif // PORT_H

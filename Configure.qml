@@ -71,9 +71,9 @@ Page {
                 }
                 return model
             }
-            currentIndex: scanner.selected.getOrientation();
+            Binding { target: orientationBox; property: "currentIndex"; value: scanner.selected.orientation }
 
-            onCurrentIndexChanged: scanner.selected.setOrientation(orientationBox.model[orientationBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
         }
 
         ComboBox {
@@ -88,9 +88,9 @@ Page {
                 }
                 return model
             }
-            currentIndex: scanner.selected.getTiltType();
+            Binding { target: tiltBox; property: "currentIndex"; value: scanner.selected.tiltType }
 
-            onCurrentIndexChanged: scanner.selected.setTiltType(tiltBox.model[tiltBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
         }
 
         ComboBox {
@@ -105,9 +105,9 @@ Page {
                 }
                 return model
             }
-            currentIndex: scanner.selected.getInputType();
+            Binding { target: inputBox; property: "currentIndex"; value: scanner.selected.inputType }
 
-            onCurrentIndexChanged: scanner.selected.setInputType(inputBox.model[inputBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
         }
 
         ComboBox {
@@ -125,18 +125,28 @@ Page {
                 }
                 return model
             }
-            currentIndex: comboBox.model.findIndex(s => s.value === scanner.selected.getType());
+            Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.findIndex(s => s.value === scanner.selected.type) }
 
-            onCurrentIndexChanged: scanner.selected.setType(comboBox.model[comboBox.currentIndex].value)
+            onCurrentIndexChanged: scanner.selected.type = comboBox.model[comboBox.currentIndex].value
         }
         Button {
             id: bind
-            visible: scanner.selected.getInputType() === InputTypes.DIRECT_TYPE
+            visible: scanner.selected.inputType === InputTypes.DIRECT_TYPE
             text: qsTr("Configure Arduino Pin Bindings")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 scanner.selected.loadPins();
                 mainStack.push("Bindings.qml");
+            }
+        }
+        Button {
+            id: keybind
+            visible: scanner.selected.type === Controllers.KEYBOARD
+            text: qsTr("Configure Keyboard Bindings")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                scanner.selected.loadKeys();
+                mainStack.push("KeyBindings.qml");
             }
         }
         Button {

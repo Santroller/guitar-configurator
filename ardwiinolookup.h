@@ -60,6 +60,12 @@ public slots:
     inline QString getTiltTypeName(TiltTypes::Value value) {
         return TiltTypes::toString(value);
     }
+    inline QString getKeyName(QVariantList sequence) {
+        if (sequence.length() == 2) {
+           return QKeySequence(sequence[0].toInt(), sequence[1].toInt()).toString();
+        }
+        return QKeySequence(sequence[0].toInt()).toString();
+    }
 private:
     static ArdwiinoLookup* instance;
 };

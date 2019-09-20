@@ -120,7 +120,68 @@ bool Port::findNewAsync() {
     return false;
 }
 
+void Port::loadKeys() {
+    m_pins.clear();
+    m_pins["up"] = m_config.keys.up;
+    m_pins["down"] = m_config.keys.down;
+    m_pins["left"] = m_config.keys.left;
+    m_pins["right"] = m_config.keys.right;
+    m_pins["start"] = m_config.keys.start;
+    m_pins["back"] = m_config.keys.back;
+    m_pins["left_stick"] = m_config.keys.left_stick;
+    m_pins["right_stick"] = m_config.keys.right_stick;
+    m_pins["LB"] = m_config.keys.LB;
+    m_pins["RB"] = m_config.keys.RB;
+    m_pins["home"] = m_config.keys.home;
+    m_pins["capture"] = m_config.keys.capture;
+    m_pins["a"] = m_config.keys.a;
+    m_pins["b"] = m_config.keys.b;
+    m_pins["x"] = m_config.keys.x;
+    m_pins["y"] = m_config.keys.y;
+    m_pins["lt"] = m_config.keys.lt;
+    m_pins["rt"] = m_config.keys.rt;
+    m_pins["l_x_lt"] = m_config.keys.l_x.neg;
+    m_pins["l_x_gt"] = m_config.keys.l_x.pos;
+    m_pins["l_y_lt"] = m_config.keys.l_y.neg;
+    m_pins["l_y_gt"] = m_config.keys.l_y.pos;
+    m_pins["r_x_lt"] = m_config.keys.r_x.neg;
+    m_pins["r_x_gt"] = m_config.keys.r_x.pos;
+    m_pins["r_y_lt"] = m_config.keys.r_y.neg;
+    m_pins["r_y_gt"] = m_config.keys.r_y.pos;
+}
+
+void Port::saveKeys() {
+    m_config.keys.up = uint8_t(m_pins["up"].toUInt());
+    m_config.keys.down = uint8_t(m_pins["down"].toUInt());
+    m_config.keys.left = uint8_t(m_pins["left"].toUInt());
+    m_config.keys.right = uint8_t(m_pins["right"].toUInt());
+    m_config.keys.start = uint8_t(m_pins["start"].toUInt());
+    m_config.keys.back = uint8_t(m_pins["back"].toUInt());
+    m_config.keys.left_stick = uint8_t(m_pins["left_stick"].toUInt());
+    m_config.keys.right_stick = uint8_t(m_pins["right_stick"].toUInt());
+    m_config.keys.LB = uint8_t(m_pins["LB"].toUInt());
+
+    m_config.keys.RB = uint8_t(m_pins["RB"].toUInt());
+    m_config.keys.home = uint8_t(m_pins["home"].toUInt());
+    m_config.keys.capture = uint8_t(m_pins["capture"].toUInt());
+    m_config.keys.a = uint8_t(m_pins["a"].toUInt());
+    m_config.keys.b = uint8_t(m_pins["b"].toUInt());
+    m_config.keys.x = uint8_t(m_pins["x"].toUInt());
+    m_config.keys.y = uint8_t(m_pins["y"].toUInt());
+    m_config.keys.lt = uint8_t(m_pins["lt"].toUInt());
+    m_config.keys.rt = uint8_t(m_pins["rt"].toUInt());
+    m_config.keys.l_x.neg = uint8_t(m_pins["l_x_lt"].toUInt());
+    m_config.keys.l_x.pos = uint8_t(m_pins["l_x_gt"].toUInt());
+    m_config.keys.l_y.neg = uint8_t(m_pins["l_y_lt"].toUInt());
+    m_config.keys.l_y.pos = uint8_t(m_pins["l_y_gt"].toUInt());
+    m_config.keys.r_x.neg = uint8_t(m_pins["r_x_lt"].toUInt());
+    m_config.keys.r_x.pos = uint8_t(m_pins["r_x_gt"].toUInt());
+    m_config.keys.r_y.neg = uint8_t(m_pins["r_y_lt"].toUInt());
+    m_config.keys.r_y.pos = uint8_t(m_pins["r_y_gt"].toUInt());
+}
+
 void Port::loadPins() {
+    m_pins.clear();
     m_pins["up"] = m_config.pins.up;
     m_pins["down"] = m_config.pins.down;
     m_pins["left"] = m_config.pins.left;
