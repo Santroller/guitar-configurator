@@ -59,9 +59,16 @@ Page {
             }
         }
 
-
-        Repeater {
+        GridLayout {
+            id: gl
+            columns: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            property var bindings: {
+                "images/uno.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
+                "images/micro.png": {0:"RX0", 1:"RX1", 18: "A0", 19: "A1", 20:"A2", 21: "A3", 255: "Disabled"},
+                "images/leonardo.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
+            }
+            property var current: bindings[scanner.selected.boardImage]
             property var guitarLabels : {
                 "up": "Strum Up",
                 "down": "Strum Down",
@@ -82,8 +89,8 @@ Page {
             }
 
             property var defLabels: {
-                "up": "Strum Up",
-                "down": "Strum Down",
+                "up": "DPad Up",
+                "down": "DPad Down",
                 "left": "DPad Left",
                 "right": "DPad Right",
                 "start": "Start Button",
@@ -97,49 +104,84 @@ Page {
                 "b": "B Button",
                 "x": "X Button",
                 "y": "Y Button",
-                "lt": "Left Shoulder Button",
-                "rt": "Right Shoulder Button",
+                "lt": "Left Shoulder Axis",
+                "rt": "Right Shoulder Axis",
                 "l_x": "Left Joystick X Axis",
                 "l_y": "Left Joystick Y Axis",
                 "r_x": "Right Joystick X Axis",
                 "r_y": "Right Joystick Y Axis",
 
             }
-
             property var labels: scanner.selected.isGuitar()?guitarLabels:defLabels;
-
-            model: Object.keys(labels).length
-            id: rp
-
-            RowLayout {
-               property var key: Object.keys(rp.labels)[index]
-               property var name: rp.labels[key]
-               id:rl
-               Label {
-                    id: label
-                    text: rl.name
+            Label {
+                text: "Actions"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Label {
+                text: "Pin Binding"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Label {
+                text: "Invert Axis"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Repeater {
+                model: Object.keys(gl.labels).length
+                Label {
+                    Layout.row: index+1
+                    Layout.column: 0
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    property var key: Object.keys(gl.labels)[index]
+                    id: label
+                    text: gl.labels[key]
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
-               }
-               Button {
+                }
+            }
+            Repeater {
+                model: Object.keys(gl.labels).length
+                Button {
+                    Layout.row: index+1
+                    Layout.column: 1
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    property var key: Object.keys(gl.labels)[index]
                     id: bt
-                    text: scanner.selected.pins[rl.key]
+                    text: gl.current[scanner.selected.pins[key]] || scanner.selected.pins[key]
                     onClicked: {
-                        scanner.selected.currentPin = rl.key;
+                        scanner.selected.currentPin = key;
                         mainStack.push("PinSelect.qml");
                     }
-               }
-               Switch {
-                   enabled: scanner.selected.pin_inverts.hasOwnProperty(rl.key)
-                   visible: scanner.selected.pin_inverts.hasOwnProperty(rl.key)
-                   checked: !!scanner.selected.pin_inverts[rl.key]
-                   onCheckedChanged: {
-                       var pins = scanner.selected.pin_inverts;
-                       pins[rl.key] = checked;
-                       scanner.selected.pin_inverts = pins;
-                   }
-               }
+                }
             }
+            Repeater {
+                model: Object.keys(gl.labels).length
+                Switch {
+                    Layout.row: index+1
+                    Layout.column: 2
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    property var key: Object.keys(gl.labels)[index]
+                    enabled: scanner.selected.pin_inverts.hasOwnProperty(key)
+                    visible: scanner.selected.pin_inverts.hasOwnProperty(key)
+                    checked: !!scanner.selected.pin_inverts[key]
+                    onCheckedChanged: {
+                        var pins = scanner.selected.pin_inverts;
+                        pins[key] = checked;
+                        scanner.selected.pin_inverts = pins;
+                    }
+                }
+            }
+
         }
 
         RowLayout {

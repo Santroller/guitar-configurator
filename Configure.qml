@@ -131,7 +131,8 @@ Page {
         }
         Button {
             id: bind
-            text: qsTr("Bind")
+            visible: scanner.selected.getInputType() === InputTypes.DIRECT_TYPE
+            text: qsTr("Configure Arduino Pin Bindings")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 scanner.selected.loadPins();
