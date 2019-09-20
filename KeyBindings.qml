@@ -97,16 +97,6 @@ Page {
                 0x2A: [Qt.Key_Backspace],
                 0x2B: [Qt.Key_Tab],
                 0x2C: [Qt.Key_Space],
-                0x2D: [Qt.Key_Minus],
-                0x2D: [Qt.Key_Underscore],
-                0x2E: [Qt.Key_Equal],
-                0x2E: [Qt.Key_Plus],
-                0x36: [Qt.Key_Comma],
-                0x36: [Qt.Key_Less],
-                0x37: [Qt.Key_Period],
-                0x37: [Qt.Key_Greater],
-                0x38: [Qt.Key_Slash],
-                0x38: [Qt.Key_Question],
                 0x39: [Qt.Key_CapsLock],
                 0x3A: [Qt.Key_F1],
                 0x3B: [Qt.Key_F2],
@@ -203,7 +193,6 @@ Page {
                 0x5C: [Qt.Key_Left|Qt.KeypadModifier],
                 0x5A: [Qt.Key_Down|Qt.KeypadModifier],
                 0x60: [Qt.Key_Up|Qt.KeypadModifier],
-                //TODO: We have to work out how to deal with shift here...
                 0x1E: [Qt.Key_1, Qt.Key_Exclam],
                 0x1F: [Qt.Key_2, Qt.Key_At],
                 0x20: [Qt.Key_3, Qt.Key_NumberSign],
@@ -213,21 +202,19 @@ Page {
                 0x24: [Qt.Key_7, Qt.Key_Ampersand],
                 0x25: [Qt.Key_8, Qt.Key_Asterisk],
                 0x26: [Qt.Key_9, Qt.Key_ParenLeft],
+                0x2D: [Qt.Key_Minus, Qt.Key_Underscore],
+                0x2E: [Qt.Key_Equal, Qt.Key_Plus],
                 0x2F: [Qt.Key_BracketLeft, Qt.Key_BraceLeft],
                 0x30: [Qt.Key_BracketRight, Qt.Key_BraceRight],
                 0x31: [Qt.Key_Backslash, Qt.Key_Bar],
                 0x33: [Qt.Key_Semicolon, Qt.Key_Colon],
                 0x34: [Qt.Key_Apostrophe, Qt.Key_QuoteDbl],
                 0x35: [Qt.Key_Agrave, Qt.Key_Tilde],
+                0x36: [Qt.Key_Comma, Qt.Key_Less],
+                0x37: [Qt.Key_Period, Qt.Key_Greater],
+                0x38: [Qt.Key_Slash, Qt.Key_Question],
                 0x65: [Qt.Key_ApplicationLeft, Qt.Key_ApplicationRight],
                 0x66: [Qt.Key_PowerOff, Qt.Key_PowerDown],
-            }
-
-            property var test: {
-                for (let i in keyMap) {
-                    console.log(ArdwiinoLookup.getKeyName(keyMap[i]));
-                }
-                return "";
             }
 
             property var labels: {
