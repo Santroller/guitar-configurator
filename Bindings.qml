@@ -191,6 +191,7 @@ Page {
             visible: scanner.selected.currentPin
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
+            onAccepted: scanner.selected.currentKey = "";
             modal: true
             Loader {
                 source:"PinSelect.qml";

@@ -279,10 +279,17 @@ Page {
                     onClicked: {
                         gl.currentValue = scanner.selected.pins[key];
                         scanner.selected.currentKey = key;
+                        focus=false;
+                        it.focus = true;
                     }
-                    Keys.onPressed: {
-                        gl.currentValue = Object.keys(gl.keyMap).find(m => gl.keyMap[m].includes(event.key | (event.modifiers & Qt.KeypadModifier))) || gl.currentValue;
-                    }
+                }
+            }
+            Item {
+                id: it
+                focus: true
+                Keys.onPressed: {
+                    gl.currentValue = Object.keys(gl.keyMap).find(m => gl.keyMap[m].includes(event.key | (event.modifiers & Qt.KeypadModifier))) || gl.currentValue;
+                    event.accepted = true;
                 }
             }
 
@@ -290,12 +297,16 @@ Page {
 
         Dialog {
             id: pinDialog
-            title: "Press a Key"
+            title: "Binding: "+gl.labels[scanner.selected.currentKey]
             visible: scanner.selected.currentKey
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             modal: true
+            onAccepted: scanner.selected.currentKey = "";
             ColumnLayout {
+                Label {
+                    text: qsTr("Press a key to assign it to "+gl.labels[scanner.selected.currentKey])
+                }
                 Label {
                     text: qsTr("Current Key: "+((!scanner.selected.currentKey)?"Not Set":gl.currentValue === 0xFF ? "No Key" : ArdwiinoLookup.getKeyName(gl.keyMap[gl.currentValue])))
                 }
@@ -306,7 +317,6 @@ Page {
                             var pins = scanner.selected.pins;
                             pins[scanner.selected.currentKey] = gl.currentValue;
                             scanner.selected.pins = pins;
-                            scanner.selected.currentKey = "";
                             pinDialog.accept()
                         }
                     }

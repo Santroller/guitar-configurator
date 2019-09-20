@@ -99,7 +99,7 @@ Page {
                 onClicked: {
                     scanner.selected.loadPins();
                     scanner.selected.currentPin = "";
-                    pinDialog.reject();
+                    pinDialog.accept();
                 }
             }
         }
