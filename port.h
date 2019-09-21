@@ -19,8 +19,6 @@ class Port : public QObject
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
-    Q_PROPERTY(QString currentPin MEMBER m_currentPin NOTIFY currentPinChanged)
-    Q_PROPERTY(QString currentKey MEMBER m_currentKey NOTIFY currentKeyChanged)
     Q_PROPERTY(InputTypes::Value inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
     Q_PROPERTY(Controllers::Value type READ getType WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(MPU6050Orientations::Value orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
@@ -40,8 +38,6 @@ signals:
     void imageChanged(QString newValue);
     void pinsChanged(QVariantMap newValue);
     void pinInvertsChanged(QVariantMap newValue);
-    void currentPinChanged(QString newValue);
-    void currentKeyChanged(QString newValue);
     void boardImageChanged(QString newValue);
     void inputTypeChanged(InputTypes::Value newValue);
     void typeChanged(Controllers::Value newValue);
@@ -130,8 +126,6 @@ private:
     config_t m_config;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
-    QString m_currentPin;
-    QString m_currentKey;
 };
 
 #endif // PORT_H

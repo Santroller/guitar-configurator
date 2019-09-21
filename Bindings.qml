@@ -8,27 +8,72 @@ import "pins.js" as PinInfo
 
 Page {
     id: page
+    property var existingPin: ""
+    property var existingCurrentPin: ""
+    property var currentPin: "";
+    property var currentValue: "";
+    Binding { target: page; property: "currentValue"; value: scanner.selected.pins[page.currentPin || page.existingPin] }
+
+    Dialog {
+        id: overrideDialog
+        title: "Pin Conflict"
+        visible: page.existingPin
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
+            var pins = scanner.selected.pins;
+            pins[page.existingCurrentPin] = page.currentValue;
+            pins[page.existingPin] = 0xFF;
+            scanner.selected.pins = pins;
+            page.existingPin = "";
+        }
+        onRejected: page.existingPin = "";
+        ColumnLayout {
+            Label {
+                function getBinding() {
+                    var bindings = PinInfo.bindings[scanner.selected.boardImage];
+                    return bindings[page.currentValue] || page.currentValue;
+                }
+                text: "Pin "+getBinding()+" is already in use."
+            }
+            Label {
+                text: "Would you like to replace it?"
+            }
+        }
+    }
 
     Dialog {
         function loadPins(value) {
-            var pins = scanner.selected.pins;
-            pins[scanner.selected.currentPin] = value;
-            scanner.selected.pins = pins;
-            scanner.selected.currentPin = "";
-            pinDialog.accept();
+
         }
         id: pinDialog
-        title: "Select a Pin for: "+gl.labels[scanner.selected.currentPin]
-        visible: scanner.selected.currentPin
+        title: "Select a Pin for: "+gl.labels[page.currentPin]
+        visible: page.currentPin
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
-        onAccepted: scanner.selected.currentPin = "";
-        onRejected: scanner.selected.currentPin = "";
+        onAccepted: {
+            var pins = scanner.selected.pins;
+            if (pins[page.currentPin] === page.currentValue) return;
+            if (page.currentValue !== 0xFF) {
+                var existing = Object.keys(pins).find(m => pins[m] === page.currentValue);
+                if (existing) {
+                    page.existingPin = existing;
+                    page.existingCurrentPin = page.currentPin;
+                    page.currentPin = "";
+                    return;
+                }
+            }
+
+            pins[page.currentPin] = page.currentValue;
+            scanner.selected.pins = pins;
+            page.currentPin = "";
+        }
+        onRejected: page.currentPin = "";
         modal: true
         ColumnLayout {
             anchors.fill: parent
             Image {
-                property var current: scanner.selected.pins[scanner.selected.currentPin]
                 property var scaleX: 1 / sourceSize.width * paintedWidth
                 property var scaleY: 1 / sourceSize.height * paintedHeight
                 property var startX: (width - paintedWidth) / 2
@@ -50,12 +95,12 @@ Page {
                         y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY
                         radius: boardImage.r * 0.5
                         border.width: 1
-                        color: boardImage.current === boardImage.pins[index].id ? "green" : mouseArea.containsMouse ? "red":"yellow"
+                        color: page.currentValue === boardImage.pins[index].id ? "green" : mouseArea.containsMouse ? "red":"yellow"
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
-                            onClicked: boardImage.current = boardImage.pins[index].id
+                            onClicked: page.currentValue = boardImage.pins[index].id
                         }
                     }
                 }
@@ -65,13 +110,16 @@ Page {
             Button {
                 text: qsTr("Set Pin Binding")
                 Layout.fillWidth: true
-                onClicked: pinDialog.loadPins(c.current)
+                onClicked: pinDialog.accept()
             }
 
             Button {
                 text: qsTr("Disable Pin Binding")
                 Layout.fillWidth: true
-                onClicked: pinDialog.loadPins(0xFF)
+                onClicked: {
+                    page.currentValue = 0xFF;
+                    pinDialog.accept();
+                }
             }
 
             Button {
@@ -183,7 +231,7 @@ Page {
                     Layout.fillHeight: true
                     id: bt
                     text: gl.current[scanner.selected.pins[modelData]] || scanner.selected.pins[modelData]
-                    onClicked: scanner.selected.currentPin = modelData;
+                    onClicked: page.currentPin = modelData;
                 }
             }
             Repeater {

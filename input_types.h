@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include <QDebug>
 #include "submodules/Ardwiino/src/shared/config/defines.h"
 #define INPUTTYPE(type) type ## _TYPE=type
 class InputTypes

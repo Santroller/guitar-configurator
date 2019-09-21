@@ -71,7 +71,7 @@ Page {
                 }
                 return model
             }
-            Binding { target: orientationBox; property: "currentIndex"; value: scanner.selected.orientation }
+            Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
 
             onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
         }
@@ -88,7 +88,7 @@ Page {
                 }
                 return model
             }
-            Binding { target: tiltBox; property: "currentIndex"; value: scanner.selected.tiltType }
+            Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
 
             onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
         }
@@ -100,12 +100,12 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: {
                 let model = [];
-                for (let i = 0; i <= InputTypes.END; i++) {
+                for (let i = 1; i <= InputTypes.END; i++) {
                     model.push({key: ArdwiinoLookup.getInputTypeName(i), value:i});
                 }
                 return model
             }
-            Binding { target: inputBox; property: "currentIndex"; value: scanner.selected.inputType }
+            Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
 
             onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
         }
@@ -117,7 +117,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: {
                 let model = [];
-                for (let i = 0; i <= Controllers.END; i++) {
+                for (let i = 1; i <= Controllers.END; i++) {
                     let name = ArdwiinoLookup.getControllerTypeName(i);
                     if (name !== "Unknown Controller") {
                         model.push({key: name, value:i});

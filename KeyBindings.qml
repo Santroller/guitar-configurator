@@ -8,37 +8,81 @@ import "keys.js" as KeyInfo
 
 Page {
     id: page
+    property var currentKey: "";
+    property var existingCurrentKey: ""
+    property var existingKey: "";
+    property var currentValue: "";
+    Binding { target: page; property: "currentValue"; value: scanner.selected.pins[page.currentKey || page.existingKey] }
 
 
     Dialog {
-        function setPin(value) {
+        id: overrideDialog
+        title: "Key Conflict"
+        visible: page.existingKey
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
             var pins = scanner.selected.pins;
-            pins[scanner.selected.currentKey] = value;
+            pins[page.existingCurrentKey] = page.currentValue;
+            pins[page.existingKey] = 0xFF;
             scanner.selected.pins = pins;
-            pinDialog.accept()
+            page.existingKey = "";
         }
+        onRejected: page.existingKey = "";
+        ColumnLayout {
+            Label {
+                text: "Key "+KeyInfo.getKeyName(page.currentValue)+" is already in use."
+            }
+            Label {
+                text: "Would you like to replace it?"
+            }
+        }
+    }
+
+    Dialog {
         id: pinDialog
-        title: "Binding: "+KeyInfo.labels[scanner.selected.currentKey]
-        visible: scanner.selected.currentKey
+        title: "Binding: "+KeyInfo.labels[page.currentKey]
+        visible: page.currentKey
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         modal: true
-        onAccepted: scanner.selected.currentKey = "";
-        onRejected: scanner.selected.currentKey = "";
+        onAccepted: {
+            var pins = scanner.selected.pins;
+            if (pins[page.currentKey] === page.currentValue) return;
+            if (page.currentValue !== 0xFF) {
+                //We need to make sure we compare numbers, as we have qt enums here for keys, and those are not directly equivilant
+                var existing = Object.keys(pins).find(m => Number(pins[m]) === Number(page.currentValue));
+                if (existing) {
+                    page.existingKey = existing;
+                    page.existingCurrentKey = page.currentKey;
+                    page.currentKey = "";
+                    return;
+                }
+            }
+
+            pins[page.currentKey] = page.currentValue;
+            scanner.selected.pins = pins;
+            page.currentKey = "";
+        }
+        onRejected: page.currentKey = "";
         ColumnLayout {
             Label {
-                text: qsTr("Press a key to assign it to " + KeyInfo.labels[scanner.selected.currentKey])
+                text: qsTr("Press a key to assign it to " + KeyInfo.labels[page.currentKey])
             }
             Label {
-                text: qsTr("Current Key: " + KeyInfo.getKeyName(gl.currentValue))
+                text: qsTr("Current Key: " + KeyInfo.getKeyName(page.currentValue))
             }
             RowLayout {
                 Button {
                     text: qsTr("Save Key")
-                    onClicked: pinDialog.setPin(gl.currentValue)
+                    onClicked: pinDialog.accept()
                 }
                 Button {
-                    onClicked: pinDialog.setPin(0xFF)
+                    onClicked: {
+                        page.currentValue = 0xFF;
+                        pinDialog.accept();
+                    }
                     text: qsTr("Disable Key")
                 }
                 Button {
@@ -47,7 +91,6 @@ Page {
                 }
             }
         }
-
     }
     ColumnLayout {
         id: column
@@ -107,7 +150,6 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            property var currentValue: ""
 
             Label {
                 text: "Actions"
@@ -149,8 +191,7 @@ Page {
                     id: bt
                     text: KeyInfo.getKeyName(scanner.selected.pins[modelData])
                     onClicked: {
-                        gl.currentValue = scanner.selected.pins[modelData];
-                        scanner.selected.currentKey = modelData;
+                        page.currentKey = modelData;
                         focus=false;
                         it.focus = true;
                     }
@@ -162,7 +203,7 @@ Page {
             id: it
             focus: true
             Keys.onPressed: {
-                gl.currentValue = KeyInfo.findValueForEvent(event) || gl.currentValue;
+                page.currentValue = KeyInfo.findValueForEvent(event) || page.currentValue;
                 event.accepted = true;
             }
         }

@@ -1,24 +1,24 @@
 .pragma library
 
-function g(count, x, y, width, id) {
+function generatePins(count, x, y, width, startId) {
     var ret = [];
     for (var i = 0; i < count; i++) {
-        ret.push({x: x+i*width, y:y, id:i+id});
+        ret.push({x: x+i*width, y:y, id:i+startId});
     }
     return ret;
 }
 var pinLocations = {
-    "images/uno.png": {pins: [...g(8,1083, 13, -40, 0), ...g(6,743, 13, -40, 8), ...g(6,873, 770, 40, 14)], r:30},
+    "images/uno.png": {pins: [...generatePins(8,1083, 13, -40, 0), ...generatePins(6,743, 13, -40, 8), ...generatePins(6,873, 770, 40, 14)], r:30},
     "images/micro.png": {pins: [
-            ...g(2,348, 5, -31, 0),
-            ...g(8,224, 5, -31, 2),
+            ...generatePins(2,348, 5, -31, 0),
+            ...generatePins(8,224, 5, -31, 2),
             {x:8, y: 191, id: 10},
             {x:39, y: 191, id: 16},
             {x:72, y: 191, id: 14},
             {x:103, y: 191, id: 15},
-            ...g(4, 132, 191, 32, 18)
+            ...generatePins(4, 132, 191, 32, 18)
         ], r:25},
-    "images/leonardo.png": {pins: [...g(8,903, 18, -35, 0), ...g(6,597, 27, -35, 8), ...g(6,727, 697, 35, 14)], r:25},
+    "images/leonardo.png": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 14)], r:25},
 }
 var bindings = {
     "images/uno.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
