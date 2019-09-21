@@ -21,6 +21,7 @@ Page {
         visible: page.existingKey
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
+        modal: true
         standardButtons: Dialog.Ok | Dialog.Cancel
         onAccepted: {
             var pins = scanner.selected.pins;

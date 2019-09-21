@@ -18,6 +18,7 @@ Page {
         id: overrideDialog
         title: "Pin Conflict"
         visible: page.existingPin
+        modal: true
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         standardButtons: Dialog.Ok | Dialog.Cancel
