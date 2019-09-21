@@ -16,10 +16,11 @@
         <file>images/flightstick.png</file>
         <file>images/rb-drums.png</file>
         <file>Bindings.qml</file>
-        <file>PinSelect.qml</file>
         <file>images/leonardo.png</file>
         <file>images/micro.png</file>
         <file>images/uno.png</file>
         <file>KeyBindings.qml</file>
+        <file>keys.js</file>
+        <file>pins.js</file>
     </qresource>
 </RCC>

@@ -4,9 +4,83 @@ import QtQuick.Controls 2.13
 import QtQuick.Controls.Universal 2.13
 import QtQuick.Layouts 1.13
 import net.tangentmc 1.0
+import "pins.js" as PinInfo
 
 Page {
     id: page
+
+    Dialog {
+        function loadPins(value) {
+            var pins = scanner.selected.pins;
+            pins[scanner.selected.currentPin] = value;
+            scanner.selected.pins = pins;
+            scanner.selected.currentPin = "";
+            pinDialog.accept();
+        }
+        id: pinDialog
+        title: "Select a Pin for: "+gl.labels[scanner.selected.currentPin]
+        visible: scanner.selected.currentPin
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        onAccepted: scanner.selected.currentPin = "";
+        onRejected: scanner.selected.currentPin = "";
+        modal: true
+        ColumnLayout {
+            anchors.fill: parent
+            Image {
+                property var current: scanner.selected.pins[scanner.selected.currentPin]
+                property var scaleX: 1 / sourceSize.width * paintedWidth
+                property var scaleY: 1 / sourceSize.height * paintedHeight
+                property var startX: (width - paintedWidth) / 2
+                property var startY: (height - paintedHeight) / 2
+                property var selected: PinInfo.pinLocations[scanner.selected.boardImage];
+                property var r: selected.r * scaleX
+                property var pins: selected.pins
+                id: boardImage
+                Layout.alignment: Qt.AlignHCenter
+                source: scanner.selected.boardImage
+                fillMode: Image.PreserveAspectFit
+                Layout.maximumHeight: applicationWindow.height/3
+                Layout.maximumWidth: applicationWindow.width/3
+                Repeater {
+                    model: boardImage.pins.length
+                    Rectangle {
+                        width: boardImage.r; height: boardImage.r
+                        x: boardImage.startX + boardImage.pins[index].x * boardImage.scaleX
+                        y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY
+                        radius: boardImage.r * 0.5
+                        border.width: 1
+                        color: boardImage.current === boardImage.pins[index].id ? "green" : mouseArea.containsMouse ? "red":"yellow"
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: boardImage.current = boardImage.pins[index].id
+                        }
+                    }
+                }
+            }
+        }
+        footer: RowLayout {
+            Button {
+                text: qsTr("Set Pin Binding")
+                Layout.fillWidth: true
+                onClicked: pinDialog.loadPins(c.current)
+            }
+
+            Button {
+                text: qsTr("Disable Pin Binding")
+                Layout.fillWidth: true
+                onClicked: pinDialog.loadPins(0xFF)
+            }
+
+            Button {
+                text: qsTr("Cancel")
+                Layout.fillWidth: true
+                onClicked: pinDialog.reject()
+            }
+        }
+    }
     ColumnLayout {
         id: column
         anchors.fill: parent
@@ -63,55 +137,8 @@ Page {
             id: gl
             columns: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            property var bindings: {
-                "images/uno.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
-                "images/micro.png": {0:"RX0", 1:"RX1", 18: "A0", 19: "A1", 20:"A2", 21: "A3", 255: "Disabled"},
-                "images/leonardo.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
-            }
-            property var current: bindings[scanner.selected.boardImage]
-            property var guitarLabels : {
-                "up": "Strum Up",
-                "down": "Strum Down",
-                "left": "DPad Left",
-                "right": "DPad Right",
-                "start": "Start Button",
-                "back": "Select Button",
-                "home": "Home Button",
-                "a": "Green Fret",
-                "b": "Red Fret",
-                "y": "Yellow Fret",
-                "x": "Blue Fret",
-                "LB": "Orange Fret",
-                "l_x": "Joystick X Axis",
-                "l_y": "Joystick Y Axis",
-                "r_x": "Whammy",
-                "r_y": "Tilt Axis",
-            }
-
-            property var defLabels: {
-                "up": "DPad Up",
-                "down": "DPad Down",
-                "left": "DPad Left",
-                "right": "DPad Right",
-                "start": "Start Button",
-                "back": "Back Button",
-                "left_stick": "Left Stick Click",
-                "right_stick": "Right Stick Click",
-                "LB": "Left Bumper",
-                "RB": "Right Bumper",
-                "home": "Home Button",
-                "a": "A Button",
-                "b": "B Button",
-                "x": "X Button",
-                "y": "Y Button",
-                "lt": "Left Shoulder Axis",
-                "rt": "Right Shoulder Axis",
-                "l_x": "Left Joystick X Axis",
-                "l_y": "Left Joystick Y Axis",
-                "r_x": "Right Joystick X Axis",
-                "r_y": "Right Joystick Y Axis",
-            }
-            property var labels: scanner.selected.isGuitar()?guitarLabels:defLabels;
+            property var current: PinInfo.bindings[scanner.selected.boardImage]
+            property var labels: PinInfo.getLabels(scanner.selected.isGuitar());
             Label {
                 text: "Actions"
                 font.pointSize: 15
@@ -132,16 +159,15 @@ Page {
             }
             Repeater {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Object.keys(gl.labels).length
+                model: Object.values(gl.labels)
                 Label {
                     Layout.row: index+1
                     Layout.column: 0
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: gl.parent.width/3
                     Layout.fillHeight: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    property var key: Object.keys(gl.labels)[index]
                     id: label
-                    text: gl.labels[key]
+                    text: modelData
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
@@ -149,53 +175,36 @@ Page {
             }
             Repeater {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Object.keys(gl.labels).length
+                model: Object.keys(gl.labels)
                 Button {
                     Layout.row: index+1
                     Layout.column: 1
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: gl.parent.width/3
                     Layout.fillHeight: true
-                    property var key: Object.keys(gl.labels)[index]
                     id: bt
-                    text: gl.current[scanner.selected.pins[key]] || scanner.selected.pins[key]
-                    onClicked: {
-                        scanner.selected.currentPin = key;
-                    }
+                    text: gl.current[scanner.selected.pins[modelData]] || scanner.selected.pins[modelData]
+                    onClicked: scanner.selected.currentPin = modelData;
                 }
             }
             Repeater {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Object.keys(gl.labels).length
+                model: Object.keys(gl.labels)
                 Switch {
                     Layout.row: index+1
                     Layout.column: 2
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: gl.parent.width/3
                     Layout.fillHeight: true
-                    property var key: Object.keys(gl.labels)[index]
-                    enabled: scanner.selected.pin_inverts.hasOwnProperty(key)
-                    visible: scanner.selected.pin_inverts.hasOwnProperty(key)
-                    checked: !!scanner.selected.pin_inverts[key]
+                    enabled: scanner.selected.pin_inverts.hasOwnProperty(modelData)
+                    visible: enabled
+                    checked: !!scanner.selected.pin_inverts[modelData]
                     onCheckedChanged: {
                         var pins = scanner.selected.pin_inverts;
-                        pins[key] = checked;
+                        pins[modelData] = checked;
                         scanner.selected.pin_inverts = pins;
                     }
                 }
             }
 
-        }
-
-        Dialog {
-            id: pinDialog
-            title: "Select a Pin"
-            visible: scanner.selected.currentPin
-            x: (parent.width - width) / 2
-            y: (parent.height - height) / 2
-            onAccepted: scanner.selected.currentKey = "";
-            modal: true
-            Loader {
-                source:"PinSelect.qml";
-            }
         }
 
         RowLayout {
