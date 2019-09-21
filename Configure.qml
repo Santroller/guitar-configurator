@@ -136,7 +136,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 scanner.selected.loadPins();
-                mainStack.push("Bindings.qml");
+                mainStack.push("PinBindings.qml");
             }
         }
         Button {

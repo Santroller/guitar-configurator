@@ -45,9 +45,6 @@ Page {
     }
 
     Dialog {
-        function loadPins(value) {
-
-        }
         id: pinDialog
         title: "Select a Pin for: "+gl.labels[page.currentPin]
         visible: page.currentPin

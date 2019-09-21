@@ -15,7 +15,7 @@
         <file>images/ddr.png</file>
         <file>images/flightstick.png</file>
         <file>images/rb-drums.png</file>
-        <file>Bindings.qml</file>
+        <file>PinBindings.qml</file>
         <file>images/leonardo.png</file>
         <file>images/micro.png</file>
         <file>images/uno.png</file>
