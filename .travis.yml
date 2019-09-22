@@ -19,7 +19,6 @@ matrix:
           packages:
             - g++-9
             - libxkbcommon-dev
-            - ccache
       before_install:
         # force qt to use desired compiler version
         - sudo rm /usr/bin/gcc
@@ -35,6 +34,9 @@ matrix:
     - os: osx
       osx_image: xcode9.4
       compiler: clang
+      before_install:
+        - brew install ccache
+        - export PATH="/usr/local/opt/ccache/libexec:$PATH"
       # explicitly disable xcb on osx build
       env: 
         - QT5_XCB_FLAG="no-xcb"
@@ -47,7 +49,7 @@ matrix:
         - MAKE="mingw32-make"
 before_script:
   # download Qt5 sources
-  - git clone https://code.qt.io/qt/qt5.git
+  - git clone https://github.com/qt/qt5
   - cd qt5
   # checkout desired version
   - git checkout $QT5_VERSION
