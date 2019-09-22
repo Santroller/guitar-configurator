@@ -43,6 +43,10 @@ matrix:
         - MAKE="make"
     - os: windows
       # explicitly disable xcb on osx build
+      before_install:
+        - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
+        - export PATH="$PWD/bin:$PATH"
+
       env: 
         - QT5_XCB_FLAG="no-xcb"
         - PLATFORM="-platform win32-g++"
