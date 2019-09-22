@@ -67,6 +67,7 @@ script:
   - $MAKE -j2
   # confirm qmake runs and check version number
   - cd ..
+  - ls
   - $MAKE clean
   - $QT5_INSTALL_PREFIX/bin/qmake -config release
   - $MAKE 
