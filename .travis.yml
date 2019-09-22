@@ -5,7 +5,6 @@ env:
   global:
     - QT5_VERSION="v5.12.5"
     - QT5_INSTALL_PREFIX="/usr/local/qt5-static"
-    - QMAKE_CXX=ccache
 matrix:
   include:
     # linux release build: gcc 9.1.0 on ubuntu 16.04
@@ -20,6 +19,7 @@ matrix:
           packages:
             - g++-9
             - libxkbcommon-dev
+            - ccache
       before_install:
         # force qt to use desired compiler version
         - sudo rm /usr/bin/gcc
