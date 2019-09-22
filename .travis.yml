@@ -43,8 +43,8 @@ matrix:
       # explicitly disable xcb on osx build
       env: 
         - QT5_XCB_FLAG="no-xcb"
-        - PLATFORM="-platform win32-msvc"
-        - MAKE="nmake"
+        - PLATFORM="-platform win32-g++"
+        - MAKE="mingw32-make"
 before_script:
   # download Qt5 sources
   - git clone https://code.qt.io/qt/qt5.git
