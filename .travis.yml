@@ -30,6 +30,7 @@ matrix:
       env: 
         - QT5_XCB_FLAG="qt-xcb"
         - MAKE="make"
+        - PLAT="$TRAVIS_OS_NAME"
     # osx release build: xcode 9.4.1 [9F2000], macOS 10.13
     - os: osx
       osx_image: xcode9.4
@@ -42,11 +43,13 @@ matrix:
       env: 
         - QT5_XCB_FLAG="no-xcb"
         - MAKE="make"
+        - PLAT="$TRAVIS_OS_NAME"
     - os: windows
       # explicitly disable xcb on osx build
       before_install:
         - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
         - export PATH="$PWD/bin:$PATH"
+        - PLAT="win32"
 
       env: 
         - QT5_XCB_FLAG="no-xcb"
@@ -58,7 +61,7 @@ before_script:
   # install pre-compiled Qt5 binaries & static libraries to $QT5_INSTALL_PREFIX
   # note absolute paths currently hard coded in QT binaries
   # to override this, add a qt.conf file (https://doc.qt.io/qt-5/qt-conf.html#overriding-paths)
-  - wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
+  - wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$PLAT.tgz"
   - sudo tar xzvf qt5-static-$TRAVIS_OS_NAME.tgz -C /
   # export path for Qt5 binaries
   - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
@@ -66,7 +69,7 @@ before_script:
   - cd ../
 script:
   - $MAKE clean
-  - $QT5_INSTALL_PREFIX/bin/qmake -config release
+  - qmake -config release
   - $MAKE 
 before_deploy:
   # make tarball of installation
