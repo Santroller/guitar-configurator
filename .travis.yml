@@ -4,7 +4,8 @@ cache:
 env:
   global:
     - QT5_VERSION="v5.12.5"
-      QT5_INSTALL_PREFIX="/usr/local/qt5-static"
+    - QT5_INSTALL_PREFIX="/usr/local/qt5-static"
+    - QMAKE_CXX=ccache
 matrix:
   include:
     # linux release build: gcc 9.1.0 on ubuntu 16.04
@@ -61,12 +62,8 @@ script:
   - mkdir build
   - cd build
   - ../qt5/qtbase/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
-  - ../qt5/qtdeclarative/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
-  - ../qt5/qtquickcontrols2/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
-  - ../qt5/qtserialport/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
   - $MAKE -j2
-  # confirm qmake runs and check version number
-  - cd ..
+  - cd ../sanjay900/guitar-configurator
   - ls
   - $MAKE clean
   - $QT5_INSTALL_PREFIX/bin/qmake -config release
