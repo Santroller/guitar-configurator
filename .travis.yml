@@ -27,16 +27,23 @@ matrix:
         - sudo ln -s /usr/bin/g++-9 /usr/bin/g++
         - gcc --version
         - g++ --version
-      env: QT5_XCB_FLAG="qt-xcb"
+      env: 
+        - QT5_XCB_FLAG="qt-xcb"
+        - MAKE="make"
     # osx release build: xcode 9.4.1 [9F2000], macOS 10.13
     - os: osx
       osx_image: xcode9.4
       compiler: clang
       # explicitly disable xcb on osx build
-      env: QT5_XCB_FLAG="no-xcb"
+      env: 
+        - QT5_XCB_FLAG="no-xcb"
+        - MAKE="make"
     - os: windows
       # explicitly disable xcb on osx build
-      env: QT5_XCB_FLAG="no-xcb"
+      env: 
+        - QT5_XCB_FLAG="no-xcb"
+        - PLATFORM="-platform win32-msvc"
+        - MAKE="nmake"
 before_script:
   # download Qt5 sources
   - git clone https://code.qt.io/qt/qt5.git
@@ -53,11 +60,16 @@ script:
   # build a minimal static version of qtbase & install to $QT5_INSTALL_PREFIX
   - mkdir build
   - cd build
-  - ../qt5/qtbase/configure -opensource -confirm-license -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
-  - make -j2
-  - sudo make install
+  - ../qt5/qtbase/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
+  - ../qt5/qtdeclarative/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
+  - ../qt5/qtquickcontrols2/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
+  - ../qt5/qtserialport/configure -opensource -confirm-license $PLATFORM -prefix $QT5_INSTALL_PREFIX -release -static -silent -$QT5_XCB_FLAG -sql-sqlite -qt-zlib -qt-libjpeg -qt-libpng -qt-pcre -qt-harfbuzz -no-compile-examples -nomake tests -nomake examples -no-opengl -no-openssl -no-sql-odbc -no-icu -no-feature-concurrent -no-feature-xml -feature-testlib
+  - $MAKE -j2
   # confirm qmake runs and check version number
-  - $QT5_INSTALL_PREFIX/bin/qmake -v
+  - cd ..
+  - $MAKE clean
+  - $QT5_INSTALL_PREFIX/bin/qmake -config release
+  - $MAKE 
 before_deploy:
   # make tarball of installation
   tar -zcvf qt5-static-$TRAVIS_OS_NAME.tgz $QT5_INSTALL_PREFIX
