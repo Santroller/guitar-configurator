@@ -27,6 +27,7 @@ matrix:
     env:
     - QT5_XCB_FLAG="qt-xcb"
     - MAKE="make"
+    - PLAT="$TRAVIS_OS_NAME"
   - os: osx
     osx_image: xcode9.4
     compiler: clang
@@ -37,24 +38,39 @@ matrix:
     - QT5_XCB_FLAG="no-xcb"
     - MAKE="make"
     - HOMEBREW_NO_AUTO_UPDATE=1
+    - PLAT="$TRAVIS_OS_NAME"
   - os: windows
     before_install:
     - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
     - export PATH="$PWD/bin:$PATH"
     env:
     - QT5_XCB_FLAG="no-xcb"
+    - PLAT="win32"
     - PLATFORM="-platform win32-g++"
     - MAKE="mingw32-make"
 before_script:
 - export MACOSX_DEPLOYMENT_TARGET=10.12
-- wget "https://github.com/sanjay900/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
+- wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
 - sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
 - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
 - qmake -v
 script:
+- mkdir qt
+- cd qt
+- git clone https://github.com/qt/qtserialport
+- git clone https://github.com/qt/qtquickcontrols2
+- cd qtserialport
+- qmake -config release
+- "$MAKE -j2"
+- "$SUDO $MAKE install"
+- cd ../qtquickcontrols2
+- qmake -config release
+- "$MAKE -j2"
+- "$SUDO $MAKE install"
+- cd ../../
 - qmake -config release
 - "$MAKE"
-before_deploy: tar -zcvf qt5-static-$TRAVIS_OS_NAME.tgz $QT5_INSTALL_PREFIX
+before_deploy: tar -zcvf qt5-static-$PLAT.tgz $QT5_INSTALL_PREFIX
 deploy:
   provider: releases
   api_key:
