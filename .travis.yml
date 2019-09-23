@@ -12,13 +12,15 @@ install:
   - source /opt/qt*/bin/qt*-env.sh
 
 script:
-  - qmake CONFIG+=release PREFIX=/usr
+  - mkdir build
+  - cd build
+  - qmake CONFIG+=release PREFIX=/usr ../
   - make -j$(nproc)
-  - make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
+  - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
   # export VERSION=... # linuxdeployqt uses this for naming the file
-  - ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
+  - ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage
 
 after_success:
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
