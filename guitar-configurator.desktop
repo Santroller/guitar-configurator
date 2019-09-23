@@ -3,5 +3,5 @@ Type=Application
 Name=Guitar Configurator
 Comment=Application for configuring Ardwiino Guitars
 Exec=guitar-configurator
-Icon=guitar-configurator
+Icon=icon
 Categories=Utility;

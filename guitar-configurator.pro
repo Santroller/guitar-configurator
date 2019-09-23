@@ -61,13 +61,14 @@ unix {
 
     desktop.path = $$PREFIX/share/applications/
     desktop.files += guitar-configurator.desktop
-    icon256.path = $$PREFIX/share/icons/hicolor/256x256/apps
+    icon256.path = $$PREFIX
     icon256.files += icon.png
-    binaries.path = $$PREFIX/opt/guitar-configurator/bin
+    binaries.path = $$PREFIX/usr/bin
     binaries.files += $$PWD/binaries/linux-64/*
-    firmware.path = $$PREFIX/opt/guitar-configurator/bin/firmware
-    firmware.files += $$PWD/firmware/*
-    firmware.files += $$PWD/submodules/Ardwiino/output/*
+    firmware.path = $$PREFIX/usr/bin/firmware
+    firmware.files += $$files($$PWD/firmware/*.hex, true)
+    firmware.files += $$files($$PWD/submodules/Ardwiino/output/*.hex, true)
+    firmware.files += $$files($$PWD/submodules/Ardwiino/output/*.eep, true)
     INSTALLS += makeArd
     INSTALLS += icon256
     INSTALLS += desktop
