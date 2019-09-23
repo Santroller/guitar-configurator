@@ -1,91 +1,66 @@
 language: cpp
-cache:
-- ccache
-env:
-  global:
-  - QT5_VERSION="v5.12.5"
-  - QT5_INSTALL_PREFIX="/usr/local/qt5-static"
 matrix:
   include:
-  - os: linux
-    dist: xenial
-    compiler: gcc
-    addons:
-      apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - g++-9
-        - libxkbcommon-dev
-    before_install:
-    - sudo rm /usr/bin/gcc
-    - sudo rm /usr/bin/g++
-    - sudo ln -s /usr/bin/gcc-9 /usr/bin/gcc
-    - sudo ln -s /usr/bin/g++-9 /usr/bin/g++
-    - gcc --version
-    - g++ --version
-    env:
-    - QT5_XCB_FLAG="qt-xcb"
-    - MAKE="make"
-    - PLAT="$TRAVIS_OS_NAME"
   - os: osx
-    osx_image: xcode9.4
+    osx_image: xcode9.2
+
     compiler: clang
+
+    script:
+      - ./unixbuild.sh
+
+    deploy:
+      provider: releases
+      skip_cleanup: true
+      file: "dist/*.zip"
+      file_glob: true
+      api_key:
+        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
+      on:
+        tags: true
+
+  - os: linux
+    dist: trusty
+    compiler: clang
+
     before_install:
-    - brew install ccache
-    - export PATH="/usr/local/opt/ccache/libexec:$PATH"
-    env:
-    - QT5_XCB_FLAG="no-xcb"
-    - MAKE="make"
-    - HOMEBREW_NO_AUTO_UPDATE=1
-    - PLAT="$TRAVIS_OS_NAME"
+      - sudo apt-get update -qq
+      - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools cmake
+
+    script:
+      - ./unixbuild.sh
+
   - os: windows
+    script:
+      - ./unixbuild.sh
+
+    deploy:
+      provider: releases
+      skip_cleanup: true
+      file: "dist/*.zip"
+      file_glob: true
+      api_key:
+        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
+      on:
+        tags: true
+
+  - os: linux
+    dist: trusty
+    compiler: gcc
+
     before_install:
-    - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
-    - export PATH="$PWD/bin:$PATH"
-    env:
-    - QT5_XCB_FLAG="no-xcb"
-    - PLAT="win32"
-    - PLATFORM="-platform win32-g++"
-    - MAKE="mingw32-make"
-before_script:
-- export MACOSX_DEPLOYMENT_TARGET=10.12
-- wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
-- sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
-- export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
-- qmake -v
-script:
-- mkdir qt
-- cd qt
-- git clone https://github.com/qt/qtserialport
-- git clone https://github.com/qt/qtdeclarative
-- git clone https://github.com/qt/qtquickcontrols2
-- cd qtserialport
-- qmake -config release
-- "$MAKE -j2"
-- "$SUDO $MAKE install"
-- cd ../qtquickcontrols2
-- qmake -config release
-- "$MAKE -j2"
-- "$SUDO $MAKE install"
-- cd ../qtdeclarative
-- qmake -config release
-- "$MAKE -j2"
-- "$SUDO $MAKE install"
-- cd ../../
-- qmake -config release
-- "$MAKE"
-before_deploy: tar -zcvf qt5-static-$PLAT.tgz $QT5_INSTALL_PREFIX
-deploy:
-  provider: releases
-  api_key:
-    secure: XUCBpgpnGlz1ryns2TlTYiSq+q8n83bi1dsBo+WMKsOcOJ3DzU+6npUfsUarqikoYB4CvSh13WyNUEcXs1YPcOU69rXY7HiVBKNUfxpGIdHlQiucIUYta1iz28fmAymdjsti9vICV/Cs64psGiSlXcR8MW3iCDZ4J4EcRnnOCg7No4BpSd/0i0dx4Nry2WaqG6D/G5f2QpaWiIcBS3HbTPFYtgGcTE299FA1bu3X3Ume4rDP8qLTHVfVdRgFRqt+hmBY+/OfGlCuhRXJ7AfrgaOyhsVL55RkCr/s2j+1aRTvcLcmu1IW8nyiwDRs7UlLzGBEdPtXk1U8DIl7ETwyFWrMUMpXp8GZFMhOrBuamx8o31B/ExJr7o8CM/VspE6xpfTCm7IiMQusAQoh4WgkyWkTGJ7vFse4dUxTUW8ybFUGrgvqQBv1XntqjkjPK1viSvkgX9bHUh8DdX74N6YHlOZa9cXwbOpeEJj1RKNf3uI0ffOlY/PovK8MG7DGgG7pxh5/tr/MYc94CV8sn5BiTv2Uwg+FmxIEUHS0sFpzvJBJwPjHHOVjWjMF0C/UiH4K4EabNoufrOGFPlMob2HlTviSlcS+oqnWXhE7xkPQTVYYMVfQpEvTORKGhejOfqJXuYmx+LQ3XakaEeuOltOKDRPtumRaMDLInR6DgCUGB6M=
-  file:
-  - qt5-static-$TRAVIS_OS_NAME.tgz
-  skip_cleanup: true
-  on:
-    repo: sanjay900/guitar-configurator
-    tags: true
-    all_branches: true
-notifications:
-  email: false
+      - sudo apt-get update -qq
+      - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools cmake
+
+    script:
+      - ./unixbuild.sh
+
+    deploy:
+      provider: releases
+      skip_cleanup: true
+      file: "dist/*.zip"
+      file_glob: true
+      api_key:
+        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
+      on:
+        tags: true
