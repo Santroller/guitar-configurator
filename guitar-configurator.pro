@@ -71,9 +71,9 @@ unix {
     INSTALLS += binaries
     INSTALLS += firmware
 }
-makeArd.commands = pushd $$PWD/submodules/Ardwiino && $(MAKE) build-all && popd
-copybinaries.commands = mkdir -p $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
-copyfirmware.commands = mkdir -p $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/firmware $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/submodules/Ardwiino/output $$OUT_PWD/firmware
+makeArd.commands = cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
+copybinaries.commands = $(MKDIR) $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+copyfirmware.commands = $(MKDIR) $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/firmware $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/submodules/Ardwiino/output $$OUT_PWD/firmware
 copyfirmware.depends = makeArd
 first.depends = $(first) copybinaries copyfirmware
 export(copybinaries.commands)
