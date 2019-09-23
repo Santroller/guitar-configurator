@@ -1,4 +1,4 @@
-QT += quick quickcontrols2 serialport
+QT += quickcontrols2 serialport
 CONFIG += c++11 ccache
 
 # The following define makes your compiler emit warnings if you use

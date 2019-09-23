@@ -1,100 +1,67 @@
 language: cpp
 cache:
-  - ccache
+- ccache
 env:
   global:
-    - QT5_VERSION="v5.12.5"
-    - QT5_INSTALL_PREFIX="/usr/local/qt5-static"
+  - QT5_VERSION="v5.12.5"
+  - QT5_INSTALL_PREFIX="/usr/local/qt5-static"
 matrix:
   include:
-    # linux release build: gcc 9.1.0 on ubuntu 16.04
-    - os: linux
-      dist: xenial
-      compiler: gcc
-      # use qt xcb helper libraries on linux (requires libxkbcommon-dev)
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-9
-            - libxkbcommon-dev
-      before_install:
-        # force qt to use desired compiler version
-        - sudo rm /usr/bin/gcc
-        - sudo rm /usr/bin/g++
-        - sudo ln -s /usr/bin/gcc-9 /usr/bin/gcc
-        - sudo ln -s /usr/bin/g++-9 /usr/bin/g++
-        - gcc --version
-        - g++ --version
-      env: 
-        - QT5_XCB_FLAG="qt-xcb"
-        - MAKE="make"
-        - PLAT="$TRAVIS_OS_NAME"
-    # osx release build: xcode 9.4.1 [9F2000], macOS 10.13
-    - os: osx
-      osx_image: xcode9.4
-      compiler: clang
-      before_install:
-        - brew install ccache
-        - export PATH="/usr/local/opt/ccache/libexec:$PATH"
-      # explicitly disable xcb on osx build
-      env: 
-        - QT5_XCB_FLAG="no-xcb"
-        - MAKE="make"
-        - PLAT="$TRAVIS_OS_NAME"
-        - HOMEBREW_NO_AUTO_UPDATE=1
-    - os: windows
-      # explicitly disable xcb on osx build
-      before_install:
-        - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
-        - export PATH="$PWD/bin:$PATH"
-        - PLAT="win32"
-
-      env: 
-        - QT5_XCB_FLAG="no-xcb"
-        - PLATFORM="-platform win32-g++"
-        - MAKE="mingw32-make"
+  - os: linux
+    dist: xenial
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-9
+        - libxkbcommon-dev
+    before_install:
+    - sudo rm /usr/bin/gcc
+    - sudo rm /usr/bin/g++
+    - sudo ln -s /usr/bin/gcc-9 /usr/bin/gcc
+    - sudo ln -s /usr/bin/g++-9 /usr/bin/g++
+    - gcc --version
+    - g++ --version
+    env:
+    - QT5_XCB_FLAG="qt-xcb"
+    - MAKE="make"
+  - os: osx
+    osx_image: xcode9.4
+    compiler: clang
+    before_install:
+    - brew install ccache
+    - export PATH="/usr/local/opt/ccache/libexec:$PATH"
+    env:
+    - QT5_XCB_FLAG="no-xcb"
+    - MAKE="make"
+    - HOMEBREW_NO_AUTO_UPDATE=1
+  - os: windows
+    before_install:
+    - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
+    - export PATH="$PWD/bin:$PATH"
+    env:
+    - QT5_XCB_FLAG="no-xcb"
+    - PLATFORM="-platform win32-g++"
+    - MAKE="mingw32-make"
 before_script:
-  # on osx, this should make clang compile for target osx>=10.12
-  - export MACOSX_DEPLOYMENT_TARGET=10.12
-  # install pre-compiled Qt5 binaries & static libraries to $QT5_INSTALL_PREFIX
-  # note absolute paths currently hard coded in QT binaries
-  # to override this, add a qt.conf file (https://doc.qt.io/qt-5/qt-conf.html#overriding-paths)
-  - wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$PLAT.tgz"
-  - sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
-  # export path for Qt5 binaries
-  - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
-  - qmake -v
-  - pushd $QT5_INSTALL_PREFIX
-  - cd $QT5_INSTALL_PREFIX
-  - git submodule update --init qtdeclarative
-  - git submodule update --init qtserialport
-  - git submodule update --init qtquickcontrols2
-  - cd qtdeclarative
-  - qmake
-  - cd ..
-  - cd qtserialport
-  - qmake
-  - cd ..
-  - cd qtquickcontrols2
-  - qmake
-  - cd ..
-  - popd
+- export MACOSX_DEPLOYMENT_TARGET=10.12
+- wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
+- sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
+- export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
+- qmake -v
 script:
-  - $MAKE clean
-  - qmake -config release
-  - $MAKE 
-before_deploy:
-  # make tarball of installation
-  tar -zcvf qt5-static-$TRAVIS_OS_NAME.tgz $QT5_INSTALL_PREFIX
+- "$MAKE clean"
+- qmake -config release
+- "$MAKE"
+before_deploy: tar -zcvf qt5-static-$TRAVIS_OS_NAME.tgz $QT5_INSTALL_PREFIX
 deploy:
-  # if commit was tagged, upload resulting tarball to github release
   provider: releases
   api_key:
-    secure: TCD5ZL62jMxf5PD4IBOsxL8CQwgGiQn7+W8I8z7XAbMcP5QyeypctkE97VAz1dgfOCjBAEWqcenw/efnf8Yfh3T9HjkC8Btfs0PA8uwrsUsC5qq7uQF1YNqsRHFxMYo2OU3RDAuQ2p1kfTJsQiJbogfgBmKTgT8t6boA16pVfvAtxQAakKbZQKt7jIkKB4eFA/hxie4e+s28/TiZ/PH54rf0kGnwf7cJpj86NH4kqGoQXhmqYjIVumCc9bbpNTPRif+tMExXwEIDZQ50vWRt9FjrsVpWKK6bOhw/zi+7OdU70f/X3G6qQC6fXNECndI8+xrdo0Ie2Js4I9RYcRGp+vdTICcD85pOlFQnKYzcRWZdt2uCAgC6XCM785Nymc3SZkBD9jeK+Nh1HTUsGf2d8kVPAajWllxhtdt/oPIKNy77NbILj/R+tPsXLPjoC07jM6heVVHw7CPo3gnVmsuJvDtfIDG36KDFRfgJxRECLnj48cDLx/X4zcFJajqbDMJibUC5HYQg5pBL4+Bxkalo7jhoKKOxI2+pQaWEMFNh/aNVQu2tnKwJEhRNngt/gdAFYBR/Vmlt839/RiLrB0R5UpONVxSjRhbKAS0xwBka7CCxXAWHbCN3ferbgecVfqhys5n+kqXQBi2ofBM+zj73X9LuV2F6ef4B3oN0oPqRrwQ=
+    secure: XUCBpgpnGlz1ryns2TlTYiSq+q8n83bi1dsBo+WMKsOcOJ3DzU+6npUfsUarqikoYB4CvSh13WyNUEcXs1YPcOU69rXY7HiVBKNUfxpGIdHlQiucIUYta1iz28fmAymdjsti9vICV/Cs64psGiSlXcR8MW3iCDZ4J4EcRnnOCg7No4BpSd/0i0dx4Nry2WaqG6D/G5f2QpaWiIcBS3HbTPFYtgGcTE299FA1bu3X3Ume4rDP8qLTHVfVdRgFRqt+hmBY+/OfGlCuhRXJ7AfrgaOyhsVL55RkCr/s2j+1aRTvcLcmu1IW8nyiwDRs7UlLzGBEdPtXk1U8DIl7ETwyFWrMUMpXp8GZFMhOrBuamx8o31B/ExJr7o8CM/VspE6xpfTCm7IiMQusAQoh4WgkyWkTGJ7vFse4dUxTUW8ybFUGrgvqQBv1XntqjkjPK1viSvkgX9bHUh8DdX74N6YHlOZa9cXwbOpeEJj1RKNf3uI0ffOlY/PovK8MG7DGgG7pxh5/tr/MYc94CV8sn5BiTv2Uwg+FmxIEUHS0sFpzvJBJwPjHHOVjWjMF0C/UiH4K4EabNoufrOGFPlMob2HlTviSlcS+oqnWXhE7xkPQTVYYMVfQpEvTORKGhejOfqJXuYmx+LQ3XakaEeuOltOKDRPtumRaMDLInR6DgCUGB6M=
   file:
-    - qt5-static-$TRAVIS_OS_NAME.tgz
+  - qt5-static-$TRAVIS_OS_NAME.tgz
   skip_cleanup: true
   on:
     repo: sanjay900/guitar-configurator
