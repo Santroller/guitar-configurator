@@ -69,6 +69,7 @@ unix {
     INSTALLS += icon256
     INSTALLS += desktop
     INSTALLS += binaries
+    INSTALLS += firmware
     INSTALLS += target
 }
 
