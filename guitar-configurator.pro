@@ -71,15 +71,12 @@ unix {
     INSTALLS += binaries
     INSTALLS += firmware
 }
-
-makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
-copydata.commands = mkdir -p $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64/* $$OUT_PWD/binaries
-copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
-copyfirmware2.commands = $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware
-first.depends = $(first) copydata makeArd copyfirmware copyfirmware2 copydata2
-export(first.depends)
-export(copydata2.commands)
-export(copydata.commands)
-export(makeArd.commands)
+makeArd.commands = pushd $$PWD/submodules/Ardwiino && $(MAKE) build-all && popd
+copybinaries.commands = mkdir -p $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+copyfirmware.commands = mkdir -p $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/firmware $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/submodules/Ardwiino/output $$OUT_PWD/firmware
+copyfirmware.depends = makeArd
+first.depends = $(first) copybinaries copyfirmware
+export(copybinaries.commands)
 export(copyfirmware.commands)
-QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware copyfirmware2 copydata2
+export(first.commands)
+QMAKE_EXTRA_TARGETS += first makeArd copybinaries copyfirmware
