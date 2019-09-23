@@ -63,12 +63,15 @@ unix {
     binaries.path = $$PREFIX/opt/guitar-configurator/bin/binaries
     binaries.files += binaries/linux-64/*
     firmware.path = $$PREFIX/opt/guitar-configurator/bin/firmware
-    firmware.files += $$OUT_PWD/firmware/*
+    firmware.files += submodules/Ardwiino/output/*
+    firmware2.path = $$PREFIX/opt/guitar-configurator/bin/firmware
+    firmware2.files += firmware/*
 
     INSTALLS += icon256
     INSTALLS += desktop
     INSTALLS += binaries
     INSTALLS += firmware
+    INSTALLS += firmware2
 }
 makeArd.commands = cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
 copybinaries.commands = $(MKDIR) $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
