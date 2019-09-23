@@ -47,7 +47,7 @@ matrix:
     - MAKE="mingw32-make"
 before_script:
 - export MACOSX_DEPLOYMENT_TARGET=10.12
-- wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
+- wget "https://github.com/sanjay900/qt5-static/releases/latest/download/qt5-static-$TRAVIS_OS_NAME.tgz"
 - sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
 - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
 - qmake -v
