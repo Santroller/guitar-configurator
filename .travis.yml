@@ -52,7 +52,6 @@ before_script:
 - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
 - qmake -v
 script:
-- "$MAKE clean"
 - qmake -config release
 - "$MAKE"
 before_deploy: tar -zcvf qt5-static-$TRAVIS_OS_NAME.tgz $QT5_INSTALL_PREFIX
