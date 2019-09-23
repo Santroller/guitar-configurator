@@ -1,7 +1,7 @@
-import QtQuick 2.13
-import QtQuick.Window 2.13
-import QtQuick.Controls 2.13
-import QtQuick.Controls.Universal 2.13
+import QtQuick 2.10
+import QtQuick.Window 2.10
+import QtQuick.Controls 2.10
+import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.13
 import net.tangentmc 1.0
 import "keys.js" as KeyInfo
