@@ -38,12 +38,12 @@ matrix:
       before_install:
         - brew install ccache
         - export PATH="/usr/local/opt/ccache/libexec:$PATH"
-        - HOMEBREW_NO_AUTO_UPDATE=1
       # explicitly disable xcb on osx build
       env: 
         - QT5_XCB_FLAG="no-xcb"
         - MAKE="make"
         - PLAT="$TRAVIS_OS_NAME"
+        - HOMEBREW_NO_AUTO_UPDATE=1
     - os: windows
       # explicitly disable xcb on osx build
       before_install:
