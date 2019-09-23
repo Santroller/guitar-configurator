@@ -58,12 +58,17 @@ script:
 - mkdir qt
 - cd qt
 - git clone https://github.com/qt/qtserialport
+- git clone https://github.com/qt/qtdeclaritive
 - git clone https://github.com/qt/qtquickcontrols2
 - cd qtserialport
 - qmake -config release
 - "$MAKE -j2"
 - "$SUDO $MAKE install"
 - cd ../qtquickcontrols2
+- qmake -config release
+- "$MAKE -j2"
+- "$SUDO $MAKE install"
+- cd ../qtdeclaritive
 - qmake -config release
 - "$MAKE -j2"
 - "$SUDO $MAKE install"
