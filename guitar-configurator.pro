@@ -70,7 +70,6 @@ unix {
     INSTALLS += desktop
     INSTALLS += binaries
     INSTALLS += firmware
-    INSTALLS += target
 }
 
 makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
