@@ -1,66 +1,32 @@
 language: cpp
-matrix:
-  include:
-  - os: osx
-    osx_image: xcode9.2
+compiler: gcc
+sudo: required
+dist: trusty
 
-    compiler: clang
+before_install:
+  - sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-trusty -y
+  - sudo apt-get update -qq
 
-    script:
-      - ./unixbuild.sh
+install:
+  - sudo apt-get -y install qt510base qt510serialport qt510quickcontrols2 libgl1-mesa-dev
+  - source /opt/qt*/bin/qt*-env.sh
 
-    deploy:
-      provider: releases
-      skip_cleanup: true
-      file: "dist/*.zip"
-      file_glob: true
-      api_key:
-        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
-      on:
-        tags: true
+script:
+  - qmake CONFIG+=release PREFIX=/usr
+  - make -j$(nproc)
+  - make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
+  - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+  - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+  # export VERSION=... # linuxdeployqt uses this for naming the file
+  - ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
 
-  - os: linux
-    dist: trusty
-    compiler: clang
-
-    before_install:
-      - sudo apt-get update -qq
-      - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools cmake
-
-    script:
-      - ./unixbuild.sh
-
-  - os: windows
-    script:
-      - ./unixbuild.sh
-
-    deploy:
-      provider: releases
-      skip_cleanup: true
-      file: "dist/*.zip"
-      file_glob: true
-      api_key:
-        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
-      on:
-        tags: true
-
-  - os: linux
-    dist: trusty
-    compiler: gcc
-
-    before_install:
-      - sudo apt-get update -qq
-      - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools cmake
-
-    script:
-      - ./unixbuild.sh
-
-    deploy:
-      provider: releases
-      skip_cleanup: true
-      file: "dist/*.zip"
-      file_glob: true
-      api_key:
-        secure: "WjYd93lVLKHULBpUXS/WtGrkdXyAwxHOUnLJotyDmQipAQP5Ox7Kj12JwkSJGEmVOEdcbIQJyi0QxPjn1UYbYsAt6Op8zrjnYLS4G4fMdBtcxprWzid85uTW7oAAIFs7ygMVhpzxRKpu70yNb683vbThqNmaOu6RyG9aJOLtPAg="
-      on:
-        tags: true
+after_success:
+  # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
+  # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh APPNAME*.AppImage*
+  
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)/
