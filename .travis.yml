@@ -68,6 +68,7 @@ before_script:
   - qmake -v
   - cd ../
 script:
+  - ls
   - $MAKE clean
   - qmake -config release
   - $MAKE 
