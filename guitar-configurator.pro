@@ -50,15 +50,26 @@ HEADERS += \
     tilt_types.h \
     wii_extensions.h
 
-makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
-copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
-copydata2.commands = $(COPY_DIR) $$PWD/binaries $$OUT_PWD/binariesAll
-copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
-copyfirmware2.commands = $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware
-first.depends = $(first) copydata makeArd copyfirmware copyfirmware2 copydata2
-export(first.depends)
-export(copydata2.commands)
-export(copydata.commands)
-export(makeArd.commands)
-export(copyfirmware.commands)
-QMAKE_EXTRA_TARGETS += first copydata makeArd copyfirmware copyfirmware2 copydata2
+unix {
+    isEmpty(PREFIX) {
+        PREFIX = /usr
+    }
+
+    makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
+    makeArd.path = $$OUT_PWD/firmware
+    target.path = $$PREFIX/bin
+
+    desktop.path = $$PREFIX/share/applications/
+    desktop.files += guitar-configurator.desktop
+    icon256.path = $$PREFIX/share/icons/hicolor/256x256/apps
+    icon256.files += icon.png
+    binaries.path = $$PREFIX/opt/guitar-configurator/bin
+    binaries.files += $$PWD/binaries/linux-64/*
+    firmware.path = $$PREFIX/opt/guitar-configurator/bin/firmware
+    firmware.files += $$PWD/firmware/*
+    firmware.files += $$PWD/submodules/Ardwiino/output/*
+    INSTALLS += makeArd
+    INSTALLS += icon256
+    INSTALLS += desktop
+    INSTALLS += target
+}
