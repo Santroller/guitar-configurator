@@ -62,10 +62,25 @@ before_script:
   # note absolute paths currently hard coded in QT binaries
   # to override this, add a qt.conf file (https://doc.qt.io/qt-5/qt-conf.html#overriding-paths)
   - wget "https://github.com/lkeegan/qt5-static/releases/latest/download/qt5-static-$PLAT.tgz"
-  - sudo tar xzvf qt5-static-$TRAVIS_OS_NAME.tgz -C /
+  - sudo tar xzf qt5-static-$TRAVIS_OS_NAME.tgz -C /
   # export path for Qt5 binaries
   - export PATH=$QT5_INSTALL_PREFIX/bin:$PATH
   - qmake -v
+  - pushd $QT5_INSTALL_PREFIX
+  - cd $QT5_INSTALL_PREFIX
+  - git submodule update --init qtdeclarative
+  - git submodule update --init qtserialport
+  - git submodule update --init qtquickcontrols2
+  - cd qtdeclarative
+  - qmake
+  - cd ..
+  - cd qtserialport
+  - qmake
+  - cd ..
+  - cd qtquickcontrols2
+  - qmake
+  - cd ..
+  - popd
 script:
   - $MAKE clean
   - qmake -config release
