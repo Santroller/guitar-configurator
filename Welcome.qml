@@ -2,7 +2,7 @@ import QtQuick 2.10
 import QtQuick.Window 2.10
 import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
-import QtQuick.Layouts 1.13
+import QtQuick.Layouts 1.10
 
 Page {
     id: page

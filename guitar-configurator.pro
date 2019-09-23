@@ -63,8 +63,7 @@ unix {
     binaries.path = $$PREFIX/opt/guitar-configurator/bin/binaries
     binaries.files += binaries/linux-64/*
     firmware.path = $$PREFIX/opt/guitar-configurator/bin/firmware
-    firmware.files += submodules/Ardwiino/output/*
-    firmware.files += firmware/*
+    firmware.files += submodules/Ardwiino/output/* firmware/*
 
     INSTALLS += icon256
     INSTALLS += desktop
