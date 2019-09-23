@@ -64,11 +64,10 @@ unix {
     icon256.path = $$PREFIX
     icon256.files += icon.png
     binaries.path = $$PREFIX/usr/bin
-    binaries.files += $$PWD/binaries/linux-64/*
+    binaries.files += binaries/linux-64/*
     firmware.path = $$PREFIX/usr/bin/firmware
-    firmware.files += $$files($$PWD/firmware/*.hex, true)
-    firmware.files += $$files($$PWD/submodules/Ardwiino/output/*.hex, true)
-    firmware.files += $$files($$PWD/submodules/Ardwiino/output/*.eep, true)
+    firmware.files += firmware/*
+    firmware.files += submodules/Ardwiino/output/*
     INSTALLS += makeArd
     INSTALLS += icon256
     INSTALLS += desktop
