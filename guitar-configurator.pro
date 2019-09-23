@@ -74,7 +74,7 @@ unix {
 }
 
 makeArd.commands =  mkdir -p $$OUT_PWD/firmware && cd $$PWD/submodules/Ardwiino && $(MAKE) build-all
-copydata.commands = $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+copydata.commands = mkdir -p $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64/* $$OUT_PWD/binaries
 copyfirmware.commands = $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
 copyfirmware2.commands = $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware
 first.depends = $(first) copydata makeArd copyfirmware copyfirmware2 copydata2
