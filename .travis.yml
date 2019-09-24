@@ -43,7 +43,7 @@ matrix:
     script:
       - mkdir build
       - cd build
-      - qmake CONFIG+=release../
+      - qmake CONFIG+=release ../
       - make -j2
       - macdeployqt -dmg -qmldir=../ 
 
