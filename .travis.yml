@@ -10,8 +10,8 @@ matrix:
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
       - python --version
-      - C:\tools\python3\python --version
-      - C:\tools\python3\python qli-installer.py 5.12.0 windows desktop
+      - /c/tools/python3/python --version
+      - /c/tools/python3/python qli-installer.py 5.12.0 windows desktop
       - export PATH="5.12.0/bin:$PATH"
 
     script:
