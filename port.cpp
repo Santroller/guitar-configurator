@@ -78,6 +78,7 @@ bool comp(const QSerialPortInfo a, const QSerialPortInfo b)
     return a.portName() < b.portName();
 }
 void Port::prepareUpload() {
+    m_port_list = QSerialPortInfo::availablePorts();
     if (m_board.protocol == "avr109") {
         m_serialPort->close();
         m_serialPort->setBaudRate(QSerialPort::Baud1200);
@@ -93,10 +94,10 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
-        m_port_list = QSerialPortInfo::availablePorts();
-        QThread::currentThread()->msleep(400);
         //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
-        findNew();
+        while (!findNewAsync()) {
+            QThread::currentThread()->msleep(100);
+        }
     }
 }
 
