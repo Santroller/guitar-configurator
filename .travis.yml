@@ -18,7 +18,7 @@ matrix:
       - qmake CONFIG+=release PREFIX=/usr ../
       - make -j$(nproc)
       - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
-      - cp -rf firmwares ../appdir/bin
+      - cp -rf firmware ../appdir/bin
       - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
       - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
       # export VERSION=... # linuxdeployqt uses this for naming the file
@@ -50,8 +50,8 @@ matrix:
       - qmake CONFIG+=release ../
       - make -j2
       - mkdir -p guitar-configurator.app/Contents/MacOS/binaries
-      - cp -rf binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
-      - cp -rf firmwares guitar-configurator.app/Contents/MacOS
+      - cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
+      - cp -rf firmware guitar-configurator.app/Contents/MacOS
       - macdeployqt guitar-configurator.app -dmg -qmldir=../
 
     after_success:
