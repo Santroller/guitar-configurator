@@ -11,7 +11,7 @@ matrix:
       - chmod +x qli-installer.py
       - python --version
       - /c/tools/python3/python --version
-      - /c/tools/python3/python qli-installer.py 5.12.0 windows desktop
+      - /c/tools/python3/python qli-installer.py 5.12.0 windows desktop win64_msvc2017_64
       - export PATH="5.12.0/bin:$PATH"
 
     script:
