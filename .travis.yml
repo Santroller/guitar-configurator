@@ -43,9 +43,8 @@ matrix:
     script:
       - mkdir build
       - cd build
-      - qmake CONFIG+=release PREFIX=/usr ../
+      - qmake CONFIG+=release../
       - make -j2
-      - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - macdeployqt -dmg -qmldir=../ 
 
     after_success:
