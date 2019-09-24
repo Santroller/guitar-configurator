@@ -20,6 +20,7 @@ board_t Programmer::detectBoard() {
     board = ArdwiinoLookup::boards[0];
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("binaries");
+    qDebug() << dir.path();
     m_port->prepareUpload();
     for (board_t board: ArdwiinoLookup::boards) {
         if (board.originalFirmware == "") continue;
