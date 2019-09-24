@@ -93,6 +93,8 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
+        m_port_list = QSerialPortInfo::availablePorts();
+        QThread::currentThread()->msleep(400);
         //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
         findNew();
     }
