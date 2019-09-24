@@ -5,6 +5,8 @@ import QtQuick.Controls.Universal 2.10
 ApplicationWindow {
     id: applicationWindow
     visible: true
+    width: 1024
+    height: 768
     Universal.theme: Universal.Dark
     Universal.accent: Universal.Violet
 

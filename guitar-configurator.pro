@@ -60,9 +60,9 @@ unix {
     desktop.files += guitar-configurator.desktop
     icon256.path = $$PREFIX/share/icons/hicolor/256x256/apps
     icon256.files += icon.png
-    binaries.path = $$PREFIX/opt/guitar-configurator/bin/binaries
+    binaries.path = $$PREFIX/bin/binaries
     binaries.files += binaries/linux-64/*
-    firmware.path = $$PREFIX/opt/guitar-configurator/bin/firmware
+    firmware.path = $$PREFIX/bin/firmware
     firmware.files += $$PWD/submodules/Ardwiino/output/* firmware/*
     INSTALLS += icon256
     INSTALLS += desktop
