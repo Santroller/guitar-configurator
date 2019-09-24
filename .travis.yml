@@ -6,7 +6,7 @@ matrix:
     install:
       - choco install python3 --params "/InstallDir:C:\tools\python3"
       - export PATH="C:\tools\python3;C:\tools\python3\Scripts:$PATH"
-      - find C:\tools
+      - find /c/tools
       - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
