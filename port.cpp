@@ -101,7 +101,7 @@ void Port::prepareUpload() {
             std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
             if (diff.size() != 0) {
                 auto info = diff.front();
-                m_port = info->systemLocation();
+                m_port = info.systemLocation();
             }
         }
     }
