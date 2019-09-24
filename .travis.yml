@@ -45,6 +45,7 @@ matrix:
       - cd build
       - qmake CONFIG+=release ../
       - make -j2
+      - find .
       - macdeployqt -dmg -qmldir=../ 
 
     after_success:
