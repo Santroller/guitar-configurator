@@ -94,9 +94,11 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
+        std::sort(m_port_list.begin(), m_port_list.end(), comp);
         //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
         while(true) {
             auto newSp = QSerialPortInfo::availablePorts();
+            std::sort(newSp.begin(), newSp.end(), comp);
             std::vector<QSerialPortInfo> diff;
             std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
             if (diff.size() != 0) {
