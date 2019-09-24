@@ -95,8 +95,14 @@ void Port::prepareUpload() {
         }
         m_serialPort->close();
         //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
-        while (!findNewAsync()) {
-            QThread::currentThread()->msleep(100);
+        while(true) {
+            auto newSp = QSerialPortInfo::availablePorts();
+            std::vector<QSerialPortInfo> diff;
+            std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
+            if (diff.size() != 0) {
+                auto info = diff.front();
+                m_port = info->systemLocation();
+            }
         }
     }
 }
@@ -115,7 +121,6 @@ bool Port::findNewAsync() {
     if (diff.size() != 0) {
         auto info = diff.front();
         QThread::currentThread()->msleep(400);
-        m_port = info.systemLocation();
         rescan(info);
         open(info);
         return true;
