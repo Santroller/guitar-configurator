@@ -4,6 +4,8 @@ matrix:
   include:
   - os: windows
     install:
+      - choco install python3
+      - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
       - ./qli-installer.py 5.12.0 windows desktop
