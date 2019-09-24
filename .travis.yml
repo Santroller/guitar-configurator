@@ -29,10 +29,13 @@ matrix:
       - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
       - bash upload.sh Guitar_Configurator*.AppImage*
   - os: osx
-    osx_image: xcode10.2
+    osx_image: xcode9.4
     compiler: clang
-    env:
-      - HOMEBREW_NO_AUTO_UPDATE=1
+    cache:
+      directories:
+        - $HOME/Library/Caches/Homebrew
+    before_cache:
+      - brew cleanup
     before_install:
       - brew tap osx-cross/avr
     install:
