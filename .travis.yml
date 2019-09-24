@@ -4,6 +4,7 @@ matrix:
   include:
   - os: windows
     install:
+      - choco install 7zip.install
       - choco install python3 --params "/InstallDir:C:\tools\python3"
       - export PATH="C:\tools\python3;C:\tools\python3\Scripts:$PATH"
       - pip install requests
