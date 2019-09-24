@@ -4,8 +4,8 @@ matrix:
   include:
   - os: windows
     install:
-      - choco install python3
-      - cmd /C refreshenv
+      - cinst -y python3
+      - cinst -y pip
       - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
