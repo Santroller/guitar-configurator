@@ -4,8 +4,8 @@ matrix:
   include:
   - os: windows
     install:
-      - cinst -y python3
-      - cinst -y pip
+      - choco install python3 --params "/InstallDir:C:\tools\python3"
+      - export PATH="C:\tools\python3;C:\tools\python3\Scripts:$PATH"
       - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
