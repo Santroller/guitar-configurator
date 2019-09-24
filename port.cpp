@@ -78,7 +78,6 @@ bool comp(const QSerialPortInfo a, const QSerialPortInfo b)
     return a.portName() < b.portName();
 }
 void Port::prepareUpload() {
-    m_port_list = QSerialPortInfo::availablePorts();
     if (m_board.protocol == "avr109") {
         m_serialPort->close();
         m_serialPort->setBaudRate(QSerialPort::Baud1200);
@@ -94,19 +93,8 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
-        std::sort(m_port_list.begin(), m_port_list.end(), comp);
         //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
-        while(true) {
-            auto newSp = QSerialPortInfo::availablePorts();
-            std::sort(newSp.begin(), newSp.end(), comp);
-            std::vector<QSerialPortInfo> diff;
-            std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
-            if (diff.size() != 0) {
-                auto info = diff.front();
-                m_port = info.systemLocation();
-                return;
-            }
-        }
+        findNew();
     }
 }
 
@@ -124,6 +112,7 @@ bool Port::findNewAsync() {
     if (diff.size() != 0) {
         auto info = diff.front();
         QThread::currentThread()->msleep(400);
+        m_port = info.systemLocation();
         rescan(info);
         open(info);
         return true;
