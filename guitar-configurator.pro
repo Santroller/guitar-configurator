@@ -73,4 +73,10 @@ unix {
     firmware.depends = $(first) makeArd
     export(makeArd.commands)
     QMAKE_EXTRA_TARGETS += first makeArd
+
+    copybinaries.commands = $(MKDIR) $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+    copyfirmware.commands = $(MKDIR) $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/submodules/Ardwiino/output/* $$OUT_PWD/firmware
+    copyfirmware.depends = makeArd
+    first.depends = $(first) copyfirmware copybinaries
+    QMAKE_EXTRA_TARGETS += first copyfirmware copybinaries
 }

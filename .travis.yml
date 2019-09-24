@@ -1,33 +1,64 @@
 language: cpp
-compiler: gcc
 sudo: required
-dist: xenial
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    compiler: gcc
+    before_install:
+      - sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y
+      - sudo apt-get update -qq
+    install:
+      - sudo apt-get -y install qt512base qt512serialport qt512quickcontrols2 libgl1-mesa-dev gcc-avr avr-libc
+      - source /opt/qt*/bin/qt*-env.sh
 
-before_install:
-  - sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y
-  - sudo apt-get update -qq
+    script:
+      - mkdir build
+      - cd build
+      - qmake CONFIG+=release PREFIX=/usr ../
+      - make -j$(nproc)
+      - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
+      - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+      - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+      # export VERSION=... # linuxdeployqt uses this for naming the file
+      - ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
 
-install:
-  - sudo apt-get -y install qt512base qt512serialport qt512quickcontrols2 libgl1-mesa-dev gcc-avr avr-libc
-  - source /opt/qt*/bin/qt*-env.sh
+    after_success:
+      # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
+      # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
+      - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+      - bash upload.sh Guitar_Configurator*.AppImage*
+  - os: osx
+    osx_image: xcode9.4
+    compiler: clang
+    before_install:
+      - brew tap osx-cross/avr
+    install:
+      - brew install qt
+      - brew install avr-gcc
 
-script:
-  - mkdir build
-  - cd build
-  - qmake CONFIG+=release PREFIX=/usr ../
-  - make -j$(nproc)
-  - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
-  - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-  - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  # export VERSION=... # linuxdeployqt uses this for naming the file
-  - ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
+    script:
+      - mkdir build
+      - cd build
+      - qmake CONFIG+=release PREFIX=/usr ../
+      - make -j$(nproc)
+      - make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
+      - macdeployqt -dmg -qmldir=../ 
 
-after_success:
-  # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
-  # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
-  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh Guitar_Configurator*.AppImage*
-  
+    after_success:
+      # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
+      # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
+      - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+      - bash upload.sh Guitar_Configurator*.AppImage*
+  # - os: windows
+  #   before_install:
+  #   - wget -P bin http://artax.karlin.mff.cuni.cz/~kendy/ccache/ccache.exe
+  #   - export PATH="$PWD/bin:$PATH"
+  #   env:
+  #   - QT5_XCB_FLAG="no-xcb"
+  #   - PLAT="win32"
+  #   - PLATFORM="-platform win32-g++"
+  #   - MAKE="mingw32-make"  
 branches:
   except:
     - # Do not build tags that we create when we upload to GitHub Releases
