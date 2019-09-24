@@ -5,6 +5,7 @@ matrix:
   - os: windows
     install:
       - choco install python3
+      - refreshenv
       - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
@@ -16,7 +17,6 @@ matrix:
       - cd build
       - qmake CONFIG+=release ../
       - make -j2
-      - cp -rf firmware ../appdir/bin
       - windeployqt guitar-configurator.exe -qmldir=../
       - find
 
