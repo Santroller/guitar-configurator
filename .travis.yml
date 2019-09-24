@@ -5,7 +5,7 @@ matrix:
   - os: windows
     install:
       - choco install python3
-      - cmd refreshenv
+      - cmd /C refreshenv
       - pip install requests
       - wget https://git.kaidan.im/lnj/qli-installer/raw/master/qli-installer.py
       - chmod +x qli-installer.py
