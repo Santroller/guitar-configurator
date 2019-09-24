@@ -102,6 +102,7 @@ void Port::prepareUpload() {
             if (diff.size() != 0) {
                 auto info = diff.front();
                 m_port = info.systemLocation();
+                return;
             }
         }
     }
