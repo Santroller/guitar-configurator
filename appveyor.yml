@@ -3,7 +3,7 @@ install:
   - set QTDIR=C:\Qt\5.13.0\msvc2015_64
   - set PATH=%PATH%;%QTDIR%\bin
 build_script:
-  - qmake -config release -tp vc guitar-configurator.pro
+  - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
   - windeployqt guitar-configurator.exe -qmldir=../
   - tree
 
