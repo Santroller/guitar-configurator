@@ -5,16 +5,20 @@ install:
   - call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 build_script:
+  - set QMAKESPEC=win32-msvc
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
-  - tree
-  - windeployqt guitar-configurator.exe -qmldir=../
-  - tree
-
-on_success:
+configuration:
+  - Release
+after_build:
+  - mkdir deploy
+  - cp guitar-configurator.exe deploy
+  - windeployqt deploy/guitar-configurator.exe -qmldir=../
+  - tree deploy
+  - 7z a guitar-configurator_win_%arch%.zip .\deploy\*
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
   # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh Guitar_Configurator*.AppImage*
+  - bash upload.sh guitar-configurator_win_%arch%.zip
 branches:
   except:    
   - /^(?i:continuous)/
