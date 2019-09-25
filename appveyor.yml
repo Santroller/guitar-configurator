@@ -8,15 +8,14 @@ environment:
 
 install:
   - git submodule update --init --recursive
-  - set PATH=%PATH%;%QT_DIR%\bin;%cd%\build\avr-gcc\bin
+  - set PATH=%PATH%;%QT_DIR%\bin;%cd%\build-bin\avr-gcc\bin
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %arch%
 before_build:
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
 configuration:
   - Release
 after_build:
-  - bash -c "cd submodules/Ardwiino && find ../../build"
-  - bash -c "cd submodules/Ardwiino && ../../build/avr-gcc/bin/make.exe build-all"
+  - bash -c "cd submodules/Ardwiino && make build-all"
   - mkdir deploy
   - mkdir deploy\firmware
   - mkdir deploy\binaries
