@@ -2,6 +2,7 @@ install:
   - git submodule update --init --recursive
   - set QTDIR=C:\Qt\5.12.3\msvc2017_64
   - set PATH=%PATH%;%QTDIR%\bin
+  - tree "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC"
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 before_build:
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
