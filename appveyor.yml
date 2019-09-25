@@ -15,13 +15,21 @@ before_build:
 configuration:
   - Release
 after_build:
+  - powershell wget https://blog.zakkemble.net/download/avr-gcc-9.2.0-%arch%-mingw.zip -OutFile avr.zip
+  - 7z x avr.zip
+  - set PATH=%PATH%;avr-gcc-9.2.0-%arch%-mingw\bin
+  - bash -c cd submodules\Ardwiino && make build-all
   - mkdir deploy
+  - mkdir deploy\firmware
+  - mkdir deploy\binaries
+  - cp submodules\Ardwiino\output\* deploy\firmware
+  - cp -r binaries\win deploy\binaries
   - cp release\guitar-configurator.exe deploy
   - windeployqt deploy\guitar-configurator.exe -qmldir=../
   - 7z a guitar-configurator_win_%arch%.zip .\deploy\*
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
   # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
-  - powershell wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - powershell wget https://github.com/probonopd/uploadtool/raw/master/upload.sh -OutFile upload.sh
   - bash upload.sh guitar-configurator_win_%arch%.zip
 branches:
   except:    
