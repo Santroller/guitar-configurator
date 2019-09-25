@@ -15,9 +15,7 @@ before_build:
 configuration:
   - Release
 after_build:
-  - powershell wget https://blog.zakkemble.net/download/avr-gcc-9.2.0-%arch%-mingw.zip -OutFile avr.zip
-  - 7z x avr.zip
-  - set PATH=%PATH%;avr-gcc-9.2.0-%arch%-mingw\bin
+  - set PATH=%PATH%;build\avr-gcc\bin
   - bash -c cd submodules\Ardwiino && make build-all
   - mkdir deploy
   - mkdir deploy\firmware
