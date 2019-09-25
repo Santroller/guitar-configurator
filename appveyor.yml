@@ -1,15 +1,11 @@
-environment:
-  matrix:
-    - arch: x64
-      QT_DIR: C:\Qt\5.13.0\msvc2017_64
-    - arch: x86
-      QT_DIR: C:\Qt\5.13.0\msvc2017
 install:
   - git submodule update --init --recursive
+  - set QTDIR=C:\Qt\5.13.0\msvc2017_64
   - set PATH=%PATH%;%QTDIR%\bin
 build_script:
   - qmake -config release -tp vc -spec win32-msvc2017 guitar-configurator.pro
-  - windeployqt --release -qmldir=../ guitar-configurator.exe 
+  - mingw32-make
+  - windeployqt guitar-configurator.exe -qmldir=../
   - find
 
 on_success:
