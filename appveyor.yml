@@ -16,11 +16,9 @@ configuration:
   - Release
 after_build:
   - mkdir deploy
-  - mkdir deploy\firmware
-  - mkdir deploy\binaries
-  - bash cp firmware/* deploy/firmware
-  - bash cp -r binaries/win/* deploy/binaries
-  - bash cp release/guitar-configurator.exe deploy
+  - xcopy firmware /O/X/E/H/K deploy\firmware
+  - xcopy binaries\win /O/X/E/H/K deploy\binaries
+  - cp release\guitar-configurator.exe deploy
   - windeployqt deploy\guitar-configurator.exe -qmldir=.
   - 7z a guitar-configurator_win_%arch%.zip .\deploy\*
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
