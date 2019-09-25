@@ -15,7 +15,7 @@ before_build:
 configuration:
   - Release
 after_build:
-  - bash -c "cd submodules\Ardwiino && make build-all"
+  - bash -c "cd submodules/Ardwiino && make build-all"
   - mkdir deploy
   - mkdir deploy\firmware
   - mkdir deploy\binaries
