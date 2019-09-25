@@ -1,9 +1,15 @@
 image: Visual Studio 2017
+environment:
+  matrix:
+    - arch: x64
+      QT_DIR: C:\Qt\5.12.3\msvc2017_64
+    - arch: x86
+      QT_DIR: C:\Qt\5.12.3\msvc2017
+
 install:
   - git submodule update --init --recursive
-  - set QTDIR=C:\Qt\5.12.3\msvc2017_64
   - set PATH=%PATH%;%QTDIR%\bin
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat %arch%"
 before_build:
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
 configuration:
@@ -12,11 +18,10 @@ after_build:
   - mkdir deploy
   - cp release\guitar-configurator.exe deploy
   - windeployqt deploy\guitar-configurator.exe -qmldir=../
-  - tree deploy
   - 7z a guitar-configurator_win_%arch%.zip .\deploy\*
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
   # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
-  - powershell wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - powershell wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
   - bash upload.sh guitar-configurator_win_%arch%.zip
 branches:
   except:    
