@@ -9,7 +9,7 @@ environment:
 install:
   - git submodule update --init --recursive
   - set PATH=%PATH%;%QTDIR%\bin
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat %arch%"
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %arch%
 before_build:
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
 configuration:
