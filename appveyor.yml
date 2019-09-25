@@ -3,9 +3,9 @@ install:
   - set QTDIR=C:\Qt\5.13.0\msvc2015_64
   - set PATH=%PATH%;%QTDIR%\bin
 build_script:
-  - qmake -config release -tp vc -spec win32-msvc2015 guitar-configurator.pro
+  - qmake -config release -tp vc guitar-configurator.pro
   - windeployqt guitar-configurator.exe -qmldir=../
-  - find
+  - tree
 
 on_success:
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
