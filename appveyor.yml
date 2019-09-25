@@ -15,8 +15,7 @@ before_build:
 configuration:
   - Release
 after_build:
-  - bash -c "cd submodules/Ardwiino && ls ../../build"
-  - bash -c "cd submodules/Ardwiino && ../../build/avr-gcc/make.exe build-all"
+  - bash -c "cd submodules/Ardwiino && ../../build/avr-gcc/bin/make.exe build-all"
   - mkdir deploy
   - mkdir deploy\firmware
   - mkdir deploy\binaries
