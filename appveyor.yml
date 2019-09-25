@@ -10,8 +10,8 @@ configuration:
   - Release
 after_build:
   - mkdir deploy
-  - cp guitar-configurator.exe deploy
-  - windeployqt deploy/guitar-configurator.exe -qmldir=../
+  - cp release\guitar-configurator.exe deploy
+  - windeployqt deploy\guitar-configurator.exe -qmldir=../
   - tree deploy
   - 7z a guitar-configurator_win_%arch%.zip .\deploy\*
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
