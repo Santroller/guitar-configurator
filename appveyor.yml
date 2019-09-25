@@ -7,7 +7,7 @@ environment:
       QT_DIR: C:\Qt\5.12.3\msvc2017
 
 install:
-  # - git submodule update --init --recursive
+  - git submodule update --init --recursive
   - set PATH=%PATH%;%QT_DIR%\bin;%cd%\build-bin\avr-gcc\bin
   - set REPO_SLUG=%APPVEYOR_REPO_NAME%
   - set TRAVIS_COMMIT=%APPVEYOR_REPO_COMMIT%
