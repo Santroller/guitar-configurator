@@ -6,6 +6,7 @@ install:
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 build_script:
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+  - tree
   - windeployqt guitar-configurator.exe -qmldir=../
   - tree
 
