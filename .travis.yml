@@ -33,11 +33,11 @@ matrix:
     osx_image: xcode9.4
     compiler: clang
     addons:
-    homebrew:
-      taps: osx-cross/avr
-      packages:
-      - qt
-      - avr-gcc
+      homebrew:
+        taps: osx-cross/avr
+        packages:
+        - qt
+        - avr-gcc
     install:
       - export PATH="$(brew --prefix qt)/bin:$PATH"
 
