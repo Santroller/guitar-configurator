@@ -6,19 +6,23 @@ addons:
     packages:
     - qt
     - avr-gcc
+  apt:
+    sources:
+    - sourceline: "ppa:beineri/opt-qt-5.12.3-xenial"
+    packages:
+    - qt512base
+    - qt512serialport
+    - qt512quickcontrols2
+    - libgl1-mesa-dev
+    - gcc-avr
+    - avr-libc
 matrix:
   include:
   - os: linux
     dist: xenial
     compiler: gcc
-    before_install:
-      - sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y
-      - sudo apt-get update -qq
-    install:
-      - sudo apt-get -y install qt512base qt512serialport qt512quickcontrols2 libgl1-mesa-dev gcc-avr avr-libc
-      - source /opt/qt*/bin/qt*-env.sh
-
     script:
+      - source /opt/qt*/bin/qt*-env.sh
       - mkdir build
       - cd build
       - qmake CONFIG+=release PREFIX=/usr ../
@@ -37,10 +41,8 @@ matrix:
       - bash upload.sh Guitar_Configurator*.AppImage*
   - os: osx
     compiler: clang
-    install:
-      - export PATH="$(brew --prefix qt)/bin:$PATH"
-
     script:
+      - export PATH="$(brew --prefix qt)/bin:$PATH"
       - mkdir build
       - cd build
       - qmake CONFIG+=release ../
