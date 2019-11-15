@@ -1,5 +1,11 @@
 language: cpp
 sudo: required
+addons:
+  homebrew:
+    taps: osx-cross/avr
+    packages:
+    - qt
+    - avr-gcc
 matrix:
   include:
   - os: linux
@@ -31,12 +37,6 @@ matrix:
       - bash upload.sh Guitar_Configurator*.AppImage*
   - os: osx
     compiler: clang
-    addons:
-      homebrew:
-        taps: osx-cross/avr
-        packages:
-        - qt
-        - avr-gcc
     install:
       - export PATH="$(brew --prefix qt)/bin:$PATH"
 
