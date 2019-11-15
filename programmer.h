@@ -32,7 +32,7 @@ public slots:
     }
     void setRestoring(bool restore) {
         m_restore = restore;
-        m_status = Status::WAIT_AVRDUDE;
+        m_status = Status::WAIT;
         m_process_out = "";
         m_process_percent = 0;
         emit restoreChanged(restore);

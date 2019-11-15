@@ -39,7 +39,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             ColumnLayout {
-                visible: scanner.selected.boardName() === "Arduino Pro Micro" && programmer.status === Status.WAIT_AVRDUDE
+                visible: scanner.selected.boardName() === "Arduino Pro Micro" && programmer.status === Status.WAIT
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -79,9 +79,25 @@ Page {
 
 
             }
-
+            Label {
+                visible: (programmer.status === Status.DFU_CONNECT || programmer.status === Status.DFU_DISCONNECT) && scanner.selected.boardName() !== "Arduino Uno"
+                id: label71
+                text: qsTr("Waiting for device detection")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Timer {
+                    id: timer1
+                    interval: 100
+                    running: (programmer.status === Status.DFU_CONNECT || programmer.status === Status.DFU_DISCONNECT) && scanner.selected.boardName() !== "Arduino Uno"
+                    repeat: true
+                    onTriggered: {
+                        if (scanner.selected.findNewAsync()) {
+                            programmer.program(scanner.selected);
+                        }
+                    }
+                }
+            }
             ColumnLayout {
-                visible: programmer.status === Status.DFU_CONNECT
+                visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardName() === "Arduino Uno"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 id: dfu
                 Label {
@@ -99,7 +115,7 @@ Page {
                 }
             }
             Label {
-                visible: programmer.status === Status.DFU_DISCONNECT
+                visible: programmer.status === Status.DFU_DISCONNECT && scanner.selected.boardName() === "Arduino Uno"
                 id: label7
                 text: qsTr("Please disconnect and reconnect your device.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -121,7 +137,7 @@ Page {
                 text: qsTr("Start Programming")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: programmer.program(scanner.selected)
-                visible: programmer.status === Status.WAIT_AVRDUDE
+                visible: programmer.status === Status.WAIT
             }
 
             Button {

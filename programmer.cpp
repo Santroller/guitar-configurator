@@ -7,7 +7,7 @@
 #include <QRegularExpression>
 #include <ardwiinolookup.h>
 
-Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT_AVRDUDE), m_restore(false)
+Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT), m_port(nullptr), m_restore(false)
 {
 
 }
@@ -79,8 +79,6 @@ void Programmer::programDFU() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_port->prepareUpload();
     m_process->start(dir.filePath("dfu-programmer"), l);
-    //Autodetect when a user has correctly programmed dfu.
-    //When dfu programming is complete, ask the user to unplug-replug
 }
 
 void Programmer::programAvrDude() {
@@ -112,20 +110,22 @@ void Programmer::programAvrDude() {
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
-    m_port->prepareUpload();
     m_process->start(dir.filePath("avrdude"), l);
 }
 void Programmer::program(Port* port) {
     m_port = port;
-    if (m_status == Status::WAIT_AVRDUDE) {
-        if (m_restore) {
-            m_status = Status::DFU_CONNECT;
-            programDFU();
+    if (m_status == Status::WAIT) {
+        if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+            programAvrDude();
         } else {
+            m_port->prepareUpload();
+            m_status = Status::DFU_CONNECT;
+        }
+    } else if (m_status == Status::DFU_CONNECT) {
+        if (!ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
             programAvrDude();
         }
-    }
-    if (m_status == Status::DFU_DISCONNECT) {
+    } else if (m_status == Status::DFU_DISCONNECT) {
         m_status = Status::COMPLETE;
     }
     emit statusChanged(m_status);
@@ -143,11 +143,9 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     case Status::AVRDUDE:
         if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
             m_status = Status::DFU_CONNECT;
-            m_port->close();
             programDFU();
         } else {
-            m_status = Status::COMPLETE;
-            m_port->findNew();
+            m_status = Status::DFU_DISCONNECT;
         }
         break;
     case Status::DFU_CONNECT:

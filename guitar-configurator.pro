@@ -69,7 +69,7 @@ unix {
     INSTALLS += binaries
     INSTALLS += firmware
 
-    copybinaries.commands = $(MKDIR) $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64 $$OUT_PWD/binaries
+    copybinaries.commands = $(MKDIR) $$OUT_PWD/binaries && $(COPY_DIR) $$PWD/binaries/linux-64/* $$OUT_PWD/binaries
     copyfirmware.commands = $(MKDIR) $$OUT_PWD/firmware && $(COPY_DIR) $$PWD/firmware/* $$OUT_PWD/firmware
     first.depends = $(first) copyfirmware copybinaries
     QMAKE_EXTRA_TARGETS += first copyfirmware copybinaries

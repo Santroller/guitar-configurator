@@ -2,6 +2,7 @@
 #include "QDebug"
 #include "QThread"
 #include "input_types.h"
+#include <iostream>
 Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
     rescan(serialPortInfo);
@@ -14,7 +15,9 @@ Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 }
 
 void Port::close() {
-    m_serialPort->close();
+    if (m_serialPort != nullptr) {
+        m_serialPort->close();
+    }
 }
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
@@ -93,8 +96,7 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
-        //We are jumping to the bootloader. Look for a new port that has just appeared, and assume it is the bootloader.
-        findNew();
+        m_port_list = QSerialPortInfo::availablePorts();
     }
 }
 
