@@ -147,18 +147,9 @@ void Port::prepareUpload() {
 void Port::updateControllerName() {
     //On windows, update the controller name, so that users see the current device name in games
 #ifdef Q_OS_WIN
-    QProcess m_process;
-    m_process.start("reg", {
-                        "add",
-                        "HKCU\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882",
-                        "/v",
-                        "OEMName",
-                        "/t",
-                        "REG_SZ",
-                        "/d",
-                        m_description,
-                        "/f"
-                    });
+    QSettings settings("HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882",
+                       QSettings::NativeFormat);
+    settings.setValue("OEMName", m_description);
 #endif
 }
 bool Port::findNew() {
