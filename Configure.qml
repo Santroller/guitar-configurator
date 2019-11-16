@@ -55,7 +55,7 @@ Page {
                 id: refreshBt
                 text: qsTr("Refresh")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.getStatusDescription()
+                onClicked: scanner.selected.readDescription()
             }
         }
 
@@ -166,7 +166,33 @@ Page {
             enabled: true
             onClicked: scanner.selected.writeConfig();
         }
+        Dialog {
+            id: detectionDialog
+            title: "Updating device, please wait"
+            visible: scanner.selected.waitingForNew
+            x: (parent.width - width) / 2
+            y: (parent.height - height) / 2
+            modal: true
+            closePolicy: Popup.NoAutoClose
 
+            ColumnLayout {
+                Label {
+                    text: qsTr("Please wait for your controller to reboot")
+                }
+                BusyIndicator {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                Timer {
+                    id: timer1
+                    interval: 100
+                    running: scanner.selected.waitingForNew
+                    repeat: true
+                    onTriggered: {
+                        scanner.selected.findNew()
+                    }
+                }
+            }
+        }
 
     }
 }

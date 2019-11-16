@@ -17,6 +17,7 @@ class Port : public QObject
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
+    Q_PROPERTY(bool waitingForNew READ getWaitingForNew NOTIFY waitingForNewChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(InputTypes::Value inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
@@ -30,7 +31,6 @@ public:
         return m_board;
     }
     void prepareUpload();
-    void findNew();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
 signals:
@@ -44,6 +44,7 @@ signals:
     void orientationChanged(MPU6050Orientations::Value newValue);
     void tiltTypeChanged(TiltTypes::Value newValue);
     void dfuFound(bool found);
+    void waitingForNewChanged(bool waitingForNew);
 
 public slots:
     void writeConfig();
@@ -64,6 +65,9 @@ public slots:
     }
     bool isGuitar() const {
         return ArdwiinoLookup::getInstance()->getControllerTypeName(getType()).toLower().contains("guitar");
+    }
+    bool getWaitingForNew() const {
+        return m_waitingForNew;
     }
     QString getPort() const {
         return m_port;
@@ -105,7 +109,7 @@ public slots:
         orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
-    bool findNewAsync();
+    bool findNew();
     void readDescription();
     void loadPins();
     void savePins();
@@ -113,6 +117,7 @@ public slots:
     void saveKeys();
 private:
     void readData();
+    void updateControllerName();
     void read(char id, QByteArray& location, void* dest, unsigned long size);
     void write(char id, void* dest, unsigned long size);
     void rescan(const QSerialPortInfo &serialPortInfo);
@@ -127,6 +132,7 @@ private:
     config_t m_config;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
+    bool m_waitingForNew;
 };
 
 #endif // PORT_H

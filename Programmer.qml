@@ -90,7 +90,7 @@ Page {
                     running: (programmer.status === Status.DFU_CONNECT || programmer.status === Status.DFU_DISCONNECT) && scanner.selected.boardName() !== "Arduino Uno"
                     repeat: true
                     onTriggered: {
-                        if (scanner.selected.findNewAsync()) {
+                        if (scanner.selected.findNew()) {
                             programmer.program(scanner.selected);
                         }
                     }
@@ -125,7 +125,7 @@ Page {
                     running: programmer.status === Status.DFU_DISCONNECT
                     repeat: true
                     onTriggered: {
-                        if (scanner.selected.findNewAsync()) {
+                        if (scanner.selected.findNew()) {
                             programmer.program(scanner.selected);
                         }
                     }

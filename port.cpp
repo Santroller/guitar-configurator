@@ -1,15 +1,16 @@
 #include "port.h"
 #include "QDebug"
 #include "QThread"
+#include <QProcess>
 #include "input_types.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #include <iostream>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_waitingForNew(false)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_waitingForNew(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -69,7 +70,6 @@ void Port::readData() {
     memcpy(&m_config_device, &m_config, sizeof(config_t));
     readDescription();
 }
-
 void Port::writeConfig() {
     write(MAIN_CMD_W, &m_config.main, sizeof(main_config_t));
     write(PIN_CMD_W, &m_config.pins, sizeof(pins_t));
@@ -80,19 +80,23 @@ void Port::writeConfig() {
     m_serialPort->write(data, 1);
     m_serialPort->waitForBytesWritten();
     m_serialPort->close();
-    findNew();
+    m_port_list = QSerialPortInfo::availablePorts();
+    m_waitingForNew = true;
+    waitingForNewChanged(m_waitingForNew);
 }
 
 void Port::readDescription() {
+    qDebug() << "reading m_description";
     controller_t controller;
     if (InputTypes::Value(m_config_device.main.input_type) == InputTypes::WII_TYPE) {
         QByteArray readData;
-        read(MAIN_CMD_R, readData, &m_config_device.main, sizeof(main_config_t));
-        memcpy(&controller, readData.data(), sizeof(controller_t));
+        read(CONTROLLER_CMD_R, readData, &controller, sizeof(controller_t));
     }
     m_description = "Ardwiino - "+ m_board.name+" - "+ArdwiinoLookup::getInstance()->lookupType(m_config_device.main.sub_type);
     m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.main.input_type, controller.device_info);
     m_description += " - " + m_port;
+    qDebug() << m_description;
+    updateControllerName();
     emit descriptionChanged(m_description);
 }
 
@@ -140,13 +144,24 @@ void Port::prepareUpload() {
     }
 }
 
-void Port::findNew() {
-    m_port_list = QSerialPortInfo::availablePorts();
-    while (!findNewAsync()) {
-        QThread::currentThread()->msleep(400);
-    }
+void Port::updateControllerName() {
+    //On windows, update the controller name, so that users see the current device name in games
+#ifdef Q_OS_WIN
+    QProcess m_process;
+    m_process.start("reg", {
+                        "add",
+                        "HKCU\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882",
+                        "/v",
+                        "OEMName",
+                        "/t",
+                        "REG_SZ",
+                        "/d",
+                        m_description,
+                        "/f"
+                    });
+#endif
 }
-bool Port::findNewAsync() {
+bool Port::findNew() {
     auto newSp = QSerialPortInfo::availablePorts();
     std::vector<QSerialPortInfo> diff;
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
@@ -157,6 +172,10 @@ bool Port::findNewAsync() {
         m_port = info.systemLocation();
         rescan(info);
         open(info);
+        if (m_waitingForNew) {
+            m_waitingForNew = false;
+            waitingForNewChanged(m_waitingForNew);
+        }
         return true;
     }
     return false;
