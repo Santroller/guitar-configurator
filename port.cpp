@@ -2,6 +2,7 @@
 #include "QDebug"
 #include "QThread"
 #include "input_types.h"
+#include "submodules/Ardwiino/src/shared/config/config.h"
 #include <iostream>
 Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
@@ -45,13 +46,24 @@ void Port::read(char id, QByteArray &readData, unsigned long size) {
 }
 void Port::readData() {
     QByteArray readData;
-    read('f', readData, 0);
+    read(FW_CMD_R, readData, 0);
     m_board = ArdwiinoLookup::findByBoard(readData);
     m_hasDFU = ArdwiinoLookup::getInstance()->hasDFUVariant(m_board);
     boardImageChanged(getBoardImage());
-    read('c', readData, sizeof(config_t));
-    memcpy(&m_config, readData.data(), sizeof(config_t));
-    memcpy(&m_config_device, readData.data(), sizeof(config_t));
+
+    read(MAIN_CMD_R, readData, sizeof(main_config_t));
+    memcpy(&m_config.main, readData.data(), sizeof(main_config_t));
+
+    read(PIN_CMD_R, readData, sizeof(pins_t));
+    memcpy(&m_config.pins, readData.data(), sizeof(pins_t));
+
+    read(AXIS_CMD_R, readData, sizeof(axis_config_t));
+    memcpy(&m_config.pins, readData.data(), sizeof(axis_config_t));
+
+    read(KEY_CMD_R, readData, sizeof(keys_t));
+    memcpy(&m_config.pins, readData.data(), sizeof(keys_t));
+
+    memcpy(&m_config_device, &m_config, sizeof(config_t));
     readDescription();
 }
 void Port::open(const QSerialPortInfo &serialPortInfo) {
@@ -204,12 +216,12 @@ void Port::loadPins() {
     m_pins["l_y"] = m_config.pins.l_y;
     m_pins["r_x"] = m_config.pins.r_x;
     m_pins["r_y"] = m_config.pins.r_y;
-    m_pin_inverts["lt"] = m_config.inversions.lt;
-    m_pin_inverts["rt"] = m_config.inversions.rt;
-    m_pin_inverts["l_x"] = m_config.inversions.l_x;
-    m_pin_inverts["l_y"] = m_config.inversions.l_y;
-    m_pin_inverts["r_x"] = m_config.inversions.r_x;
-    m_pin_inverts["r_y"] = m_config.inversions.r_y;
+    m_pin_inverts["lt"] = m_config.axis.inversions.lt;
+    m_pin_inverts["rt"] = m_config.axis.inversions.rt;
+    m_pin_inverts["l_x"] = m_config.axis.inversions.l_x;
+    m_pin_inverts["l_y"] = m_config.axis.inversions.l_y;
+    m_pin_inverts["r_x"] = m_config.axis.inversions.r_x;
+    m_pin_inverts["r_y"] = m_config.axis.inversions.r_y;
 }
 
 void Port::savePins() {
@@ -235,12 +247,12 @@ void Port::savePins() {
     m_config.pins.l_y = uint8_t(m_pins["l_y"].toUInt());
     m_config.pins.r_x = uint8_t(m_pins["r_x"].toUInt());
     m_config.pins.r_y = uint8_t(m_pins["r_y"].toUInt());
-    m_config.inversions.lt = m_pin_inverts["lt"].toBool();
-    m_config.inversions.rt = m_pin_inverts["rt"].toBool();
-    m_config.inversions.l_x = m_pin_inverts["l_x"].toBool();
-    m_config.inversions.l_y = m_pin_inverts["l_y"].toBool();
-    m_config.inversions.r_x = m_pin_inverts["r_x"].toBool();
-    m_config.inversions.r_y = m_pin_inverts["r_y"].toBool();
+    m_config.axis.inversions.lt = m_pin_inverts["lt"].toBool();
+    m_config.axis.inversions.rt = m_pin_inverts["rt"].toBool();
+    m_config.axis.inversions.l_x = m_pin_inverts["l_x"].toBool();
+    m_config.axis.inversions.l_y = m_pin_inverts["l_y"].toBool();
+    m_config.axis.inversions.r_x = m_pin_inverts["r_x"].toBool();
+    m_config.axis.inversions.r_y = m_pin_inverts["r_y"].toBool();
 }
 
 void Port::writeConfig() {
@@ -255,13 +267,13 @@ void Port::writeConfig() {
 
 void Port::readDescription() {
     controller_t controller;
-    if (InputTypes::Value(m_config_device.input_type) == InputTypes::WII_TYPE) {
+    if (InputTypes::Value(m_config_device.main.input_type) == InputTypes::WII_TYPE) {
         QByteArray readData;
         read('r', readData, sizeof(config_t));
         memcpy(&controller, readData.data(), sizeof(controller_t));
     }
-    m_description = "Ardwiino - "+ m_board.name+" - "+ArdwiinoLookup::getInstance()->lookupType(m_config_device.sub_type);
-    m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.input_type, controller.device_info);
+    m_description = "Ardwiino - "+ m_board.name+" - "+ArdwiinoLookup::getInstance()->lookupType(m_config_device.main.sub_type);
+    m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.main.input_type, controller.device_info);
     m_description += " - " + m_port;
     emit descriptionChanged(m_description);
 }

@@ -69,39 +69,39 @@ public slots:
         return m_port;
     }
     QString getImage() const {
-        return Controllers::getImage(Controllers::Value(m_config.sub_type));
+        return Controllers::getImage(Controllers::Value(m_config.main.sub_type));
     }
     QString getBoardImage() const {
         return m_board.image;
     }
     Controllers::Value getType() const {
-        return Controllers::Value(m_config.sub_type);
+        return Controllers::Value(m_config.main.sub_type);
     }
     MPU6050Orientations::Value getOrientation() const {
-        return MPU6050Orientations::Value(m_config.mpu_6050_orientation);
+        return MPU6050Orientations::Value(m_config.axis.mpu_6050_orientation);
     }
     InputTypes::Value getInputType() const {
-        return InputTypes::Value(m_config.input_type);
+        return InputTypes::Value(m_config.main.input_type);
     }
     TiltTypes::Value getTiltType() const {
-        return TiltTypes::Value(m_config.tilt_type);
+        return TiltTypes::Value(m_config.main.tilt_type);
     }
     void setType(Controllers::Value value) {
-        m_config.sub_type = value;
+        m_config.main.sub_type = value;
         imageChanged(getImage());
         typeChanged(value);
     }
     void setInputType(InputTypes::Value value) {
-        m_config.input_type = value;
+        m_config.main.input_type = value;
         inputTypeChanged(value);
 
     }
     void setTiltType(TiltTypes::Value value) {
-        m_config.tilt_type = value;
+        m_config.main.tilt_type = value;
         tiltTypeChanged(value);
     }
     void setOrientation(MPU6050Orientations::Value value) {
-        m_config.mpu_6050_orientation = value;
+        m_config.axis.mpu_6050_orientation = value;
         orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
