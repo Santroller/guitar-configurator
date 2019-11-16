@@ -113,7 +113,8 @@ public slots:
     void saveKeys();
 private:
     void readData();
-    void read(char id, QByteArray& location, unsigned long size);
+    void read(char id, QByteArray& location, void* dest, unsigned long size);
+    void write(char id, void* dest, unsigned long size);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
     QString m_port;
