@@ -5,6 +5,7 @@
 #include "input_types.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #include <iostream>
+#include <QSettings>
 Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_waitingForNew(false)
 {
     rescan(serialPortInfo);
@@ -147,8 +148,7 @@ void Port::prepareUpload() {
 void Port::updateControllerName() {
     //On windows, update the controller name, so that users see the current device name in games
 #ifdef Q_OS_WIN
-    QSettings settings("HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882",
-                       QSettings::NativeFormat);
+    QSettings settings("HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882", QSettings::NativeFormat);
     settings.setValue("OEMName", m_description);
 #endif
 }
