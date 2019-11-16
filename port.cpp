@@ -40,10 +40,8 @@ void Port::read(char id, QByteArray &readData, unsigned long size) {
     m_serialPort->flush();
     m_serialPort->write(&id);
     m_serialPort->waitForBytesWritten();
-    do {
-        m_serialPort->waitForReadyRead();
-        readData.push_back(m_serialPort->readAll());
-    } while (readData.length() < static_cast<signed>(size));
+    m_serialPort->waitForReadyRead();
+    readData.push_back(m_serialPort->readAll());
 }
 void Port::readData() {
     QByteArray readData;
