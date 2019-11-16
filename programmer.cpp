@@ -141,11 +141,13 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
 
     switch (m_status) {
     case Status::AVRDUDE:
-        if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
-            m_status = Status::DFU_CONNECT;
-            programDFU();
-        } else {
-            m_status = Status::DFU_DISCONNECT;
+        if (exitCode == 0) {
+            if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+                m_status = Status::DFU_CONNECT;
+                programDFU();
+            } else {
+                m_status = Status::DFU_DISCONNECT;
+            }
         }
         break;
     case Status::DFU_CONNECT:
