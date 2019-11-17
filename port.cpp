@@ -41,20 +41,13 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
 void Port::read(char id, QByteArray &readData, void* dest, unsigned long size) {
     readData.clear();
     m_serialPort->flush();
-    m_serialPort->write(&id);
+    m_serialPort->write(&id, 1);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     readData.push_back(m_serialPort->readAll());
     if (dest != nullptr) {
         memcpy(dest, readData.data(), size);
     }
-}
-void Port::write(char id, void* dest, unsigned long size) {
-    char data[1 + sizeof(config_t)] = {id};
-    memcpy(&data[1], dest, size);
-    m_serialPort->flush();
-    m_serialPort->write(data, static_cast<long>(size)+1);
-    m_serialPort->waitForBytesWritten();
 }
 void Port::readData() {
     QByteArray readData;
@@ -71,14 +64,20 @@ void Port::readData() {
     memcpy(&m_config_device, &m_config, sizeof(config_t));
     readDescription();
 }
+void Port::write(char id, void* dest, unsigned long size) {
+    m_serialPort->flush();
+    m_serialPort->write(&id, 1);
+    m_serialPort->write(static_cast<char*>(dest), static_cast<signed long>(size));
+    m_serialPort->waitForBytesWritten();
+}
 void Port::writeConfig() {
     write(MAIN_CMD_W, &m_config.main, sizeof(main_config_t));
     write(PIN_CMD_W, &m_config.pins, sizeof(pins_t));
     write(AXIS_CMD_W, &m_config.axis, sizeof(axis_config_t));
     write(KEY_CMD_W, &m_config.keys, sizeof(keys_t));
-    char data[1] = {REBOOT_CMD};
+    char data = REBOOT_CMD;
     m_serialPort->flush();
-    m_serialPort->write(data, 1);
+    m_serialPort->write(&data, 1);
     m_serialPort->waitForBytesWritten();
     m_serialPort->close();
     m_port_list = QSerialPortInfo::availablePorts();
