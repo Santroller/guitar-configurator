@@ -150,12 +150,13 @@ void Port::updateControllerName() {
 bool Port::findNew() {
     auto newSp = QSerialPortInfo::availablePorts();
     std::vector<QSerialPortInfo> diff;
+    std::sort(m_port_list.begin(), m_port_list.end(), comp);
     std::sort(newSp.begin(), newSp.end(), comp);
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
     m_port_list = newSp;
     if (diff.size() != 0) {
         auto info = diff.front();
-        QThread::currentThread()->msleep(400);
+        QThread::currentThread()->msleep(100);
         m_port = info.systemLocation();
         rescan(info);
         open(info);
