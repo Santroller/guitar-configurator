@@ -105,8 +105,6 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
         QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         if (m_serialPort->open(QIODevice::ReadWrite)) {
             readData();
-        } else {
-            m_serialPort->close();
         }
     }
 }
@@ -152,18 +150,19 @@ void Port::updateControllerName() {
 bool Port::findNew() {
     auto newSp = QSerialPortInfo::availablePorts();
     std::vector<QSerialPortInfo> diff;
+    std::sort(newSp.begin(), newSp.end(), comp);
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
     m_port_list = newSp;
     if (diff.size() != 0) {
         auto info = diff.front();
-        if (m_waitingForNew) {
-            m_waitingForNew = false;
-            waitingForNewChanged(m_waitingForNew);
-        }
         QThread::currentThread()->msleep(400);
         m_port = info.systemLocation();
         rescan(info);
         open(info);
+        if (m_waitingForNew) {
+            m_waitingForNew = false;
+            waitingForNewChanged(m_waitingForNew);
+        }
         return true;
     }
     return false;

@@ -1,7 +1,7 @@
 #include "portscanner.h"
 #include <QDebug>
 
-PortScanner::PortScanner(QObject *parent) : QObject(parent)
+PortScanner::PortScanner(QObject *parent) : QObject(parent), m_selected(nullptr)
 {
     m_model.push_back(new Port(nullptr));
 }
