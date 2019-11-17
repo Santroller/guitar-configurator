@@ -144,7 +144,14 @@ Page {
                 id: cntBtn
                 text: qsTr(programmer.restore?"Finish Restore":"Start Configuring")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.restore?mainStack.push("Welcome.qml"):mainStack.push("Configure.qml")
+                onClicked: {
+                    if (programmer.restore) {
+                        scanner.selected = null
+                        mainStack.push("Welcome.qml")
+                    } else {
+                        mainStack.push("Configure.qml")
+                    }
+                }
                 enabled: programmer.status === Status.COMPLETE
             }
 

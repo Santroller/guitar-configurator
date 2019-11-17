@@ -86,7 +86,6 @@ void Port::writeConfig() {
 }
 
 void Port::readDescription() {
-    qDebug() << "reading m_description";
     controller_t controller;
     if (InputTypes::Value(m_config_device.main.input_type) == InputTypes::WII_TYPE) {
         QByteArray readData;
@@ -95,7 +94,6 @@ void Port::readDescription() {
     m_description = "Ardwiino - "+ m_board.name+" - "+ArdwiinoLookup::getInstance()->lookupType(m_config_device.main.sub_type);
     m_description += " - " + ArdwiinoLookup::getInstance()->lookupExtension(m_config_device.main.input_type, controller.device_info);
     m_description += " - " + m_port;
-    qDebug() << m_description;
     updateControllerName();
     emit descriptionChanged(m_description);
 }
@@ -158,14 +156,14 @@ bool Port::findNew() {
     m_port_list = newSp;
     if (diff.size() != 0) {
         auto info = diff.front();
-        QThread::currentThread()->msleep(400);
-        m_port = info.systemLocation();
-        rescan(info);
-        open(info);
         if (m_waitingForNew) {
             m_waitingForNew = false;
             waitingForNewChanged(m_waitingForNew);
         }
+        QThread::currentThread()->msleep(400);
+        m_port = info.systemLocation();
+        rescan(info);
+        open(info);
         return true;
     }
     return false;

@@ -116,7 +116,7 @@ Page {
             Timer {
                 id: timer
                 interval: 100
-                running: true
+                running: !scanner.selected
                 repeat: true
                 onTriggered: {
                     scanner.checkPorts()
