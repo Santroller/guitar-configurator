@@ -115,11 +115,16 @@ void Programmer::programAvrDude() {
 void Programmer::program(Port* port) {
     m_port = port;
     if (m_status == Status::WAIT) {
-        if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
-            programAvrDude();
-        } else {
-            m_port->prepareUpload();
+        if (m_restore) {
             m_status = Status::DFU_CONNECT;
+            programDFU();
+        } else {
+            if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+                programAvrDude();
+            } else {
+                m_port->prepareUpload();
+                m_status = Status::DFU_CONNECT;
+            }
         }
     } else if (m_status == Status::DFU_CONNECT) {
         if (!ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
