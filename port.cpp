@@ -137,7 +137,22 @@ void Port::prepareUpload() {
         }
         m_serialPort->close();
         m_port_list = QSerialPortInfo::availablePorts();
+    } else if (m_board.protocol == "arduino") {
+        if (!m_serialPort->isOpen()) {
+            m_serialPort->open(QIODevice::WriteOnly);
+        }
+        char data[] = {BOOTLOADER_CMD};
+        m_serialPort->write(data, 1);
+        m_serialPort->waitForBytesWritten();
+        m_serialPort->close();
     }
+}
+
+void Port::prepareRescan() {
+    if (m_serialPort->isOpen()) {
+        m_serialPort->close();
+    }
+    m_port_list = QSerialPortInfo::availablePorts();
 }
 
 void Port::updateControllerName() {

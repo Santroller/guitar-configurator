@@ -30,6 +30,7 @@ public:
     board_t getBoard() const {
         return m_board;
     }
+    void prepareRescan();
     void prepareUpload();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
