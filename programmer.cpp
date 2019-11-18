@@ -81,6 +81,7 @@ void Programmer::programDFU() {
 }
 
 void Programmer::programAvrDude() {
+    m_port->close();
     m_status = Status::AVRDUDE;
     statusChanged(m_status);
     board_t board = m_port->getBoard();
