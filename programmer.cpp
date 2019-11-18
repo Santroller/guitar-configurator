@@ -20,7 +20,6 @@ board_t Programmer::detectBoard() {
     board = ArdwiinoLookup::boards[0];
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("binaries");
-    m_port->prepareUpload();
     for (board_t board: ArdwiinoLookup::boards) {
         if (board.originalFirmware == "") continue;
         m_process = new QProcess();
@@ -76,7 +75,6 @@ void Programmer::programDFU() {
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
-    m_port->prepareUpload();
     m_process->start(dir.filePath("dfu-programmer"), l);
 }
 
@@ -175,6 +173,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         break;
     case Status::DFU_FLASH:
         m_status = Status::DFU_DISCONNECT;
+        m_port->prepareRescan();
         break;
     default:
         break;

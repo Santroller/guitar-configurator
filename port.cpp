@@ -148,6 +148,13 @@ void Port::prepareUpload() {
     }
 }
 
+void Port::prepareRescan() {
+    if (m_serialPort->isOpen()) {
+        m_serialPort->close();
+    }
+    m_port_list = QSerialPortInfo::availablePorts();
+}
+
 void Port::updateControllerName() {
     //On windows, update the controller name, so that users see the current device name in games
 #ifdef Q_OS_WIN
