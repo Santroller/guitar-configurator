@@ -1,9 +1,9 @@
 #include "portscanner.h"
 #include <QDebug>
 
-PortScanner::PortScanner(QObject *parent) : QObject(parent), m_selected(nullptr)
+PortScanner::PortScanner(QObject *parent) : QObject(parent), m_model(), m_selected(nullptr)
 {
-    m_model.push_back(new Port(nullptr));
+    m_model.push_back(new Port());
 }
 void PortScanner::checkPorts() {
     const auto serialPortInfos = QSerialPortInfo::availablePorts();
@@ -16,8 +16,6 @@ void PortScanner::checkPorts() {
     }
     if (serialPortInfos.length() > 0) {
         m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (static_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
-    } else if (m_model.length() == 0) {
-        m_model.push_back(new Port());
     }
     for (const QSerialPortInfo &serialPortInfo : serialPortInfos) {
         auto port = new Port(serialPortInfo);
@@ -27,6 +25,9 @@ void PortScanner::checkPorts() {
             m_model.push_back(port);
             port->open(serialPortInfo);
         }
+    }
+    if (m_model.length() == 0) {
+        m_model.push_back(new Port());
     }
     emit modelChanged(m_model);
 }
