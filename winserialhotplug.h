@@ -1,3 +1,4 @@
+#ifdef Q_OS_WIN
 #ifndef WINEVENTFILTER_H
 #define WINEVENTFILTER_H
 #include <QWindow>
@@ -24,3 +25,4 @@ private:
 };
 
 #endif // WINEVENTFILTER_H
+#endif

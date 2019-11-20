@@ -30,6 +30,7 @@ void UnixSerialHotplug::tick() {
     for (auto p: diff) {
         scanner->addPort(p);
     }
+    diff.clear();
     //Ports in old list that aren't in new (disconnected ports)
     std::set_difference(m_port_list.begin(), m_port_list.end(), newSp.begin(), newSp.end(), std::inserter(diff, diff.begin()), comp);
     for (auto p: diff) {

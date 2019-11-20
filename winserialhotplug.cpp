@@ -1,3 +1,4 @@
+#ifdef Q_OS_WIN
 #include "winserialhotplug.h"
 
 #include <QDebug>
@@ -65,3 +66,4 @@ void WinSerialHotplug::init(WId wid) {
     NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_COMPORT;
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid),&NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE );
 }
+#endif
