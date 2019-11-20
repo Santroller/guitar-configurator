@@ -1,5 +1,5 @@
-#ifdef Q_OS_WIN
 #include "winserialhotplug.h"
+#ifdef Q_OS_WIN
 
 #include <QDebug>
 

@@ -79,6 +79,12 @@ void Port::write(char id, void* dest, unsigned long size) {
     m_serialPort->write(&id, 1);
     m_serialPort->write(static_cast<char*>(dest), static_cast<signed long>(size));
     m_serialPort->waitForBytesWritten();
+    m_serialPort->waitForReadyRead();
+    auto read = m_serialPort->readAll();
+    if (read != "OK") {
+        qDebug() << "Not okay!!!!!";
+        qDebug() << read;
+    }
 }
 void Port::writeConfig() {
     write(MAIN_CMD_W, &m_config.main, sizeof(main_config_t));
