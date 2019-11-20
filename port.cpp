@@ -6,12 +6,12 @@
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #include <iostream>
 #include <QSettings>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_waitingForNew(false)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_waitingForNew(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -20,8 +20,18 @@ Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m
 void Port::close() {
     if (m_serialPort != nullptr) {
         m_serialPort->close();
+        portStateChanged(getOpen());
     }
 }
+
+void Port::handleConnection(QSerialPortInfo info) {
+    qDebug() << "Handled!";
+    if (!m_serialPort->isOpen()) {
+        rescan(info);
+        open(info);
+    }
+}
+
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
     if (m_isArdwiino) {
@@ -80,9 +90,7 @@ void Port::writeConfig() {
     m_serialPort->write(&data, 1);
     m_serialPort->waitForBytesWritten();
     m_serialPort->close();
-    m_port_list = QSerialPortInfo::availablePorts();
-    m_waitingForNew = true;
-    waitingForNewChanged(m_waitingForNew);
+    portStateChanged(getOpen());
 }
 
 void Port::readDescription() {
@@ -107,18 +115,18 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
             readData();
         }
     }
+    portStateChanged(getOpen());
 }
 
 void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
     if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
         m_description = "Ardwiino - Error Communicating";
-        m_serialPort->close();
+        if (m_serialPort->isOpen()) {
+            m_serialPort->close();
+            portStateChanged(getOpen());
+        }
     }
-}
-bool comp(const QSerialPortInfo a, const QSerialPortInfo b)
-{
-    return a.portName() < b.portName();
 }
 void Port::prepareUpload() {
     if (m_board.protocol == "avr109") {
@@ -136,7 +144,6 @@ void Port::prepareUpload() {
             m_serialPort->setDataTerminalReady(false);
         }
         m_serialPort->close();
-        m_port_list = QSerialPortInfo::availablePorts();
     } else if (m_board.protocol == "arduino") {
         if (!m_serialPort->isOpen()) {
             m_serialPort->open(QIODevice::WriteOnly);
@@ -146,13 +153,14 @@ void Port::prepareUpload() {
         m_serialPort->waitForBytesWritten();
         m_serialPort->close();
     }
+    portStateChanged(getOpen());
 }
 
 void Port::prepareRescan() {
     if (m_serialPort->isOpen()) {
         m_serialPort->close();
     }
-    m_port_list = QSerialPortInfo::availablePorts();
+    portStateChanged(getOpen());
 }
 
 void Port::updateControllerName() {
@@ -161,27 +169,6 @@ void Port::updateControllerName() {
     QSettings settings("HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882", QSettings::NativeFormat);
     settings.setValue("OEMName", m_description);
 #endif
-}
-bool Port::findNew() {
-    auto newSp = QSerialPortInfo::availablePorts();
-    std::vector<QSerialPortInfo> diff;
-    std::sort(m_port_list.begin(), m_port_list.end(), comp);
-    std::sort(newSp.begin(), newSp.end(), comp);
-    std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
-    m_port_list = newSp;
-    if (diff.size() != 0) {
-        auto info = diff.front();
-        QThread::currentThread()->msleep(100);
-        m_port = info.systemLocation();
-        rescan(info);
-        open(info);
-        if (m_waitingForNew) {
-            m_waitingForNew = false;
-            waitingForNewChanged(m_waitingForNew);
-        }
-        return true;
-    }
-    return false;
 }
 
 void Port::loadKeys() {

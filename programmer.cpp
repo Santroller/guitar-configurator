@@ -110,18 +110,22 @@ void Programmer::programAvrDude() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("avrdude"), l);
 }
-void Programmer::program(Port* port) {
+bool Programmer::program(Port* port) {
+    bool ret = false;
     m_port = port;
     if (m_status == Status::WAIT) {
         if (m_restore) {
             m_status = Status::DFU_CONNECT;
+            m_port->close();
             programDFU();
         } else {
             if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
                 programAvrDude();
             } else {
+                m_port->close();
                 m_port->prepareUpload();
                 m_status = Status::DFU_CONNECT;
+                ret = true;
             }
         }
     } else if (m_status == Status::DFU_CONNECT) {
@@ -130,9 +134,11 @@ void Programmer::program(Port* port) {
         }
     } else if (m_status == Status::DFU_DISCONNECT) {
         m_status = Status::COMPLETE;
+        ret = true;
     }
     emit statusChanged(m_status);
     emit statusVChanged(getStatusDescription());
+    return ret;
 }
 
 void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
@@ -172,8 +178,8 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         programDFU();
         break;
     case Status::DFU_FLASH:
-        m_status = Status::DFU_DISCONNECT;
         m_port->prepareRescan();
+        m_status = Status::DFU_DISCONNECT;
         break;
     default:
         break;

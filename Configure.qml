@@ -7,6 +7,7 @@ import net.tangentmc 1.0
 
 Page {
     id: page
+    title: "Configuration"
     ColumnLayout {
         id: column
         anchors.fill: parent
@@ -169,7 +170,7 @@ Page {
         Dialog {
             id: detectionDialog
             title: "Updating device, please wait"
-            visible: scanner.selected.waitingForNew
+            visible: mainStack.currentItem.title === "Configuration" && !scanner.selected.isOpen
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             modal: true
@@ -181,15 +182,6 @@ Page {
                 }
                 BusyIndicator {
                     Layout.alignment: Qt.AlignHCenter
-                }
-                Timer {
-                    id: timer1
-                    interval: 100
-                    running: scanner.selected.waitingForNew
-                    repeat: true
-                    onTriggered: {
-                        scanner.selected.findNew()
-                    }
                 }
             }
         }

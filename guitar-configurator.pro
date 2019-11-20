@@ -17,7 +17,9 @@ SOURCES += \
         main.cpp \
         port.cpp \
         portscanner.cpp \
-        programmer.cpp
+        programmer.cpp \
+        unixserialhotplug.cpp \
+        winserialhotplug.cpp
 
 RESOURCES += \
     resources.qrc
@@ -48,7 +50,9 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h \
     tilt_types.h \
-    wii_extensions.h
+    unixserialhotplug.h \
+    wii_extensions.h \
+    winserialhotplug.h
 
 unix {
     isEmpty(PREFIX) {

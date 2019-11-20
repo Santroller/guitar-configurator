@@ -17,9 +17,9 @@ class Port : public QObject
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
-    Q_PROPERTY(bool waitingForNew READ getWaitingForNew NOTIFY waitingForNewChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
+    Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
     Q_PROPERTY(InputTypes::Value inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
     Q_PROPERTY(Controllers::Value type READ getType WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(MPU6050Orientations::Value orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
@@ -34,6 +34,7 @@ public:
     void prepareUpload();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
+    void handleConnection(QSerialPortInfo info);
 signals:
     void descriptionChanged(QString newValue);
     void imageChanged(QString newValue);
@@ -45,12 +46,15 @@ signals:
     void orientationChanged(MPU6050Orientations::Value newValue);
     void tiltTypeChanged(TiltTypes::Value newValue);
     void dfuFound(bool found);
-    void waitingForNewChanged(bool waitingForNew);
+    void portStateChanged(bool open);
 
 public slots:
     void writeConfig();
     QString description() const {
         return m_description;
+    }
+    bool getOpen() const {
+        return m_serialPort != nullptr && m_serialPort->isOpen();
     }
     board_t board() const {
         return m_board;
@@ -66,9 +70,6 @@ public slots:
     }
     bool isGuitar() const {
         return ArdwiinoLookup::getInstance()->getControllerTypeName(getType()).toLower().contains("guitar");
-    }
-    bool getWaitingForNew() const {
-        return m_waitingForNew;
     }
     QString getPort() const {
         return m_port;
@@ -110,7 +111,6 @@ public slots:
         orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
-    bool findNew();
     void readDescription();
     void loadPins();
     void savePins();
@@ -126,14 +126,12 @@ private:
     QString m_port;
     QSerialPort* m_serialPort;
     board_t m_board;
-    QList<QSerialPortInfo> m_port_list;
     bool m_isArdwiino;
     bool m_hasDFU;
     config_t m_config_device;
     config_t m_config;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
-    bool m_waitingForNew;
 };
 
 #endif // PORT_H

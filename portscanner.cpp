@@ -1,31 +1,33 @@
 #include "portscanner.h"
 #include <QDebug>
 
-PortScanner::PortScanner(QObject *parent) : QObject(parent), m_model(), m_selected(nullptr)
+PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), programmer(programmer), m_model(), m_selected(nullptr)
 {
     m_model.push_back(new Port());
 }
-void PortScanner::checkPorts() {
-    const auto serialPortInfos = QSerialPortInfo::availablePorts();
-    for (QObject *obj : m_model) {
-        auto port = static_cast<Port*>(obj);
-        if (port->getPort() == "searching") continue;
-        if (std::find_if(serialPortInfos.begin(), serialPortInfos.end(), [port](const QSerialPortInfo &serialPortInfo){return port->getPort() == serialPortInfo.systemLocation();}) == serialPortInfos.end()) {
-            m_model.removeOne(port);
+void PortScanner::addPort(QSerialPortInfo serialPortInfo) {
+    if (m_selected != nullptr) {
+        programmer->program(m_selected);
+        if (!programmer->getRestore()) {
+            m_selected->handleConnection(serialPortInfo);
+            return;
         }
     }
-    if (serialPortInfos.length() > 0) {
+    auto port = new Port(serialPortInfo);
+    if (port->getPort() == nullptr) return;
+    auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();});
+    if (find == m_model.end()) {
         m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (static_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
+        m_model.push_back(port);
+        port->open(serialPortInfo);
     }
-    for (const QSerialPortInfo &serialPortInfo : serialPortInfos) {
-        auto port = new Port(serialPortInfo);
-        if (port->getPort() == nullptr) continue;
-        auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();});
-        if (find == m_model.end()) {
-            m_model.push_back(port);
-            port->open(serialPortInfo);
-        }
+    emit modelChanged(m_model);
+}
+void PortScanner::removePort(QSerialPortInfo serialPortInfo) {
+    if (m_selected != nullptr) {
+        //Pass through to selected, replace its scanning implementation
     }
+    m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();}), m_model.end());
     if (m_model.length() == 0) {
         m_model.push_back(new Port());
     }

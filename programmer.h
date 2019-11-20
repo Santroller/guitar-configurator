@@ -24,11 +24,14 @@ signals:
     void statusChanged(Status::Value newValue);
     void statusVChanged(QString newValue);
 public slots:
+    bool program(Port* port);
     void onReady();
-    void program(Port* port);
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
         return QString("Programming Status: %1 (%2%)").arg(Status::toString(m_status)).arg(QString().sprintf("%.2f",m_process_percent*100));
+    }
+    bool getRestore() {
+        return m_restore;
     }
     void setRestoring(bool restore) {
         m_restore = restore;

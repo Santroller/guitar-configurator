@@ -113,18 +113,18 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             fontSizeMode: Text.Fit
             font.weight: Font.DemiBold
-            Timer {
-                id: timer
-                interval: 100
-                running: !scanner.selected
-                repeat: true
-                onTriggered: {
-                    scanner.checkPorts()
-                    let index = devices.currentIndex;
-                    devices.currentIndex = -1;
-                    devices.currentIndex = index;
-                }
-            }
+//            Timer {
+//                id: timer
+//                interval: 100
+//                running: !scanner.selected
+//                repeat: true
+//                onTriggered: {
+//                    scanner.checkPorts()
+//                    let index = devices.currentIndex;
+//                    devices.currentIndex = -1;
+//                    devices.currentIndex = index;
+//                }
+//            }
         }
 
         ComboBox {

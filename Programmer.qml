@@ -84,17 +84,6 @@ Page {
                 id: label71
                 text: qsTr("Waiting for device detection")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Timer {
-                    id: timer1
-                    interval: 100
-                    running: (programmer.status === Status.DFU_CONNECT || programmer.status === Status.DFU_DISCONNECT) && scanner.selected.boardName() !== "Arduino Uno"
-                    repeat: true
-                    onTriggered: {
-                        if (scanner.selected.findNew()) {
-                            programmer.program(scanner.selected);
-                        }
-                    }
-                }
             }
             ColumnLayout {
                 visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardName() === "Arduino Uno"
@@ -119,17 +108,6 @@ Page {
                 id: label7
                 text: qsTr("Please disconnect and reconnect your device.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Timer {
-                    id: timer
-                    interval: 100
-                    running: programmer.status === Status.DFU_DISCONNECT
-                    repeat: true
-                    onTriggered: {
-                        if (scanner.selected.findNew()) {
-                            programmer.program(scanner.selected);
-                        }
-                    }
-                }
             }
 
             Button {
