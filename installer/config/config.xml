@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Guitar Configurator</Name>
+    <Version>1.0.0</Version>
+    <Title>Ardwiino Guitar Configurator</Title>
+    <Publisher>TangentMC</Publisher>
+    <StartMenuDir>Ardwiino Configurator</StartMenuDir>
+    <TargetDir>@HomeDir@/InstallationDirectory</TargetDir>
+</Installer>
