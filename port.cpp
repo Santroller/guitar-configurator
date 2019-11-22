@@ -25,7 +25,6 @@ void Port::close() {
 }
 
 void Port::handleConnection(QSerialPortInfo info) {
-    qDebug() << "Handled!";
     if (!m_serialPort->isOpen()) {
         rescan(info);
         open(info);

@@ -15,12 +15,9 @@ void PortScanner::addPort(QSerialPortInfo serialPortInfo) {
     }
     auto port = new Port(serialPortInfo);
     if (port->getPort() == nullptr) return;
-    auto find = std::find_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (static_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();});
-    if (find == m_model.end()) {
-        m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (static_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
-        m_model.push_back(port);
-        port->open(serialPortInfo);
-    }
+    m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (static_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
+    m_model.push_back(port);
+    port->open(serialPortInfo);
     emit modelChanged(m_model);
 }
 void PortScanner::removePort(QSerialPortInfo serialPortInfo) {
