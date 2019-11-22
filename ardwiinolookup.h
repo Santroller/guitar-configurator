@@ -62,7 +62,7 @@ public slots:
     }
     inline QString getKeyName(QVariantList sequence) {
         if (sequence.length() == 2) {
-           return QKeySequence(sequence[0].toInt(), sequence[1].toInt()).toString();
+            return QKeySequence(sequence[0].toInt(), sequence[1].toInt()).toString();
         }
         return QKeySequence(sequence[0].toInt()).toString();
     }

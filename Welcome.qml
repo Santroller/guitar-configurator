@@ -104,6 +104,25 @@ Page {
                 font.bold: false
                 verticalAlignment: Text.AlignVCenter
             }
+            Label {
+                id: os
+                text: qsTr(scanner.getOSString())
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                fontSizeMode: Text.Fit
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                font.capitalization: Font.MixedCase
+                font.weight: Font.Light
+                font.bold: false
+                verticalAlignment: Text.AlignVCenter
+                onLinkActivated: Qt.openUrlExternally(link)
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton // we don't want to eat clicks on the Text
+                    cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+                }
+            }
         }
 
         Label {

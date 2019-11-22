@@ -23,6 +23,14 @@ public slots:
     QList<QObject*> model() const {
         return m_model;
     }
+
+    inline QString getOSString() {
+#ifdef Q_OS_LINUX
+        return "<br />If you are not able to detect any devices, you may need to add yourself to the uucp and dialout groups. <br /> For information, <a href=\"https://www.arduino.cc/en/guide/linux#toc6\">click here</a>";
+#else
+        return "";
+#endif
+    }
 private:
     QList<QObject*> m_model;
     Port* m_selected;
