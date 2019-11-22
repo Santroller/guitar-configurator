@@ -8,7 +8,7 @@ environment:
 
 install:
   - git submodule update --init --recursive
-  - set PATH=%PATH%;%QT_DIR%\bin;C:\Qt\QtIFW-3.0.1;%cd%\build-bin\avr-gcc\bin
+  - set PATH=%PATH%;%QT_DIR%\bin;C:\Qt\QtIFW-3.0.1\bin;%cd%\build-bin\avr-gcc\bin
   - set REPO_SLUG=%APPVEYOR_REPO_NAME%
   - set TRAVIS_COMMIT=%APPVEYOR_REPO_COMMIT%
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %arch%
