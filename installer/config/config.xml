@@ -5,5 +5,5 @@
     <Title>Ardwiino Guitar Configurator</Title>
     <Publisher>TangentMC</Publisher>
     <StartMenuDir>Ardwiino Configurator</StartMenuDir>
-    <TargetDir>@HomeDir@/InstallationDirectory</TargetDir>
+    <TargetDir>@ApplicationsDir@/TangentMC/GuitarConfigurator</TargetDir>
 </Installer>
