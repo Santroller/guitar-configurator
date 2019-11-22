@@ -22,7 +22,7 @@ after_build:
   - xcopy binaries\win /O/X/E/H/K/I deploy\binaries
   - cp release\guitar-configurator.exe deploy
   - windeployqt deploy\guitar-configurator.exe -qmldir=.
-  - xcopy deploy installer\packages\net.tangentmc.guitar-configurator\data
+  - xcopy O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar-configurator\data
   - binarycreator -c installer\config\config.xml -p installer\packages win_installer_%arch%.exe
   # find appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq # for debugging
   # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
