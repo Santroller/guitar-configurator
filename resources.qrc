@@ -22,5 +22,6 @@
         <file>KeyBindings.qml</file>
         <file>keys.js</file>
         <file>pins.js</file>
+        <file>Tilt.qml</file>
     </qresource>
 </RCC>

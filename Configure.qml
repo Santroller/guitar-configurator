@@ -60,38 +60,15 @@ Page {
             }
         }
 
-        ComboBox {
-            id: orientationBox
-            Layout.fillWidth: true
-            textRole: "key"
+        Label {
+            id: inputLb
+            text: qsTr("Controller Connectivity Type")
+            fontSizeMode: Text.FixedSize
+            verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = []; 
-                for (let i = 0; i <= MPU6050Orientations.END; i++) {
-                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
-                }
-                return model
-            }
-            Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
-
-            onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
-        }
-
-        ComboBox {
-            id: tiltBox
-            Layout.fillWidth: true
-            textRole: "key"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= TiltTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getTiltTypeName(i), value:i});
-                }
-                return model
-            }
-            Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
-
-            onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
+            wrapMode: Text.WordWrap
         }
 
         ComboBox {
@@ -109,6 +86,17 @@ Page {
             Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
 
             onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
+        }
+
+        Label {
+            id: inputLb1
+            text: qsTr("Controller Output Type")
+            fontSizeMode: Text.FixedSize
+            verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
         }
 
         ComboBox {
@@ -129,6 +117,14 @@ Page {
             Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.findIndex(s => s.value === scanner.selected.type) }
 
             onCurrentIndexChanged: scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+        }
+        Button {
+            id: tilt
+            text: qsTr("Configure Tilt")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                mainStack.push("Tilt.qml");
+            }
         }
         Button {
             id: bind
@@ -185,6 +181,8 @@ Page {
                 }
             }
         }
+
+
 
     }
 }
