@@ -119,31 +119,7 @@ public slots:
     int getTilt() {
         QByteArray a;
         read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
-        float tilt;
-        switch (m_config.axis.mpu_6050_orientation) {
-        case NEGATIVE_X:
-            tilt = -m_controller.t_x;
-            break;
-        case POSITIVE_X:
-            tilt = m_controller.t_x;
-            break;
-        case NEGATIVE_Y:
-            tilt = -m_controller.t_y;
-            break;
-        case POSITIVE_Y:
-            tilt = m_controller.t_y;
-            break;
-        case NEGATIVE_Z:
-            tilt = -m_controller.t_z;
-            break;
-        case POSITIVE_Z:
-            tilt = m_controller.t_z;
-            break;
-        }
-        if (tilt > 32767) { tilt = 65535 - tilt; }
-        int ret = -((int((tilt * 360) / 65535) % 360)/2);
-        qDebug() << ret;
-        return ret;
+        return (int((m_controller.r_y * 360.0) / 65535.0) % 360)/2;
     }
 private:
     void readData();
