@@ -119,9 +119,13 @@ public slots:
     double getTilt() {
         QByteArray a;
         read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
-        float tilt = *((&m_controller.t_x)+(m_config.axis.mpu_6050_orientation/2));
-        if (m_config.axis.mpu_6050_orientation & 1) tilt = -tilt;
-        return (double(tilt) * 180.0) / M_PI;
+        qDebug() << m_controller.t_x;
+        qDebug() << m_controller.t_y;
+        qDebug() << m_controller.t_z;
+        return 0;
+//        float tilt = *((&m_controller.t_z)+(m_config.axis.mpu_6050_orientation/2));
+//        if (m_config.axis.mpu_6050_orientation & 1) tilt = -tilt;
+//        return (double(tilt) * 180.0) / M_PI;
     }
 private:
     void readData();
