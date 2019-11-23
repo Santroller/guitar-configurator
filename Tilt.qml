@@ -32,12 +32,12 @@ Page {
             transform: Rotation{
                 id: rotateImagePhoto
                 angle: 0
-                origin.x: 0
-                origin.y: 0
+                origin.x: image.width/2
+                origin.y: image.height/2
             }
             Timer {
                     interval: 100; running: true; repeat: true
-                    onTriggered: console.log(scanner.selected.getTilt())
+                    onTriggered: rotateImagePhoto.angle = scanner.selected.getTilt()
             }
         }
         Label {
