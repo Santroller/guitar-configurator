@@ -28,4 +28,4 @@ after_build:
   # curl --upload-file APPNAME*.AppImage https://transfer.sh/APPNAME-git.$(git rev-parse --short HEAD)-x86_64.AppImage
   - powershell wget https://github.com/probonopd/uploadtool/raw/master/upload.sh -OutFile upload.sh
   - bash upload.sh win_installer_%arch%.exe
-skip_tags: true
+skip_tags: false
