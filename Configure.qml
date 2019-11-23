@@ -121,6 +121,7 @@ Page {
         Button {
             id: tilt
             text: qsTr("Configure Tilt")
+            visible: scanner.selected.type === Controllers.PS3_GUITAR_GH || scanner.selected.type === Controllers.PS3_GUITAR_RB || scanner.selected.type === Controllers.XINPUT_GUITAR || scanner.selected.type === Controllers.XINPUT_GUITAR_ALTERNATE || scanner.selected.type === Controllers.XINPUT_GUITAR_BASS
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 mainStack.push("Tilt.qml");

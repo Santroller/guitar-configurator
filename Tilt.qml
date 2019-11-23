@@ -29,6 +29,16 @@ Page {
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
+            transform: Rotation{
+                id: rotateImagePhoto
+                angle: 0
+                origin.x: 0
+                origin.y: 0
+            }
+            Timer {
+                    interval: 100; running: true; repeat: true
+                    onTriggered: console.log(scanner.selected.getTilt())
+            }
         }
         Label {
             id: dev
