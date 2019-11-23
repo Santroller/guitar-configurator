@@ -24,6 +24,7 @@ class Port : public QObject
     Q_PROPERTY(Controllers::Value type READ getType WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(MPU6050Orientations::Value orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(TiltTypes::Value tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
+    Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -45,6 +46,7 @@ signals:
     void typeChanged(Controllers::Value newValue);
     void orientationChanged(MPU6050Orientations::Value newValue);
     void tiltTypeChanged(TiltTypes::Value newValue);
+    void tiltSensitivityChanged(int newValue);
     void dfuFound(bool found);
     void portStateChanged(bool open);
 
@@ -120,6 +122,13 @@ public slots:
         QByteArray a;
         read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
         return (int((m_controller.r_y * 360.0) / 65535.0) % 360)/2;
+    }
+    int getSensitivity() const {
+        return m_config.axis.tilt_sensitivity;
+    }
+    void setSensitivity(int s) {
+        m_config.axis.tilt_sensitivity = int16_t(s);
+        tiltSensitivityChanged(s);
     }
 private:
     void readData();

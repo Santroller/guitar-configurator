@@ -29,7 +29,7 @@ Page {
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
-            transform: Rotation{
+            /*transform: Rotation{
                 id: rotateImagePhoto
                 angle: 0
                 origin.x: image.width/2
@@ -38,7 +38,7 @@ Page {
             Timer {
                     interval: 100; running: true; repeat: true
                     onTriggered: rotateImagePhoto.angle = scanner.selected.getTilt()
-            }
+            }*/
         }
         Label {
             id: dev
@@ -70,23 +70,16 @@ Page {
             }
         }
 
-        ComboBox {
-            id: orientationBox
-            Layout.fillWidth: true
-            textRole: "key"
+        Label {
+            id: type
+            text: qsTr("Tilt Sensor Type: ")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = []; 
-                for (let i = 0; i <= MPU6050Orientations.END; i++) {
-                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
-                }
-                return model
-            }
-            Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
-
-            onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
+            wrapMode: Text.WordWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            fontSizeMode: Text.FixedSize
         }
-
         ComboBox {
             id: tiltBox
             Layout.fillWidth: true
@@ -103,6 +96,67 @@ Page {
 
             onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
         }
+
+        Label {
+            id: orientation
+            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR;
+            text: qsTr("Tilt Sensor Orientation: ")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            fontSizeMode: Text.FixedSize
+        }
+        ComboBox {
+            id: orientationBox
+            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR;
+            Layout.fillWidth: true
+            textRole: "key"
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: {
+                let model = [];
+                for (let i = 0; i <= MPU6050Orientations.END; i++) {
+                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
+                }
+                return model
+            }
+            Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
+
+            onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
+        }
+
+        Label {
+            id: orientation1
+            text: qsTr("Tilt Sensor Sensitivity: ")
+            fontSizeMode: Text.FixedSize
+            verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR
+        }
+
+        Slider {
+            id: slider
+            Layout.fillWidth: true
+            to: -32767
+            from: 32767
+            value: scanner.selected.sensitivity
+            onValueChanged: scanner.selected.sensitivity = slider.value
+        }
+
+        Button {
+            id: configureContinue
+            text: qsTr("Back to Configuration")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                mainStack.pop();
+            }
+        }
+
+
     }
 }
 
