@@ -116,22 +116,34 @@ public slots:
     void savePins();
     void loadKeys();
     void saveKeys();
-    float getTilt() {
+    int getTilt() {
         QByteArray a;
         read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
-        float tilt = *((&m_controller.t_z)+(m_config.axis.mpu_6050_orientation/2));
-        if (m_config.axis.mpu_6050_orientation & 1) tilt = -tilt;
-        uint8_t *test = (uint8_t*)&tilt;
-        float tilt2;
-        uint8_t *test2 = (uint8_t*)&tilt2;
-        test2[0] = test[3];
-        test2[1] = test[2];
-        test2[2] = test[1];
-        test2[3] = test[0];
-        qDebug() << "what";
-        qDebug() << tilt2;
-        qDebug() << tilt2 * (180/M_PIf32);
-        return tilt2 * (180/M_PIf32);
+        float tilt;
+        switch (m_config.axis.mpu_6050_orientation) {
+        case NEGATIVE_X:
+            tilt = -m_controller.t_x;
+            break;
+        case POSITIVE_X:
+            tilt = m_controller.t_x;
+            break;
+        case NEGATIVE_Y:
+            tilt = -m_controller.t_y;
+            break;
+        case POSITIVE_Y:
+            tilt = m_controller.t_y;
+            break;
+        case NEGATIVE_Z:
+            tilt = -m_controller.t_z;
+            break;
+        case POSITIVE_Z:
+            tilt = m_controller.t_z;
+            break;
+        }
+        if (tilt > 32767) { tilt = 65535 - tilt; }
+        int ret = -((int((tilt * 360) / 65535) % 360)/2);
+        qDebug() << ret;
+        return ret;
     }
 private:
     void readData();
