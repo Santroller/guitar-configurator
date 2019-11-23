@@ -119,32 +119,9 @@ public slots:
     double getTilt() {
         QByteArray a;
         read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
-        int32_t tilt;
-        switch (m_config.axis.mpu_6050_orientation) {
-            case POSITIVE_X:
-                tilt = m_controller.t_x;
-                break;
-            case NEGATIVE_X:
-                tilt = -m_controller.t_x;
-                break;
-            case POSITIVE_Y:
-                tilt = m_controller.t_y;
-                break;
-            case NEGATIVE_Y:
-                tilt = -m_controller.t_y;
-                break;
-            case POSITIVE_Z:
-                tilt = m_controller.t_z;
-                break;
-            case NEGATIVE_Z:
-                tilt = -m_controller.t_z;
-                break;
-        default:
-            return 0;
-        }
-        double t = (tilt / (65535 / M_PI) / 32768)*360;
-        if (t > 360) t = 360 - t;
-        return t;
+        float tilt = *((&m_controller.t_x)+(m_config.axis.mpu_6050_orientation/2));
+        if (m_config.axis.mpu_6050_orientation & 1) tilt = -tilt;
+        return (double(tilt) * 180.0) / M_PI;
     }
 private:
     void readData();
