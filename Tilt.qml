@@ -141,10 +141,19 @@ Page {
         Slider {
             id: slider
             Layout.fillWidth: true
-            to: -32767
-            from: 32767
+            to: 32767
+            from: -32767
             value: scanner.selected.sensitivity
             onValueChanged: scanner.selected.sensitivity = slider.value
+            background: Rectangle {
+                y: 15
+                implicitWidth: 200
+                implicitHeight: 4
+                width: control.availableWidth
+                height: implicitHeight
+                radius: 2
+                color: "#bdbebf"
+            }
         }
 
         Button {
