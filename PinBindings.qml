@@ -260,6 +260,7 @@ Page {
                 text: qsTr("Save Bindings")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: {
+                    scanner.selected.savePins()
                     mainStack.pop();
                 }
             }

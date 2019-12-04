@@ -35,7 +35,6 @@ public slots:
     }
     void setRestoring(bool restore) {
         m_restore = restore;
-        m_status = Status::WAIT;
         m_process_out = "";
         m_process_percent = 0;
         emit restoreChanged(restore);
@@ -43,6 +42,11 @@ public slots:
         emit statusVChanged(getStatusDescription());
         emit processOutChanged(m_process_out);
         emit processPercentChanged(m_process_percent);
+    }
+    void startProgramming() {
+        m_status = Status::WAIT;
+        emit statusChanged(m_status);
+        emit statusVChanged(getStatusDescription());
     }
 private:
     void programDFU();

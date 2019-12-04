@@ -7,7 +7,7 @@
 #include <QRegularExpression>
 #include <ardwiinolookup.h>
 
-Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::WAIT), m_port(nullptr), m_restore(false)
+Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_port(nullptr), m_restore(false)
 {
 
 }
@@ -111,6 +111,7 @@ void Programmer::programAvrDude() {
     m_process->start(dir.filePath("avrdude"), l);
 }
 bool Programmer::program(Port* port) {
+    if (m_status == Status::NOT_PROGRAMMING) return false;
     bool ret = false;
     m_port = port;
     if (m_status == Status::WAIT) {

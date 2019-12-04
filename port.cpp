@@ -269,6 +269,7 @@ void Port::loadPins() {
 }
 
 void Port::savePins() {
+    qDebug() << m_pins;
     m_config.pins.up = uint8_t(m_pins["up"].toUInt());
     m_config.pins.down = uint8_t(m_pins["down"].toUInt());
     m_config.pins.left = uint8_t(m_pins["left"].toUInt());

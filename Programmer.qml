@@ -79,12 +79,6 @@ Page {
 
 
             }
-            Label {
-                visible: (programmer.status === Status.DFU_CONNECT || programmer.status === Status.DFU_DISCONNECT) && scanner.selected.boardName() !== "Arduino Uno"
-                id: label71
-                text: qsTr("Waiting for device detection")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            }
             ColumnLayout {
                 visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardName() === "Arduino Uno"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -114,8 +108,11 @@ Page {
                 id: button
                 text: qsTr("Start Programming")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: programmer.program(scanner.selected)
-                visible: programmer.status === Status.WAIT
+                onClicked: {
+                    programmer.startProgramming();
+                    programmer.program(scanner.selected);
+                }
+                visible: programmer.status === Status.NOT_PROGRAMMING
             }
 
             Button {

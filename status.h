@@ -6,6 +6,7 @@ class Status : public QObject
     Q_GADGET
 public:
     enum Value {
+        NOT_PROGRAMMING,
         WAIT,
         AVRDUDE,
         DFU_CONNECT,
@@ -20,6 +21,7 @@ public:
 
     static QString toString(Value value) {
         switch(value) {
+        case Value::NOT_PROGRAMMING: return "Not Programming";
         case Value::WAIT: return "Waiting";
         case Value::DFU_CONNECT: return "Waiting for DFU Mode";
         case Value::AVRDUDE: return "Programming Main Controller";
