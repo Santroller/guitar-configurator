@@ -1,4 +1,7 @@
 image: Visual Studio 2017
+branches:
+  only:
+    - master
 environment:
   matrix:
     - arch: x64
@@ -14,12 +17,6 @@ install:
   - set TRAVIS_TAG=%APPVEYOR_REPO_TAG_NAME%
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %arch%
 before_build:
-  - ps: |
-      if (($env:APPVEYOR_REPO_TAG -eq "true") -and ($env:APPVEYOR_REPO_TAG_NAME -match "^continuous"))
-      {
-        echo "tag: $env:APPVEYOR_REPO_TAG tag_name: $env:APPVEYOR_REPO_TAG_NAME"
-        Write-Error "This job should have been filtered out."
-      }
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
 configuration:
   - Release
