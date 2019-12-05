@@ -1,13 +1,13 @@
 image: Visual Studio 2017
-branches:
-  only:
-    - master
 environment:
   matrix:
     - arch: x64
       QT_DIR: C:\Qt\5.13.2\msvc2017_64
     - arch: x86
       QT_DIR: C:\Qt\5.13.2\msvc2017
+  APPVEYOR_API_TOKEN:
+    secure: 6EbQhfwu9eDqhf4aTzHog1TGDIPgFdajVfAS13n2N+c=
+
 
 install:
   - git submodule update --init --recursive
@@ -17,6 +17,19 @@ install:
   - set TRAVIS_TAG=%APPVEYOR_REPO_TAG_NAME%
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %arch%
 before_build:
+  - ps: |
+      ( Invoke-RestMethod https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=20 ).builds                                                                             `
+      | Where-Object {$_.status -eq "queued" -and ( $_.tag -match $tag_pattern ) }  |
+      %{ $_.version }                                                             |
+      %{
+        $msg = "Found build version $_"
+        Write-Host "  $msg"
+        $url = "https://ci.appveyor.com/api/builds/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/$_"
+        Invoke-RestMethod $url   `
+          -Method Delete         `
+          -Headers @{"Authorization" = "Bearer $env:APPVEYOR_API_TOKEN"};
+        Write-Host "  $msg - cancelled"
+      }
   - qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
 configuration:
   - Release
