@@ -3,10 +3,8 @@ name: C/C++ CI
 on: [push]
 
 jobs:
-  build:
-
+  linux:
     runs-on: ubuntu-16.04
-    
     steps:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
@@ -28,3 +26,29 @@ jobs:
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
+
+  mac:
+    pool:
+      vmImage: 'macOS-10.14'
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with: 
+        modules: qtserialport qtquickcontrols2 
+    - name: Install libraries
+      run: sudo apt-get install libxkbcommon-x11-0
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: build and bundle
+      run: |
+      - mkdir build
+      - cd build
+      - qmake CONFIG+=release ../
+      - make -j2
+      - mkdir -p guitar-configurator.app/Contents/MacOS/binaries
+      - mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
+      - cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
+      - cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
+      - cp -rf firmware guitar-configurator.app/Contents/MacOS
+      - macdeployqt guitar-configurator.app -dmg -qmldir=../
