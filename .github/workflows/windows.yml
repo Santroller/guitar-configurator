@@ -1,10 +1,10 @@
-name: Build Mac
+name: Build Windows
 
 on: [push]
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: windows-latest
     steps:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
