@@ -15,15 +15,13 @@ jobs:
         submodules: true
     - name: build and bundle
       run: |
-        mkdir build
-        cd build
-        qmake CONFIG+=release ../
-        make -j2
-        cd ..
+        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+        msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         mkdir deploy
         xcopy firmware /O/X/E/H/K/I deploy\firmware
         xcopy binaries\win /O/X/E/H/K/I deploy\binaries
-        cp build\guitar-configurator.exe deploy
+        cp release\guitar-configurator.exe deploy
         windeployqt deploy\guitar-configurator.exe -qmldir=.
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         binarycreator -c installer\config\config.xml -p installer\packages win_installer_%arch%.exe
