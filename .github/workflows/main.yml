@@ -1,0 +1,28 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with: 
+        modules: qtserialport qtquickcontrols2 
+    - uses: actions/checkout@v1
+    - name: configure
+      run: ./configure
+    - name: build and bundle
+      run: |
+        mkdir build
+        cd build
+        qmake CONFIG+=release PREFIX=/usr ../
+        make -j$(nproc)
+        make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
+        cp -rf firmware ../appdir/bin
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
