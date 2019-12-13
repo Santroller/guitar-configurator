@@ -25,3 +25,4 @@ jobs:
         windeployqt deploy\guitar-configurator.exe -qmldir=.
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         binarycreator -c installer\config\config.xml -p installer\packages win_installer_%arch%.exe
+      shell: cmd
