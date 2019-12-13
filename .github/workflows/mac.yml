@@ -42,13 +42,13 @@ jobs:
         submodules: true
     - name: build and bundle
       run: |
-      mkdir build
-      cd build
-      qmake CONFIG+=release ../
-      make -j2
-      mkdir -p guitar-configurator.app/Contents/MacOS/binaries
-      mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
-      cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
-      cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
-      cp -rf firmware guitar-configurator.app/Contents/MacOS
-      macdeployqt guitar-configurator.app -dmg -qmldir=../
+        mkdir build
+        cd build
+        qmake CONFIG+=release ../
+        make -j2
+        mkdir -p guitar-configurator.app/Contents/MacOS/binaries
+        mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
+        cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
+        cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
+        cp -rf firmware guitar-configurator.app/Contents/MacOS
+        macdeployqt guitar-configurator.app -dmg -qmldir=../
