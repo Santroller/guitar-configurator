@@ -1,0 +1,25 @@
+name: Build Mac
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with: 
+        modules: qtserialport qtquickcontrols2 
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: build and bundle
+      run: |
+        qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+        mkdir deploy
+        xcopy firmware /O/X/E/H/K/I deploy\firmware
+        xcopy binaries\win /O/X/E/H/K/I deploy\binaries
+        cp release\guitar-configurator.exe deploy
+        windeployqt deploy\guitar-configurator.exe -qmldir=.
+        xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
+        binarycreator -c installer\config\config.xml -p installer\packages win_installer_%arch%.exe

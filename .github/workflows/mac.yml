@@ -10,8 +10,6 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with: 
         modules: qtserialport qtquickcontrols2 
-    - name: Install libraries
-      run: sudo apt-get install libxkbcommon-x11-0
     - uses: actions/checkout@v1
       with:
         submodules: true
