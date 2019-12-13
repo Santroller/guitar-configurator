@@ -13,6 +13,7 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: true
+    - uses: ilammy/msvc-dev-cmd@v1
     - name: build and bundle
       run: |
         qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
