@@ -13,8 +13,6 @@ jobs:
       with: 
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
-    - name: configure
-      run: ./configure
     - name: build and bundle
       run: |
         mkdir build

@@ -19,7 +19,7 @@ install:
 before_build:
   - ps: |
       ( Invoke-RestMethod https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=20 ).builds                                                                             `
-      | Where-Object {$_.status -eq "queued" -and ( $_.tag -match $tag_pattern ) }  |
+      | Where-Object {$_.status -eq "queued" -and ( $_.tag -match "continuous" ) }  |
       %{ $_.version }                                                             |
       %{
         $msg = "Found build version $_"

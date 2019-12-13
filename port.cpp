@@ -74,12 +74,20 @@ void Port::readData() {
     readDescription();
 }
 void Port::write(char id, void* dest, unsigned long size) {
+    auto read = m_serialPort->readAll();
     m_serialPort->flush();
     m_serialPort->write(&id, 1);
+    m_serialPort->waitForBytesWritten();
+    m_serialPort->waitForReadyRead();
+    if (read != "READY") {
+        qDebug() << "Not ready!!!!!";
+        qDebug() << read;
+        return;
+    }
     m_serialPort->write(static_cast<char*>(dest), static_cast<signed long>(size));
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
-    auto read = m_serialPort->readAll();
+    read = m_serialPort->readAll();
     if (read != "OK") {
         qDebug() << "Not okay!!!!!";
         qDebug() << read;
