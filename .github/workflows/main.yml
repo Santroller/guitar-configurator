@@ -13,6 +13,8 @@ jobs:
       with: 
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
+      with:
+        submodules: true
     - name: build and bundle
       run: |
         mkdir build
