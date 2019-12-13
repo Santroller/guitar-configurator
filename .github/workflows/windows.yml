@@ -17,6 +17,7 @@ jobs:
     - name: build and bundle
       run: |
         qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+        msbuild guitar-configurator.vcxproj
         mkdir deploy
         xcopy firmware /O/X/E/H/K/I deploy\firmware
         xcopy binaries\win /O/X/E/H/K/I deploy\binaries
