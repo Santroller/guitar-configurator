@@ -91,69 +91,6 @@ jobs:
       with:
         name: windows
         path: artifacts
-  release-windows:
-    name: Release (Windows)
-    needs: [create-release]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v1
-        with:
-          name: windows   
-      - name: list files
-        run: |
-          ls -R  
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./windows/*.exe
-          asset_name: win_installer.exe
-          asset_content_type: application/octet-stream
-  release-mac:
-    name: Release (macOS)
-    needs: [create-release]
-    runs-on: ubuntu-latest
-    steps:    
-      - uses: actions/download-artifact@v1
-        with:
-          name: mac  
-      - name: list files
-        run: |
-          ls -R  
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./mac/*.dmg
-          asset_name: guitar-configurator.dmg
-          asset_content_type: application/octet-stream
-  release-linux:
-    name: Release (Linux)
-    needs: [create-release]
-    runs-on: ubuntu-latest
-    steps:         
-      - uses: actions/download-artifact@v1
-        with:
-          name: linux  
-      - name: list files
-        run: |
-          ls -R  
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./linux/*.AppImage
-          asset_name: Guitar_Configurator.AppImage
-          asset_content_type: application/octet-stream
   create-release:
     if: contains(github.ref, 'tags/v')
     name: Create Release
@@ -170,3 +107,57 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+  release-windows:
+    name: Release (Windows)
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows   
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./windows/*.exe
+          asset_name: win_installer.exe
+          asset_content_type: application/octet-stream
+  release-mac:
+    name: Release (macOS)
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    steps:    
+      - uses: actions/download-artifact@v1
+        with:
+          name: mac  
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./mac/*.dmg
+          asset_name: guitar-configurator.dmg
+          asset_content_type: application/octet-stream
+  release-linux:
+    name: Release (Linux)
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    steps:         
+      - uses: actions/download-artifact@v1
+        with:
+          name: linux  
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./linux/*.AppImage
+          asset_name: Guitar_Configurator.AppImage
+          asset_content_type: application/octet-stream
