@@ -48,8 +48,8 @@ jobs:
         submodules: true
     - name: Build
       run: |
-        cd build
         mkdir build
+        cd build
         qmake CONFIG+=release PREFIX=/usr ../
         make -j$(nproc)
         make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
