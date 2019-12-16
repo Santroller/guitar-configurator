@@ -59,6 +59,7 @@ jobs:
         name: linux
         path: build/artifacts
         build-win:
+  build-windows:
     runs-on: windows-latest
     steps:
     - name: Install Qt
