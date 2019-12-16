@@ -25,5 +25,10 @@ jobs:
         windeployqt deploy\guitar-configurator.exe -qmldir=.
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         python -m aqt tool windows tools_ifw 3.1.1 qt.tools.ifw.31
-        .\Tools\QtInstallerFramework\3.1\bin\binarycreator -c installer\config\config.xml -p installer\packages win_installer_%arch%.exe
+        mkdir artifacts
+        .\Tools\QtInstallerFramework\3.1\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\win_installer_%arch%.exe
       shell: cmd
+    - uses: actions/upload-artifact@v1
+      with:
+        name: windows
+        path: artifacts

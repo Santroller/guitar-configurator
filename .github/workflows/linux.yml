@@ -26,3 +26,9 @@ jobs:
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
+        mkdir artifacts
+        cp Guitar_Configurator*.AppImage* artifacts
+    - uses: actions/upload-artifact@v1
+      with:
+        name: linux
+        path: artifacts

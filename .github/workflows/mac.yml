@@ -25,3 +25,9 @@ jobs:
         cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
         cp -rf firmware guitar-configurator.app/Contents/MacOS
         macdeployqt guitar-configurator.app -dmg -qmldir=../
+        mkdir artifacts
+        cp guitar-configurator*.dmg* artifacts
+    - uses: actions/upload-artifact@v1
+      with:
+        name: mac
+        path: artifacts
