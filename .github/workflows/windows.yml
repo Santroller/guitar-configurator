@@ -3,7 +3,7 @@ name: Build Windows
 on: [push]
 
 jobs:
-  build:
+  build-win:
     runs-on: windows-latest
     steps:
     - name: Install Qt
@@ -26,7 +26,7 @@ jobs:
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         python -m aqt tool windows tools_ifw 3.1.1 qt.tools.ifw.31
         mkdir artifacts
-        .\Tools\QtInstallerFramework\3.1\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\win_installer_%arch%.exe
+        .\Tools\QtInstallerFramework\3.1\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\win_installer.exe
       shell: cmd
     - uses: actions/upload-artifact@v1
       with:

@@ -3,7 +3,7 @@ name: Build Mac
 on: [push]
 
 jobs:
-  build:
+  build-mac:
     runs-on: macos-latest
     steps:
     - name: Install Qt
@@ -30,4 +30,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: mac
-        path: artifacts
+        path: build/artifacts

@@ -3,7 +3,7 @@ name: Build Linux
 on: [push]
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-16.04
     steps:
     - name: Install Qt
@@ -31,4 +31,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: linux
-        path: artifacts
+        path: build/artifacts
