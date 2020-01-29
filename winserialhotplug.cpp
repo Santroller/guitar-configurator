@@ -2,7 +2,6 @@
 #ifdef Q_OS_WIN
 
 #include <QDebug>
-#include <QThread>
 
 #pragma comment(lib, "user32.lib" )
 
@@ -34,7 +33,6 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     for (auto p: QSerialPortInfo::availablePorts()) {
                         if (p.portName().contains(QString(reinterpret_cast<QChar*>(lpdbv->dbcp_name)))) {
                             m_port_list.push_back(p);
-                            QThread::msleep(500);
                             scanner->addPort(p);
                             return false;
                         }

@@ -7,6 +7,7 @@ PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(pare
 }
 void PortScanner::addPort(QSerialPortInfo serialPortInfo) {
     if (m_selected != nullptr) {
+        m_selected->handleConnection(serialPortInfo);
         programmer->program(m_selected);
         if (!programmer->getRestore()) {
             m_selected->handleConnection(serialPortInfo);
