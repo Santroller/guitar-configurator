@@ -73,10 +73,6 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with: 
         modules: qtserialport qtquickcontrols2 
-    - name: Install Qt Installer Framework
-      run: |
-        python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32
-      shell: cmd
     - uses: actions/checkout@v1
       with:
         submodules: true
@@ -95,6 +91,7 @@ jobs:
         windeployqt deploy\guitar-configurator.exe -qmldir=.
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         mkdir artifacts
+        python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32
         .\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
       shell: cmd
     - uses: actions/upload-artifact@v1
