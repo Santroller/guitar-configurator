@@ -34,7 +34,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     for (auto p: QSerialPortInfo::availablePorts()) {
                         if (p.portName().contains(QString(reinterpret_cast<QChar*>(lpdbv->dbcp_name)))) {
                             m_port_list.push_back(p);
-                            QThread::sleep(500);
+                            QThread::msleep(500);
                             scanner->addPort(p);
                             return false;
                         }
