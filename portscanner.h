@@ -15,9 +15,10 @@ class PortScanner : public QObject
 public:
     explicit PortScanner(Programmer* programmer, QObject *parent = nullptr);
 signals:
-    void modelChanged(QList<QObject*> newValue);
+    void modelChanged();
     void selectedChanged(Port* newValue);
 public slots:
+    void update();
     void addPort(const QSerialPortInfo& port);
     void removePort(const QSerialPortInfo& port);
     QList<QObject*> model() const {

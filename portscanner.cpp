@@ -19,7 +19,18 @@ void PortScanner::addPort(const QSerialPortInfo& serialPortInfo) {
     m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
     m_model.push_back(port);
     port->open(serialPortInfo);
-    emit modelChanged(m_model);
+    connect(port, &Port::descriptionChanged,this,&PortScanner::update);
+    emit modelChanged();
+}
+void PortScanner::update() {
+    //For whatever reason, just updating the model is not enough to make the QML combobox update correctly. However, removing all items then adding them again does work.
+    auto m = m_model;
+    m_model.clear();
+    m_model.push_back(new Port());
+    emit modelChanged();
+    m_model.clear();
+    m_model << m;
+    emit modelChanged();
 }
 void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
     if (m_selected != nullptr) {
@@ -29,5 +40,5 @@ void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
     if (m_model.length() == 0) {
         m_model.push_back(new Port());
     }
-    emit modelChanged(m_model);
+    emit modelChanged();
 }

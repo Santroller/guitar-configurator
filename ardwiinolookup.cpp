@@ -18,7 +18,7 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
 
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    return serialPortInfo.vendorIdentifier() == SONY_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
+    return serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
 ArdwiinoLookup* ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty =  {"","",0,{},"","",0,"","", false};
@@ -30,7 +30,6 @@ const board_t ArdwiinoLookup::boards[4] = {
 };
 
 auto ArdwiinoLookup::findByBoard(const QString& board_name) -> const board_t {
-    qDebug() << board_name;
     for (const auto& board: boards) {
         if (board.hexFile == board_name) {
             return board;

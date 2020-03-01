@@ -5,7 +5,7 @@
 #include "input_types.h"
 #include <iostream>
 #include <QSettings>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), readyForRead(false)
 {
     rescan(serialPortInfo);
 }
@@ -46,8 +46,8 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     }
     emit descriptionChanged(m_description);
 }
-char Port::read_single(QByteArray id) {
-    return read(id).data()[0];
+uint8_t Port::read_single(QByteArray id) {
+    return read(id).data()[0] & 0xff;
 }
 QByteArray Port::read(QByteArray id) {
     m_serialPort->flush();
@@ -57,42 +57,25 @@ QByteArray Port::read(QByteArray id) {
     return m_serialPort->readLine();
 }
 void Port::readData() {
+    qDebug() << read(READ_INFO(INFO_BOARD));
     m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
     m_hasDFU = m_board.hasDFU;
     boardImageChanged(getBoardImage());
     readDescription();
 }
-void Port::write(char id, void* dest, unsigned long size) {
-    auto read = m_serialPort->readAll();
-    m_serialPort->flush();
-    m_serialPort->write(&id, 1);
+void Port::write(QByteArray id) {
+    qDebug() << id;
+    m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
-    if (read != "READY") {
-        qDebug() << "Not ready!!!!!";
-        qDebug() << read;
-        return;
-    }
-    m_serialPort->write(static_cast<char*>(dest), static_cast<signed long>(size));
-    m_serialPort->waitForBytesWritten();
-    m_serialPort->waitForReadyRead();
-    read = m_serialPort->readAll();
-    if (read != "OK") {
-        qDebug() << "Not okay!!!!!";
-        qDebug() << read;
-    }
+    m_serialPort->readLine();
 }
 void Port::writeConfig() {
-//    write(MAIN_CMD_W, &m_config.main, sizeof(main_config_t));
-//    write(PIN_CMD_W, &m_config.pins, sizeof(pins_t));
-//    write(AXIS_CMD_W, &m_config.axis, sizeof(axis_config_t));
-//    write(KEY_CMD_W, &m_config.keys, sizeof(keys_t));
-//    char data = REBOOT_CMD;
-//    m_serialPort->flush();
-//    m_serialPort->write(&data, 1);
-//    m_serialPort->waitForBytesWritten();
-//    m_serialPort->close();
-//    portStateChanged(getOpen());
+    m_serialPort->flush();
+    m_serialPort->write(QByteArray(1,COMMAND_APPLY_CONFIG));
+    m_serialPort->waitForBytesWritten();
+    m_serialPort->close();
+    portStateChanged(getOpen());
 }
 
 void Port::readDescription() {
@@ -121,7 +104,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
             QThread *thread = QThread::create([this]{
                 //We need a delay on linux for unos, as the 328p gets rebooted when we open.
                 QThread::msleep(2000);
-                QMetaObject::invokeMethod(this, [this] { readData(); });
+                QMetaObject::invokeMethod(this, [this] { readData(); readyForRead = true;});
             });
             thread->start();
         }
@@ -159,10 +142,9 @@ void Port::prepareUpload() {
         if (!m_serialPort->isOpen()) {
             m_serialPort->open(QIODevice::WriteOnly);
         }
-//        char data[] = {BOOTLOADER_CMD};
-//        m_serialPort->write(data, 1);
-//        m_serialPort->waitForBytesWritten();
-//        m_serialPort->close();
+        m_serialPort->write(QByteArray(1, COMMAND_JUMP_BOOTLOADER_UNO));
+        m_serialPort->waitForBytesWritten();
+        m_serialPort->close();
     }
     portStateChanged(getOpen());
 }
@@ -184,126 +166,124 @@ void Port::updateControllerName() {
 
 void Port::loadKeys() {
     m_pins.clear();
-//    m_pins["up"] = m_config.keys.up;
-//    m_pins["down"] = m_config.keys.down;
-//    m_pins["left"] = m_config.keys.left;
-//    m_pins["right"] = m_config.keys.right;
-//    m_pins["start"] = m_config.keys.start;
-//    m_pins["back"] = m_config.keys.back;
-//    m_pins["left_stick"] = m_config.keys.left_stick;
-//    m_pins["right_stick"] = m_config.keys.right_stick;
-//    m_pins["LB"] = m_config.keys.LB;
-//    m_pins["RB"] = m_config.keys.RB;
-//    m_pins["home"] = m_config.keys.home;
-//    m_pins["capture"] = m_config.keys.capture;
-//    m_pins["a"] = m_config.keys.a;
-//    m_pins["b"] = m_config.keys.b;
-//    m_pins["x"] = m_config.keys.x;
-//    m_pins["y"] = m_config.keys.y;
-//    m_pins["lt"] = m_config.keys.lt;
-//    m_pins["rt"] = m_config.keys.rt;
-//    m_pins["l_x_lt"] = m_config.keys.l_x.neg;
-//    m_pins["l_x_gt"] = m_config.keys.l_x.pos;
-//    m_pins["l_y_lt"] = m_config.keys.l_y.neg;
-//    m_pins["l_y_gt"] = m_config.keys.l_y.pos;
-//    m_pins["r_x_lt"] = m_config.keys.r_x.neg;
-//    m_pins["r_x_gt"] = m_config.keys.r_x.pos;
-//    m_pins["r_y_lt"] = m_config.keys.r_y.neg;
-//    m_pins["r_y_gt"] = m_config.keys.r_y.pos;
+    m_pins["up"] = read_single(READ_CONFIG(CONFIG_KEY_UP));
+    m_pins["down"] = read_single(READ_CONFIG(CONFIG_KEY_DOWN));
+    m_pins["left"] = read_single(READ_CONFIG(CONFIG_KEY_LEFT));
+    m_pins["right"] = read_single(READ_CONFIG(CONFIG_KEY_RIGHT));
+    m_pins["start"] = read_single(READ_CONFIG(CONFIG_KEY_START));
+    m_pins["back"] = read_single(READ_CONFIG(CONFIG_KEY_SELECT));
+    m_pins["left_stick"] = read_single(READ_CONFIG(CONFIG_KEY_LEFT_STICK));
+    m_pins["right_stick"] = read_single(READ_CONFIG(CONFIG_KEY_RIGHT_STICK));
+    m_pins["LB"] = read_single(READ_CONFIG(CONFIG_KEY_LB));
+    m_pins["RB"] = read_single(READ_CONFIG(CONFIG_KEY_RB));
+    m_pins["home"] = read_single(READ_CONFIG(CONFIG_KEY_HOME));
+    m_pins["capture"] = read_single(READ_CONFIG(CONFIG_KEY_CAPTURE));
+    m_pins["a"] = read_single(READ_CONFIG(CONFIG_KEY_A));
+    m_pins["b"] = read_single(READ_CONFIG(CONFIG_KEY_B));
+    m_pins["x"] = read_single(READ_CONFIG(CONFIG_KEY_X));
+    m_pins["y"] = read_single(READ_CONFIG(CONFIG_KEY_Y));
+    m_pins["lt"] = read_single(READ_CONFIG(CONFIG_KEY_LT));
+    m_pins["rt"] = read_single(READ_CONFIG(CONFIG_KEY_RT));
+    auto a = read(READ_CONFIG(CONFIG_KEY_L_X));
+    m_pins["l_x_lt"] = a.data()[0];
+    m_pins["l_x_gt"] = a.data()[1];
+    a = read(READ_CONFIG(CONFIG_KEY_L_Y));
+    m_pins["l_y_lt"] = a.data()[0];
+    m_pins["l_y_gt"] = a.data()[1];
+    a = read(READ_CONFIG(CONFIG_KEY_R_X));
+    m_pins["r_x_lt"] = a.data()[0];
+    m_pins["r_x_gt"] = a.data()[1];
+    a = read(READ_CONFIG(CONFIG_KEY_R_Y));
+    m_pins["r_y_lt"] = a.data()[0];
+    m_pins["r_y_gt"] = a.data()[1];
 }
 
 void Port::saveKeys() {
-//    m_config.keys.up = uint8_t(m_pins["up"].toUInt());
-//    m_config.keys.down = uint8_t(m_pins["down"].toUInt());
-//    m_config.keys.left = uint8_t(m_pins["left"].toUInt());
-//    m_config.keys.right = uint8_t(m_pins["right"].toUInt());
-//    m_config.keys.start = uint8_t(m_pins["start"].toUInt());
-//    m_config.keys.back = uint8_t(m_pins["back"].toUInt());
-//    m_config.keys.left_stick = uint8_t(m_pins["left_stick"].toUInt());
-//    m_config.keys.right_stick = uint8_t(m_pins["right_stick"].toUInt());
-//    m_config.keys.LB = uint8_t(m_pins["LB"].toUInt());
+    write(WRITE_CONFIG(CONFIG_KEY_UP, uint8_t(m_pins["up"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_DOWN, uint8_t(m_pins["down"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_LEFT, uint8_t(m_pins["left"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_RIGHT, uint8_t(m_pins["right"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_START, uint8_t(m_pins["start"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_SELECT, uint8_t(m_pins["back"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_LEFT_STICK, uint8_t(m_pins["left_stick"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_RIGHT_STICK, uint8_t(m_pins["right_stick"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_LB, uint8_t(m_pins["LB"].toUInt())));
 
-//    m_config.keys.RB = uint8_t(m_pins["RB"].toUInt());
-//    m_config.keys.home = uint8_t(m_pins["home"].toUInt());
-//    m_config.keys.capture = uint8_t(m_pins["capture"].toUInt());
-//    m_config.keys.a = uint8_t(m_pins["a"].toUInt());
-//    m_config.keys.b = uint8_t(m_pins["b"].toUInt());
-//    m_config.keys.x = uint8_t(m_pins["x"].toUInt());
-//    m_config.keys.y = uint8_t(m_pins["y"].toUInt());
-//    m_config.keys.lt = uint8_t(m_pins["lt"].toUInt());
-//    m_config.keys.rt = uint8_t(m_pins["rt"].toUInt());
-//    m_config.keys.l_x.neg = uint8_t(m_pins["l_x_lt"].toUInt());
-//    m_config.keys.l_x.pos = uint8_t(m_pins["l_x_gt"].toUInt());
-//    m_config.keys.l_y.neg = uint8_t(m_pins["l_y_lt"].toUInt());
-//    m_config.keys.l_y.pos = uint8_t(m_pins["l_y_gt"].toUInt());
-//    m_config.keys.r_x.neg = uint8_t(m_pins["r_x_lt"].toUInt());
-//    m_config.keys.r_x.pos = uint8_t(m_pins["r_x_gt"].toUInt());
-//    m_config.keys.r_y.neg = uint8_t(m_pins["r_y_lt"].toUInt());
-//    m_config.keys.r_y.pos = uint8_t(m_pins["r_y_gt"].toUInt());
+    write(WRITE_CONFIG(CONFIG_KEY_RB, uint8_t(m_pins["RB"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_HOME, uint8_t(m_pins["home"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_CAPTURE, uint8_t(m_pins["capture"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_A, uint8_t(m_pins["a"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_B, uint8_t(m_pins["b"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_X, uint8_t(m_pins["x"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_Y, uint8_t(m_pins["y"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_LT, uint8_t(m_pins["lt"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_KEY_RT, uint8_t(m_pins["rt"].toUInt())));
+    write(WRITE_CONFIG_PINS(CONFIG_KEY_L_X, uint8_t(m_pins["l_x_lt"].toUInt()),uint8_t(m_pins["l_x_gt"].toUInt())));
+    write(WRITE_CONFIG_PINS(CONFIG_KEY_L_Y, uint8_t(m_pins["l_y_lt"].toUInt()),uint8_t(m_pins["l_y_gt"].toUInt())));
+    write(WRITE_CONFIG_PINS(CONFIG_KEY_R_X, uint8_t(m_pins["r_x_lt"].toUInt()),uint8_t(m_pins["r_x_gt"].toUInt())));
+    write(WRITE_CONFIG_PINS(CONFIG_KEY_R_Y, uint8_t(m_pins["r_y_lt"].toUInt()),uint8_t(m_pins["r_y_gt"].toUInt())));
 }
 
 void Port::loadPins() {
-//    m_pins.clear();
-//    m_pins["up"] = m_config.pins.up;
-//    m_pins["down"] = m_config.pins.down;
-//    m_pins["left"] = m_config.pins.left;
-//    m_pins["right"] = m_config.pins.right;
-//    m_pins["start"] = m_config.pins.start;
-//    m_pins["back"] = m_config.pins.back;
-//    m_pins["left_stick"] = m_config.pins.left_stick;
-//    m_pins["right_stick"] = m_config.pins.right_stick;
-//    m_pins["LB"] = m_config.pins.LB;
-//    m_pins["RB"] = m_config.pins.RB;
-//    m_pins["home"] = m_config.pins.home;
-//    m_pins["unused"] = m_config.pins.unused;
-//    m_pins["a"] = m_config.pins.a;
-//    m_pins["b"] = m_config.pins.b;
-//    m_pins["x"] = m_config.pins.x;
-//    m_pins["y"] = m_config.pins.y;
-//    m_pins["lt"] = m_config.pins.lt;
-//    m_pins["rt"] = m_config.pins.rt;
-//    m_pins["l_x"] = m_config.pins.l_x;
-//    m_pins["l_y"] = m_config.pins.l_y;
-//    m_pins["r_x"] = m_config.pins.r_x;
-//    m_pins["r_y"] = m_config.pins.r_y;
-//    m_pin_inverts["lt"] = m_config.axis.inversions.lt;
-//    m_pin_inverts["rt"] = m_config.axis.inversions.rt;
-//    m_pin_inverts["l_x"] = m_config.axis.inversions.l_x;
-//    m_pin_inverts["l_y"] = m_config.axis.inversions.l_y;
-//    m_pin_inverts["r_x"] = m_config.axis.inversions.r_x;
-//    m_pin_inverts["r_y"] = m_config.axis.inversions.r_y;
+    m_pins.clear();
+    m_pins["up"] = read_single(READ_CONFIG(CONFIG_PIN_UP));
+    m_pins["down"] = read_single(READ_CONFIG(CONFIG_PIN_DOWN));
+    m_pins["left"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT));
+    m_pins["right"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT));
+    m_pins["start"] = read_single(READ_CONFIG(CONFIG_PIN_START));
+    m_pins["back"] = read_single(READ_CONFIG(CONFIG_PIN_SELECT));
+    m_pins["left_stick"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT_STICK));
+    m_pins["right_stick"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT_STICK));
+    m_pins["LB"] = read_single(READ_CONFIG(CONFIG_PIN_LB));
+    m_pins["RB"] = read_single(READ_CONFIG(CONFIG_PIN_RB));
+    m_pins["home"] = read_single(READ_CONFIG(CONFIG_PIN_HOME));
+    m_pins["capture"] = read_single(READ_CONFIG(CONFIG_PIN_CAPTURE));
+    m_pins["a"] = read_single(READ_CONFIG(CONFIG_PIN_A));
+    m_pins["b"] = read_single(READ_CONFIG(CONFIG_PIN_B));
+    m_pins["x"] = read_single(READ_CONFIG(CONFIG_PIN_X));
+    m_pins["y"] = read_single(READ_CONFIG(CONFIG_PIN_Y));
+    m_pins["lt"] = read_single(READ_CONFIG(CONFIG_PIN_LT));
+    m_pins["rt"] = read_single(READ_CONFIG(CONFIG_PIN_RT));
+    m_pins["l_x"] = read_single(READ_CONFIG(CONFIG_PIN_L_X));
+    m_pins["l_y"] = read_single(READ_CONFIG(CONFIG_PIN_L_Y));
+    m_pins["r_x"] = read_single(READ_CONFIG(CONFIG_PIN_R_X));
+    m_pins["r_y"] = read_single(READ_CONFIG(CONFIG_PIN_R_Y));
+    m_pin_inverts["lt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_LT));
+    m_pin_inverts["rt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_RT));
+    m_pin_inverts["l_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_X));
+    m_pin_inverts["l_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_Y));
+    m_pin_inverts["r_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_X));
+    m_pin_inverts["r_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_Y));
 }
 
 void Port::savePins() {
-//    qDebug() << m_pins;
-//    m_config.pins.up = uint8_t(m_pins["up"].toUInt());
-//    m_config.pins.down = uint8_t(m_pins["down"].toUInt());
-//    m_config.pins.left = uint8_t(m_pins["left"].toUInt());
-//    m_config.pins.right = uint8_t(m_pins["right"].toUInt());
-//    m_config.pins.start = uint8_t(m_pins["start"].toUInt());
-//    m_config.pins.back = uint8_t(m_pins["back"].toUInt());
-//    m_config.pins.left_stick = uint8_t(m_pins["left_stick"].toUInt());
-//    m_config.pins.right_stick = uint8_t(m_pins["right_stick"].toUInt());
-//    m_config.pins.LB = uint8_t(m_pins["LB"].toUInt());
-//    m_config.pins.RB = uint8_t(m_pins["RB"].toUInt());
-//    m_config.pins.home = uint8_t(m_pins["home"].toUInt());
-//    m_config.pins.unused = uint8_t(m_pins["unused"].toUInt());
-//    m_config.pins.a = uint8_t(m_pins["a"].toUInt());
-//    m_config.pins.b = uint8_t(m_pins["b"].toUInt());
-//    m_config.pins.x = uint8_t(m_pins["x"].toUInt());
-//    m_config.pins.y = uint8_t(m_pins["y"].toUInt());
-//    m_config.pins.lt = uint8_t(m_pins["lt"].toUInt());
-//    m_config.pins.rt = uint8_t(m_pins["rt"].toUInt());
-//    m_config.pins.l_x = uint8_t(m_pins["l_x"].toUInt());
-//    m_config.pins.l_y = uint8_t(m_pins["l_y"].toUInt());
-//    m_config.pins.r_x = uint8_t(m_pins["r_x"].toUInt());
-//    m_config.pins.r_y = uint8_t(m_pins["r_y"].toUInt());
-//    m_config.axis.inversions.lt = m_pin_inverts["lt"].toBool();
-//    m_config.axis.inversions.rt = m_pin_inverts["rt"].toBool();
-//    m_config.axis.inversions.l_x = m_pin_inverts["l_x"].toBool();
-//    m_config.axis.inversions.l_y = m_pin_inverts["l_y"].toBool();
-//    m_config.axis.inversions.r_x = m_pin_inverts["r_x"].toBool();
-//    m_config.axis.inversions.r_y = m_pin_inverts["r_y"].toBool();
+    write(WRITE_CONFIG(CONFIG_PIN_UP, uint8_t(m_pins["up"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_DOWN, uint8_t(m_pins["down"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_LEFT, uint8_t(m_pins["left"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_RIGHT, uint8_t(m_pins["right"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_START, uint8_t(m_pins["start"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_SELECT, uint8_t(m_pins["back"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_LEFT_STICK, uint8_t(m_pins["left_stick"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_RIGHT_STICK, uint8_t(m_pins["right_stick"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_LB, uint8_t(m_pins["LB"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_RB, uint8_t(m_pins["RB"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_HOME, uint8_t(m_pins["home"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_A, uint8_t(m_pins["a"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_B, uint8_t(m_pins["b"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_X, uint8_t(m_pins["x"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_Y, uint8_t(m_pins["y"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_LT, uint8_t(m_pins["lt"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_RT, uint8_t(m_pins["rt"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_L_X, uint8_t(m_pins["l_x"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_L_Y, uint8_t(m_pins["l_y"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_R_X, uint8_t(m_pins["r_x"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_PIN_R_Y, uint8_t(m_pins["r_y"].toUInt())));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_LT, m_pin_inverts["lt"].toBool()));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_RT, m_pin_inverts["rt"].toBool()));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_X, m_pin_inverts["l_x"].toBool()));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_Y, m_pin_inverts["l_y"].toBool()));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_X, m_pin_inverts["r_x"].toBool()));
+    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_Y, m_pin_inverts["r_y"].toBool()));
 }
 
 
