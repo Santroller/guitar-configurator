@@ -67,7 +67,8 @@ public slots:
     QString boardName() const {
         return m_board.name;
     }
-    void setBoardFreq(uint freq) {
+    void setBoard(QString boardName, uint freq) {
+        m_board = ArdwiinoLookup::getInstance()->findByBoard(boardName);
         m_board.cpuFrequency = freq;
     }
     bool isArdwiino() const {

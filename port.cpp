@@ -57,14 +57,12 @@ QByteArray Port::read(QByteArray id) {
     return m_serialPort->readLine();
 }
 void Port::readData() {
-    qDebug() << read(READ_INFO(INFO_BOARD));
     m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
     m_hasDFU = m_board.hasDFU;
     boardImageChanged(getBoardImage());
     readDescription();
 }
 void Port::write(QByteArray id) {
-    qDebug() << id;
     m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();

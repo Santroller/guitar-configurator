@@ -38,20 +38,22 @@ Page {
             id: column1
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
+            Layout.fillWidth: true
             ColumnLayout {
-                visible: scanner.selected.boardName() === "Arduino Pro Micro" && programmer.status === Status.WAIT
+                visible: (scanner.selected.boardName() === "Arduino Pro Micro" || scanner.selected.boardName() === "Arduino Leonardo") && programmer.status === Status.NOT_PROGRAMMING
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 Label {
                     id: label
-                    text: qsTr("An Arduino Pro Micro was detected.")
+                    text: qsTr("An Arduino Pro Micro or Leonardo was detected.")
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 }
 
                 Label {
                     id: label1
-                    text: qsTr("Please select the voltage your Pro Micro is running at")
+                    text: qsTr("Please select the board that you are using")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 }
 
                 Rectangle {
@@ -61,16 +63,19 @@ Page {
                 }
 
                 ComboBox {
+                    Layout.fillWidth: true
                     textRole: "key"
                     id: comboBox
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     model: ListModel {
                         id: model
-                        ListElement { key: "3.3V"; freq: "8000000" }
-                        ListElement { key: "5V"; freq: "16000000" }
+                        ListElement { key: "Arduino Pro Micro 3.3V"; board: "micro"; freq: "8000000" }
+                        ListElement { key: "Arduino Pro Micro 5V"; board: "micro"; freq: "16000000" }
+                        ListElement { key: "Arduino Leonardo 3.3V"; board: "leonardo"; freq: "8000000" }
+                        ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: "16000000" }
                     }
                     onActivated: {
-                        scanner.selected.setBoardFreq(model.get(currentIndex).freq)
+                        scanner.selected.setBoard(model.get(currentIndex).board, model.get(currentIndex).freq);
                     }
                 }
 
