@@ -2,6 +2,8 @@
 cd submodules/Ardwiino
 git fetch
 git reset --hard origin/master
+git submodule init
+git submodule pull --remote
 make build-all
 cp -rf output/* ../../firmware/
 cd ../../
