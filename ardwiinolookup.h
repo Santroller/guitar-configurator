@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QSerialPortInfo>
+#include <QKeySequence>
 #include <QList>
 #include "submodules/Ardwiino/src/shared/input/input_wii_ext.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
@@ -27,6 +28,7 @@ typedef struct {
     uint cpuFrequency;
     QString originalFirmware;
     QString image;
+    bool hasDFU;
 } board_t;
 
 class ArdwiinoLookup: public QObject
@@ -35,16 +37,15 @@ class ArdwiinoLookup: public QObject
 public:
     static ArdwiinoLookup* getInstance();
     static const board_t boards[4];
-    static const board_t* detectBoard(const QSerialPortInfo &serialPortInfo);
-    static const board_t retriveDFUVariant(const board_t board);
+    static const board_t detectBoard(const QSerialPortInfo &serialPortInfo);
+    static const board_t retriveDFUVariant(const board_t& board);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject *parent = nullptr);
-    static const board_t findByBoard(QString board);
+    static const board_t findByBoard(const QString& board);
 public slots:
-    QString lookupExtension(uint8_t type, uint16_t device);
-    QString lookupType(uint8_t type);
-    bool isArdwiino(const QSerialPortInfo &info);
-    bool hasDFUVariant(const board_t board);
+    static QString lookupExtension(uint8_t type, uint16_t device);
+    static QString lookupType(uint8_t type);
+    static bool isArdwiino(const QSerialPortInfo &info);
     inline QString getControllerTypeName(Controllers::Value value) {
         return Controllers::toString(value);
     }

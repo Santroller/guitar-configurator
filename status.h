@@ -11,7 +11,6 @@ public:
         AVRDUDE,
         DFU_CONNECT,
         DFU_ERASE,
-        DFU_EEPROM,
         DFU_FLASH,
         DFU_DISCONNECT,
         COMPLETE

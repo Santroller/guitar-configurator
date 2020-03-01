@@ -18,8 +18,8 @@ signals:
     void modelChanged(QList<QObject*> newValue);
     void selectedChanged(Port* newValue);
 public slots:
-    void addPort(QSerialPortInfo port);
-    void removePort(QSerialPortInfo port);
+    void addPort(const QSerialPortInfo& port);
+    void removePort(const QSerialPortInfo& port);
     QList<QObject*> model() const {
         return m_model;
     }

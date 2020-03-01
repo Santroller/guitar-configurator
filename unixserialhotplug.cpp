@@ -10,13 +10,13 @@ UnixSerialHotplug::UnixSerialHotplug(PortScanner* scanner, QObject *parent) : QO
 
     // msec
     timer->start(10);
-    for (auto a:QSerialPortInfo::availablePorts()) {
+    for (const auto& a:QSerialPortInfo::availablePorts()) {
         m_port_list.push_back(a);
         scanner->addPort(a);
     }
 }
 
-bool comp(const QSerialPortInfo a, const QSerialPortInfo b)
+auto comp(const QSerialPortInfo& a, const QSerialPortInfo& b) -> bool
 {
     return a.portName() < b.portName();
 }
@@ -27,10 +27,10 @@ void UnixSerialHotplug::tick() {
     std::sort(newSp.begin(), newSp.end(), comp);
     //Ports in new list that aren't in old (connected ports)
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
-    for (auto p: diff) {
+    for (const auto& p: diff) {
         if (p.vendorIdentifier() == 0) {
             //Skip ports that have not fully loaded yet.
-            newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](QSerialPortInfo object){return object.systemLocation() == p.systemLocation();}), newSp.end());
+            newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](const QSerialPortInfo& object){return object.systemLocation() == p.systemLocation();}), newSp.end());
         } else {
             scanner->addPort(p);
         }
@@ -38,7 +38,7 @@ void UnixSerialHotplug::tick() {
     diff.clear();
     //Ports in old list that aren't in new (disconnected ports)
     std::set_difference(m_port_list.begin(), m_port_list.end(), newSp.begin(), newSp.end(), std::inserter(diff, diff.begin()), comp);
-    for (auto p: diff) {
+    for (const auto& p: diff) {
         scanner->removePort(p);
     }
     m_port_list = newSp;

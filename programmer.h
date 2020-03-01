@@ -28,7 +28,7 @@ public slots:
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
-        return QString("Programming Status: %1 (%2%)").arg(Status::toString(m_status)).arg(QString().sprintf("%.2f",m_process_percent*100));
+        return QString("Programming Status: %1 (%2%)").arg(Status::toString(m_status)).arg(QString::number(m_process_percent*100,'f',2));
     }
     bool getRestore() {
         return m_restore;
@@ -51,9 +51,9 @@ public slots:
 private:
     void programDFU();
     void programAvrDude();
-    QProcess* m_process;
+    QProcess* m_process{};
     QString m_process_out;
-    double m_process_percent;
+    double m_process_percent{};
     Status::Value m_status;
     Port* m_port;
     bool m_restore;

@@ -21,9 +21,9 @@ var pinLocations = {
     "images/leonardo.png": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 14)], r:25},
 }
 var bindings = {
-    "images/uno.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
-    "images/micro.png": {0:"RX0", 1:"RX1", 18: "A0", 19: "A1", 20:"A2", 21: "A3", 255: "Disabled"},
-    "images/leonardo.png": {14: "A0", 15: "A1", 16: "A2", 17: "A3", 255: "Disabled"},
+    "images/uno.png": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
+    "images/micro.png": { 0: "RX0", 1: "RX1", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
+    "images/leonardo.png": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
 }
 var guitarLabels = {
     "up": "Strum Up",

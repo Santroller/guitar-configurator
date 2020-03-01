@@ -49,6 +49,7 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/defaults.h \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h \
+    submodules/Ardwiino/src/shared/output/usb/API.h \
     tilt_types.h \
     unixserialhotplug.h \
     wii_extensions.h \

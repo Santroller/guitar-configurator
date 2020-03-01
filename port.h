@@ -6,9 +6,10 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include "ardwiinolookup.h"
-#include "submodules/Ardwiino/src/shared/config/config.h"
-#include "submodules/Ardwiino/src/shared/controller/controller.h"
+#include "submodules/Ardwiino/src/shared/output/usb/API.h"
 #include <math.h>
+#define READ_INFO(slot) QByteArray(1, COMMAND_READ_INFO) + QByteArray(1,slot)
+#define READ_CONFIG(slot) QByteArray(1, COMMAND_READ_CONFIG_VALUE) + QByteArray(1,slot)
 class Port : public QObject
 {
     Q_OBJECT
@@ -35,7 +36,7 @@ public:
     void prepareUpload();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
-    void handleConnection(QSerialPortInfo info);
+    void handleConnection(const QSerialPortInfo& info);
 signals:
     void descriptionChanged(QString newValue);
     void imageChanged(QString newValue);
@@ -77,39 +78,45 @@ public slots:
         return m_port;
     }
     QString getImage() const {
-        return Controllers::getImage(Controllers::Value(m_config.main.sub_type));
+        return Controllers::getImage(Controllers::XINPUT_GUITAR);
+//        return Controllers::getImage(Controllers::Value(m_config.main.sub_type));
     }
     QString getBoardImage() const {
-        return m_board.image;
+//        return m_board.image;
+        return "images/uno.png";
     }
     Controllers::Value getType() const {
-        return Controllers::Value(m_config.main.sub_type);
+        return Controllers::KEYBOARD;
+//        return Controllers::Value(m_config.main.sub_type);
     }
     MPU6050Orientations::Value getOrientation() const {
-        return MPU6050Orientations::Value(m_config.axis.mpu_6050_orientation);
+        return MPU6050Orientations::NEGATIVE_X_TYPE;
+//        return MPU6050Orientations::Value(m_config.axis.mpu_6050_orientation);
     }
     InputTypes::Value getInputType() const {
-        return InputTypes::Value(m_config.main.input_type);
+        return InputTypes::WII_TYPE;
+//        return InputTypes::Value(m_config.main.input_type);
     }
     TiltTypes::Value getTiltType() const {
-        return TiltTypes::Value(m_config.main.tilt_type);
+        return TiltTypes::NONE_SENSOR;
+//        return TiltTypes::Value(m_config.main.tilt_type);
     }
     void setType(Controllers::Value value) {
-        m_config.main.sub_type = value;
+//        m_config.main.sub_type = value;
         imageChanged(getImage());
         typeChanged(value);
     }
     void setInputType(InputTypes::Value value) {
-        m_config.main.input_type = value;
+//        m_config.main.input_type = value;
         inputTypeChanged(value);
 
     }
     void setTiltType(TiltTypes::Value value) {
-        m_config.main.tilt_type = value;
+//        m_config.main.tilt_type = value;
         tiltTypeChanged(value);
     }
     void setOrientation(MPU6050Orientations::Value value) {
-        m_config.axis.mpu_6050_orientation = value;
+//        m_config.axis.mpu_6050_orientation = value;
         orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
@@ -119,34 +126,36 @@ public slots:
     void loadKeys();
     void saveKeys();
     int getTilt() {
-        QByteArray a;
-        read(CONTROLLER_CMD_R, a, &m_controller, sizeof(controller_t));
-        return (int((m_controller.r_y * 360.0) / 65535.0) % 360)/2;
+//        QByteArray a;
+//        read(, a, &m_controller, sizeof(controller_t));
+//        READ_CONFIG(CONFIG)
+//        return (int((m_controller.r_y * 360.0) / 65535.0) % 360)/2;
+        return 0;
     }
     int getSensitivity() const {
-        return m_config.axis.tilt_sensitivity;
+        return 0;
+//        return m_config.axis.tilt_sensitivity;
     }
     void setSensitivity(int s) {
-        m_config.axis.tilt_sensitivity = int16_t(s);
+//        m_config.axis.tilt_sensitivity = int16_t(s);
         tiltSensitivityChanged(s);
     }
 private:
     void readData();
     void updateControllerName();
-    void read(char id, QByteArray& location, void* dest, unsigned long size);
+    char read_single(QByteArray id);
+    QByteArray read(QByteArray);
     void write(char id, void* dest, unsigned long size);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
     QString m_port;
-    QSerialPort* m_serialPort;
+    QSerialPort* m_serialPort{};
     board_t m_board;
-    bool m_isArdwiino;
-    bool m_hasDFU;
-    config_t m_config_device;
-    config_t m_config;
+    bool m_isArdwiino{};
+    bool m_hasDFU{};
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
-    controller_t m_controller;
+    controller_t m_controller{};
 };
 
 #endif // PORT_H

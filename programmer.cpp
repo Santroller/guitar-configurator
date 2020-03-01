@@ -12,7 +12,7 @@ Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::NOT_
 
 }
 
-board_t Programmer::detectBoard() {
+auto Programmer::detectBoard() -> board_t {
     board_t board = ArdwiinoLookup::retriveDFUVariant(m_port->getBoard());
     if (!m_restore) {
         return board;
@@ -35,7 +35,7 @@ board_t Programmer::detectBoard() {
 }
 void Programmer::programDFU() {
     board_t board = detectBoard();
-    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency);
+    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency)+".hex";
     if (m_restore) {
         board = ArdwiinoLookup::boards[0];
         hexFile = board.originalFirmware;
@@ -58,15 +58,10 @@ void Programmer::programDFU() {
     case Status::DFU_ERASE:
         l.push_back("erase");
         break;
-    case Status::DFU_EEPROM:
-        l.push_back("flash");
-        l.push_back("--eeprom");
-        l.push_back(file+".eep");
-        break;
     case Status::DFU_FLASH:
         l.push_back("flash");
         l.push_back("--suppress-bootloader-mem");
-        l.push_back(file+".hex");
+        l.push_back(file);
         break;
     default:
         break;
@@ -110,7 +105,7 @@ void Programmer::programAvrDude() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("avrdude"), l);
 }
-bool Programmer::program(Port* port) {
+auto Programmer::program(Port* port) -> bool {
     if (m_status == Status::NOT_PROGRAMMING) return false;
     bool ret = false;
     m_port = port;
@@ -120,7 +115,7 @@ bool Programmer::program(Port* port) {
             m_port->close();
             programDFU();
         } else {
-            if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+            if (m_port->getBoard().hasDFU) {
                 programAvrDude();
             } else {
                 m_port->close();
@@ -130,7 +125,7 @@ bool Programmer::program(Port* port) {
             }
         }
     } else if (m_status == Status::DFU_CONNECT) {
-        if (!ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+        if (!m_port->getBoard().hasDFU) {
             programAvrDude();
         }
     } else if (m_status == Status::DFU_DISCONNECT) {
@@ -152,7 +147,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     switch (m_status) {
     case Status::AVRDUDE:
         if (exitCode == 0) {
-            if (ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard())) {
+            if (m_port->getBoard().hasDFU) {
                 m_status = Status::DFU_CONNECT;
                 programDFU();
             } else {
@@ -167,14 +162,6 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         programDFU();
         break;
     case Status::DFU_ERASE:
-        if (m_restore) {
-            m_status = Status::DFU_FLASH;
-        } else {
-            m_status = Status::DFU_EEPROM;
-        }
-        programDFU();
-        break;
-    case Status::DFU_EEPROM:
         m_status = Status::DFU_FLASH;
         programDFU();
         break;
@@ -198,7 +185,7 @@ void Programmer::onReady() {
     if (m_restore) {
         m_process_percent += out2.count('>')*((100.0/32.0)/200.0);
     } else {
-        bool hasDfu = ArdwiinoLookup::getInstance()->hasDFUVariant(m_port->getBoard());
+        bool hasDfu = m_port->getBoard().hasDFU;
         //Each # counts for 2%, and there are 5 steps, so 500% total. 2/500 rescales that back to 100%.
         m_process_percent += out2.count('#')*((100.0/50.0)/500.0) * (hasDfu?0.5:1);
         m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;

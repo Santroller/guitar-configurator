@@ -16,7 +16,7 @@
 #include "unixserialhotplug.h"
 #endif
 
-int main(int argc, char *argv[])
+auto main(int argc, char *argv[]) -> int
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
