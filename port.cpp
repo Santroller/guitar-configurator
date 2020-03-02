@@ -59,11 +59,10 @@ QByteArray Port::read(QByteArray id) {
 }
 void Port::readData() {
     do {
-    m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
+        //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
+        m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
     } while (m_board.name.isEmpty());
     readyForRead = true;
-    qDebug() << m_board.name;
-    qDebug() << m_board.hasDFU;
     m_hasDFU = m_board.hasDFU;
     dfuFound(m_hasDFU);
     boardImageChanged(getBoardImage());
