@@ -20,6 +20,7 @@
 #define SWITCH_VID 0x0f0d
 
 typedef struct {
+    QString shortName;
     QString hexFile;
     QString name;
     uint baudRate;
@@ -37,7 +38,7 @@ class ArdwiinoLookup: public QObject
     Q_OBJECT
 public:
     static ArdwiinoLookup* getInstance();
-    static const board_t boards[4];
+    static const board_t boards[5];
     static const board_t detectBoard(const QSerialPortInfo &serialPortInfo);
     static const board_t retriveDFUVariant(const board_t& board);
     static const board_t empty;

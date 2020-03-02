@@ -40,7 +40,7 @@ Page {
 
             Layout.fillWidth: true
             ColumnLayout {
-                visible: (scanner.selected.boardName() === "Arduino Pro Micro" || scanner.selected.boardName() === "Arduino Leonardo") && programmer.status === Status.NOT_PROGRAMMING
+                visible: (scanner.selected.boardShortName() === "micro" || scanner.selected.boardShortName() === "leonardo") && programmer.status === Status.NOT_PROGRAMMING
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -85,7 +85,7 @@ Page {
 
             }
             ColumnLayout {
-                visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardName() === "Arduino Uno"
+                visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardShortName() === "uno"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 id: dfu
                 Label {
@@ -103,7 +103,7 @@ Page {
                 }
             }
             Label {
-                visible: programmer.status === Status.DFU_DISCONNECT && scanner.selected.boardName() === "Arduino Uno"
+                visible: programmer.status === Status.DFU_DISCONNECT && scanner.selected.boardShortName() === "uno"
                 id: label7
                 text: qsTr("Please disconnect and reconnect your device.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

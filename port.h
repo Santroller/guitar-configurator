@@ -38,6 +38,7 @@ public:
     void prepareUpload();
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
+    void jumpUNO();
     void handleConnection(const QSerialPortInfo& info);
 signals:
     void descriptionChanged(QString newValue);
@@ -63,6 +64,9 @@ public slots:
     }
     board_t board() const {
         return m_board;
+    }
+    QString boardShortName() const {
+        return m_board.shortName;
     }
     QString boardName() const {
         return m_board.name;

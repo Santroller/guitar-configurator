@@ -63,6 +63,9 @@ void Programmer::programDFU() {
         l.push_back("--suppress-bootloader-mem");
         l.push_back(file);
         break;
+    case Status::DFU_DISCONNECT:
+        l.push_back("launch");
+        break;
     default:
         break;
     }
@@ -112,7 +115,7 @@ auto Programmer::program(Port* port) -> bool {
     if (m_status == Status::WAIT) {
         if (m_restore) {
             m_status = Status::DFU_CONNECT;
-            m_port->close();
+            m_port->jumpUNO();
             programDFU();
         } else {
             if (m_port->getBoard().hasDFU) {

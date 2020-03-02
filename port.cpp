@@ -75,7 +75,13 @@ void Port::writeConfig() {
     m_serialPort->close();
     portStateChanged(getOpen());
 }
-
+void Port::jumpUNO() {
+    m_serialPort->flush();
+    m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER_UNO));
+    m_serialPort->waitForBytesWritten();
+    m_serialPort->close();
+    portStateChanged(getOpen());
+}
 void Port::readDescription() {
     QByteArray readData;
     auto vtype = InputTypes::Value(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
