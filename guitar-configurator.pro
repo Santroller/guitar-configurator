@@ -79,3 +79,6 @@ unix {
     first.depends = $(first) copyfirmware copybinaries
     QMAKE_EXTRA_TARGETS += first copyfirmware copybinaries
 }
+
+DISTFILES += \
+    firmware/ardwiino-uno-usb-at90usb82-16000000.hex
