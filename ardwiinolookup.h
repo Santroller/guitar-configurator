@@ -40,7 +40,6 @@ public:
     static ArdwiinoLookup* getInstance();
     static const board_t boards[5];
     static const board_t detectBoard(const QSerialPortInfo &serialPortInfo);
-    static const board_t retriveDFUVariant(const board_t& board);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject *parent = nullptr);
     static const board_t findByBoard(const QString& board);

@@ -154,7 +154,7 @@ Page {
             visible: scanner.selected.hasDFU
             onClicked: {
                 programmer.setRestoring(true);
-                mainStack.push("Programmer.qml");
+                mainStack.replace("Programmer.qml");
             }
         }
         Button {

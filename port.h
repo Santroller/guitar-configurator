@@ -39,6 +39,7 @@ public:
     void open(const QSerialPortInfo &serialPortInfo);
     void close();
     void jumpUNO();
+    void jump();
     void handleConnection(const QSerialPortInfo& info);
 signals:
     void descriptionChanged(QString newValue);
@@ -151,10 +152,10 @@ private:
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
     QString m_port;
-    QSerialPort* m_serialPort{};
+    QSerialPort* m_serialPort;
     board_t m_board;
-    bool m_isArdwiino{};
-    bool m_hasDFU{};
+    bool m_isArdwiino;
+    bool m_hasDFU;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
     controller_t m_controller{};

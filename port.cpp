@@ -10,13 +10,14 @@ Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(par
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), readyForRead(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
 }
 
 void Port::close() {
+    readyForRead = false;
     if (m_serialPort != nullptr) {
         m_serialPort->close();
         portStateChanged(getOpen());
@@ -57,8 +58,14 @@ QByteArray Port::read(QByteArray id) {
     return m_serialPort->readLine();
 }
 void Port::readData() {
+    do {
     m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
+    } while (m_board.name.isEmpty());
+    readyForRead = true;
+    qDebug() << m_board.name;
+    qDebug() << m_board.hasDFU;
     m_hasDFU = m_board.hasDFU;
+    dfuFound(m_hasDFU);
     boardImageChanged(getBoardImage());
     readDescription();
 }
@@ -72,14 +79,21 @@ void Port::writeConfig() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_APPLY_CONFIG));
     m_serialPort->waitForBytesWritten();
-    m_serialPort->close();
+    close();
+    portStateChanged(getOpen());
+}
+void Port::jump() {
+    m_serialPort->flush();
+    m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER));
+    m_serialPort->waitForBytesWritten();
+    close();
     portStateChanged(getOpen());
 }
 void Port::jumpUNO() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER_UNO));
     m_serialPort->waitForBytesWritten();
-    m_serialPort->close();
+    close();
     portStateChanged(getOpen());
 }
 void Port::readDescription() {
@@ -108,7 +122,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
             QThread *thread = QThread::create([this]{
                 //We need a delay on linux for unos, as the 328p gets rebooted when we open.
                 QThread::msleep(2000);
-                QMetaObject::invokeMethod(this, [this] { readData(); readyForRead = true;});
+                QMetaObject::invokeMethod(this, [this] { readData(); });
             });
             thread->start();
         }
@@ -121,14 +135,14 @@ void Port::handleError(QSerialPort::SerialPortError serialPortError)
     if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
         m_description = "Ardwiino - Error Communicating";
         if (m_serialPort->isOpen()) {
-            m_serialPort->close();
+            close();
             portStateChanged(getOpen());
         }
     }
 }
 void Port::prepareUpload() {
     if (m_board.protocol == "avr109") {
-        m_serialPort->close();
+        close();
         m_serialPort->setBaudRate(QSerialPort::Baud1200);
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
@@ -141,21 +155,21 @@ void Port::prepareUpload() {
         if (m_serialPort->open(QIODevice::WriteOnly)) {
             m_serialPort->setDataTerminalReady(false);
         }
-        m_serialPort->close();
+        close();
     } else if (m_board.protocol == "arduino") {
         if (!m_serialPort->isOpen()) {
             m_serialPort->open(QIODevice::WriteOnly);
         }
         m_serialPort->write(QByteArray(1, COMMAND_JUMP_BOOTLOADER_UNO));
         m_serialPort->waitForBytesWritten();
-        m_serialPort->close();
+        close();
     }
     portStateChanged(getOpen());
 }
 
 void Port::prepareRescan() {
     if (m_serialPort->isOpen()) {
-        m_serialPort->close();
+        close();
     }
     portStateChanged(getOpen());
 }

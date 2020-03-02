@@ -126,10 +126,9 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: {
                     if (programmer.restore) {
-                        scanner.selected = null
-                        mainStack.push("Welcome.qml")
+                        mainStack.replace("Welcome.qml")
                     } else {
-                        mainStack.push("Configure.qml")
+                        mainStack.replace("Configure.qml")
                     }
                 }
                 enabled: programmer.status === Status.COMPLETE

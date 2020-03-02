@@ -13,11 +13,10 @@ Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::NOT_
 }
 
 auto Programmer::detectBoard() -> board_t {
-    board_t board = ArdwiinoLookup::retriveDFUVariant(m_port->getBoard());
-    if (!m_restore) {
-        return board;
+    if (!m_port->board().hasDFU) {
+        return m_port->board();
     }
-    board = ArdwiinoLookup::boards[0];
+    auto board = ArdwiinoLookup::boards[0];
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("binaries");
     for (board_t board: ArdwiinoLookup::boards) {
@@ -37,7 +36,6 @@ void Programmer::programDFU() {
     board_t board = detectBoard();
     QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency)+".hex";
     if (m_restore) {
-        board = ArdwiinoLookup::boards[0];
         hexFile = board.originalFirmware;
     }
     auto dir = QDir(QCoreApplication::applicationDirPath());
@@ -77,11 +75,10 @@ void Programmer::programDFU() {
 }
 
 void Programmer::programAvrDude() {
-    m_port->close();
     m_status = Status::AVRDUDE;
     statusChanged(m_status);
     board_t board = m_port->getBoard();
-    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency);
+    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency)+".hex";
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
     m_process_out.clear();
@@ -99,8 +96,7 @@ void Programmer::programAvrDude() {
         "-c", board.protocol,
         "-p", board.processor,
         "-P", m_port->getPort(),
-        "-U", "flash:w:"+file+".hex:a",
-        "-U", "eeprom:w:"+file+".eep:a"
+        "-U", "flash:w:"+file+":a",
     };
     QObject::connect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
@@ -121,7 +117,7 @@ auto Programmer::program(Port* port) -> bool {
             if (m_port->getBoard().hasDFU) {
                 programAvrDude();
             } else {
-                m_port->close();
+                m_port->jump();
                 m_port->prepareUpload();
                 m_status = Status::DFU_CONNECT;
                 ret = true;
@@ -171,6 +167,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     case Status::DFU_FLASH:
         m_port->prepareRescan();
         m_status = Status::DFU_DISCONNECT;
+        programDFU();
         break;
     default:
         break;
@@ -189,9 +186,9 @@ void Programmer::onReady() {
         m_process_percent += out2.count('>')*((100.0/32.0)/200.0);
     } else {
         bool hasDfu = m_port->getBoard().hasDFU;
-        //Each # counts for 2%, and there are 5 steps, so 500% total. 2/500 rescales that back to 100%.
-        m_process_percent += out2.count('#')*((100.0/50.0)/500.0) * (hasDfu?0.5:1);
-        m_process_percent += out2.count('>')*((100.0/32.0)/800.0) * hasDfu;
+        //Each # counts for 2%, and there are 3 steps, so 300% total. 2/300 rescales that back to 100%.
+        m_process_percent += out2.count('#')*((100.0/50.0)/300.0) * (hasDfu?0.5:1);
+        m_process_percent += out2.count('>')*((100.0/32.0)/400.0) * hasDfu;
     }
     emit processOutChanged(m_process_out);
     emit processPercentChanged(m_process_percent);

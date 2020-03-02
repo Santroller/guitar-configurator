@@ -38,9 +38,6 @@ auto ArdwiinoLookup::findByBoard(const QString& board_name) -> const board_t {
     }
     return empty;
 }
-auto ArdwiinoLookup::retriveDFUVariant(const board_t& board) -> const board_t {
-    return !board.hasDFU ? board:findByBoard(board.hexFile.split("-")[0]+"-usb");
-}
 
 auto ArdwiinoLookup::detectBoard(const QSerialPortInfo& serialPortInfo) -> const board_t {
     for (const auto& board: boards) {

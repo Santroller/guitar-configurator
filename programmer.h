@@ -37,6 +37,7 @@ public slots:
         m_restore = restore;
         m_process_out = "";
         m_process_percent = 0;
+        m_status = Status::NOT_PROGRAMMING;
         emit restoreChanged(restore);
         emit statusChanged(m_status);
         emit statusVChanged(getStatusDescription());
