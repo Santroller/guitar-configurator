@@ -16,7 +16,7 @@ class Port : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
-    Q_PROPERTY(bool isArdwiino READ isArdwiino)
+    Q_PROPERTY(bool isArdwiino READ isArdwiino NOTIFY isArdwiinoChanged)
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
@@ -58,6 +58,7 @@ signals:
     void portStateChanged(bool open);
     void readyChanged();
     void outdatedChanged();
+    void isArdwiinoChanged();
 
 public slots:
     void writeConfig();

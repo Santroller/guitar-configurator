@@ -50,6 +50,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     }
     emit descriptionChanged(m_description);
     emit outdatedChanged();
+    emit isArdwiinoChanged();
 }
 uint8_t Port::read_single(QByteArray id) {
     return read(id).data()[0] & 0xff;
