@@ -10,7 +10,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ../Qt
-        key: QtCache
+        key: QtCache-${{ runner.os }}
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.4.0
       with: 
