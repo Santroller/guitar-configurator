@@ -5,9 +5,16 @@ jobs:
     name: Build (macOS)
     runs-on: macos-latest
     steps:
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: QtCache
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.4.0
       with: 
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
       with:
@@ -37,9 +44,16 @@ jobs:
     name: Build (Linux)
     runs-on: ubuntu-16.04
     steps:
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: QtCache
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.4.0
       with: 
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
     - name: Install libraries
       run: sudo apt-get install libxkbcommon-x11-0
@@ -69,9 +83,16 @@ jobs:
     name: Build (Windows)
     runs-on: windows-latest
     steps:
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: QtCache
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.4.0
       with: 
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
       with:
