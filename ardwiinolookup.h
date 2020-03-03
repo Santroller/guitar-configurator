@@ -47,6 +47,8 @@ public slots:
     static QString lookupExtension(uint8_t type, uint16_t device);
     static QString lookupType(uint8_t type);
     static bool isArdwiino(const QSerialPortInfo &info);
+    static bool isOldFirmwareArdwiino(const QSerialPortInfo& QSerialPort);
+    static bool isOldArdwiino(const QSerialPortInfo& QSerialPort);
     inline QString getControllerTypeName(Controllers::Value value) {
         return Controllers::toString(value);
     }
