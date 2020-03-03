@@ -5,6 +5,7 @@ git reset --hard origin/master
 git submodule init
 git submodule update
 git describe --abbrev=0 --tags > output/version
+make clean
 make build-all
 cp -rf output/* ../../firmware/
 cd ../../
