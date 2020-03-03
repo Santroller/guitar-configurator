@@ -113,7 +113,7 @@ jobs:
         xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
         mkdir artifacts
         python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32
-        powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmwares\version) | Out-File -encoding ASCII myFile.txt"
+        powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
         .\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
       shell: cmd
     - uses: actions/upload-artifact@v1
