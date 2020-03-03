@@ -81,4 +81,5 @@ unix {
 }
 
 DISTFILES += \
-    firmware/ardwiino-uno-usb-at90usb82-16000000.hex
+    firmware/ardwiino-uno-usb-at90usb82-16000000.hex \
+    firmware/version

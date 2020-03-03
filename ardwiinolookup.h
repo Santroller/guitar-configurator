@@ -72,6 +72,7 @@ public slots:
     }
 private:
     static ArdwiinoLookup* instance;
+    static float currentVersion;
 };
 
 #endif // ARDWIINOLOOKUP_H

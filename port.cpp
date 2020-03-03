@@ -5,12 +5,12 @@
 #include "input_types.h"
 #include <iostream>
 #include <QSettings>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), readyForRead(false)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), readyForRead(false)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), readyForRead(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), readyForRead(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -33,6 +33,8 @@ void Port::handleConnection(const QSerialPortInfo& info) {
 
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
+    m_isOldArdwiino = ArdwiinoLookup::getInstance()->isOldFirmwareArdwiino(serialPortInfo);
+    m_isOutdated = ArdwiinoLookup::getInstance()->isOldArdwiino(serialPortInfo);
     if (m_isArdwiino) {
         m_description = "Ardwiino - Reading Controller Information";
         m_port = serialPortInfo.systemLocation();
@@ -43,9 +45,11 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
             m_port = serialPortInfo.systemLocation();
             m_description = m_board.name + " - "+m_port;
             boardImageChanged(getBoardImage());
+            m_isReady = true;
         }
     }
     emit descriptionChanged(m_description);
+    emit outdatedChanged();
 }
 uint8_t Port::read_single(QByteArray id) {
     return read(id).data()[0] & 0xff;
@@ -58,15 +62,28 @@ QByteArray Port::read(QByteArray id) {
     return m_serialPort->readLine();
 }
 void Port::readData() {
-    do {
-        //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
-        m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
-    } while (m_board.name.isEmpty());
-    readyForRead = true;
+    if (m_isOldArdwiino) {
+        do {
+            //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
+            m_board = ArdwiinoLookup::findByBoard(read(READ_INFO('f')).trimmed().split('-')[0]);
+        } while (m_board.name.isEmpty());
+        m_description = "Ardwiino - "+ m_board.name+" - Unsupported firmware";
+        m_isArdwiino = false;
+        m_isOldArdwiino = false;
+        emit descriptionChanged(m_description);
+    } else {
+        do {
+            //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
+            m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
+        } while (m_board.name.isEmpty());
+        readyForRead = true;
+        readDescription();
+    }
     m_hasDFU = m_board.hasDFU;
     dfuFound(m_hasDFU);
+    m_isReady = true;
     boardImageChanged(getBoardImage());
-    readDescription();
+    readyChanged();
 }
 void Port::write(QByteArray id) {
     m_serialPort->write(id);
@@ -74,6 +91,11 @@ void Port::write(QByteArray id) {
     m_serialPort->waitForReadyRead();
     m_serialPort->readLine();
 }
+
+void Port::startConfiguring() {
+    write(QByteArray(1,COMMAND_START_CONFIG));
+}
+
 void Port::writeConfig() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_APPLY_CONFIG));
@@ -99,7 +121,11 @@ void Port::readDescription() {
     QByteArray readData;
     auto vtype = InputTypes::Value(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
     auto ctype = Controllers::Value(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
-    m_description = "Ardwiino - "+ m_board.name+" - "+Controllers::toString(ctype);
+    m_description = "Ardwiino - "+ m_board.name;
+    if (m_isOutdated) {
+        m_description += " - Outdated";
+    }
+    m_description += " - "+Controllers::toString(ctype);
     m_description += " - " + InputTypes::toString(vtype);
     if (vtype == InputTypes::WII_TYPE) {
         m_description += " " + read(READ_INFO(INFO_WII_EXT)).trimmed();

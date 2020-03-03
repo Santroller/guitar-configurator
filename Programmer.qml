@@ -40,7 +40,7 @@ Page {
 
             Layout.fillWidth: true
             ColumnLayout {
-                visible: (scanner.selected.boardShortName() === "micro" || scanner.selected.boardShortName() === "leonardo") && programmer.status === Status.NOT_PROGRAMMING
+                visible: (scanner.selected.boardShortName() === "micro" || scanner.selected.boardShortName() === "leonardo") && !scanner.selected.ready && programmer.status === Status.NOT_PROGRAMMING
                 id: micro
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -128,6 +128,7 @@ Page {
                     if (programmer.restore) {
                         mainStack.replace("Welcome.qml")
                     } else {
+                        scanner.selected.startConfiguring();
                         mainStack.replace("Configure.qml")
                     }
                 }

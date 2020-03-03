@@ -149,22 +149,17 @@ Page {
             id: welcomeContinue
             text: qsTr("Continue")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            enabled: true
+            enabled: devices.model[devices.currentIndex].ready
             onClicked: {
                 scanner.selected = devices.model[devices.currentIndex];
                 programmer.setRestoring(false);
-                scanner.selected.isArdwiino? mainStack.replace("Configure.qml"):mainStack.replace("Programmer.qml")
-            }
-            states: [
-                State {
-                    name: "enabled"; when: devices.model[devices.currentIndex].getPort() !== "searching"
-                    PropertyChanges { target: welcomeContinue; enabled:true }
-                },
-                State {
-                    name: "disabled"; when: devices.model[devices.currentIndex].getPort() === "searching"
-                    PropertyChanges { target: welcomeContinue; enabled:false }
+                if (scanner.selected.isArdwiino) {
+                    scanner.selected.startConfiguring();
+                    mainStack.replace("Configure.qml");
+                } else {
+                    mainStack.replace("Programmer.qml");
                 }
-            ]
+            }
         }
 
 

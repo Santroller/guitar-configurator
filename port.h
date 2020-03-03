@@ -17,6 +17,8 @@ class Port : public QObject
     Q_OBJECT
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino)
+    Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
+    Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
@@ -54,9 +56,14 @@ signals:
     void tiltSensitivityChanged(int newValue);
     void dfuFound(bool found);
     void portStateChanged(bool open);
+    void readyChanged();
+    void outdatedChanged();
 
 public slots:
     void writeConfig();
+    bool isReady() const {
+        return m_isReady;
+    }
     QString description() const {
         return m_description;
     }
@@ -79,11 +86,17 @@ public slots:
     bool isArdwiino() const {
         return m_isArdwiino;
     }
+    bool isOutdated() const {
+        return m_isOutdated;
+    }
     bool isGuitar() {
         return ArdwiinoLookup::getInstance()->getControllerTypeName(getType()).toLower().contains("guitar");
     }
     QString getPort() const {
         return m_port;
+    }
+    bool ready() const {
+        return m_isReady;
     }
     QString getImage() {
         if (readyForRead && m_serialPort) return Controllers::getImage(Controllers::Value(read_single(READ_CONFIG(CONFIG_SUB_TYPE))));
@@ -123,6 +136,7 @@ public slots:
         orientationChanged(value);
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
+    void startConfiguring();
     void readDescription();
     void loadPins();
     void savePins();
@@ -155,7 +169,10 @@ private:
     QSerialPort* m_serialPort;
     board_t m_board;
     bool m_isArdwiino;
+    bool m_isOldArdwiino;
+    bool m_isOutdated;
     bool m_hasDFU;
+    bool m_isReady;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
     controller_t m_controller{};

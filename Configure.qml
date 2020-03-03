@@ -58,6 +58,13 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: scanner.selected.readDescription()
             }
+            Button {
+                id: updateBt
+                text: qsTr("Update")
+                visible: scanner.selected.isOutdated
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: mainStack.replace("Programmer.qml")
+            }
         }
 
         Label {

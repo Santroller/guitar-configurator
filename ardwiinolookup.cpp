@@ -2,9 +2,22 @@
 #include "QDebug"
 #include "wii_extensions.h"
 #include "input_types.h"
+#include <QRegularExpression>
+#include <QCoreApplication>
+#include <QDir>
+float ArdwiinoLookup::currentVersion = -1;
+const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
-
+    if (currentVersion == -1) {
+        QDir dir(QCoreApplication::applicationDirPath());
+        dir.cd("firmware");
+        QFile f(dir.filePath("version"));
+        f.open(QFile::ReadOnly | QFile::Text);
+        auto match2 = versionRegex.match(f.readAll());
+        currentVersion = match2.captured(1).toFloat();
+    }
 }
+
 auto ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) -> QString {
     auto vtype = InputTypes::Value(type);
     if (vtype == InputTypes::WII_TYPE) {
@@ -16,6 +29,14 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
     return Controllers::toString(Controllers::Value(type));
 }
 
+auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
+    auto match = versionRegex.match(serialPortInfo.serialNumber());
+    return isArdwiino(serialPortInfo) && match.hasMatch() && match.captured(1).toFloat() < currentVersion;
+}
+
+auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
+    return isArdwiino(serialPortInfo) && !versionRegex.match(serialPortInfo.serialNumber()).hasMatch();
+}
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
     return serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
