@@ -6,7 +6,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action
       with: 
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action
       with: 
         modules: qtserialport qtquickcontrols2 
     - name: Install libraries
@@ -70,7 +70,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action
       with: 
         modules: qtserialport qtquickcontrols2 
     - uses: actions/checkout@v1
