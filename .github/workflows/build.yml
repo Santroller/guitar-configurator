@@ -116,7 +116,8 @@ jobs:
         powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
         .\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
         mkdir www
-        .\Tools\QtInstallerFramework\3.2\bin\repogen.exe -p installer\packages www\repository
+        dir .\Tools\QtInstallerFramework\3.2\bin
+        .\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages www\repository
       shell: cmd
     - uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
