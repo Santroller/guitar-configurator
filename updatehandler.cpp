@@ -21,7 +21,7 @@ QString UpdateHandler::getUpdateInfo() {
     return ret;
 }
 void UpdateHandler::startUpdate() {
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
     auto dir = QDir(QCoreApplication::applicationDirPath());
     auto m_process = new QProcess();
     m_process->setWorkingDirectory(dir.path());
