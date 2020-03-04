@@ -90,7 +90,7 @@ jobs:
         path: ../Qt
         key: QtCacheTools-${{ runner.os }}
     - name: Install Qt
-      uses: jurplel/install-qt-action@23ec546
+      uses: jurplel/install-qt-action@71eec97
       with: 
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
