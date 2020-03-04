@@ -18,6 +18,7 @@ class Port : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino NOTIFY isArdwiinoChanged)
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
+    Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY boardImageChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)

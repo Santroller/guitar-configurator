@@ -24,7 +24,7 @@ jobs:
         mkdir build
         cd build
         qmake CONFIG+=release ../
-        make -j2
+        make -j$(sysctl -n hw.logicalcpu)
     - name: Bundle
       run: |
         cd build
@@ -115,7 +115,15 @@ jobs:
         python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32
         powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
         .\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
+        mkdir www
+        .\Tools\QtInstallerFramework\3.2\bin\repogen.exe -p installer\packages www\repository
       shell: cmd
+    - name: Deploy build to pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: www 
     - uses: actions/upload-artifact@v1
       with:
         name: windows
@@ -129,7 +137,7 @@ jobs:
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
-          name: windows 
+          name: windows
       - name: Download macOS Artifacts
         uses: actions/download-artifact@v1
         with:
