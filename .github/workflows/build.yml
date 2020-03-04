@@ -117,7 +117,9 @@ jobs:
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
           mkdir artifacts
-          powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
+          powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII installer\config\config.xml"
+          powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII installer\config\config.xml"
+          powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '2010-09-21', (Get-Date -Format "yyy-MM-dd") | Out-File -encoding ASCII installer\config\config.xml"
           ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
           mkdir www
           ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages artifacts\repository
