@@ -95,8 +95,7 @@ jobs:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
     - name: Install QtTools
-      with: 
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32 -O ../Qt
       shell: cmd
