@@ -1,6 +1,7 @@
 #include "updatehandler.h"
 #include "QCoreApplication"
 #include "QProcess"
+#include "QDir"
 
 UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-1),currentVersion(-1)
 {
@@ -25,7 +26,6 @@ void UpdateHandler::startUpdate() {
     auto dir = QDir(QCoreApplication::applicationDirPath());
     auto m_process = new QProcess();
     m_process->setWorkingDirectory(dir.path());
-    connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("maintenancetool.exe"), {"--updater"});
     m_process->waitForStarted();
     QCoreApplication::exit(-1);
