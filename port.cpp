@@ -48,7 +48,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
             m_isReady = true;
         }
     }
-    emit descriptionChanged(m_description);
+    emit descriptionChanged();
     emit outdatedChanged();
     emit isArdwiinoChanged();
 }
@@ -71,7 +71,7 @@ void Port::readData() {
         m_description = "Ardwiino - "+ m_board.name+" - Unsupported firmware";
         m_isArdwiino = false;
         m_isOldArdwiino = false;
-        emit descriptionChanged(m_description);
+        emit descriptionChanged();
     } else {
         do {
             //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
@@ -133,7 +133,8 @@ void Port::readDescription() {
     }
     m_description += " - " + m_port;
     updateControllerName();
-    emit descriptionChanged(m_description);
+    emit typeChanged(;)
+    emit descriptionChanged();
 }
 
 void Port::open(const QSerialPortInfo &serialPortInfo) {

@@ -107,6 +107,7 @@ Page {
         }
 
         ComboBox {
+            property var inited: false
             id: comboBox
             Layout.fillWidth: true
             textRole: "key"
@@ -123,7 +124,14 @@ Page {
             }
             Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.findIndex(s => s.value === scanner.selected.type) }
 
-            onCurrentIndexChanged: scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+            onCurrentIndexChanged: {
+                if (!inited) {
+                    inited = true;
+                    return;
+                }
+
+                scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+            }
         }
         Button {
             id: tilt

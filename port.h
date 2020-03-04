@@ -18,7 +18,7 @@ class Port : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(bool isArdwiino READ isArdwiino NOTIFY isArdwiinoChanged)
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
-    Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY boardImageChanged)
+    Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY typeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
@@ -45,18 +45,18 @@ public:
     void jump();
     void handleConnection(const QSerialPortInfo& info);
 signals:
-    void descriptionChanged(QString newValue);
-    void imageChanged(QString newValue);
-    void pinsChanged(QVariantMap newValue);
-    void pinInvertsChanged(QVariantMap newValue);
-    void boardImageChanged(QString newValue);
-    void inputTypeChanged(InputTypes::Value newValue);
-    void typeChanged(Controllers::Value newValue);
-    void orientationChanged(MPU6050Orientations::Value newValue);
-    void tiltTypeChanged(TiltTypes::Value newValue);
-    void tiltSensitivityChanged(int newValue);
-    void dfuFound(bool found);
-    void portStateChanged(bool open);
+    void descriptionChanged();
+    void imageChanged();
+    void pinsChanged();
+    void pinInvertsChanged();
+    void boardImageChanged();
+    void inputTypeChanged();
+    void typeChanged();
+    void orientationChanged();
+    void tiltTypeChanged();
+    void tiltSensitivityChanged();
+    void dfuFound();
+    void portStateChanged();
     void readyChanged();
     void outdatedChanged();
     void isArdwiinoChanged();
