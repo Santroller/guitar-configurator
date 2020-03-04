@@ -120,17 +120,26 @@ jobs:
         powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
         ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
         mkdir www
-        ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages www\repository
+        ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages artifacts\repository
       shell: cmd
-    - uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: www 
     - uses: actions/upload-artifact@v1
       with:
         name: windows
         path: artifacts
+  pages:
+    name: Pages
+    runs-on: ubuntu-latest
+    needs: [build-windows]
+    steps:
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: windows
+    - uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: windows 
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
