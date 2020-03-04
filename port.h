@@ -101,7 +101,7 @@ public slots:
         return m_isReady;
     }
     QString getImage() {
-        if (readyForRead && m_serialPort) return Controllers::getImage(Controllers::Value(read_single(READ_CONFIG(CONFIG_SUB_TYPE))));
+        if (readyForRead && m_serialPort) return Controllers::getImage(getType());
         return Controllers::getImage(Controllers::XINPUT_GAMEPAD);
     }
     QString getBoardImage() const {
@@ -121,21 +121,21 @@ public slots:
     }
     void setType(Controllers::Value value) {
         write(WRITE_CONFIG(CONFIG_SUB_TYPE, value));
-        imageChanged(getImage());
-        typeChanged(value);
+        imageChanged();
+        typeChanged();
     }
     void setInputType(InputTypes::Value value) {
         write(WRITE_CONFIG(CONFIG_INPUT_TYPE, value));
-        inputTypeChanged(value);
+        inputTypeChanged();
 
     }
     void setTiltType(TiltTypes::Value value) {
         write(WRITE_CONFIG(CONFIG_TILT_TYPE, value));
-        tiltTypeChanged(value);
+        tiltTypeChanged();
     }
     void setOrientation(MPU6050Orientations::Value value) {
         write(WRITE_CONFIG(CONFIG_MPU_6050_ORIENTATION, value));
-        orientationChanged(value);
+        orientationChanged();
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     void startConfiguring();
@@ -157,7 +157,7 @@ public slots:
     }
     void setSensitivity(int s) {
         write(WRITE_CONFIG(CONFIG_TILT_SENSITIVITY, s));
-        tiltSensitivityChanged(s);
+        tiltSensitivityChanged();
     }
 private:
     void readData();

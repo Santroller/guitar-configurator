@@ -20,7 +20,7 @@ void Port::close() {
     readyForRead = false;
     if (m_serialPort != nullptr) {
         m_serialPort->close();
-        portStateChanged(getOpen());
+        portStateChanged();
     }
 }
 
@@ -44,7 +44,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
             m_board = b;
             m_port = serialPortInfo.systemLocation();
             m_description = m_board.name + " - "+m_port;
-            boardImageChanged(getBoardImage());
+            boardImageChanged();
             m_isReady = true;
         }
     }
@@ -53,6 +53,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     emit isArdwiinoChanged();
 }
 uint8_t Port::read_single(QByteArray id) {
+    qDebug() << id << read(id);
     return read(id).data()[0] & 0xff;
 }
 QByteArray Port::read(QByteArray id) {
@@ -60,7 +61,7 @@ QByteArray Port::read(QByteArray id) {
     m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
-    return m_serialPort->readLine();
+    return m_serialPort->readAll();
 }
 void Port::readData() {
     if (m_isOldArdwiino) {
@@ -81,9 +82,9 @@ void Port::readData() {
         readDescription();
     }
     m_hasDFU = m_board.hasDFU;
-    dfuFound(m_hasDFU);
+    dfuFound();
     m_isReady = true;
-    boardImageChanged(getBoardImage());
+    boardImageChanged();
     readyChanged();
 }
 void Port::write(QByteArray id) {
@@ -102,21 +103,21 @@ void Port::writeConfig() {
     m_serialPort->write(QByteArray(1,COMMAND_APPLY_CONFIG));
     m_serialPort->waitForBytesWritten();
     close();
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 void Port::jump() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER));
     m_serialPort->waitForBytesWritten();
     close();
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 void Port::jumpUNO() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER_UNO));
     m_serialPort->waitForBytesWritten();
     close();
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 void Port::readDescription() {
     QByteArray readData;
@@ -133,7 +134,7 @@ void Port::readDescription() {
     }
     m_description += " - " + m_port;
     updateControllerName();
-    emit typeChanged(;)
+    emit typeChanged();
     emit descriptionChanged();
 }
 
@@ -154,7 +155,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
             thread->start();
         }
     }
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 
 void Port::handleError(QSerialPort::SerialPortError serialPortError)
@@ -163,7 +164,7 @@ void Port::handleError(QSerialPort::SerialPortError serialPortError)
         m_description = "Ardwiino - Error Communicating";
         if (m_serialPort->isOpen()) {
             close();
-            portStateChanged(getOpen());
+            portStateChanged();
         }
     }
 }
@@ -191,14 +192,14 @@ void Port::prepareUpload() {
         m_serialPort->waitForBytesWritten();
         close();
     }
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 
 void Port::prepareRescan() {
     if (m_serialPort->isOpen()) {
         close();
     }
-    portStateChanged(getOpen());
+    portStateChanged();
 }
 
 void Port::updateControllerName() {
