@@ -118,12 +118,11 @@ jobs:
         mkdir www
         .\Tools\QtInstallerFramework\3.2\bin\repogen.exe -p installer\packages www\repository
       shell: cmd
-    - name: Deploy build to pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: www 
+    - uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: www 
     - uses: actions/upload-artifact@v1
       with:
         name: windows
