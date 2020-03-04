@@ -39,6 +39,45 @@ Page {
         }
 
         Label {
+            id: updates
+            text: updateHandler.updateInfo
+            textFormat: Text.PlainText
+            renderType: Text.QtRendering
+            lineHeight: 1
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.NoWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            fontSizeMode: Text.Fit
+        }
+
+        Label {
+            visible: updateHandler.hasUpdate
+            id: updatesAvail
+            text: "An update is available!"
+            textFormat: Text.PlainText
+            renderType: Text.QtRendering
+            lineHeight: 1
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.NoWrap
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            fontSizeMode: Text.Fit
+        }
+
+        Button {
+            visible: updateHandler.hasUpdate
+            id: updateNow
+            text: qsTr("Update Application")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                updateHandler.startUpdate()
+            }
+        }
+
+        Label {
             id: please
             text: qsTr("Please connect an Ardwiino controller, or an Arduino")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

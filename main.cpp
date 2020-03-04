@@ -9,6 +9,7 @@
 #include "input_types.h"
 #include "joy_types.h"
 #include "controllers.h"
+#include "updatehandler.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #ifdef Q_OS_WIN
 #include "winserialhotplug.h"
@@ -46,12 +47,14 @@ auto main(int argc, char *argv[]) -> int
     });
     auto* programmer = new Programmer();
     auto* scanner = new PortScanner(programmer);
+    auto* updates = new UpdateHandler();
 #ifdef Q_OS_WIN
     WinSerialHotplug* filter = new WinSerialHotplug(scanner);
     app.installNativeEventFilter(filter);
 #else
     new UnixSerialHotplug(scanner);
 #endif
+    engine.rootContext()->setContextProperty("updateHandler", updates);
     engine.rootContext()->setContextProperty("scanner", scanner);
     engine.rootContext()->setContextProperty("programmer", programmer);
     const QUrl url(QStringLiteral("qrc:/main.qml"));
