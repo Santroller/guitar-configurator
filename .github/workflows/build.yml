@@ -122,11 +122,11 @@ jobs:
         mkdir www
         ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages www\repository
       shell: cmd
-    - uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: www 
+    # - uses: JamesIves/github-pages-deploy-action@releases/v3
+    #   with:
+    #     ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+    #     BRANCH: gh-pages
+    #     FOLDER: www 
     - uses: actions/upload-artifact@v1
       with:
         name: windows
