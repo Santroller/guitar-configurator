@@ -7,3 +7,10 @@
     <StartMenuDir>Ardwiino Configurator</StartMenuDir>
     <TargetDir>@ApplicationsDir@/TangentMC/GuitarConfigurator</TargetDir>
 </Installer>
+<RemoteRepositories>
+     <Repository>
+             <Url>https://sanjay900.github.io/guitar-configurator/repository</Url>
+             <Enabled>1</Enabled>
+             <DisplayName>Main repository</DisplayName>
+     </Repository>
+</RemoteRepositories>
