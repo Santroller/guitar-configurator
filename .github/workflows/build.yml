@@ -90,7 +90,7 @@ jobs:
         path: ../Qt
         key: QtCacheTools-${{ runner.os }}
     - name: Install Qt
-      uses: jurplel/install-qt-action@646dc60
+      uses: jurplel/install-qt-action@v2.4.0
       with: 
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         modules: qtserialport qtquickcontrols2 
@@ -122,11 +122,11 @@ jobs:
         mkdir www
         ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages www\repository
       shell: cmd
-    # - uses: JamesIves/github-pages-deploy-action@releases/v3
-    #   with:
-    #     ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-    #     BRANCH: gh-pages
-    #     FOLDER: www 
+    - uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: www 
     - uses: actions/upload-artifact@v1
       with:
         name: windows
