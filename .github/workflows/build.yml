@@ -5,127 +5,127 @@ jobs:
     name: Build (macOS)
     runs-on: macos-latest
     steps:
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: QtCache-${{ runner.os }}
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2.4.0
-      with: 
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        modules: qtserialport qtquickcontrols2 
-    - uses: actions/checkout@v1
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        qmake CONFIG+=release ../
-        make -j$(sysctl -n hw.logicalcpu)
-    - name: Bundle
-      run: |
-        cd build
-        mkdir -p guitar-configurator.app/Contents/MacOS/binaries
-        mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
-        cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
-        cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
-        cp -rf firmware guitar-configurator.app/Contents/MacOS
-        macdeployqt guitar-configurator.app -dmg -qmldir=../
-        mkdir artifacts
-        mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
-    - uses: actions/upload-artifact@v1
-      with:
-        name: mac
-        path: build/artifacts
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache-${{ runner.os }}
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.4.0
+        with: 
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          modules: qtserialport qtquickcontrols2 
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          qmake CONFIG+=release ../
+          make -j$(sysctl -n hw.logicalcpu)
+      - name: Bundle
+        run: |
+          cd build
+          mkdir -p guitar-configurator.app/Contents/MacOS/binaries
+          mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
+          cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
+          cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
+          cp -rf firmware guitar-configurator.app/Contents/MacOS
+          macdeployqt guitar-configurator.app -dmg -qmldir=../
+          mkdir artifacts
+          mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
+      - uses: actions/upload-artifact@v1
+        with:
+          name: mac
+          path: build/artifacts
   build-linux:
     name: Build (Linux)
     runs-on: ubuntu-16.04
     steps:
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: QtCache-${{ runner.os }}
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2.4.0
-      with: 
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        modules: qtserialport qtquickcontrols2 
-    - name: Install libraries
-      run: sudo apt-get install libxkbcommon-x11-0
-    - uses: actions/checkout@v1
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        qmake CONFIG+=release PREFIX=/usr ../
-        make -j$(nproc)
-        make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
-    - name: Bundle
-      run: |
-        cd build
-        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
-        mkdir artifacts
-        mv Guitar_Configurator*.AppImage* artifacts/guitar-configurator-linux.AppImage
-    - uses: actions/upload-artifact@v1
-      with:
-        name: linux
-        path: build/artifacts
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache-${{ runner.os }}
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.4.0
+        with: 
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          modules: qtserialport qtquickcontrols2 
+      - name: Install libraries
+        run: sudo apt-get install libxkbcommon-x11-0
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          qmake CONFIG+=release PREFIX=/usr ../
+          make -j$(nproc)
+          make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
+      - name: Bundle
+        run: |
+          cd build
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+          ./linuxdeployqt-continuous-x86_64.AppImage ../appdir/usr/share/applications/*.desktop -appimage -qmldir=../ 
+          mkdir artifacts
+          mv Guitar_Configurator*.AppImage* artifacts/guitar-configurator-linux.AppImage
+      - uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: build/artifacts
   build-windows:
     name: Build (Windows)
     runs-on: windows-latest
     steps:
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: QtCacheTools-${{ runner.os }}
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2.4.0
-      with: 
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        modules: qtserialport qtquickcontrols2 
-    - name: Install QtTools
-      if: steps.cache-qt.outputs.cache-hit != 'true'
-      run: |
-        python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32 -O ../Qt
-      shell: cmd
-    - uses: actions/checkout@v1
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
-        msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
-      shell: cmd
-    - name: Bundle
-      run: |
-        mkdir deploy
-        xcopy firmware /O/X/E/H/K/I deploy\firmware
-        xcopy binaries\win /O/X/E/H/K/I deploy\binaries
-        cp release\guitar-configurator.exe deploy
-        windeployqt deploy\guitar-configurator.exe -qmldir=.
-        xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
-        mkdir artifacts
-        powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
-        ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
-        mkdir www
-        ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages artifacts\repository
-      shell: cmd
-    - uses: actions/upload-artifact@v1
-      with:
-        name: windows
-        path: artifacts
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCacheTools-${{ runner.os }}
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.4.0
+        with: 
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          modules: qtserialport qtquickcontrols2 
+      - name: Install QtTools
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          python -m aqt tool windows tools_ifw 3.2.0 qt.tools.ifw.32 -O ../Qt
+        shell: cmd
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+          msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
+        shell: cmd
+      - name: Bundle
+        run: |
+          mkdir deploy
+          xcopy firmware /O/X/E/H/K/I deploy\firmware
+          xcopy binaries\win /O/X/E/H/K/I deploy\binaries
+          cp release\guitar-configurator.exe deploy
+          windeployqt deploy\guitar-configurator.exe -qmldir=.
+          xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
+          mkdir artifacts
+          powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (gc firmware\version) | Out-File -encoding ASCII myFile.txt"
+          ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
+          mkdir www
+          ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages artifacts\repository
+        shell: cmd
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows
+          path: artifacts
   pages:
     name: Pages
     runs-on: ubuntu-latest
@@ -135,11 +135,11 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: windows
-    - uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: windows 
+      - uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: windows 
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
