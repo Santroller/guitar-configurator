@@ -53,7 +53,6 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     emit isArdwiinoChanged();
 }
 uint8_t Port::read_single(QByteArray id) {
-    qDebug() << id << read(id);
     return read(id).data()[0] & 0xff;
 }
 QByteArray Port::read(QByteArray id) {
