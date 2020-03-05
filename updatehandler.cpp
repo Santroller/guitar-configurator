@@ -2,6 +2,7 @@
 #include "QCoreApplication"
 #include "QProcess"
 #include "QDir"
+#include "QDesktopServices"
 
 UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-1),currentVersion(-1),versionError("Retrieving Version")
 {
@@ -30,7 +31,8 @@ void UpdateHandler::startUpdate() {
     m_process->waitForStarted();
     QCoreApplication::exit(-1);
 #endif
-    qDebug() << "Updating!";
+    QDesktopServices::openUrl(QUrl("https://github.com/sanjay900/guitar-configurator/releases"));
+    QCoreApplication::exit(-1);
 }
 
 bool UpdateHandler::hasUpdate() {
