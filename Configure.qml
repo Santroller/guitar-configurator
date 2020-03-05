@@ -197,6 +197,12 @@ Page {
                 }
             }
         }
+        Button {
+            id: returnMenu
+            text: qsTr("Program a different device")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: mainStack.replace("Welcome.qml");
+        }
 
 
 
