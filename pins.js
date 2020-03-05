@@ -18,7 +18,7 @@ var pinLocations = {
             {x:103, y: 191, id: 15},
             ...generatePins(4, 132, 191, 32, 18)
         ], r:25},
-    "images/leonardo.png": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 14)], r:25},
+    "images/leonardo.png": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 18)], r:25},
 }
 var bindings = {
     "images/uno.png": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
