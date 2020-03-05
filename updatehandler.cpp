@@ -9,15 +9,15 @@ UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-
     connect(nam, &QNetworkAccessManager::finished, this, &UpdateHandler::onResult);
     QUrl url("https://api.github.com/repos/sanjay900/guitar-configurator/releases/latest");
     nam->get(QNetworkRequest(url));
-    this->currentVersion = QString(VERSION_NUMBER).remove('v').toFloat();
+    this->currentVersion = QVersionNumber::fromString(QString(VERSION_NUMBER).remove('v'), NULL);
     emit updateInfoChanged();
 }
 QString UpdateHandler::getUpdateInfo() {
-    auto ret = QString("Current Version: %1, Latest Version: %2").arg(this->currentVersion);
-    if  (latestVersion < 0) {
+    auto ret = QString("Current Version: v%1, Latest Version: v%2").arg(this->currentVersion.toString());
+    if  (latestVersion < QVersionNumber(0)) {
         ret = ret.arg("Retrieving Version");
     } else {
-        ret = ret.arg(this->latestVersion);
+        ret = ret.arg(this->latestVersion.toString());
     }
     return ret;
 }
@@ -44,7 +44,7 @@ void UpdateHandler::onResult(QNetworkReply *reply){
         QByteArray result = reply->readAll();
         QJsonDocument jsonResponse = QJsonDocument::fromJson(result);
         QJsonObject obj = jsonResponse.object();
-        this->latestVersion = obj["tag_name"].toString().remove('v').toFloat();
+        this->latestVersion = QVersionNumber::fromString(obj["tag_name"].toString().remove('v'));
         emit updateInfoChanged();
     } else {
         //TODO: Do we warn the user if we cant check for updates?

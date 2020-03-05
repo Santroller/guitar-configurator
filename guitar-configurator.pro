@@ -1,5 +1,4 @@
-VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
-VERSION ~= s/-\d+-g[a-f0-9]{6,}//
+VERSION = $$str_member($$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags --abbrev=0), 1, -1)
 QT += quickcontrols2 serialport
 CONFIG += c++11 qtquickcompiler
 

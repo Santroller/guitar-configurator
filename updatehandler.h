@@ -6,6 +6,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QVersionNumber>
 #include <QString>
 class UpdateHandler : public QObject
 {
@@ -24,8 +25,8 @@ public slots:
 private:
     void onResult(QNetworkReply *reply);
     QNetworkAccessManager* nam;
-    float latestVersion;
-    float currentVersion;
+    QVersionNumber latestVersion;
+    QVersionNumber currentVersion;
 };
 
 #endif // UPDATEHANDLER_H
