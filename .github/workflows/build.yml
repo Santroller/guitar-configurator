@@ -166,7 +166,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Cleanup windows directory for pages
         run: |
-          del ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
+          rm ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
       - uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
