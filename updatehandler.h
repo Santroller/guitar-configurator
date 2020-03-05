@@ -27,6 +27,7 @@ private:
     QNetworkAccessManager* nam;
     QVersionNumber latestVersion;
     QVersionNumber currentVersion;
+    QString versionError;
 };
 
 #endif // UPDATEHANDLER_H

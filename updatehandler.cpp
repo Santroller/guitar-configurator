@@ -3,7 +3,7 @@
 #include "QProcess"
 #include "QDir"
 
-UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-1),currentVersion(-1)
+UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-1),currentVersion(-1),versionError("Retrieving Version")
 {
     nam = new QNetworkAccessManager(this);
     connect(nam, &QNetworkAccessManager::finished, this, &UpdateHandler::onResult);
@@ -13,11 +13,11 @@ UpdateHandler::UpdateHandler(QObject *parent) : QObject(parent), latestVersion(-
     emit updateInfoChanged();
 }
 QString UpdateHandler::getUpdateInfo() {
-    auto ret = QString("Current Version: v%1, Latest Version: v%2").arg(this->currentVersion.toString());
-    if  (latestVersion < QVersionNumber(0)) {
-        ret = ret.arg("Retrieving Version");
+    auto ret = QString("Current Version: v%1, Latest Version: %2").arg(this->currentVersion.toString());
+    if  (!versionError.isEmpty()) {
+        ret = ret.arg(versionError);
     } else {
-        ret = ret.arg(this->latestVersion.toString());
+        ret = ret.arg("v"+this->latestVersion.toString());
     }
     return ret;
 }
@@ -34,8 +34,7 @@ void UpdateHandler::startUpdate() {
 }
 
 bool UpdateHandler::hasUpdate() {
-    return true;
-//    return latestVersion > currentVersion;
+    return latestVersion > currentVersion;
 }
 
 void UpdateHandler::onResult(QNetworkReply *reply){
@@ -45,8 +44,10 @@ void UpdateHandler::onResult(QNetworkReply *reply){
         QJsonDocument jsonResponse = QJsonDocument::fromJson(result);
         QJsonObject obj = jsonResponse.object();
         this->latestVersion = QVersionNumber::fromString(obj["tag_name"].toString().remove('v'));
+        versionError = "";
         emit updateInfoChanged();
     } else {
+        versionError = reply->errorString();
         //TODO: Do we warn the user if we cant check for updates?
     }
     reply->deleteLater();
