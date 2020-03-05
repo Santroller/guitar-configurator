@@ -45,10 +45,10 @@ void UpdateHandler::onResult(QNetworkReply *reply){
         QJsonObject obj = jsonResponse.object();
         this->latestVersion = QVersionNumber::fromString(obj["tag_name"].toString().remove('v'));
         versionError = "";
-        emit updateInfoChanged();
     } else {
         versionError = reply->errorString();
         //TODO: Do we warn the user if we cant check for updates?
     }
     reply->deleteLater();
+    emit updateInfoChanged();
 }
