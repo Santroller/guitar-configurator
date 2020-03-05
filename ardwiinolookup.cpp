@@ -5,17 +5,15 @@
 #include <QRegularExpression>
 #include <QCoreApplication>
 #include <QDir>
-float ArdwiinoLookup::currentVersion = -1;
+QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
-    if (currentVersion == -1) {
-        QDir dir(QCoreApplication::applicationDirPath());
-        dir.cd("firmware");
-        QFile f(dir.filePath("version"));
-        f.open(QFile::ReadOnly | QFile::Text);
-        auto match2 = versionRegex.match(f.readAll());
-        currentVersion = match2.captured(1).toFloat();
-    }
+    QDir dir(QCoreApplication::applicationDirPath());
+    dir.cd("firmware");
+    QFile f(dir.filePath("version"));
+    f.open(QFile::ReadOnly | QFile::Text);
+    auto match2 = versionRegex.match(f.readAll());
+    currentVersion = QVersionNumber::fromString(match2.captured(1));
 }
 
 auto ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) -> QString {
@@ -31,7 +29,7 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
 
 auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
     auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
-    return isArdwiino(serialPortInfo) && match.hasMatch() && match.captured(1).toFloat() < currentVersion;
+    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < currentVersion;
 }
 
 auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {

@@ -14,6 +14,7 @@
 #include "joy_types.h"
 #include "mpu_orientations.h"
 #include "tilt_types.h"
+#include <QVersionNumber>
 #define ARDWIINO_VID 0x1209
 #define ARDWIINO_PID 0x2882
 #define SONY_VID 0x12ba
@@ -72,7 +73,7 @@ public slots:
     }
 private:
     static ArdwiinoLookup* instance;
-    static float currentVersion;
+    static QVersionNumber currentVersion;
 };
 
 #endif // ARDWIINOLOOKUP_H
