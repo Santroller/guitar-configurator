@@ -127,30 +127,16 @@ jobs:
         with:
           name: windows
           path: artifacts
-  pages:
-    name: Pages
-    runs-on: ubuntu-latest
-    needs: [build-windows]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: windows 
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
     runs-on: ubuntu-latest
     needs: [build-linux, build-mac, build-windows]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -178,3 +164,11 @@ jobs:
             ./linux/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cleanup windows directory for pages
+        run: |
+          del ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
+      - uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: windows 
