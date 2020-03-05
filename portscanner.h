@@ -27,7 +27,7 @@ public slots:
 
     inline QString getOSString() {
 #ifdef Q_OS_LINUX
-        return "<br />If you are not able to detect any devices, you may need to add yourself to the uucp and dialout groups. <br /> For information, <a href=\"https://www.arduino.cc/en/guide/linux#toc6\">click here</a>";
+        return "<br />If you are not able to detect any devices, you may need to add yourself to the uucp and dialout groups. <br /> For information, <a href=\"https://www.arduino.cc/en/guide/linux#toc6\">click here</a><br/>This <a href=\"https://github.com/paroj/xpad\">fork of xpad</a> is required for xinput support on linux at the moment.";
 #else
         return "";
 #endif
