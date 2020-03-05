@@ -30,12 +30,12 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
 }
 
 auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    auto match = versionRegex.match(serialPortInfo.serialNumber());
+    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
     return isArdwiino(serialPortInfo) && match.hasMatch() && match.captured(1).toFloat() < currentVersion;
 }
 
 auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    return isArdwiino(serialPortInfo) && !versionRegex.match(serialPortInfo.serialNumber()).hasMatch();
+    return isArdwiino(serialPortInfo) && !versionRegex.match(serialPortInfo.serialNumber().toLower()).hasMatch();
 }
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
