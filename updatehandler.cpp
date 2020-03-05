@@ -30,6 +30,7 @@ void UpdateHandler::startUpdate() {
     m_process->start(dir.filePath("maintenancetool.exe"), {"--updater"});
     m_process->waitForStarted();
     QCoreApplication::exit(-1);
+    return;
 #endif
     QDesktopServices::openUrl(QUrl("https://github.com/sanjay900/guitar-configurator/releases"));
     QCoreApplication::exit(-1);
