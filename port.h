@@ -30,6 +30,7 @@ class Port : public QObject
     Q_PROPERTY(ArdwiinoDefines::subtype type READ getType WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(ArdwiinoDefines::gyro orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(ArdwiinoDefines::tilt tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::fret_mode ledType READ getLedType WRITE setLedType NOTIFY ledTypeChanged)
     Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
@@ -46,12 +47,12 @@ public:
     void handleConnection(const QSerialPortInfo& info);
 signals:
     void descriptionChanged();
-    void imageChanged();
     void pinsChanged();
     void pinInvertsChanged();
     void boardImageChanged();
     void inputTypeChanged();
     void typeChanged();
+    void ledTypeChanged();
     void orientationChanged();
     void tiltTypeChanged();
     void tiltSensitivityChanged();
@@ -116,9 +117,11 @@ public slots:
     ArdwiinoDefines::tilt getTiltType() {
         return ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
     }
+    ArdwiinoDefines::fret_mode getLedType() {
+        return ArdwiinoDefines::fret_mode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
+    }
     void setType(ArdwiinoDefines::subtype value) {
         write(WRITE_CONFIG(CONFIG_SUB_TYPE, value));
-        imageChanged();
         typeChanged();
     }
     void setInputType(ArdwiinoDefines::input value) {
@@ -133,6 +136,10 @@ public slots:
     void setOrientation(ArdwiinoDefines::gyro value) {
         write(WRITE_CONFIG(CONFIG_MPU_6050_ORIENTATION, value));
         orientationChanged();
+    }
+    void setLedType(ArdwiinoDefines::fret_mode value) {
+        write(WRITE_CONFIG(CONFIG_LED_TYPE, value));
+        ledTypeChanged();
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
     void startConfiguring();

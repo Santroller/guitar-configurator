@@ -130,6 +130,14 @@ Page {
             }
         }
         Button {
+            id: leds
+            text: qsTr("Configure LEDs")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: {
+                mainStack.push("leds.qml");
+            }
+        }
+        Button {
             id: bind
             visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT
             text: qsTr("Configure Arduino Pin Bindings")

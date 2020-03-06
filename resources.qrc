@@ -24,5 +24,6 @@
         <file>pins.js</file>
         <file>Tilt.qml</file>
         <file>defines.js</file>
+        <file>leds.qml</file>
     </qresource>
 </RCC>
