@@ -110,7 +110,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.image
+            source: Defines.boardImages[scanner.selected.controller]
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3

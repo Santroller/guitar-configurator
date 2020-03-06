@@ -2,7 +2,6 @@
 #include "QDebug"
 #include "QThread"
 #include <QProcess>
-#include "input_types.h"
 #include <iostream>
 #include <QSettings>
 Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), readyForRead(false)
@@ -120,15 +119,15 @@ void Port::jumpUNO() {
 }
 void Port::readDescription() {
     QByteArray readData;
-    auto vtype = InputTypes::Value(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
-    auto ctype = Controllers::Value(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
+    auto vtype = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
+    auto ctype = ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
     m_description = "Ardwiino - "+ m_board.name;
     if (m_isOutdated) {
         m_description += " - Outdated";
     }
-    m_description += " - "+Controllers::toString(ctype);
-    m_description += " - " + InputTypes::toString(vtype);
-    if (vtype == InputTypes::WII_TYPE) {
+    m_description += " - " + ArdwiinoDefines::getName(ctype);
+    m_description += " - " + ArdwiinoDefines::getName(vtype);
+    if (vtype == ArdwiinoDefines::WII) {
         m_description += " " + read(READ_INFO(INFO_WII_EXT)).trimmed();
     }
     m_description += " - " + m_port;

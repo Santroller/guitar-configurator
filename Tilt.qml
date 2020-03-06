@@ -4,6 +4,7 @@ import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
 import net.tangentmc 1.0
+import "defines.js" as Defines
 
 Page {
     id: page
@@ -25,7 +26,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.image
+            source: Defines.getBoardImage(scanner.selected.type)
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
@@ -85,13 +86,7 @@ Page {
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= TiltTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getTiltTypeName(i), value:i});
-                }
-                return model
-            }
+            model: Defines.fillCombobox("tilt")
             Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
 
             onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
@@ -99,7 +94,7 @@ Page {
 
         Label {
             id: orientation
-            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR;
+            visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
             text: qsTr("Tilt Sensor Orientation: ")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             wrapMode: Text.WordWrap
@@ -110,24 +105,18 @@ Page {
         }
         ComboBox {
             id: orientationBox
-            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR;
+            visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 0; i <= MPU6050Orientations.END; i++) {
-                    model.push({key: ArdwiinoLookup.getOrientationName(i), value:i});
-                }
-                return model
-            }
+            model: Defines.fillCombobox("gyro")
             Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
 
             onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
         }
 
         Label {
-            id: orientation1
+            id: sensitivityLbl
             text: qsTr("Tilt Sensor Sensitivity: ")
             fontSizeMode: Text.FixedSize
             verticalAlignment: Text.AlignVCenter
@@ -135,7 +124,6 @@ Page {
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             wrapMode: Text.WordWrap
-            visible: scanner.selected.tiltType === TiltTypes.MPU_6050_SENSOR
         }
 
         Slider {

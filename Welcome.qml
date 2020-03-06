@@ -3,6 +3,7 @@ import QtQuick.Window 2.10
 import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
+import "defines.js" as Defines
 
 Page {
     id: page
@@ -17,7 +18,7 @@ Page {
             source: {
                 let index = devices.currentIndex;
                 if (index === -1) return "images/controller.png";
-                return devices.model[index].image;
+                return Defines.getBoardImage(devices.model[index].type);
             }
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3

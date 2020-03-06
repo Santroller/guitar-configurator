@@ -1,7 +1,5 @@
 #include "ardwiinolookup.h"
 #include "QDebug"
-#include "wii_extensions.h"
-#include "input_types.h"
 #include <QRegularExpression>
 #include <QCoreApplication>
 #include <QDir>
@@ -16,15 +14,8 @@ ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
     currentVersion = QVersionNumber::fromString(match2.captured(1));
 }
 
-auto ArdwiinoLookup::lookupExtension(uint8_t type, uint16_t device) -> QString {
-    auto vtype = InputTypes::Value(type);
-    if (vtype == InputTypes::WII_TYPE) {
-        return QString("%1 %2").arg(InputTypes::toString(vtype)).arg(WiiExtensions::toString(WiiExtensions::Value(device)));
-    }
-    return InputTypes::toString(vtype);
-}
 auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
-    return Controllers::toString(Controllers::Value(type));
+    return ArdwiinoDefines::getName(ArdwiinoDefines::subtype(type));
 }
 
 auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {

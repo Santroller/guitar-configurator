@@ -23,5 +23,6 @@
         <file>keys.js</file>
         <file>pins.js</file>
         <file>Tilt.qml</file>
+        <file>defines.js</file>
     </qresource>
 </RCC>

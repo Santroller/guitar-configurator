@@ -6,11 +6,9 @@
 #include "portscanner.h"
 #include "programmer.h"
 #include "status.h"
-#include "input_types.h"
-#include "joy_types.h"
-#include "controllers.h"
 #include "updatehandler.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
+#include "ardwiino_defines.h"
 #ifdef Q_OS_WIN
 #include "winserialhotplug.h"
 #else
@@ -25,25 +23,13 @@ auto main(int argc, char *argv[]) -> int
     QQmlApplicationEngine engine;
     qmlRegisterUncreatableType<Status>("net.tangentmc", 1, 0, "Status",
                                        "Not creatable as it is an enum type.");
-    qRegisterMetaType<InputTypes::Value>("Status::Value");
-    qmlRegisterUncreatableType<InputTypes>("net.tangentmc", 1, 0, "InputTypes",
-                                           "Not creatable as it is an enum type.");
-    qRegisterMetaType<InputTypes::Value>("InputTypes::Value");
-    qmlRegisterUncreatableType<Controllers>("net.tangentmc", 1, 0, "Controllers",
-                                            "Not creatable as it is an enum type.");
-    qRegisterMetaType<Controllers::Value>("Controllers::Value");
-    qmlRegisterUncreatableType<TiltTypes>("net.tangentmc", 1, 0, "TiltTypes",
-                                          "Not creatable as it is an enum type.");
-    qRegisterMetaType<TiltTypes::Value>("TiltTypes::Value");
-    qmlRegisterUncreatableType<MPU6050Orientations>("net.tangentmc", 1, 0, "MPU6050Orientations",
-                                                    "Not creatable as it is an enum type.");
-    qRegisterMetaType<MPU6050Orientations::Value>("MPU6050Orientations::Value");
-    qmlRegisterUncreatableType<JoyTypes>("net.tangentmc", 1, 0, "JoyTypes",
-                                         "Not creatable as it is an enum type.");
-    qRegisterMetaType<JoyTypes::Value>("JoyTypes::Value");
-    qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QJSValue {
-        Q_UNUSED(engine)
+    qRegisterMetaType<Status::Value>("Status::Value");
+    qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine*, QJSEngine *scriptEngine) -> QJSValue {
         return scriptEngine->newQObject(ArdwiinoLookup::getInstance());
+    });
+    qmlRegisterUncreatableType<ArdwiinoDefines>("net.tangentmc", 1, 0, "ArdwiinoDefinesValues","Not creatable as it is an enum type.");
+    qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoDefines", [](QQmlEngine*, QJSEngine *scriptEngine) -> QJSValue {
+        return scriptEngine->newQObject(ArdwiinoDefines::getInstance());
     });
     auto* programmer = new Programmer();
     auto* scanner = new PortScanner(programmer);

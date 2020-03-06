@@ -4,6 +4,8 @@ import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
 import net.tangentmc 1.0
+import "defines.js" as Defines
+
 
 Page {
     id: page
@@ -25,7 +27,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.image
+            source: Defines.getBoardImage(scanner.selected.type)
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
@@ -83,13 +85,7 @@ Page {
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 1; i <= InputTypes.END; i++) {
-                    model.push({key: ArdwiinoLookup.getInputTypeName(i), value:i});
-                }
-                return model
-            }
+            model: Defines.fillCombobox("input")
             Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
 
             onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
@@ -112,16 +108,7 @@ Page {
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: {
-                let model = [];
-                for (let i = 1; i <= Controllers.END; i++) {
-                    let name = ArdwiinoLookup.getControllerTypeName(i);
-                    if (name !== "Unknown Controller") {
-                        model.push({key: name, value:i});
-                    }
-                }
-                return model
-            }
+            model: Defines.fillCombobox("subtype")
             Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.findIndex(s => s.value === scanner.selected.type) }
 
             onCurrentIndexChanged: {
@@ -136,7 +123,7 @@ Page {
         Button {
             id: tilt
             text: qsTr("Configure Tilt")
-            visible: scanner.selected.type === Controllers.PS3_GUITAR_GH || scanner.selected.type === Controllers.PS3_GUITAR_RB || scanner.selected.type === Controllers.XINPUT_GUITAR || scanner.selected.type === Controllers.XINPUT_GUITAR_ALTERNATE || scanner.selected.type === Controllers.XINPUT_GUITAR_BASS
+            visible: scanner.selected.isGuitar
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 mainStack.push("Tilt.qml");
@@ -144,7 +131,7 @@ Page {
         }
         Button {
             id: bind
-            visible: scanner.selected.inputType === InputTypes.DIRECT_TYPE
+            visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT
             text: qsTr("Configure Arduino Pin Bindings")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
@@ -154,7 +141,7 @@ Page {
         }
         Button {
             id: keybind
-            visible: scanner.selected.type === Controllers.KEYBOARD
+            visible: scanner.selected.type === ArdwiinoDefinesValues.KEYBOARD
             text: qsTr("Configure Keyboard Bindings")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {

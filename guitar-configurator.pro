@@ -15,6 +15,7 @@ DEFINES += "VERSION_NUMBER=\\\"$${VERSION}\\\""
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        arduino_defines.cpp \
         ardwiinolookup.cpp \
         main.cpp \
         port.cpp \
@@ -39,11 +40,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ardwiino_defines.h \
     ardwiinolookup.h \
-    controllers.h \
-    input_types.h \
-    joy_types.h \
-    mpu_orientations.h \
     port.h \
     portscanner.h \
     programmer.h \
@@ -53,10 +51,8 @@ HEADERS += \
     submodules/Ardwiino/src/shared/config/defines.h \
     submodules/Ardwiino/src/shared/controller/controller.h \
     submodules/Ardwiino/src/shared/output/usb/API.h \
-    tilt_types.h \
     unixserialhotplug.h \
     updatehandler.h \
-    wii_extensions.h \
     winserialhotplug.h
 
 unix {

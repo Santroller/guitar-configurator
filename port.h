@@ -8,6 +8,7 @@
 #include "ardwiinolookup.h"
 #include "submodules/Ardwiino/src/shared/output/usb/API.h"
 #include <math.h>
+#include "ardwiino_defines.h"
 #define READ_INFO(slot) QByteArray(1, COMMAND_READ_INFO) + QByteArray(1,slot)
 #define READ_CONFIG(slot) QByteArray(1, COMMAND_READ_CONFIG_VALUE) + QByteArray(1,slot)
 #define WRITE_CONFIG(slot, value) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot) + QByteArray(1, value)
@@ -22,14 +23,13 @@ class Port : public QObject
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
-    Q_PROPERTY(QString image READ getImage NOTIFY imageChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
-    Q_PROPERTY(InputTypes::Value inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
-    Q_PROPERTY(Controllers::Value type READ getType WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(MPU6050Orientations::Value orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
-    Q_PROPERTY(TiltTypes::Value tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::input inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::subtype type READ getType WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(ArdwiinoDefines::gyro orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
+    Q_PROPERTY(ArdwiinoDefines::tilt tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
     Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
@@ -92,7 +92,7 @@ public slots:
         return m_isOutdated;
     }
     bool isGuitar() {
-        return ArdwiinoLookup::getInstance()->getControllerTypeName(getType()).toLower().contains("guitar");
+        return ArdwiinoDefines::getName(getType()).toLower().contains("guitar");
     }
     QString getPort() const {
         return m_port;
@@ -100,40 +100,37 @@ public slots:
     bool ready() const {
         return m_isReady;
     }
-    QString getImage() {
-        if (readyForRead && m_serialPort) return Controllers::getImage(getType());
-        return Controllers::getImage(Controllers::XINPUT_GAMEPAD);
-    }
     QString getBoardImage() const {
         return m_board.image;
     }
-    Controllers::Value getType() {
-        return Controllers::Value(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
+    ArdwiinoDefines::subtype getType() {
+        if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
+        return ArdwiinoDefines::XINPUT_GAMEPAD;
     }
-    MPU6050Orientations::Value getOrientation() {
-        return MPU6050Orientations::Value(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
+    ArdwiinoDefines::gyro getOrientation() {
+        return ArdwiinoDefines::gyro(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
     }
-    InputTypes::Value getInputType() {
-        return InputTypes::Value(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
+    ArdwiinoDefines::input getInputType() {
+        return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
     }
-    TiltTypes::Value getTiltType() {
-        return TiltTypes::Value(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
+    ArdwiinoDefines::tilt getTiltType() {
+        return ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
     }
-    void setType(Controllers::Value value) {
+    void setType(ArdwiinoDefines::subtype value) {
         write(WRITE_CONFIG(CONFIG_SUB_TYPE, value));
         imageChanged();
         typeChanged();
     }
-    void setInputType(InputTypes::Value value) {
+    void setInputType(ArdwiinoDefines::input value) {
         write(WRITE_CONFIG(CONFIG_INPUT_TYPE, value));
         inputTypeChanged();
 
     }
-    void setTiltType(TiltTypes::Value value) {
+    void setTiltType(ArdwiinoDefines::tilt value) {
         write(WRITE_CONFIG(CONFIG_TILT_TYPE, value));
         tiltTypeChanged();
     }
-    void setOrientation(MPU6050Orientations::Value value) {
+    void setOrientation(ArdwiinoDefines::gyro value) {
         write(WRITE_CONFIG(CONFIG_MPU_6050_ORIENTATION, value));
         orientationChanged();
     }

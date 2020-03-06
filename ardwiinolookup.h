@@ -7,13 +7,8 @@
 #include <QList>
 #include "submodules/Ardwiino/src/shared/input/input_wii_ext.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
-#include "submodules/Ardwiino/src/shared/config/defaults.h"
 #include "submodules/Ardwiino/src/shared/controller/controller.h"
-#include "controllers.h"
-#include "input_types.h"
-#include "joy_types.h"
-#include "mpu_orientations.h"
-#include "tilt_types.h"
+#include "ardwiino_defines.h"
 #include <QVersionNumber>
 #define ARDWIINO_VID 0x1209
 #define ARDWIINO_PID 0x2882
@@ -45,25 +40,18 @@ public:
     explicit ArdwiinoLookup(QObject *parent = nullptr);
     static const board_t findByBoard(const QString& board);
 public slots:
-    static QString lookupExtension(uint8_t type, uint16_t device);
     static QString lookupType(uint8_t type);
     static bool isArdwiino(const QSerialPortInfo &info);
     static bool isOldFirmwareArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isOldArdwiino(const QSerialPortInfo& QSerialPort);
-    inline QString getControllerTypeName(Controllers::Value value) {
-        return Controllers::toString(value);
+    inline QString getInputTypeName(ArdwiinoDefines::input value) {
+        return ArdwiinoDefines::getName(value);
     }
-    inline QString getInputTypeName(InputTypes::Value value) {
-        return InputTypes::toString(value);
+    inline QString getOrientationName(ArdwiinoDefines::gyro value) {
+        return ArdwiinoDefines::getName(value);
     }
-    inline QString getJoyTypeName(JoyTypes::Value value) {
-        return JoyTypes::toString(value);
-    }
-    inline QString getOrientationName(MPU6050Orientations::Value value) {
-        return MPU6050Orientations::toString(value);
-    }
-    inline QString getTiltTypeName(TiltTypes::Value value) {
-        return TiltTypes::toString(value);
+    inline QString getTiltTypeName(ArdwiinoDefines::tilt value) {
+        return ArdwiinoDefines::getName(value);
     }
     inline QString getKeyName(QVariantList sequence) {
         if (sequence.length() == 2) {
