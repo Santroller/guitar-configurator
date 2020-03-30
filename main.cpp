@@ -9,6 +9,7 @@
 #include "updatehandler.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #include "ardwiino_defines.h"
+#include "cloneheroinfo.h"
 #ifdef Q_OS_WIN
 #include "winserialhotplug.h"
 #else
@@ -40,6 +41,7 @@ auto main(int argc, char *argv[]) -> int
 #else
     new UnixSerialHotplug(scanner);
 #endif
+    new CloneHeroInfo();
     engine.rootContext()->setContextProperty("updateHandler", updates);
     engine.rootContext()->setContextProperty("scanner", scanner);
     engine.rootContext()->setContextProperty("programmer", programmer);

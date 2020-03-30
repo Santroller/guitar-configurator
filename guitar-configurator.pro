@@ -17,13 +17,15 @@ DEFINES += "VERSION_NUMBER=\\\"$${VERSION}\\\""
 SOURCES += \
         arduino_defines.cpp \
         ardwiinolookup.cpp \
+        cloneheroinfo.cpp \
         main.cpp \
         port.cpp \
         portscanner.cpp \
         programmer.cpp \
         unixserialhotplug.cpp \
         updatehandler.cpp \
-        winserialhotplug.cpp
+        winserialhotplug.cpp \
+        qprocessinfo.cpp
 
 RESOURCES += \
     resources.qrc
@@ -42,6 +44,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     ardwiino_defines.h \
     ardwiinolookup.h \
+    cloneheroinfo.h \
     port.h \
     portscanner.h \
     programmer.h \

@@ -159,6 +159,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
 void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
     if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
+        qDebug() << serialPortError;
         m_description = "Ardwiino - Error Communicating";
         if (m_serialPort->isOpen()) {
             close();
