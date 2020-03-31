@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.kde.kf5auth.example
+Exec=/home/sanjay/Code/build-guitar-configurator-Desktop-Debug/memory-reader/memory-reader
+User=root
