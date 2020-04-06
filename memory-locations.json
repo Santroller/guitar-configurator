@@ -1,9 +1,9 @@
 {
     "v0.24.0.1520-master": {
         "linux": {"lib": "UnityPlayer.so", "pointerPathBasePlayer": [34094584, 0, 16, 48, 56, 40, 0]},
-        "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24717712, 336, 480, 120, 72, 32, 0]},
-        "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [24717712, 336, 480, 120, 72, 32, 0]},
-        "mac": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24717712, 336, 480, 120, 72, 32, 0]},
+        "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
+        "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
+        "mac": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
         "pointerPathCurrentNote": [184,32,0],
         "offsetButtonsPressed": 224,
         "offsetStarPowerActivated": 230,
