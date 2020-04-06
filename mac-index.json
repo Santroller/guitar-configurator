@@ -1,0 +1,194 @@
+[
+    {
+        "version": "v0.24.0.1555-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": true,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "d98dc37beb47cf9cc3c60d3442317177"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "8be874a7dd1529c641df1651eb2c5c26"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "66da28a411698c56fd945fda65a4a2a0"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1543-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": true,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "8b8e25c16aedf670330cc9fb80994dc5"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "29b0fa5366f723ca8dcbe1b0c928d97a"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1535-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "455525b97498a5df68a1bd5ff5e65eeb"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "26135e3d78f88a22bce1976ac0e93ea1"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1533-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "3f97f90cbdc9c4745442f0f573563b92"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "64d64e073bbcacb2238d82adbe11bc6e"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1530-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "3a1d23722bfae107096f43d797647baf"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "2839a4ce5e93f5ce6bf6e2d0d3db5c70"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1525-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "e500c395b5a3f81895f05100684ccff0"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "0bde621679c893c7b078c91cf39d6e53"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1522-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "265813d076d60914271beffff80c9792"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "2a24b3ba2ce4db625c5dd47d0d92cf9c"
+            ]
+        ]
+    },
+    {
+        "version": "v0.24.0.1520-master",
+        "binaryName": "Clone Hero.app",
+        "downloadable": false,
+        "compression": "gzip",
+        "hash": [
+            [
+                "/Clone Hero.app/Contents/MacOS/Clone Hero",
+                "3d359593524cd11c2bd3639a8d0c4697"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/globalgamemanagers",
+                "18e77e05030bea1d7a4818dc655fdbb2"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/level1",
+                "354df896805cbe7584112ac10c327604"
+            ],
+            [
+                "/Clone Hero.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll",
+                "b0b453199eb99011c34078bb3350b2b8"
+            ]
+        ]
+    }
+]
