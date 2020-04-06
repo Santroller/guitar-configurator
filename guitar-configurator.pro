@@ -56,22 +56,30 @@ HEADERS += \
     unixserialhotplug.h \
     updatehandler.h \
     winserialhotplug.h
+BDIR = $$OUT_PWD
 win32 {
-    system("Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win32-index.json -OutFile $$OUT_PWD/ch-index.json")
-    system("Invoke-WebRequest -Uri https://dltest.b-cdn.net/win32-index.json -OutFile $$OUT_PWD/ch-index-test.json")
-} else {
-    win64 {
-        system("Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win64-index.json -OutFile $$OUT_PWD/ch-index.json")
-        system("Invoke-WebRequest -Uri https://dltest.b-cdn.net/win64-index.json -OutFile $$OUT_PWD/ch-index-test.json")
+    BDIR_STRIPPED = $$replace(BDIR,Release,)
+    equals (BDIR,$$BDIR_STRIPPED): BDIR=$$BDIR/debug/
+    message($$BDIR)
+    contains(QMAKE_TARGET.arch, x86_64) {
+        system("powershell -Command \"Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win64-index.json -OutFile $$BDIR/ch-index.json\"")
+        system("powershell -Command \"Invoke-WebRequest -Uri https://dltest.b-cdn.net/win64-index.json -OutFile $$BDIR/ch-index-test.json\"")
     } else {
-        mac {
-            system("curl https://dlpublic.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index.json")
-            system("curl https://dltest.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index-test.json")
-        } else {
-            system("curl https://dlpublic.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index.json")
-            system("curl https://dltest.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index-test.json")
-        }
+        system("powershell -Command \"Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win32-index.json -OutFile $$BDIR/ch-index.json\"")
+        system("powershell -Command \"Invoke-WebRequest -Uri https://dltest.b-cdn.net/win32-index.json -OutFile $$BDIR/ch-index-test.json\"")
     }
+} else {
+    macx {
+        system("curl https://dlpublic.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index.json")
+        system("curl https://dltest.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index-test.json")
+    } else {
+        system("curl https://dlpublic.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index.json")
+        system("curl https://dltest.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index-test.json")
+    }
+}
+
+macx {
+
 }
 unix {
     isEmpty(PREFIX) {

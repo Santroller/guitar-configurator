@@ -41,7 +41,7 @@ private:
  QSettings settings;
  QNetworkAccessManager m_WebCtrl;
  QString binary;
- int pid;
+ Q_PID pid;
  QString m_version;
  QMap<QString, QString> hashes;
  QProcess process;
@@ -52,7 +52,7 @@ private:
  QString m_gameFolder;
  QByteArray lastData;
  qint64 base=0;
- qint64 readFromProc(qint64 , qint64 addr, qint64 *buf);
+ qint64 readFromProc(quint64 , qint64 addr, qint64 *buf);
  qint64 readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf);
 
  QList<qint64> pointerPathBasePlayer;
@@ -60,7 +60,6 @@ private:
 
  QString platform;
  QString lib;
- int maxOffset;
  // int32_t
  int offsetButtonsPressed;
  // bool

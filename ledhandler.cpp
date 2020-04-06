@@ -1,11 +1,17 @@
 #include "ledhandler.h"
 #include <QFile>
-#include <proc/readproc.h>
-#include <proc/version.h>
 #include <QProcess>
 #include <QGuiApplication>
 #include <QDir>
-
+#include <QThread>
+#if defined Q_OS_LINUX
+    #include <proc/readproc.h>
+    #include <proc/version.h>
+#endif
+#if defined Q_OS_WIN
+    #include <Windows.h>
+    #include <Psapi.h>
+#endif
 LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent) : QObject(parent), scanner(scanner)
 {
 #ifdef Q_OS_WIN64
@@ -42,8 +48,10 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     findVersion();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
+    gameFolder = gameFolder.replace("file:///","");
     m_gameFolder = gameFolder;
     settings.setValue("cloneHeroDir",gameFolder);
+    findVersion();
     gameFolderChanged();
 }
 void readList(QJsonArray arr, QList<qint64>* list) {
@@ -83,7 +91,6 @@ void LEDHandler::findVersion() {
         offsetIsStarPower = obj["offsetIsStarPower"].toInt();
         offsetScore = obj["offsetScore"].toInt();
         offsetCurrentNote = obj["offsetCurrentNote"].toInt();
-        maxOffset = std::max({offsetScore, offsetCurrentNote, offsetIsStarPower, offsetButtonsPressed, offsetStarPowerActivated});
     } else {
         m_version = "Unsupported Version: "+m_version;
     }
@@ -98,9 +105,10 @@ void LEDHandler::startGame() {
     QString binaryPath = QDir(m_gameFolder).filePath(binary);
     process.start(binaryPath, {"--launcher-build"});
     process.waitForStarted();
+#if defined Q_OS_LINUX
     process.waitForReadyRead();
+#endif
     pid = process.pid();
-    //TODO: this, and readFromProc need to be ported to linux + windows.
 #if defined Q_OS_LINUX
     inputFile = new QFile(QStringLiteral("/proc/%1/maps").arg(pid));
     inputFile->open(QIODevice::ReadOnly);
@@ -123,6 +131,22 @@ void LEDHandler::startGame() {
     if (!inputFile->isOpen())
         return;
 #endif
+    QThread::msleep(500);
+#if defined Q_OS_WIN
+    HMODULE handles[2048];
+    DWORD needed;
+    EnumProcessModules(pid->hProcess, handles, sizeof(handles), &needed);
+    for (int i = 0; i < needed / sizeof(handles[0]); i++) {
+        MODULEINFO info;
+        char name[1024];
+        GetModuleBaseNameA(pid->hProcess, handles[i], name, sizeof(name));
+        if (QString(name).endsWith(lib)) {
+            GetModuleInformation(pid->hProcess, handles[i], &info, sizeof(info));
+            base = (qint64)info.lpBaseOfDll;
+            break;
+        }
+    }
+#endif
     // create a timer
     timer = new QTimer(this);
 
@@ -133,17 +157,25 @@ void LEDHandler::startGame() {
     timer->start(1);
 }
 
-qint64 LEDHandler::readFromProc(qint64 size, qint64 addr, qint64 *buf)
+qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
 {
 
 #if defined Q_OS_LINUX
     inputFile->seek((long)addr);
     return inputFile->read((char*)buf, size);
 #endif
+
+#if defined Q_OS_WIN
+    quint64 read;
+    if (!ReadProcessMemory(pid->hProcess, reinterpret_cast<const char *>(addr), buf, size, &read)) {
+        return -1;
+    }
+    return qint64(read);
+#endif
 }
 qint64 LEDHandler::readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf) {
     qint64 addr;
-    int ret;
+    qint64 ret;
     if ((ret = readFromProc(sizeof(qint64), base + path[0], buf)) < 0)
     {
         return ret;
@@ -156,12 +188,12 @@ qint64 LEDHandler::readData(qint64 base, QList<qint64> &path, qint64 pathCount, 
             return ret;
         }
     }
-    readFromProc(maxOffset, addr, buf);
+    readFromProc(512, addr, buf);
     return (qint64)addr;
 }
 
 void LEDHandler::tick() {
-    qint64 buf[maxOffset];
+    qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
     int score = *(size_t*)(cbuf+offsetScore);
@@ -193,11 +225,13 @@ void LEDHandler::tick() {
         }
     }
     //Show nothing if in menu.
-    if (process.pid() == 0) {
+    if (!process.pid()) {
         lastData = "";
         data = "l00000";
+#if defined Q_OS_LINUX
         inputFile->close();
         inputFile = nullptr;
+#endif
         disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
     }
     if (scanner->selectedPort() && scanner->selectedPort()->isReady() && data != lastData) {

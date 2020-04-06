@@ -239,6 +239,7 @@ Page {
             folder: ledhandler.gameFolder
             title: "Please locate your game directory"
             selectFolder: true
+            onAccepted: ledhandler.gameFolder = fileUrl
         }
 
         Button {
