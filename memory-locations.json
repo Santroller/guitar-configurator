@@ -3,7 +3,7 @@
         "linux": {"lib": "UnityPlayer.so", "pointerPathBasePlayer": [34094584, 0, 16, 48, 56, 40, 0]},
         "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
         "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
-        "mac": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [24766808, 0, 16, 48, 56, 40, 0]},
+        "mac": {"lib": "UnityPlayer.dylib", "pointerPathBasePlayer": [26122544, 0, 16, 48, 88, 40, 0]},
         "pointerPathCurrentNote": [184,32,0],
         "offsetButtonsPressed": 224,
         "offsetStarPowerActivated": 230,
