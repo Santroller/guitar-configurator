@@ -43,6 +43,7 @@ jobs:
           mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
+          cp -rf ../memory-locations.json guitar-configurator.app/Contents/MacOS/memory-locations.json
           cp -rf firmware guitar-configurator.app/Contents/MacOS
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
@@ -125,6 +126,7 @@ jobs:
           mkdir deploy
           xcopy firmware /O/X/E/H/K/I deploy\firmware
           xcopy binaries\win /O/X/E/H/K/I deploy\binaries
+          xcopy memory-locations.json /O/X/E/H/K/I deploy\memory-locations.json
           cp release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
