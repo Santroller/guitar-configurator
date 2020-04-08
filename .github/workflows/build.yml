@@ -5,7 +5,9 @@ jobs:
     name: Build (macOS)
     runs-on: macos-latest
     steps:
-      - uses: apple-actions/import-codesign-certs@v1
+      - name: codesign
+        id: codesign
+        uses: apple-actions/import-codesign-certs@v1
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
@@ -38,7 +40,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
-          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ steps.import-codesign-certs.outputs.keychain-password}} system
+          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ steps.codesign.outputs.keychain-password}} system
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
