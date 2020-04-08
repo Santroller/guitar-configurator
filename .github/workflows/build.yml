@@ -9,7 +9,8 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain: guitar-configurator
+          keychain: system
+          create-keychain: false
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
