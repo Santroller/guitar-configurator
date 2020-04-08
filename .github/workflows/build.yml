@@ -16,6 +16,8 @@ jobs:
         run: |
           security list-keychains
           security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
+          security unlock-keychain -p "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
+          security find-identity -p codesigning
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
