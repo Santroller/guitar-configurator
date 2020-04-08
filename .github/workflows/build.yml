@@ -47,7 +47,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
-          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
+          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep --keychain /Users/runner/Library/Keychains/certs.keychain-db
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
           mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
