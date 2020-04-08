@@ -23,16 +23,12 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
 {
 #ifdef Q_OS_WIN64
     platform = "win64";
-    binary = "Clone Hero.exe";
 #elif defined Q_OS_WIN32
     platform = "win32";
-    binary = "Clone Hero.exe";
 #elif defined Q_OS_MACOS
     platform = "mac";
-    binary = "Clone Hero";
 #elif defined Q_OS_LINUX
     platform = "linux";
-    binary = "clonehero";
 #endif
     auto dir = QDir(QCoreApplication::applicationDirPath());
     QFile prod(dir.filePath("ch-index.json"));
@@ -125,9 +121,7 @@ void LEDHandler::startGame() {
     QString binaryPath = QDir(m_gameFolder).filePath(binary);
     process.start(binaryPath, {"--launcher-build"});
     process.waitForStarted();
-#if defined Q_OS_LINUX
-    process.waitForReadyRead();
-#endif
+    QThread::msleep(500);
     pid = process.pid();
 #if defined Q_OS_LINUX
     inputFile = new QFile(QStringLiteral("/proc/%1/maps").arg(pid));
@@ -151,7 +145,6 @@ void LEDHandler::startGame() {
     if (!inputFile->isOpen())
         return;
 #endif
-    QThread::msleep(500);
 #if defined Q_OS_WIN
     HMODULE handles[2048];
     DWORD needed;
@@ -171,15 +164,10 @@ void LEDHandler::startGame() {
     QProcess vmem;
     vmem.start("vmmap", {QString::number(pid)});
     vmem.waitForFinished();
-    base = std::numeric_limits<qint64>().max();
     for (QString line :vmem.readAllStandardOutput().split('\n')) {
         if (line.indexOf(lib) != -1) {
             bool okay = true;
-            auto nBase = line.split(QRegExp("\\s+"))[1].split('-')[0].toLong(&okay, 16);
-//            if (nBase < base) {
-//                base = nBase;
-//            }
-            base = nBase;
+            base = line.split(QRegExp("\\s+"))[1].split('-')[0].toLong(&okay, 16);
             break;
         }
     }
@@ -252,34 +240,39 @@ void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
-    qDebug() << hex << lib << hex << addr;
-    int score = *(size_t*)(cbuf+offsetScore);
-    bool noteIsStarPower = *(cbuf+offsetIsStarPower);
-    bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
-    uint8_t buttons = *(uint8_t*)(cbuf+offsetButtonsPressed);
-    addr = readData(addr, pointerPathCurrentNote, pointerPathCurrentNote.length(), buf);
-    uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
     QByteArray data("l");
-    if (score > lastScore && lastNote & 1<<6) {
-        shownNote = lastNote;
-        countdown = 1;
-    }
-    for (int i =0; i < 5; i++) {
-        if (countdown > 0 && shownNote & 1<<6) {
-            data.push_back((noteIsStarPower || starPowerActivated)?"3":"4");
-        } else if (buttons & 1<<i) {
-            if (score > lastScore && lastNote & 1<<i) {
-                shownNote = lastNote;
-                countdown = 1;
-            }
-            if (countdown > 0 && shownNote & 1<<i) {
-                data.push_back((noteIsStarPower && !starPowerActivated)?"3":"2");
-            } else {
-                data.push_back(starPowerActivated?"2":"1");
-            }
-        } else {
-            data.push_back(starPowerActivated?"3":"0");
+    if (addr < 0) {
+        data = "l00000";
+    } else {
+        int score = *(size_t*)(cbuf+offsetScore);
+        bool noteIsStarPower = *(cbuf+offsetIsStarPower);
+        bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
+        uint8_t buttons = *(uint8_t*)(cbuf+offsetButtonsPressed);
+        addr = readData(addr, pointerPathCurrentNote, pointerPathCurrentNote.length(), buf);
+        uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
+        if (score > lastScore && lastNote & 1<<6) {
+            shownNote = lastNote;
+            countdown = 1;
         }
+        for (int i =0; i < 5; i++) {
+            if (countdown > 0 && shownNote & 1<<6) {
+                data.push_back((noteIsStarPower || starPowerActivated)?"3":"4");
+            } else if (buttons & 1<<i) {
+                if (score > lastScore && lastNote & 1<<i) {
+                    shownNote = lastNote;
+                    countdown = 1;
+                }
+                if (countdown > 0 && shownNote & 1<<i) {
+                    data.push_back((noteIsStarPower && !starPowerActivated)?"3":"2");
+                } else {
+                    data.push_back(starPowerActivated?"2":"1");
+                }
+            } else {
+                data.push_back(starPowerActivated?"3":"0");
+            }
+        }
+        lastScore = score;
+        countdown--;
     }
     //TODO: Show nothing if in menu.
     if (!process.pid()) {
@@ -295,8 +288,6 @@ void LEDHandler::tick() {
         scanner->selectedPort()->write(data);
         lastData = data;
     }
-    lastScore = score;
-    countdown--;
 
 }
 

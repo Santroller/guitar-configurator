@@ -5,6 +5,11 @@ jobs:
     name: Build (macOS)
     runs-on: macos-latest
     steps:
+      - uses: apple-actions/import-codesign-certs@v1
+        with: 
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+          keychain: system
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
