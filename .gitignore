@@ -72,3 +72,5 @@ Thumbs.db
 
 !binaries/*
 !binaries/**/*
+!installer/*
+!installer/**/*
