@@ -47,6 +47,7 @@ jobs:
           cp -rf firmware guitar-configurator.app/Contents/MacOS
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
+          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator*.dmg*" --deep
           mkdir artifacts
           mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
       - uses: actions/upload-artifact@v1
