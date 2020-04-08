@@ -4,13 +4,6 @@
 #include <QGuiApplication>
 #include <QDir>
 #include <QThread>
-#if defined Q_OS_MAC
-    #include <mach/host_info.h>
-    #include <mach/mach_host.h>
-    #include <mach/shared_region.h>
-    #include <mach/mach.h>
-    #include <mach-o/dyld.h>
-#endif
 #if defined Q_OS_LINUX
     #include <proc/readproc.h>
     #include <proc/version.h>
@@ -171,6 +164,12 @@ void LEDHandler::startGame() {
             break;
         }
     }
+
+    kern_return_t kernret = task_for_pid(mach_task_self(), pid, &task);
+    if (kernret != KERN_SUCCESS) {
+        // TODO: give the user a warning here!
+        return kernret;
+    }
 #endif
 
     // create a timer
@@ -209,9 +208,7 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
 #if defined Q_OS_MAC
         size = _word_align(size);
         vm_size_t data_cnt;
-        mach_port_t task;
-        kern_return_t kernret = task_for_pid(mach_task_self(), pid, &task);
-        kernret = vm_read_overwrite(task, (vm_address_t)addr, size, (vm_address_t)buf, &data_cnt);
+        kern_return_t kernret = vm_read_overwrite(task, (vm_address_t)addr, size, (vm_address_t)buf, &data_cnt);
         if (kernret == KERN_SUCCESS) return kernret;
         return -1;
 

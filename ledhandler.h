@@ -17,6 +17,14 @@
 #include <QSet>
 #include "portscanner.h"
 
+#if defined Q_OS_MAC
+    #include <mach/host_info.h>
+    #include <mach/mach_host.h>
+    #include <mach/shared_region.h>
+    #include <mach/mach.h>
+    #include <mach-o/dyld.h>
+#endif
+
 class LEDHandler : public QObject
 {
     Q_OBJECT
@@ -74,6 +82,9 @@ private:
  int offsetCurrentNote;
 #if defined Q_OS_LINUX
  QFile* inputFile;
+#endif
+#if defined Q_OS_MAC
+ mach_port_t task;
 #endif
 
 };

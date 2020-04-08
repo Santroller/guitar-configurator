@@ -68,10 +68,12 @@ win32 {
         system("powershell -Command \"Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win32-index.json -OutFile $$BDIR/ch-index.json\"")
         system("powershell -Command \"Invoke-WebRequest -Uri https://dltest.b-cdn.net/win32-index.json -OutFile $$BDIR/ch-index-test.json\"")
     }
+    RC_ICONS = icon.ico
 } else {
     macx {
         system("curl https://dlpublic.b-cdn.net/mac-index.json -o $$OUT_PWD/guitar-configurator.app/Contents/MacOS/ch-index.json")
         system("curl https://dltest.b-cdn.net/mac-index.json -o $$OUT_PWD/guitar-configurator.app/Contents/MacOS/ch-index-test.json")
+        ICON = icon.icns
     } else {
         system("curl https://dlpublic.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index.json")
         system("curl https://dltest.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index-test.json")
