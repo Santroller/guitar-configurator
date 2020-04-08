@@ -10,7 +10,6 @@ jobs:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
           keychain: system
-          create-keychain: false
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -39,6 +38,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
+          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ steps.import-codesign-certs.outputs.keychain-password}} system
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
