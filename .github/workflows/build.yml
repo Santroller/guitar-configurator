@@ -49,7 +49,9 @@ jobs:
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           mkdir dmg
           mv guitar-configurator.app dmg
-          hdiutil create -volname "GuitarConfiguratorInstall" -ov -format UDZO -srcfolder dmg artifacts/guitar-configurator-macOS.dmg 
+          npm i -g appdmg
+          cp ../appdmg.json dmg
+          appdmg dmg/appdmg.json artifacts/guitar-configurator-macOS.dmg
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
       - uses: actions/upload-artifact@v1
         with:
