@@ -78,7 +78,7 @@ win32 {
     }
 }
 macx {
-    QMAKE_POST_LINK += codesign --entitlements $$PWD/entitlements.xml -s "guitar-configurator" "$$OUT_PWD/guitar-configurator.app" --deep
+#   QMAKE_POST_LINK += codesign --entitlements $$PWD/entitlements.xml -s "guitar-configurator" "$$OUT_PWD/guitar-configurator.app" --deep
     QMAKE_INFO_PLIST = MyInfo.plist
 }
 unix {

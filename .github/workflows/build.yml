@@ -28,7 +28,6 @@ jobs:
         run: |
           mkdir build
           cd build
-          mkdir -p guitar-configurator.app/Contents/MacOS
           qmake CONFIG+=release ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
@@ -39,6 +38,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
+          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
           mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
