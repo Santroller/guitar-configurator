@@ -37,7 +37,7 @@ void UnixSerialHotplug::tick() {
             newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](const QSerialPortInfo& object){return object.systemLocation() == p.systemLocation();}), newSp.end());
         } else {
 #if defined Q_OS_MAC
-            if (p.portName().startsWith("cu")) continue;
+            if (p.portName().startsWith("tty")) continue;
 #endif
             scanner->addPort(p);
         }
