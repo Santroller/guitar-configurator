@@ -12,9 +12,8 @@ jobs:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
           keychain: certs
-      - name: Bundle
+      - name: Enable Certs
         run: |
-          cd build
           security list-keychains
           security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Library/Keychains/Certs.keychain
       - name: Cache Qt
