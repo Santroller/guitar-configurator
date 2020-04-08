@@ -14,9 +14,6 @@ jobs:
           keychain: certs
       - name: Enable Certs
         run: |
-          # security list-keychains
-          # security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
-          security find-identity -p codesigning
           security unlock-keychain -p "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
       - name: Cache Qt
         id: cache-qt
