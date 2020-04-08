@@ -61,7 +61,7 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     findVersion();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
-    gameFolder = gameFolder.replace("file:///","");
+    gameFolder = gameFolder.replace("file://","");
     m_gameFolder = gameFolder;
     settings.setValue("cloneHeroDir",gameFolder);
     findVersion();
