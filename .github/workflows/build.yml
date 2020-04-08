@@ -11,7 +11,12 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain: system
+          keychain: certs
+      - name: Bundle
+        run: |
+          cd build
+          security list-keychains
+          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Library/Keychains/Certs.keychain
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -30,6 +35,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          mkdir -p guitar-configurator.app/Contents/MacOS
           qmake CONFIG+=release ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
@@ -40,8 +46,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
-          security list-keychains
-          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" system
+          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Library/Keychains/Certs.keychain
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
