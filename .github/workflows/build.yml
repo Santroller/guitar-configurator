@@ -61,7 +61,7 @@ jobs:
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
       - name: Install libraries
-        run: sudo apt-get install libxkbcommon-x11-0 libpolkit-qt5-1-1
+        run: sudo apt-get install libxkbcommon-x11-0
       - uses: actions/checkout@v1
         with:
           submodules: true
