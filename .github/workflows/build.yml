@@ -28,6 +28,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          mkdir -p guitar-configurator.app/Contents/MacOS
           qmake CONFIG+=release ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
@@ -61,7 +62,7 @@ jobs:
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
       - name: Install libraries
-        run: sudo apt-get install libxkbcommon-x11-0 procps
+        run: sudo apt-get install libxkbcommon-x11-0 libprocps-dev
       - uses: actions/checkout@v1
         with:
           submodules: true
