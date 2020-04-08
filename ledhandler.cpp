@@ -4,6 +4,13 @@
 #include <QGuiApplication>
 #include <QDir>
 #include <QThread>
+#if defined Q_OS_MAC
+    #include <mach/host_info.h>
+    #include <mach/mach_host.h>
+    #include <mach/shared_region.h>
+    #include <mach/mach.h>
+    #include <mach-o/dyld.h>
+#endif
 #if defined Q_OS_LINUX
     #include <proc/readproc.h>
     #include <proc/version.h>
@@ -35,9 +42,19 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
         a->open(QFile::ReadOnly| QIODevice::Text);
         QJsonDocument doc = QJsonDocument::fromJson(a->readAll());
         QJsonArray arr = doc.array();
+        if (hashedFiles.empty()) {
+            for (auto hashObj: arr[0].toObject()["hash"].toArray()) {
+                hashedFiles.push_back(hashObj.toArray()[0].toString());
+            }
+            binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0,1);
+        }
         for (auto v: arr) {
             auto o = v.toObject();
-            hashes[o["hash"].toArray()[0].toArray()[1].toString()] = o["version"].toString();
+            QString hash;
+            for (auto hashObj: o["hash"].toArray()) {
+                hash += hashObj.toArray()[1].toString();
+            }
+            hashes[hash] = o["version"].toString();
         }
         a->close();
     }
@@ -60,21 +77,24 @@ void readList(QJsonArray arr, QList<qint64>* list) {
     }
 }
 void LEDHandler::findVersion() {
-    QString binaryPath = QDir(m_gameFolder).filePath(binary);
-    QFile f(binaryPath);
-    if (f.exists()) {
-        f.open(QFile::ReadOnly);
-        m_version = QString(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Md5).toHex());
-        if (hashes.contains(m_version)) {
-            m_version = hashes[m_version];
+    QString hash;
+    for (QString file: hashedFiles) {
+        QString filePath = m_gameFolder + file;
+        QFile f(filePath);
+        if (f.exists()) {
+            f.open(QFile::ReadOnly);
+            hash += QString(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Md5).toHex());
+            f.close();
         } else {
-            m_version = "Unknown version!";
+            m_version = "Unable to locate game executable";
         }
         f.close();
-    } else {
-        m_version = "Unable to locate game executable";
     }
-    f.close();
+    if (hashes.contains(hash)) {
+        m_version = hashes[hash];
+    } else {
+        m_version = "Unknown version!";
+    }
     auto dir = QDir(QCoreApplication::applicationDirPath());
     QFile memLoc(dir.filePath("memory-locations.json"));
     memLoc.open(QFile::ReadOnly| QIODevice::Text);
@@ -147,6 +167,24 @@ void LEDHandler::startGame() {
         }
     }
 #endif
+#if defined Q_OS_MAC
+    QProcess vmem;
+    vmem.start("vmmap", {QString::number(pid)});
+    vmem.waitForFinished();
+    base = std::numeric_limits<qint64>().max();
+    for (QString line :vmem.readAllStandardOutput().split('\n')) {
+        if (line.indexOf(lib) != -1) {
+            bool okay = true;
+            auto nBase = line.split(QRegExp("\\s+"))[1].split('-')[0].toLong(&okay, 16);
+//            if (nBase < base) {
+//                base = nBase;
+//            }
+            base = nBase;
+            break;
+        }
+    }
+#endif
+
     // create a timer
     timer = new QTimer(this);
 
@@ -156,7 +194,15 @@ void LEDHandler::startGame() {
     // msec
     timer->start(1);
 }
+size_t _word_align(size_t size)
+{
+    size_t rsize = 0;
 
+    rsize = ((size % sizeof(long)) > 0) ? (sizeof(long) - (size % sizeof(long))) : 0;
+    rsize += size;
+
+    return rsize;
+}
 qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
 {
 
@@ -171,6 +217,16 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
         return -1;
     }
     return qint64(read);
+#endif
+#if defined Q_OS_MAC
+        size = _word_align(size);
+        vm_size_t data_cnt;
+        mach_port_t task;
+        kern_return_t kernret = task_for_pid(mach_task_self(), pid, &task);
+        kernret = vm_read_overwrite(task, (vm_address_t)addr, size, (vm_address_t)buf, &data_cnt);
+        if (kernret == KERN_SUCCESS) return kernret;
+        return -1;
+
 #endif
 }
 qint64 LEDHandler::readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf) {
@@ -196,6 +252,7 @@ void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
+    qDebug() << hex << lib << hex << addr;
     int score = *(size_t*)(cbuf+offsetScore);
     bool noteIsStarPower = *(cbuf+offsetIsStarPower);
     bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
@@ -224,7 +281,7 @@ void LEDHandler::tick() {
             data.push_back(starPowerActivated?"3":"0");
         }
     }
-    //Show nothing if in menu.
+    //TODO: Show nothing if in menu.
     if (!process.pid()) {
         lastData = "";
         data = "l00000";

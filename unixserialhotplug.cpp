@@ -11,6 +11,10 @@ UnixSerialHotplug::UnixSerialHotplug(PortScanner* scanner, QObject *parent) : QO
     // msec
     timer->start(10);
     for (const auto& a:QSerialPortInfo::availablePorts()) {
+
+#if defined Q_OS_MAC
+            if (a.portName().startsWith("tty")) continue;
+#endif
         m_port_list.push_back(a);
         scanner->addPort(a);
     }
@@ -32,6 +36,9 @@ void UnixSerialHotplug::tick() {
             //Skip ports that have not fully loaded yet.
             newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](const QSerialPortInfo& object){return object.systemLocation() == p.systemLocation();}), newSp.end());
         } else {
+#if defined Q_OS_MAC
+            if (p.portName().startsWith("cu")) continue;
+#endif
             scanner->addPort(p);
         }
     }

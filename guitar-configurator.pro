@@ -70,16 +70,16 @@ win32 {
     }
 } else {
     macx {
-        system("curl https://dlpublic.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index.json")
-        system("curl https://dltest.b-cdn.net/mac-index.json -o $$OUT_PWD/ch-index-test.json")
+        system("curl https://dlpublic.b-cdn.net/mac-index.json -o $$OUT_PWD/guitar-configurator.app/Contents/MacOS/ch-index.json")
+        system("curl https://dltest.b-cdn.net/mac-index.json -o $$OUT_PWD/guitar-configurator.app/Contents/MacOS/ch-index-test.json")
     } else {
         system("curl https://dlpublic.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index.json")
         system("curl https://dltest.b-cdn.net/linux-index.json -o $$OUT_PWD/ch-index-test.json")
     }
 }
-
 macx {
-
+    QMAKE_POST_LINK += codesign --entitlements $$PWD/entitlements.xml -s "guitar-configurator" "$$OUT_PWD/guitar-configurator.app" --deep
+    QMAKE_INFO_PLIST = MyInfo.plist
 }
 unix {
     isEmpty(PREFIX) {
@@ -107,6 +107,8 @@ unix {
     QMAKE_EXTRA_TARGETS += first copyfirmware copybinaries copylocations
 }
 DISTFILES += \
+    MyInfo.plist \
+    entitlements.xml \
     firmware/ardwiino-uno-usb-at90usb82-16000000.hex \
     firmware/version \
     memory-locations.json

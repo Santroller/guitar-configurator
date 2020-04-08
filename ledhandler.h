@@ -14,6 +14,7 @@
 #include <QProcess>
 #include <QFile>
 #include <QSettings>
+#include <QSet>
 #include "portscanner.h"
 
 class LEDHandler : public QObject
@@ -44,6 +45,7 @@ private:
  Q_PID pid;
  QString m_version;
  QMap<QString, QString> hashes;
+ QList<QString> hashedFiles;
  QProcess process;
  PortScanner* scanner;
  int lastScore = 0;
