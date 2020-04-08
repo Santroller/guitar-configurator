@@ -14,10 +14,10 @@ jobs:
           keychain: certs
       - name: Enable Certs
         run: |
-          security list-keychains
-          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
-          security unlock-keychain -p "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
+          # security list-keychains
+          # security set-key-partition-list -S apple-tool:,apple: -s -k "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
           security find-identity -p codesigning
+          security unlock-keychain -p "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -47,7 +47,7 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf firmware guitar-configurator.app/Contents/MacOS
-          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep --keychain /Users/runner/Library/Keychains/certs.keychain-db
+          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           macdeployqt guitar-configurator.app -dmg -qmldir=../
           mkdir artifacts
           mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
