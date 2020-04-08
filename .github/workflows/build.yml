@@ -45,10 +45,11 @@ jobs:
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf ../memory-locations.json guitar-configurator.app/Contents/MacOS/memory-locations.json
           cp -rf firmware guitar-configurator.app/Contents/MacOS
+          macdeployqt guitar-configurator.app -qmldir=../
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
-          macdeployqt guitar-configurator.app -dmg -qmldir=../
-          mkdir artifacts
-          mv guitar-configurator*.dmg* artifacts/guitar-configurator-macOS.dmg
+          mkdir dmg
+          mv guitar-configurator.app dmg
+          hdiutil create artifacts/guitar-configurator-macOS.dmg -ov -volname "GuitarConfiguratorInstall" -fs HFS+ -srcfolder "dmg" 
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
       - uses: actions/upload-artifact@v1
         with:
