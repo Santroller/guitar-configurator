@@ -168,7 +168,8 @@ void LEDHandler::startGame() {
     kern_return_t kernret = task_for_pid(mach_task_self(), pid, &task);
     if (kernret != KERN_SUCCESS) {
         // TODO: give the user a warning here!
-        return kernret;
+        qDebug() << "Unable to get task from pid!";
+        return;
     }
 #endif
 
