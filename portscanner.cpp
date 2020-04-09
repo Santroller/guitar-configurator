@@ -1,6 +1,7 @@
 #include "portscanner.h"
 #include <QDebug>
-
+#include <QFile>
+#include <QProcess>
 PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
@@ -41,4 +42,18 @@ void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
         m_model.push_back(new Port());
     }
     emit modelChanged();
+}
+void PortScanner::fixLinux() {
+    QFile f("/sys/bus/usb/drivers/xpad/new_id");
+    f.open(QFile::ReadOnly);
+    QString s = QString(f.readAll());
+    f.close();
+    if(!s.contains("1209 2882")) {
+        QProcess p;
+        p.start("pkexec", {"tee", "-a", "/sys/bus/usb/drivers/xpad/new_id"});
+        p.waitForStarted();
+        p.write("1209 2882");
+        p.closeWriteChannel();
+        p.waitForFinished();
+    }
 }

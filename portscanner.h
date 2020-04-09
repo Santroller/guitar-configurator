@@ -24,16 +24,23 @@ public slots:
     void update();
     void addPort(const QSerialPortInfo& port);
     void removePort(const QSerialPortInfo& port);
+    void fixLinux();
     QList<QObject*> model() const {
         return m_model;
     }
 
     inline QString getOSString() {
 #ifdef Q_OS_LINUX
-        return "<br />If you are not able to detect any devices, you may need to add yourself to the uucp and dialout groups. <br /> For information, <a href=\"https://www.arduino.cc/en/guide/linux#toc6\">click here</a><br/>This <a href=\"https://github.com/paroj/xpad\">fork of xpad</a> is required for xinput support on linux at the moment.";
+        return "<br />If you are not able to detect any devices, you may need to add yourself to the uucp and dialout groups. <br /> For information, <a href=\"https://www.arduino.cc/en/guide/linux#toc6\">click here</a>.<br/>Is your gamepad not detected in game? Click the button below to fix the problem. <br/> Note that this fix will need to be applied after every reboot.";
 #else
         return "";
 #endif
+    }
+    inline bool isLinux() {
+#ifdef Q_OS_LINUX
+        return true;
+#endif
+        return false;
     }
 private:
     QList<QObject*> m_model;

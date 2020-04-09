@@ -163,6 +163,13 @@ Page {
                     cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
                 }
             }
+            Button {
+                id: configureXpad
+                text: qsTr("Fix controller")
+                visible: scanner.isLinux()
+                onClicked: scanner.fixLinux()
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
         }
 
         Label {
