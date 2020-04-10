@@ -134,7 +134,7 @@ Page {
 
             Label {
                 id: uno
-                text: qsTr("Arduino Uno R3")
+                text: qsTr("Arduino Uno")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 fontSizeMode: Text.Fit
                 wrapMode: Text.WordWrap
@@ -144,12 +144,12 @@ Page {
                 font.bold: false
                 verticalAlignment: Text.AlignVCenter
             }
+
             Label {
                 id: os
                 text: qsTr(scanner.getOSString())
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 fontSizeMode: Text.Fit
-                wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
                 font.capitalization: Font.MixedCase
                 font.weight: Font.Light

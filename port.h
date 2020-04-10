@@ -20,6 +20,7 @@ class Port : public QObject
     Q_PROPERTY(bool isArdwiino READ isArdwiino NOTIFY isArdwiinoChanged)
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
     Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY typeChanged)
+    Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
@@ -95,6 +96,9 @@ public slots:
     }
     bool isGuitar() {
         return ArdwiinoDefines::getName(getType()).toLower().contains("guitar");
+    }
+    bool isWii() {
+        return getInputType() == ArdwiinoDefines::WII;
     }
     QString getPort() const {
         return m_port;

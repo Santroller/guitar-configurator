@@ -5,6 +5,7 @@ import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
 import net.tangentmc 1.0
 import "pins.js" as PinInfo
+import "defines.js" as Defines
 
 Page {
     id: page
@@ -144,7 +145,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.image
+            source: Defines.getBoardImage(scanner.selected.type)
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
@@ -184,7 +185,7 @@ Page {
             columns: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             property var current: PinInfo.bindings[scanner.selected.boardImage]
-            property var labels: PinInfo.getLabels(scanner.selected.isGuitar);
+            property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii);
             Label {
                 text: "Actions"
                 font.pointSize: 15

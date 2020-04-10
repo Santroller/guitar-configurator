@@ -68,6 +68,7 @@ var defLabels = {
     "r_y": "Right Joystick Y Axis",
 }
 
-function getLabels(isGuitar) {
+function getLabels(isGuitar, isWii) {
+    if (isWii && isGuitar) return {"r_y": "Tilt Axis"}
     return isGuitar?guitarLabels:defLabels;
 }

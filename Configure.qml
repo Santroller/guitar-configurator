@@ -121,51 +121,54 @@ Page {
                 scanner.selected.type = comboBox.model[comboBox.currentIndex].value
             }
         }
-        Button {
-            id: tilt
-            text: qsTr("Configure Tilt")
-            visible: scanner.selected.isGuitar
+        RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                mainStack.push("Tilt.qml");
+            Button {
+                id: tilt
+                text: qsTr("Configure Tilt")
+                visible: scanner.selected.isGuitar
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.push("Tilt.qml");
+                }
             }
-        }
-        Button {
-            id: leds
-            text: qsTr("Configure LEDs")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                mainStack.push("leds.qml");
+            Button {
+                id: leds
+                text: qsTr("Configure LEDs")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.push("leds.qml");
+                }
             }
-        }
-        Button {
-            id: bind
-            visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT
-            text: qsTr("Configure Arduino Pin Bindings")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                scanner.selected.loadPins();
-                mainStack.push("PinBindings.qml");
+            Button {
+                id: bind
+                visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar
+                text: qsTr("Configure Arduino Pin Bindings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    scanner.selected.loadPins();
+                    mainStack.push("PinBindings.qml");
+                }
             }
-        }
-        Button {
-            id: keybind
-            visible: scanner.selected.type === ArdwiinoDefinesValues.KEYBOARD
-            text: qsTr("Configure Keyboard Bindings")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                scanner.selected.loadKeys();
-                mainStack.push("KeyBindings.qml");
+            Button {
+                id: keybind
+                visible: scanner.selected.type === ArdwiinoDefinesValues.KEYBOARD
+                text: qsTr("Configure Keyboard Bindings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    scanner.selected.loadKeys();
+                    mainStack.push("KeyBindings.qml");
+                }
             }
-        }
-        Button {
-            id: restore
-            text: qsTr("Restore Device back to Arduino")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            visible: scanner.selected.hasDFU
-            onClicked: {
-                programmer.setRestoring(true);
-                mainStack.replace("Programmer.qml");
+            Button {
+                id: restore
+                text: qsTr("Restore Device back to Arduino")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                visible: scanner.selected.hasDFU
+                onClicked: {
+                    programmer.setRestoring(true);
+                    mainStack.replace("Programmer.qml");
+                }
             }
         }
         Button {
@@ -200,39 +203,33 @@ Page {
             onClicked: mainStack.replace("Welcome.qml");
         }
         Label {
-            text: qsTr("Clone Hero Connector")
+            text: qsTr("Clone Hero Connector - Game Version: "+ledhandler.version)
             fontSizeMode: Text.FixedSize
             verticalAlignment: Text.AlignVCenter
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             wrapMode: Text.WordWrap
+        }
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Label {
+                text: qsTr("Game Location: "+ledhandler.gameFolder)
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Button {
+                id: findGame
+                text: qsTr("Locate your game directory")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: folderDialog.open()
+            }
         }
 
-        Label {
-            text: qsTr("Game Location: "+ledhandler.gameFolder)
-            fontSizeMode: Text.FixedSize
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Label {
-            text: qsTr("Game Version: "+ledhandler.version)
-            fontSizeMode: Text.FixedSize
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Button {
-            id: findGame
-            text: qsTr("Locate your game directory")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: folderDialog.open()
-        }
 
         FileDialog {
             id: folderDialog
@@ -244,7 +241,8 @@ Page {
 
         Button {
             id: startGame
-            text: qsTr("Start CloneHero")
+            text: qsTr("Start Clone Hero")
+            enabled: ledhandler.ready
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: ledhandler.startGame();
         }

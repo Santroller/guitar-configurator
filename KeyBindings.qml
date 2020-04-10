@@ -5,6 +5,7 @@ import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
 import net.tangentmc 1.0
 import "keys.js" as KeyInfo
+import "defines.js" as Defines
 
 Page {
     id: page
@@ -110,7 +111,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: Defines.boardImages[scanner.selected.controller]
+            source: Defines.getBoardImage(scanner.selected.type)
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3

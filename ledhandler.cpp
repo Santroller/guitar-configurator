@@ -100,10 +100,13 @@ void LEDHandler::findVersion() {
         offsetIsStarPower = obj["offsetIsStarPower"].toInt();
         offsetScore = obj["offsetScore"].toInt();
         offsetCurrentNote = obj["offsetCurrentNote"].toInt();
+        m_ready = true;
     } else {
         m_version = "Unsupported Version: "+m_version;
+        m_ready = false;
     }
     memLoc.close();
+    readyChanged();
     versionChanged();
 }
 
@@ -250,7 +253,7 @@ void LEDHandler::tick() {
         uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
         if (score > lastScore && lastNote & 1<<6) {
             shownNote = lastNote;
-            countdown = 1;
+            countdown = 2;
         }
         for (int i =0; i < 5; i++) {
             if (countdown > 0 && shownNote & 1<<6) {
@@ -258,7 +261,7 @@ void LEDHandler::tick() {
             } else if (buttons & 1<<i) {
                 if (score > lastScore && lastNote & 1<<i) {
                     shownNote = lastNote;
-                    countdown = 1;
+                    countdown = 2;
                 }
                 if (countdown > 0 && shownNote & 1<<i) {
                     data.push_back((noteIsStarPower && !starPowerActivated)?"3":"2");

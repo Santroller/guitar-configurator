@@ -10,5 +10,17 @@
         "offsetIsStarPower": 240,
         "offsetScore": 288,
         "offsetCurrentNote": 40
+    },
+    "v0.23.2.2": {
+        "linux": {"lib": "clonehero", "pointerPathBasePlayer": [29483520, 0, 16, 48, 72, 40, 24, 0]},
+        "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [20890896, 0, 16, 144, 24, 504, 144, 3920]},
+        "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [20890896, 0, 16, 144, 24, 504, 144, 3920]},
+        "mac": {"lib": "UnityPlayer.dylib", "pointerPathBasePlayer": [22506880, 0, 184, 40, 72, 32, 0]},
+        "pointerPathCurrentNote": [168,32,0],
+        "offsetButtonsPressed": 200,
+        "offsetStarPowerActivated": 204,
+        "offsetIsStarPower": 216,
+        "offsetScore": 260,
+        "offsetCurrentNote": 44
     }
 }

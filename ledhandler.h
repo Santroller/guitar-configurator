@@ -30,6 +30,7 @@ class LEDHandler : public QObject
     Q_OBJECT
     Q_PROPERTY(QString gameFolder READ getGameFolder WRITE setGameFolder NOTIFY gameFolderChanged)
     Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
+    Q_PROPERTY(bool ready MEMBER m_ready NOTIFY readyChanged)
 public:
     explicit LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent = nullptr);
     QTimer *timer;
@@ -40,6 +41,7 @@ public:
 signals:
     void gameFolderChanged();
     void versionChanged();
+    void readyChanged();
 public slots:
     void startGame();
 private slots:
@@ -59,6 +61,7 @@ private:
  int lastScore = 0;
  int shownNote = 0;
  int countdown = 0;
+ bool m_ready;
  QString m_gameFolder;
  QByteArray lastData;
  qint64 base=0;
