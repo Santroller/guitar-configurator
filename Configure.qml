@@ -66,7 +66,7 @@ Page {
                 text: qsTr("Update")
                 visible: scanner.selected.isOutdated
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: mainStack.replace("Programmer.qml")
+                onClicked: {scanner.selected.prepareUpdate(); mainStack.replace("Programmer.qml")}
             }
         }
 

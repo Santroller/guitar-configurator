@@ -103,6 +103,11 @@ void Port::writeConfig() {
     close();
     portStateChanged();
 }
+void Port::prepareUpdate() {
+    if (board().hasDFU) {
+        jump();
+    }
+}
 void Port::jump() {
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER));
@@ -111,6 +116,9 @@ void Port::jump() {
     portStateChanged();
 }
 void Port::jumpUNO() {
+    if (!m_serialPort->isOpen()) {
+        m_serialPort->open(QIODevice::ReadWrite);
+    }
     m_serialPort->flush();
     m_serialPort->write(QByteArray(1,COMMAND_JUMP_BOOTLOADER_UNO));
     m_serialPort->waitForBytesWritten();

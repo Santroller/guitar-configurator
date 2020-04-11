@@ -153,6 +153,7 @@ public slots:
     void savePins();
     void loadKeys();
     void saveKeys();
+    void prepareUpdate();
     int getTilt() {
         //TODO: We currently do not expose this from the serial api, and probably should.
 //        QByteArray a;

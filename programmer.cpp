@@ -148,6 +148,7 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
         if (exitCode == 0) {
             if (m_port->getBoard().hasDFU) {
                 m_status = Status::DFU_CONNECT;
+                m_port->jumpUNO();
                 programDFU();
             } else {
                 m_status = Status::DFU_DISCONNECT;
