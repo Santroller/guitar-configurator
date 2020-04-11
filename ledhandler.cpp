@@ -242,43 +242,42 @@ void LEDHandler::tick() {
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
     QByteArray data("l");
-    if (addr < 0) {
-        data = "l00000";
-    } else {
-        int score = *(size_t*)(cbuf+offsetScore);
-        bool noteIsStarPower = *(cbuf+offsetIsStarPower);
-        bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
-        uint8_t buttons = *(uint8_t*)(cbuf+offsetButtonsPressed);
+    int score = *(size_t*)(cbuf+offsetScore);
+    bool noteIsStarPower = *(cbuf+offsetIsStarPower);
+    bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
+    uint8_t buttons = *(uint8_t*)(cbuf+offsetButtonsPressed);
+    if (addr > 0) {
         addr = readData(addr, pointerPathCurrentNote, pointerPathCurrentNote.length(), buf);
-        uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
-        if (score > lastScore && lastNote & 1<<6) {
-            shownNote = lastNote;
-            countdown = 2;
-        }
-        for (int i =0; i < 5; i++) {
+    }
+    uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
+    if (score > lastScore && lastNote & 1<<6) {
+        shownNote = lastNote;
+        countdown = 2;
+    }
+    for (int i =0; i < 5; i++) {
+        if (addr < 0) {
+            data.push_back((char)0);
+        } else {
             if (countdown > 0 && shownNote & 1<<6) {
-                data.push_back((noteIsStarPower || starPowerActivated)?"3":"4");
+                data.push_back((noteIsStarPower || starPowerActivated)?3:4);
             } else if (buttons & 1<<i) {
                 if (score > lastScore && lastNote & 1<<i) {
                     shownNote = lastNote;
                     countdown = 2;
                 }
                 if (countdown > 0 && shownNote & 1<<i) {
-                    data.push_back((noteIsStarPower && !starPowerActivated)?"3":"2");
+                    data.push_back((noteIsStarPower && !starPowerActivated)?3:2);
                 } else {
-                    data.push_back(starPowerActivated?"2":"1");
+                    data.push_back(starPowerActivated?2:1);
                 }
             } else {
-                data.push_back(starPowerActivated?"3":"0");
+                data.push_back(starPowerActivated?3:0);
             }
         }
-        lastScore = score;
-        countdown--;
     }
-    //TODO: Show nothing if in menu.
+    lastScore = score;
+    countdown--;
     if (!process.pid()) {
-        lastData = "";
-        data = "l00000";
 #if defined Q_OS_LINUX
         inputFile->close();
         inputFile = nullptr;
