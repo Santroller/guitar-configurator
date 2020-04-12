@@ -47,6 +47,7 @@ public:
     void jump();
     void handleConnection(const QSerialPortInfo& info);
     void write(QByteArray id);
+    void writeNoResp(QByteArray id);
 signals:
     void descriptionChanged();
     void pinsChanged();

@@ -285,7 +285,9 @@ void LEDHandler::tick() {
         disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
     }
     if (scanner->selectedPort() && scanner->selectedPort()->isReady() && data != lastData) {
-        scanner->selectedPort()->write(data);
+        //Currently, our serial communication is super unbalanced. sending data to the arduino can run at full speed, but responses don't. since an led not turning on isnt mission critical
+        //we just make it so LEDs don't write newlines
+        scanner->selectedPort()->writeNoResp(data);
         lastData = data;
     }
 

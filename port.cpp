@@ -99,6 +99,11 @@ void Port::write(QByteArray id) {
     m_serialPort->readLine();
 }
 
+void Port::writeNoResp(QByteArray id) {
+    m_serialPort->write(id);
+    m_serialPort->waitForBytesWritten();
+}
+
 void Port::startConfiguring() {
     write(QByteArray(1,COMMAND_START_CONFIG));
 }
@@ -154,7 +159,11 @@ void Port::readDescription() {
 void Port::open(const QSerialPortInfo &serialPortInfo) {
     m_serialPort = new QSerialPort(serialPortInfo);
     if (m_isArdwiino) {
-        m_serialPort->setBaudRate(QSerialPort::Baud115200);
+        if (ArdwiinoLookup::is115200(serialPortInfo)) {
+            m_serialPort->setBaudRate(QSerialPort::Baud115200);
+        } else {
+            m_serialPort->setBaudRate(1000000);
+        }
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
         m_serialPort->setParity(QSerialPort::Parity::NoParity);
