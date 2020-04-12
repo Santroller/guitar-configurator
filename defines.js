@@ -16,6 +16,7 @@ boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_WHEEL] = "images/xbox.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_ARCADE_STICK] = "images/arcadestick.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_FLIGHT_STICK] = "images/flightstick.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_DANCE_PAD] = "images/ddr.png";
+boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_LIVE_GUITAR] = "images/guitar.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_GUITAR] = "images/guitar.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_GUITAR_BASS] = "images/guitar.png";
 boardImages[TangentMC.ArdwiinoDefinesValues.XINPUT_DRUMS] = "images/rb-drums.png";

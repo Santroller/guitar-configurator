@@ -44,6 +44,26 @@ var guitarLabels = {
     "r_y": "Tilt Axis",
 }
 
+var guitarLiveLabels = {
+    "up": "Strum Up",
+    "down": "Strum Down",
+    "left": "DPad Left",
+    "right": "DPad Right",
+    "start": "Start Button",
+    "back": "Select Button",
+    "home": "Home Button",
+    "a": "Black 1",
+    "b": "Black 2",
+    "y": "Black 3",
+    "x": "White 1",
+    "LB": "White 2",
+    "RB": "White 3",
+    "l_x": "Joystick X Axis",
+    "l_y": "Joystick Y Axis",
+    "r_x": "Whammy",
+    "r_y": "Tilt Axis",
+}
+
 var defLabels = {
     "up": "DPad Up",
     "down": "DPad Down",
@@ -68,7 +88,9 @@ var defLabels = {
     "r_y": "Right Joystick Y Axis",
 }
 
-function getLabels(isGuitar, isWii) {
+function getLabels(isGuitar, isWii, isLiveGuitar) {
     if (isWii && isGuitar) return {"r_y": "Tilt Axis"}
-    return isGuitar?guitarLabels:defLabels;
+    if (isLiveGuitar) return guitarLiveLabels;
+    if (isGuitar) return guitarLabels;
+    return defLabels;
 }

@@ -185,7 +185,7 @@ Page {
             columns: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             property var current: PinInfo.bindings[scanner.selected.boardImage]
-            property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii);
+            property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar);
             Label {
                 text: "Actions"
                 font.pointSize: 15

@@ -152,7 +152,6 @@ void Port::readDescription() {
     }
     m_description += " - " + m_port;
     updateControllerName();
-    write(WRITE_CONFIG(CONFIG_SUB_TYPE, 9));
     emit typeChanged();
     emit descriptionChanged();
 }
