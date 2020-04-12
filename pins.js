@@ -88,6 +88,18 @@ var defLabels = {
     "r_y": "Right Joystick Y Axis",
 }
 
+function getUnused(isGuitar, isWii, isLiveGuitar) {
+    let unused = [];
+    let labels = getLabels(isGuitar, isWii, isLiveGuitar);
+    if (labels === defLabels) return;
+    for (let label in defLabels) {
+        if (!(label in labels)) {
+            unused.push(label);
+        }
+    }
+    return unused;
+}
+
 function getLabels(isGuitar, isWii, isLiveGuitar) {
     if (isWii && isGuitar) return {"r_y": "Tilt Axis"}
     if (isLiveGuitar) return guitarLiveLabels;

@@ -261,6 +261,12 @@ Page {
                 text: qsTr("Save Bindings")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: {
+
+                    var pins = scanner.selected.pins;
+                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar)) {
+                        pins[pin] = 0xFF;
+                    }
+                    scanner.selected.pins = pins;
                     scanner.selected.savePins()
                     mainStack.pop();
                 }
