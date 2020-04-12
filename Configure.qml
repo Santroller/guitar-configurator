@@ -104,22 +104,14 @@ Page {
         }
 
         ComboBox {
-            property var inited: false
             id: comboBox
             Layout.fillWidth: true
             textRole: "key"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: Defines.fillCombobox("subtype")
-            Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.findIndex(s => s.value === scanner.selected.type) }
+            Binding { target: comboBox; property: "currentIndex"; value: {comboBox.model.findIndex(s => s.value === scanner.selected.type)} }
 
-            onCurrentIndexChanged: {
-                if (!inited) {
-                    inited = true;
-                    return;
-                }
-
-                scanner.selected.type = comboBox.model[comboBox.currentIndex].value
-            }
+            onCurrentIndexChanged: scanner.selected.type = comboBox.model[comboBox.currentIndex].value
         }
         RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

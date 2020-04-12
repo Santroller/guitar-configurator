@@ -72,6 +72,13 @@ void Port::readData() {
         m_isOldArdwiino = false;
         emit descriptionChanged();
     } else {
+        //If we have an uno, and it is in avrdude mode, send the commands to jump back to ardwiino mode. You can tell it is in avrdude mode as we receive all of the frame commands, including 0x7f.
+        if (m_serialPort->readAll().contains(0x7f)) {
+            m_serialPort->write("2",1);
+            m_serialPort->waitForBytesWritten();
+            m_serialPort->setDataTerminalReady(false);
+            m_serialPort->clear();
+        }
         do {
             //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
             m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
@@ -151,6 +158,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
         m_serialPort->setParity(QSerialPort::Parity::NoParity);
+        m_serialPort->setFlowControl(QSerialPort::FlowControl::HardwareControl);
         QObject::connect(m_serialPort, &QSerialPort::errorOccurred, this, &Port::handleError);
         if (m_serialPort->open(QIODevice::ReadWrite)) {
             QThread *thread = QThread::create([this]{
