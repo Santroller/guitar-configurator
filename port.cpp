@@ -51,6 +51,10 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     emit outdatedChanged();
     emit isArdwiinoChanged();
 }
+uint16_t Port::read_16(QByteArray id) {
+    uint16_t* data = (uint16_t*)read(id).data();
+    return *data;
+}
 uint8_t Port::read_single(QByteArray id) {
     return read(id).data()[0] & 0xff;
 }
@@ -323,6 +327,7 @@ void Port::loadPins() {
         m_pin_inverts["rt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_RT));
         m_pin_inverts["l_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_X));
         m_pin_inverts["l_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_Y));
+        m_pin_inverts["r_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_X));
     }
     m_pins["r_y"] = read_single(READ_CONFIG(CONFIG_PIN_R_Y));
     m_pin_inverts["r_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_Y));

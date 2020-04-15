@@ -153,6 +153,14 @@ Page {
                 }
             }
             Button {
+                id: mappings
+                text: qsTr("Configure additional settings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    mainStack.push("Mappings.qml");
+                }
+            }
+            Button {
                 id: restore
                 text: qsTr("Restore Device back to Arduino")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

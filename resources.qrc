@@ -25,5 +25,6 @@
         <file>Tilt.qml</file>
         <file>defines.js</file>
         <file>leds.qml</file>
+        <file>Mappings.qml</file>
     </qresource>
 </RCC>

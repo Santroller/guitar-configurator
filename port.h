@@ -34,6 +34,11 @@ class Port : public QObject
     Q_PROPERTY(ArdwiinoDefines::tilt tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
     Q_PROPERTY(ArdwiinoDefines::fret_mode ledType READ getLedType WRITE setLedType NOTIFY ledTypeChanged)
     Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
+    Q_PROPERTY(int triggerThreshold READ getTriggerThreshold WRITE setTriggerThreshold NOTIFY triggerThresholdChanged)
+    Q_PROPERTY(int joyThreshold READ getJoyThreshold WRITE setJoyThreshold NOTIFY joyThresholdChanged)
+    Q_PROPERTY(int pollRate READ getPollRate WRITE setPollRate NOTIFY pollRateChanged)
+    Q_PROPERTY(bool mapJoystick READ getMapJoystick WRITE setMapJoystick NOTIFY mapJoystickChanged)
+    Q_PROPERTY(bool mapStartSelectHome READ getMapStartSelectHome WRITE setMapStartSelectHome NOTIFY mapStartSelectHomeChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -65,6 +70,11 @@ signals:
     void readyChanged();
     void outdatedChanged();
     void isArdwiinoChanged();
+    void triggerThresholdChanged();
+    void joyThresholdChanged();
+    void pollRateChanged();
+    void mapJoystickChanged();
+    void mapStartSelectHomeChanged();
 
 public slots:
     void writeConfig();
@@ -151,6 +161,42 @@ public slots:
         write(WRITE_CONFIG(CONFIG_LED_TYPE, value));
         ledTypeChanged();
     }
+    void setMapJoystick(bool value) {
+        write(WRITE_CONFIG(CONFIG_MAP_JOY_DPAD, value));
+        mapJoystickChanged();
+    }
+    void setMapStartSelectHome(bool value) {
+        write(WRITE_CONFIG(CONFIG_MAP_START_SEL_HOME, value));
+        mapStartSelectHomeChanged();
+    }
+    void setTriggerThreshold(uint8_t value) {
+        write(WRITE_CONFIG(CONFIG_THRESHOLD_TRIGGER, value));
+        triggerThresholdChanged();
+
+    }
+    void setJoyThreshold(uint8_t value) {
+        write(WRITE_CONFIG(CONFIG_THRESHOLD_JOY, value));
+        joyThresholdChanged();
+    }
+    void setPollRate(uint8_t value) {
+        write(WRITE_CONFIG(CONFIG_POLL_RATE, value));
+        pollRateChanged();
+    }
+    uint8_t getTriggerThreshold() {
+        return read_single(READ_CONFIG(CONFIG_THRESHOLD_TRIGGER));
+    }
+    uint8_t getJoyThreshold() {
+        return read_single(READ_CONFIG(CONFIG_THRESHOLD_JOY));
+    }
+    int getPollRate() {
+        return read_single(READ_CONFIG(CONFIG_POLL_RATE));
+    }
+    bool getMapJoystick() {
+        return read_single(READ_CONFIG(CONFIG_MAP_JOY_DPAD));
+    }
+    bool getMapStartSelectHome() {
+        return read_single(READ_CONFIG(CONFIG_MAP_START_SEL_HOME));
+    }
     void handleError(QSerialPort::SerialPortError serialPortError);
     void startConfiguring();
     void readDescription();
@@ -178,6 +224,7 @@ private:
     void readData();
     void updateControllerName();
     uint8_t read_single(QByteArray id);
+    uint16_t read_16(QByteArray id);
     QByteArray read(QByteArray);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
