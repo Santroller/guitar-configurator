@@ -91,7 +91,7 @@ var defLabels = {
 function getUnused(isGuitar, isWii, isLiveGuitar) {
     let unused = [];
     let labels = getLabels(isGuitar, isWii, isLiveGuitar);
-    if (labels === defLabels) return;
+    if (labels === defLabels) return unused;
     for (let label in defLabels) {
         if (!(label in labels)) {
             unused.push(label);
