@@ -145,21 +145,6 @@ Page {
                     color: "#bdbebf"
                 }
             }
-            Label {
-                text: "Poll Rate"
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                wrapMode: Text.WordWrap
-            }
-            SpinBox {
-                Layout.preferredWidth: gl.parent.width/3
-                id: spinbox
-                from: 0
-                to: 4
-                textFromValue: function(value, locale) { return Number(1 << value).toLocaleString(locale, 'f', 0); }
-                value: Math.log2(scanner.selected.pollRate);
-                onValueChanged: scanner.selected.pollRate = 1 << value
-
-            }
 
 
         }

@@ -36,7 +36,6 @@ class Port : public QObject
     Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
     Q_PROPERTY(int triggerThreshold READ getTriggerThreshold WRITE setTriggerThreshold NOTIFY triggerThresholdChanged)
     Q_PROPERTY(int joyThreshold READ getJoyThreshold WRITE setJoyThreshold NOTIFY joyThresholdChanged)
-    Q_PROPERTY(int pollRate READ getPollRate WRITE setPollRate NOTIFY pollRateChanged)
     Q_PROPERTY(bool mapJoystick READ getMapJoystick WRITE setMapJoystick NOTIFY mapJoystickChanged)
     Q_PROPERTY(bool mapStartSelectHome READ getMapStartSelectHome WRITE setMapStartSelectHome NOTIFY mapStartSelectHomeChanged)
 public:
@@ -72,7 +71,6 @@ signals:
     void isArdwiinoChanged();
     void triggerThresholdChanged();
     void joyThresholdChanged();
-    void pollRateChanged();
     void mapJoystickChanged();
     void mapStartSelectHomeChanged();
 
@@ -178,18 +176,11 @@ public slots:
         write(WRITE_CONFIG(CONFIG_THRESHOLD_JOY, value));
         joyThresholdChanged();
     }
-    void setPollRate(uint8_t value) {
-        write(WRITE_CONFIG(CONFIG_POLL_RATE, value));
-        pollRateChanged();
-    }
     uint8_t getTriggerThreshold() {
         return read_single(READ_CONFIG(CONFIG_THRESHOLD_TRIGGER));
     }
     uint8_t getJoyThreshold() {
         return read_single(READ_CONFIG(CONFIG_THRESHOLD_JOY));
-    }
-    int getPollRate() {
-        return read_single(READ_CONFIG(CONFIG_POLL_RATE));
     }
     bool getMapJoystick() {
         return read_single(READ_CONFIG(CONFIG_MAP_JOY_DPAD));

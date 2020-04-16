@@ -137,7 +137,6 @@ Page {
                 y: 15
                 implicitWidth: 200
                 implicitHeight: 4
-                width: control.availableWidth
                 height: implicitHeight
                 radius: 2
                 color: "#bdbebf"
