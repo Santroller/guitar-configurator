@@ -185,7 +185,7 @@ Page {
             columns: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             property var current: PinInfo.bindings[scanner.selected.boardImage]
-            property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar);
+            property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB);
             Label {
                 text: "Actions"
                 font.pointSize: 15
@@ -263,7 +263,7 @@ Page {
                 onClicked: {
 
                     var pins = scanner.selected.pins;
-                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar)) {
+                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
                         pins[pin] = 0xFF;
                     }
                     scanner.selected.pins = pins;

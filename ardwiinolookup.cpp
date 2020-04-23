@@ -34,7 +34,7 @@ auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo
 }
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    return serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
+    return serialPortInfo.vendorIdentifier() == HARMONIX_VID || serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
 ArdwiinoLookup* ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty =  {"","","",0,{},"","",0,"","", false};

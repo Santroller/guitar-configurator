@@ -21,6 +21,7 @@ class Port : public QObject
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
     Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY typeChanged)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY typeChanged)
+    Q_PROPERTY(bool isRB READ isRB NOTIFY typeChanged)
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
@@ -112,6 +113,10 @@ public slots:
     }
     bool isWii() {
         return getInputType() == ArdwiinoDefines::WII;
+    }
+    bool isRB() {
+        ArdwiinoDefines::subtype s = getType();
+        return s == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || s == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
     }
     QString getPort() const {
         return m_port;

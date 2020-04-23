@@ -13,6 +13,7 @@
 #define ARDWIINO_VID 0x1209
 #define ARDWIINO_PID 0x2882
 #define SONY_VID 0x12ba
+#define HARMONIX_VID 0x1bad
 #define SWITCH_VID 0x0f0d
 
 typedef struct {
