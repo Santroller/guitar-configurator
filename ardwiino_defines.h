@@ -12,7 +12,7 @@ public:
           for(auto i = 0; i< sentence.size(); i++){
              sentence[i] = sentence[i][0].toUpper() + sentence[i].right(sentence[i].size()-1);
           }
-          return sentence.join(" ").replace("Ps3","PS3").replace("Apa102", "APA102").replace("Ws2812","WS2812");
+          return sentence.join(" ").replace("Ps3","PS3").replace("Apa102", "APA102");
     }
     static QVariantMap getEntries(QMetaEnum e) {
         QVariantMap map;
