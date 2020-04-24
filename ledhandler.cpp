@@ -65,6 +65,21 @@ void readList(QJsonArray arr, QList<qint64>* list) {
         list->push_back(a.toVariant().toLongLong());
     }
 }
+void LEDHandler::setColor(int color) {
+    uint32_t ucolor = color;
+    //Gamma-correct values
+    uint8_t r = ucolor >> 16 & 0xff;
+    uint8_t g = ucolor >> 8 & 0xff;
+    uint8_t b = ucolor & 0xff;
+    r = (pow(r / 255.0, 2.8) * 255 + 0.5);
+    g = (pow(g / 255.0, 2.8) * 255 + 0.5);
+    b = (pow(b / 255.0, 2.8) * 255 + 0.5);
+    if (scanner->selectedPort() && scanner->selectedPort()->isReady()) {
+        QByteArray a = "g";
+        a.append((char)b).append((char)g).append((char)r);
+        scanner->selectedPort()->write(a);
+    }
+}
 void LEDHandler::findVersion() {
     QString hash;
     for (QString file: hashedFiles) {
@@ -285,9 +300,7 @@ void LEDHandler::tick() {
         disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
     }
     if (scanner->selectedPort() && scanner->selectedPort()->isReady() && data != lastData) {
-        //Currently, our serial communication is super unbalanced. sending data to the arduino can run at full speed, but responses don't. since an led not turning on isnt mission critical
-        //we just make it so LEDs don't write newlines
-        scanner->selectedPort()->writeNoResp(data);
+        scanner->selectedPort()->write(data);
         lastData = data;
     }
 

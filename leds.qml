@@ -4,6 +4,8 @@ import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
 import QtQuick.Layouts 1.10
 import net.tangentmc 1.0
+import Qt.labs.platform 1.1
+import QtQuick.Dialogs 1.3
 import "defines.js" as Defines
 
 Page {
@@ -80,6 +82,17 @@ Page {
             Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.ledType) }
 
             onCurrentIndexChanged: scanner.selected.ledType = tiltBox.model[tiltBox.currentIndex].value
+        }
+        ColorDialog {
+          id: color
+          onCurrentColorChanged: {
+              var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
+              ledhandler.color = parseInt(result[1],16);
+          }
+        }
+        Button {
+          onClicked: color.open()
+          id: colorBt
         }
 
         Button {

@@ -26,5 +26,24 @@
         <file>defines.js</file>
         <file>leds.qml</file>
         <file>Mappings.qml</file>
+        <file>images/ps3/Base.svg</file>
+        <file>images/ps3/Btn.svg</file>
+        <file>images/ps3/Btn_High.svg</file>
+        <file>images/ps3/CIRCLE.svg</file>
+        <file>images/ps3/CROSS.svg</file>
+        <file>images/ps3/DDOWN.svg</file>
+        <file>images/ps3/DLEFT.svg</file>
+        <file>images/ps3/DRIGHT.svg</file>
+        <file>images/ps3/DUP.svg</file>
+        <file>images/ps3/HOME.svg</file>
+        <file>images/ps3/L1.svg</file>
+        <file>images/ps3/L2.svg</file>
+        <file>images/ps3/LSTICK.svg</file>
+        <file>images/ps3/RSTICK.svg</file>
+        <file>images/ps3/SELECT.svg</file>
+        <file>images/ps3/SQUARE.svg</file>
+        <file>images/ps3/START.svg</file>
+        <file>images/ps3/TRIANGLE.svg</file>
+        <file>images/nunchuck_adapter.pdf</file>
     </qresource>
 </RCC>

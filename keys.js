@@ -177,6 +177,6 @@ function findValueForEvent(event) {
 
 function getKeyName(key) {
     if (!key) return "Not Set";
-    if (key === 0xFF) return "No Key";
+    if (key === 0xFF || key === -1) return "No Key";
     return TangentMC.ArdwiinoLookup.getKeyName(keyMap[key]);
 }
