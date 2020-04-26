@@ -194,6 +194,8 @@ jobs:
       - uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           SINGLE_COMMIT: true
+          CLEAN: true
+          CLEAN_EXCLUDE: ["_includes","_layouts","_sass","assets","screenshots",".env",".gitignore","*.html","*.md","Gemfile","Gemfile.lock","_config.yml","adaptor.jpg"]
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: windows 
