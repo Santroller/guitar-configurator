@@ -177,7 +177,6 @@ jobs:
           mv ./windows/*.exe ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
           mv ./mac/*.dmg ./mac/guitar-configurator-mac-${GITHUB_REF##*/}.dmg
           mv ./linux/*.AppImage ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage
-          echo "<meta http-equiv="refresh" content="2;url=https://sanjay900.github.io/guitar-configurator-site" />" > windows/index.html
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
