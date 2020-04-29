@@ -143,7 +143,7 @@ jobs:
           powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\config\config.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '2010-09-21', (Get-Date -Format "yyy-MM-dd") | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"
-          ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe
+          ..\Qt\Tools\QtInstallerFramework\3.2\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           ..\Qt\Tools\QtInstallerFramework\3.2\bin\repogen -p installer\packages artifacts\repository
         shell: cmd
       - uses: actions/upload-artifact@v1
@@ -192,6 +192,9 @@ jobs:
           rm ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
       - uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
+          SINGLE_COMMIT: true
+          CLEAN: true
+          CLEAN_EXCLUDE: '["_includes","_layouts","_sass","assets","screenshots",".env",".gitignore","*.html","*.md","Gemfile","Gemfile.lock","_config.yml","adaptor.jpg"]'
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: windows 
