@@ -8,8 +8,8 @@ function generatePins(count, x, y, width, startId) {
     return ret;
 }
 var pinLocations = {
-    "images/uno.png": {pins: [...generatePins(8,1083, 13, -40, 0), ...generatePins(6,743, 13, -40, 8), ...generatePins(6,873, 770, 40, 14)], r:30},
-    "images/micro.png": {pins: [
+    "images/ArduinoUno.svg": {pins: [...generatePins(8,1083, 13, -40, 0), ...generatePins(6,743, 13, -40, 8), ...generatePins(6,873, 770, 40, 14)], r:30},
+    "images/ArduinoProMicro.svg": {pins: [
             ...generatePins(2,348, 5, -31, 0),
             ...generatePins(8,224, 5, -31, 2),
             {x:8, y: 191, id: 10},
@@ -18,12 +18,12 @@ var pinLocations = {
             {x:103, y: 191, id: 15},
             ...generatePins(4, 132, 191, 32, 18)
         ], r:25},
-    "images/leonardo.png": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 18)], r:25},
+    "images/ArduinoLeonardo.svg": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 18)], r:25},
 }
 var bindings = {
-    "images/uno.png": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
-    "images/micro.png": { 0: "RX0", 1: "RX1", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
-    "images/leonardo.png": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
+    "images/ArduinoUno.svg": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
+    "images/ArduinoProMicro.svg": { 0: "RX0", 1: "RX1", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
+    "images/ArduinoLeonardo.svg": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
 }
 var guitarLabels = {
     "up": "Strum Up",

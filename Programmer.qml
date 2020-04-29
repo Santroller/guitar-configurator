@@ -15,7 +15,7 @@ Page {
         Image {
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: "images/controller.png"
+            source: "images/Upload.svg"
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
@@ -96,7 +96,7 @@ Page {
                 Image {
                     id: dfuImg
                     Layout.alignment: Qt.AlignHCenter
-                    source: "images/dfu.png"
+                    source: "images/ArduinoUnoDFU.svg"
                     fillMode: Image.PreserveAspectFit
                     Layout.maximumHeight: applicationWindow.height/3
                     Layout.maximumWidth: applicationWindow.width/3

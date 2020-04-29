@@ -9,13 +9,42 @@ ApplicationWindow {
     height: 1024
     Universal.theme: Universal.Dark
     Universal.accent: Universal.Violet
-
-    StackView {
-        id: mainStack
-        initialItem: welcome
+    Page {
         anchors.fill: parent
-        Welcome {
-            id:welcome
+        id: page
+        header: Item {
+            id: element
+
+            Label {
+                font.bold: true
+                text: qsTr("Guitar Configurator")
+                anchors.horizontalCenter: parent.horizontalCenter
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 30
+            }
+            Label {
+                id: updates
+                text: updateHandler.updateInfo
+                textFormat: Text.PlainText
+                renderType: Text.QtRendering
+                lineHeight: 1
+                wrapMode: Text.NoWrap
+                font.bold: true
+                anchors.right: parent.right
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+                fontSizeMode: Text.Fit
+            }
+        }
+
+        StackView {
+            id: mainStack
+            initialItem: welcome
+            anchors.fill: parent
+            Welcome {
+                id:welcome
+            }
         }
     }
 
@@ -101,8 +130,8 @@ ApplicationWindow {
 
 
 
-/*##^## Designer {
-    D{i:0;autoSize:true;height:1080;width:1920}D{i:2;anchors_height:60;anchors_width:802;anchors_x:646;anchors_y:658}
-D{i:1;anchors_height:200;anchors_width:200;anchors_x:846;anchors_y:87}
+/*##^##
+Designer {
+    D{i:2;anchors_height:60;anchors_width:802;anchors_x:646;anchors_y:658}D{i:1;anchors_height:200;anchors_width:200;anchors_x:846;anchors_y:87}
 }
- ##^##*/
+##^##*/

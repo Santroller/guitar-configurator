@@ -30,7 +30,9 @@ class Port : public QObject
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
     Q_PROPERTY(ArdwiinoDefines::input inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::input currentInputType READ getCurrentInputType NOTIFY inputTypeChanged)
     Q_PROPERTY(ArdwiinoDefines::subtype type READ getType WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(ArdwiinoDefines::subtype currentType READ getCurrentType NOTIFY typeChanged)
     Q_PROPERTY(ArdwiinoDefines::gyro orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(ArdwiinoDefines::tilt tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
     Q_PROPERTY(ArdwiinoDefines::fret_mode ledType READ getLedType WRITE setLedType NOTIFY ledTypeChanged)
@@ -131,11 +133,18 @@ public slots:
         if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
         return ArdwiinoDefines::XINPUT_GAMEPAD;
     }
+    ArdwiinoDefines::subtype getCurrentType() {
+        if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_CURRENT_SUB_TYPE)));
+        return ArdwiinoDefines::XINPUT_GAMEPAD;
+    }
     ArdwiinoDefines::gyro getOrientation() {
         return ArdwiinoDefines::gyro(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
     }
     ArdwiinoDefines::input getInputType() {
         return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
+    }
+    ArdwiinoDefines::input getCurrentInputType() {
+        return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_CURRENT_INPUT_TYPE)));
     }
     ArdwiinoDefines::tilt getTiltType() {
         return ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));

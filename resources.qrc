@@ -1,24 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>images/controller.png</file>
-        <file>images/icon.png</file>
-        <file>images/keyboard.png</file>
-        <file>images/wii.png</file>
-        <file>images/xbox.png</file>
-        <file>images/guitar.png</file>
         <file>Welcome.qml</file>
         <file>Configure.qml</file>
         <file>Programmer.qml</file>
-        <file>images/dfu.png</file>
-        <file>images/arcadestick.png</file>
-        <file>images/ddr.png</file>
-        <file>images/flightstick.png</file>
-        <file>images/rb-drums.png</file>
         <file>PinBindings.qml</file>
-        <file>images/leonardo.png</file>
-        <file>images/micro.png</file>
-        <file>images/uno.png</file>
         <file>KeyBindings.qml</file>
         <file>keys.js</file>
         <file>pins.js</file>
@@ -26,24 +12,66 @@
         <file>defines.js</file>
         <file>leds.qml</file>
         <file>Mappings.qml</file>
-        <file>images/ps3/Base.svg</file>
-        <file>images/ps3/Btn.svg</file>
-        <file>images/ps3/Btn_High.svg</file>
-        <file>images/ps3/CIRCLE.svg</file>
-        <file>images/ps3/CROSS.svg</file>
-        <file>images/ps3/DDOWN.svg</file>
-        <file>images/ps3/DLEFT.svg</file>
-        <file>images/ps3/DRIGHT.svg</file>
-        <file>images/ps3/DUP.svg</file>
-        <file>images/ps3/HOME.svg</file>
-        <file>images/ps3/L1.svg</file>
-        <file>images/ps3/L2.svg</file>
-        <file>images/ps3/LSTICK.svg</file>
-        <file>images/ps3/RSTICK.svg</file>
-        <file>images/ps3/SELECT.svg</file>
-        <file>images/ps3/SQUARE.svg</file>
-        <file>images/ps3/START.svg</file>
-        <file>images/ps3/TRIANGLE.svg</file>
-        <file>images/nunchuck_adapter.pdf</file>
+        <file>images/360Accessories/ArcadePad/Base.svg</file>
+        <file>images/360Accessories/ArcadePad/Buttons.svg</file>
+        <file>images/360Accessories/ArcadeStick/Base.svg</file>
+        <file>images/360Accessories/ArcadeStick/Buttons.svg</file>
+        <file>images/360Accessories/DancePad/Base.svg</file>
+        <file>images/360Accessories/DancePad/Buttons.svg</file>
+        <file>images/360Accessories/FlightStick/Base.svg</file>
+        <file>images/360Accessories/FlightStick/Buttons.svg</file>
+        <file>images/360Accessories/Wheel/Base.svg</file>
+        <file>images/360Accessories/Wheel/Buttons.svg</file>
+        <file>images/360Ctrl/Base.svg</file>
+        <file>images/360Ctrl/Buttons.svg</file>
+        <file>images/360Ctrl/Triggers.svg</file>
+        <file>images/360Ctrl/triggersBase.svg</file>
+        <file>images/GuitarHero/360/Drum/Base.svg</file>
+        <file>images/GuitarHero/360/Drum/Buttons.svg</file>
+        <file>images/GuitarHero/360/LesPaul/Base.svg</file>
+        <file>images/GuitarHero/360/LesPaul/Buttons.svg</file>
+        <file>images/GuitarHero/360/WorldTour/Base.svg</file>
+        <file>images/GuitarHero/360/WorldTour/buttons.svg</file>
+        <file>images/GuitarHero/PS3/Drum/Base.svg</file>
+        <file>images/GuitarHero/PS3/Drum/Buttons.svg</file>
+        <file>images/GuitarHero/PS3/LesPaul/Base.svg</file>
+        <file>images/GuitarHero/PS3/LesPaul/Buttons.svg</file>
+        <file>images/GuitarHero/PS3/WorldTour/Base.svg</file>
+        <file>images/GuitarHero/PS3/WorldTour/Buttons.svg</file>
+        <file>images/Keyboard/Base.svg</file>
+        <file>images/Keyboard/Keys.svg</file>
+        <file>images/PS3Ctrl/Base.svg</file>
+        <file>images/PS3Ctrl/Buttons.svg</file>
+        <file>images/RockBand/360/Drum/Base.svg</file>
+        <file>images/RockBand/360/Drum/Buttons.svg</file>
+        <file>images/RockBand/360/Guitar/Base.svg</file>
+        <file>images/RockBand/360/Guitar/BaseThumb.svg</file>
+        <file>images/RockBand/360/Guitar/Buttons.svg</file>
+        <file>images/RockBand/360/Guitar/ButtonsThumb.svg</file>
+        <file>images/RockBand/Logos/Drum.svg</file>
+        <file>images/RockBand/Logos/Guitar.svg</file>
+        <file>images/RockBand/PS3/Drum/Base.svg</file>
+        <file>images/RockBand/PS3/Drum/buttons.svg</file>
+        <file>images/SwitchCtrl/Base.ai</file>
+        <file>images/SwitchCtrl/Base.svg</file>
+        <file>images/SwitchCtrl/Buttons.svg</file>
+        <file>images/SwitchCtrl/ControllerIcons.ai</file>
+        <file>images/ArduinoLeonardo.svg</file>
+        <file>images/ArduinoProMicro.svg</file>
+        <file>images/ArduinoUno.svg</file>
+        <file>images/ArduinoUnoDFU.svg</file>
+        <file>images/NoController.svg</file>
+        <file>images/RockBand/PS3/Guitar/Base.svg</file>
+        <file>images/RockBand/PS3/Guitar/Buttons.svg</file>
+        <file>images/GuitarHero/Live/Base.svg</file>
+        <file>images/GuitarHero/Live/Buttons.svg</file>
+        <file>images/RockBand/Wii/Drum/Base.svg</file>
+        <file>images/RockBand/Wii/Drum/Buttons.svg</file>
+        <file>images/RockBand/Wii/Guitar/Base.svg</file>
+        <file>images/RockBand/Wii/Guitar/BaseDPad.svg</file>
+        <file>images/RockBand/Wii/Guitar/BaseThumb.svg</file>
+        <file>images/RockBand/Wii/Guitar/Buttons.svg</file>
+        <file>images/RockBand/Wii/Guitar/ButtonsDpad.svg</file>
+        <file>images/RockBand/Wii/Guitar/ButtonsThumb.svg</file>
     </qresource>
 </RCC>

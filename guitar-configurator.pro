@@ -1,6 +1,6 @@
 VERSION = $$str_member($$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags --abbrev=0), 1, -1)
 QT += quickcontrols2 serialport
-CONFIG += c++11 qtquickcompiler
+CONFIG += c++11 qtquickcompiler svg
 
 
 # The following define makes your compiler emit warnings if you use

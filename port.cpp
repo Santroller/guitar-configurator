@@ -40,7 +40,9 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     } else {
         auto b = ArdwiinoLookup::detectBoard(serialPortInfo);
         if (!b.name.isEmpty()) {
-            m_board = b;
+            if (m_board.name.isEmpty()) {
+                m_board = b;
+            }
             m_port = serialPortInfo.systemLocation();
             m_description = m_board.name + " - "+m_port;
             boardImageChanged();
@@ -143,8 +145,8 @@ void Port::jumpUNO() {
 }
 void Port::readDescription() {
     QByteArray readData;
-    auto vtype = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
-    auto ctype = ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
+    auto vtype = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_CURRENT_INPUT_TYPE)));
+    auto ctype = ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_CURRENT_SUB_TYPE)));
     m_description = "Ardwiino - "+ m_board.name;
     if (m_isOutdated) {
         m_description += " - Outdated";
