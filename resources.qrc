@@ -73,5 +73,36 @@
         <file>images/RockBand/Wii/Guitar/Buttons.svg</file>
         <file>images/RockBand/Wii/Guitar/ButtonsDpad.svg</file>
         <file>images/RockBand/Wii/Guitar/ButtonsThumb.svg</file>
+        <file>images/GuitarHero/360/Drum/components/ga.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gb.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gback.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gbase.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gdpad.svg</file>
+        <file>images/GuitarHero/360/Drum/components/ghome.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gLB.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gRB.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gstart.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gx.svg</file>
+        <file>images/GuitarHero/360/Drum/components/gy.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/ga.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gb.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gback.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gdpad.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/ghome.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gLB.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gr_x.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gstart.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gstrum.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gx.svg</file>
+        <file>images/GuitarHero/360/LesPaul/components/gy.svg</file>
+        <file>images/RockBand/360/Guitar (copy 1)/BaseDPad.svg</file>
+        <file>images/RockBand/360/Guitar (copy 1)/BaseThumb.svg</file>
+        <file>images/RockBand/360/Guitar (copy 1)/ButtonsDPad.svg</file>
+        <file>images/RockBand/360/Guitar (copy 1)/ButtonsThumb.svg</file>
+        <file>images/RockBand/PS3/Guitar (copy 1)/BaseDPad.svg</file>
+        <file>images/RockBand/PS3/Guitar (copy 1)/BaseThumb.svg</file>
+        <file>images/RockBand/PS3/Guitar (copy 1)/ButtonsDpad.svg</file>
+        <file>images/RockBand/PS3/Guitar (copy 1)/ButtonsThumb.svg</file>
+        <file>images/Upload.svg</file>
     </qresource>
 </RCC>

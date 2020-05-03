@@ -2,6 +2,7 @@ import QtQuick 2.10
 import QtQuick.Window 2.10
 import QtQuick.Controls 2.10
 import QtQuick.Controls.Universal 2.10
+import QtQuick.Layouts 1.10
 ApplicationWindow {
     id: applicationWindow
     visible: true
@@ -14,7 +15,38 @@ ApplicationWindow {
         id: page
         header: Item {
             id: element
-
+            ColumnLayout {
+                RowLayout {
+                    Label {
+                        visible: scanner.selected
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                        id: dev
+                        text: qsTr("Connected Device: ")
+                        wrapMode: Text.WordWrap
+                        font.bold: true
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                        fontSizeMode: Text.FixedSize
+                    }
+                    Button {
+                        visible: scanner.selected
+                        id: refreshBt
+                        text: qsTr("Refresh")
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                        onClicked: scanner.selected.readDescription()
+                    }
+                }
+                Label {
+                    visible: scanner.selected
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    id: status
+                    text: (scanner.selected && scanner.selected.description || "").replace(/-/g,"<br/>")
+                    wrapMode: Text.WordWrap
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                    fontSizeMode: Text.FixedSize
+                }
+            }
             Label {
                 font.bold: true
                 text: qsTr("Guitar Configurator")

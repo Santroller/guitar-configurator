@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSerialPortInfo>
 #include <QList>
+#include <QImage>
 #include "port.h"
 #include "programmer.h"
 
@@ -25,6 +26,8 @@ public slots:
     void addPort(const QSerialPortInfo& port);
     void removePort(const QSerialPortInfo& port);
     void fixLinux();
+    QStringList getImages(QString base);
+    QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
     QList<QObject*> model() const {
         return m_model;
     }
@@ -43,9 +46,11 @@ public slots:
         return false;
     }
 private:
+    void clearImages();
     QList<QObject*> m_model;
     Port* m_selected;
     Programmer* programmer;
+    QList<QPair<QImage,QString>> images;
 };
 
 #endif // PORTSCANNER_H

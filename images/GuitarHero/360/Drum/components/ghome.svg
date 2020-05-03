@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.11 153.14"
+   data-name="360GHDrum"
+   id="_360GHDrum">
+  <metadata
+     id="metadata1005">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs932">
+    <style
+       id="style930">.cls-1{fill:#333132;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-20,.cls-21,.cls-22,.cls-23,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-1,.cls-8,.cls-9{stroke-width:0.75px;}.cls-2{fill:#393839;}.cls-10,.cls-11,.cls-12,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke-width:0.25px;}.cls-3{fill:#565759;}.cls-4{fill:#302e2f;}.cls-5{fill:#cc493a;}.cls-6{fill:#496fb6;}.cls-7{fill:#46a07c;}.cls-8{fill:#db6f4b;}.cls-9{fill:#ffe17f;}.cls-10{fill:#2d2a2b;}.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23{stroke:#231f20;}.cls-11{fill:#464547;}.cls-12{fill:#86888a;}.cls-13{fill:#6ca63c;}.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20{stroke-width:0.1px;}.cls-14{fill:#0058a3;}.cls-15{fill:#f6bd17;}.cls-16{fill:#aa1e23;}.cls-17{fill:#1687c9;}.cls-18{fill:#febf38;}.cls-19{fill:#99ca3c;}.cls-20{fill:#dd1f26;}.cls-21{fill:none;}.cls-21,.cls-22,.cls-23{stroke-width:0.15px;}.cls-22{fill:#8dc63f;}.cls-23{fill:#d1d3d4;}</style>
+  </defs>
+  <g
+     id="ghome">
+    <ellipse
+       class="cls-21"
+       cx="126.2"
+       cy="24.74"
+       rx="3"
+       ry="2.93"
+       id="ellipse988" />
+    <path
+       class="cls-22"
+       d="M126.91,29.35a3.84,3.84,0,0,0-.76,0h0a5.85,5.85,0,0,1,1.51.76,8.28,8.28,0,0,0-1.85,3.09h0a9.21,9.21,0,0,1,2.47-2.71,3.85,3.85,0,0,1,1.13.95,5.17,5.17,0,0,1,1.09,1.91h0a4.77,4.77,0,0,0-1.76-3.26,4.33,4.33,0,0,1,1.46-.82h0a2.37,2.37,0,0,0-.55,0"
+       transform="translate(-2.02 -6.76)"
+       id="path990" />
+    <path
+       class="cls-22"
+       d="M126.91,29.35a2.32,2.32,0,0,1,1.36.51,2.83,2.83,0,0,1,1.39-.57"
+       transform="translate(-2.02 -6.76)"
+       id="path992" />
+    <path
+       class="cls-23"
+       d="M126.15,29.4a2.74,2.74,0,0,0-.93,2.11,2.91,2.91,0,0,0,.59,1.74,8.52,8.52,0,0,1,1.85-3.1A6.07,6.07,0,0,0,126.15,29.4Z"
+       transform="translate(-2.02 -6.76)"
+       id="path994" />
+    <path
+       class="cls-23"
+       d="M128.29,30.54a9.34,9.34,0,0,0-2.48,2.71,3.05,3.05,0,0,0,4.7.15,5.09,5.09,0,0,0-1.09-1.91A4,4,0,0,0,128.29,30.54Z"
+       transform="translate(-2.02 -6.76)"
+       id="path996" />
+    <path
+       class="cls-23"
+       d="M130.21,29.31a4.48,4.48,0,0,0-1.46.83,4.81,4.81,0,0,1,1.76,3.26,2.79,2.79,0,0,0,.72-2A2.73,2.73,0,0,0,130.21,29.31Z"
+       transform="translate(-2.02 -6.76)"
+       id="path998" />
+    <path
+       class="cls-23"
+       d="M128.26,29.89a2.86,2.86,0,0,1,2-.58,2.89,2.89,0,0,0-2-.73,3.1,3.1,0,0,0-2.08.82A2.87,2.87,0,0,1,128.26,29.89Z"
+       transform="translate(-2.02 -6.76)"
+       id="path1000" />
+  </g>
+</svg>

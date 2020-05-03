@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 245.45 145.67"
+   data-name="360LesPaul"
+   id="_360LesPaul">
+  <metadata
+     id="metadata1187">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1124">
+    <style
+       id="style1122">.cls-1{fill:#292728;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-width:0.25px;}.cls-2{fill:#9d9fa2;}.cls-3,.cls-5{fill:#333132;}.cls-13,.cls-4{fill:#d1d3d4;}.cls-11,.cls-12,.cls-13,.cls-5{stroke:#231f20;}.cls-6{fill:#b34926;}.cls-7{fill:#3a58a7;}.cls-8{fill:#fbef59;}.cls-9{fill:#be1e2d;}.cls-10{fill:#538c43;}.cls-11{fill:none;}.cls-11,.cls-12,.cls-13{stroke-width:0.05px;}.cls-12{fill:#8dc63f;}</style>
+  </defs>
+  <g
+     id="ghome">
+    <circle
+       class="cls-2"
+       cx="74.24"
+       cy="66.79"
+       r="3.33"
+       id="circle1144" />
+    <ellipse
+       class="cls-11"
+       cx="74.19"
+       cy="66.85"
+       rx="2.55"
+       ry="2.48"
+       id="ellipse1170" />
+    <path
+       class="cls-12"
+       d="M92,72.71a3.16,3.16,0,0,0-.64,0h0a4.71,4.71,0,0,1,1.29.64A6.93,6.93,0,0,0,91.05,76h0a8,8,0,0,1,2.1-2.3,3.37,3.37,0,0,1,1,.81A4.32,4.32,0,0,1,95,76.12h0a4.11,4.11,0,0,0-1.5-2.77,3.79,3.79,0,0,1,1.24-.7h0a2.46,2.46,0,0,0-.47,0"
+       transform="translate(-18.9 -7.69)"
+       id="path1172" />
+    <path
+       class="cls-12"
+       d="M92,72.71a1.91,1.91,0,0,1,1.16.43,2.41,2.41,0,0,1,1.18-.48"
+       transform="translate(-18.9 -7.69)"
+       id="path1174" />
+    <path
+       class="cls-13"
+       d="M91.33,72.75a2.35,2.35,0,0,0-.78,1.79,2.5,2.5,0,0,0,.5,1.48,7.16,7.16,0,0,1,1.57-2.63A5.2,5.2,0,0,0,91.33,72.75Z"
+       transform="translate(-18.9 -7.69)"
+       id="path1176" />
+    <path
+       class="cls-13"
+       d="M93.15,73.72a7.81,7.81,0,0,0-2.1,2.3,2.59,2.59,0,0,0,4,.13,4.26,4.26,0,0,0-.93-1.63A3.31,3.31,0,0,0,93.15,73.72Z"
+       transform="translate(-18.9 -7.69)"
+       id="path1178" />
+    <path
+       class="cls-13"
+       d="M94.78,72.67a3.72,3.72,0,0,0-1.24.71A4,4,0,0,1,95,76.15a2.41,2.41,0,0,0,.61-1.71A2.32,2.32,0,0,0,94.78,72.67Z"
+       transform="translate(-18.9 -7.69)"
+       id="path1180" />
+    <path
+       class="cls-13"
+       d="M93.13,73.17a2.4,2.4,0,0,1,1.65-.5,2.47,2.47,0,0,0-1.69-.61,2.64,2.64,0,0,0-1.76.69A2.49,2.49,0,0,1,93.13,73.17Z"
+       transform="translate(-18.9 -7.69)"
+       id="path1182" />
+  </g>
+</svg>

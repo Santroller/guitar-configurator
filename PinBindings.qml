@@ -147,7 +147,7 @@ Page {
             }
 
             Button {
-                text: qsTr("Find Pin Binding")
+                text: qsTr("Automatically Find Pin Binding")
                 Layout.fillWidth: true
                 visible: scanner.selected.hasAutoBind
                 onClicked: {

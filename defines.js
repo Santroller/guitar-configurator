@@ -36,3 +36,11 @@ boardImages[TangentMC.ArdwiinoDefinesValues.WII_ROCK_BAND_DRUMS] = "images/RockB
 function getBoardImage(type) {
     return boardImages[type+""]+"/Base.svg";
 }
+
+function getBoardComponents(type) {
+    return boardImages[type+""]+"/components/";
+}
+
+function getBoardBase(type) {
+    return boardImages[type+""];
+}

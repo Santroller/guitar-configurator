@@ -2,6 +2,9 @@
 #include <QDebug>
 #include <QFile>
 #include <QProcess>
+#include <QDir>
+#include <QIcon>
+#include <QDirIterator>
 PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
@@ -21,6 +24,7 @@ void PortScanner::addPort(const QSerialPortInfo& serialPortInfo) {
     m_model.push_back(port);
     port->open(serialPortInfo);
     connect(port, &Port::descriptionChanged,this,&PortScanner::update);
+    connect(port, &Port::typeChanged, this, &PortScanner::clearImages);
     emit modelChanged();
 }
 void PortScanner::update() {
@@ -56,4 +60,29 @@ void PortScanner::fixLinux() {
         p.closeWriteChannel();
         p.waitForFinished();
     }
+}
+void PortScanner::clearImages() {
+    images.clear();
+}
+QStringList PortScanner::getImages(QString base) {
+    auto images = QDir(":/"+base).entryList();
+    images.sort();
+    return images;
+}
+
+QString PortScanner::findElement(QString base, int width, int height, int mouseX, int mouseY) {
+    if (images.isEmpty()) {
+        auto imageList = QDir(":/"+base).entryList();
+        imageList.sort();
+        for (auto image: getImages(base+"/components")) {
+            auto i = QIcon(":/"+base+"/components/"+image).pixmap(QSize(width,height)).toImage();
+            images.push_back(QPair<QImage,QString>(i,image));
+        }
+    }
+    for (auto& i: images) {
+        if (i.first.pixel((double)mouseX/width*i.first.width(),(double)mouseY/height*i.first.height())) {
+            return "/"+base+"/components/"+i.second;
+        }
+    }
+    return "";
 }
