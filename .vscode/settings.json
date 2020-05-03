@@ -3,6 +3,7 @@
         "array": "cpp",
         "string": "cpp",
         "string_view": "cpp",
-        "kauth": "cpp"
+        "kauth": "cpp",
+        "cstddef": "cpp"
     }
 }

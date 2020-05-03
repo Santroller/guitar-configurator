@@ -9,6 +9,7 @@
 #include "submodules/Ardwiino/src/shared/output/usb/API.h"
 #include <math.h>
 #include "ardwiino_defines.h"
+#include <QJSValue>
 #define READ_INFO(slot) QByteArray(1, COMMAND_READ_INFO) + QByteArray(1,slot)
 #define READ_CONFIG(slot) QByteArray(1, COMMAND_READ_CONFIG_VALUE) + QByteArray(1,slot)
 #define WRITE_CONFIG(slot, value) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot) + QByteArray(1, value)
@@ -24,6 +25,7 @@ class Port : public QObject
     Q_PROPERTY(bool isRB READ isRB NOTIFY typeChanged)
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
+    Q_PROPERTY(bool hasAutoBind READ hasAutoBind NOTIFY hasAutoBindChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
@@ -57,6 +59,7 @@ public:
     void write(QByteArray id);
     void writeNoResp(QByteArray id);
 signals:
+    void hasAutoBindChanged();
     void descriptionChanged();
     void pinsChanged();
     void pinInvertsChanged();
@@ -76,8 +79,10 @@ signals:
     void joyThresholdChanged();
     void mapJoystickChanged();
     void mapStartSelectHomeChanged();
+    void detectedPinChanged();
 
 public slots:
+    void readyRead();
     void writeConfig();
     bool isReady() const {
         return m_isReady;
@@ -120,6 +125,9 @@ public slots:
         ArdwiinoDefines::subtype s = getType();
         return s == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || s == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
     }
+    bool hasAutoBind() {
+        return m_hasAutoBind;
+    }
     QString getPort() const {
         return m_port;
     }
@@ -130,10 +138,20 @@ public slots:
         return m_board.image;
     }
     ArdwiinoDefines::subtype getType() {
-        if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_SUB_TYPE)));
+        if (readyForRead && m_serialPort) {
+            uint8_t id = read_single(READ_CONFIG(CONFIG_SUB_TYPE));
+            if (id == REAL_DRUM_SUBTYPE) {
+                id = ArdwiinoDefines::XINPUT_GUITAR_HERO_DRUMS;
+            }
+            if (id == REAL_GUITAR_SUBTYPE) {
+                id = ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR;
+            }
+            return ArdwiinoDefines::subtype(id);
+        }
         return ArdwiinoDefines::XINPUT_GAMEPAD;
     }
     ArdwiinoDefines::subtype getCurrentType() {
+        if (!m_supportsCurrent) return getType();
         if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_CURRENT_SUB_TYPE)));
         return ArdwiinoDefines::XINPUT_GAMEPAD;
     }
@@ -144,6 +162,7 @@ public slots:
         return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
     }
     ArdwiinoDefines::input getCurrentInputType() {
+        if (!m_supportsCurrent) return getInputType();
         return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_CURRENT_INPUT_TYPE)));
     }
     ArdwiinoDefines::tilt getTiltType() {
@@ -152,6 +171,8 @@ public slots:
     ArdwiinoDefines::fret_mode getLedType() {
         return ArdwiinoDefines::fret_mode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
     }
+    void findDigital(QJSValue callback);
+    void findAnalog(QJSValue callback);
     void setType(ArdwiinoDefines::subtype value) {
         write(WRITE_CONFIG(CONFIG_SUB_TYPE, value));
         typeChanged();
@@ -239,8 +260,12 @@ private:
     bool m_isArdwiino;
     bool m_isOldArdwiino;
     bool m_isOutdated;
+    bool m_supportsCurrent;
     bool m_hasDFU;
     bool m_isReady;
+    bool m_hasAutoBind;
+    bool m_hasPinDetectionCallback;
+    QJSValue m_pinDetectionCallback;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
     controller_t m_controller{};

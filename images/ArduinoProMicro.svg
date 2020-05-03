@@ -1,1 +1,476 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.56 137.8"><defs><style>.cls-1{fill:#0f7391;}.cls-1,.cls-2,.cls-3,.cls-5,.cls-7,.cls-8{stroke:#231f20;}.cls-1,.cls-2,.cls-3,.cls-5,.cls-6,.cls-7,.cls-8{stroke-miterlimit:10;}.cls-2{fill:#393839;}.cls-3{fill:#beccd3;}.cls-4{font-size:8.9px;}.cls-4,.cls-9{fill:#fff;font-family:MyriadPro-Regular, Myriad Pro;}.cls-5{fill:#cfd1d2;}.cls-6{fill:#8c8e90;stroke:#edefa0;}.cls-7{fill:none;}.cls-8{fill:#f5f9e6;}.cls-9{font-size:9.97px;}.cls-10{letter-spacing:0em;}.cls-11{letter-spacing:0.02em;}.cls-12{letter-spacing:-0.03em;}.cls-13{letter-spacing:-0.02em;}.cls-14{letter-spacing:-0.05em;}</style></defs><g id="Arduinos"><g id="ProMicro"><polygon class="cls-1" points="0.5 1.02 0.5 137.3 255.33 137.3 254.55 0.5 0.5 1.02"/><polygon class="cls-2" points="71.89 67.38 108.55 30.73 147.28 65.47 110.28 103.51 71.89 67.38"/><circle class="cls-3" cx="12.7" cy="124.7" r="7.82"/><circle class="cls-3" cx="33.03" cy="125.14" r="5.56"/><circle class="cls-3" cx="54" cy="125.14" r="5.56"/><circle class="cls-3" cx="73.02" cy="125.22" r="5.56"/><circle class="cls-3" cx="92.13" cy="125.22" r="5.56"/><circle class="cls-3" cx="110.15" cy="125.35" r="5.56"/><circle class="cls-3" cx="130.13" cy="125.35" r="5.56"/><circle class="cls-3" cx="149.02" cy="125.44" r="5.56"/><circle class="cls-3" cx="168.95" cy="125.44" r="5.56"/><circle class="cls-3" cx="186.93" cy="125.53" r="5.56"/><circle class="cls-3" cx="205.82" cy="125.44" r="5.56"/><circle class="cls-3" cx="224.76" cy="125.61" r="5.56"/><text class="cls-4" transform="translate(160.85 26.94)">GND</text><path class="cls-5" d="M30.29,60.21l.48,38.07A1.77,1.77,0,0,0,32.54,100H55.85a1.77,1.77,0,0,0,1.77-1.78l-.24-38.51A1.76,1.76,0,0,0,55.58,58L32,58.43A1.76,1.76,0,0,0,30.29,60.21Z" transform="translate(-2.15 -11.06)"/><path class="cls-6" d="M32.88,62.89V92.2s-.65,3.59,3.58,3.59h14.4s3.87,1,3.87-3.88v-29a2.28,2.28,0,0,0-2.33-2.33h-17A2.17,2.17,0,0,0,32.88,62.89Z" transform="translate(-2.15 -11.06)"/><path class="cls-3" d="M263.22,48.21v51.94H224.3V91.81H233s.87-4.77-4.78-4.77V62.46s3.56.17,3.56-6.26h-6.94v-8Z" transform="translate(-2.15 -11.06)"/><path class="cls-3" d="M221.79,53.38V97.81h2.6v-6H233s.09-4.77-4.78-4.77V62.46s3.56-.05,3.56-6.26h-6.94V53.38Z" transform="translate(-2.15 -11.06)"/><path class="cls-7" d="M236.45,15.2V28.49s-.35,1.87,1.87,1.87h11a1.93,1.93,0,0,0,2.07-2.07V16.56a2.07,2.07,0,0,0-2.28-2.29H237.69S236.45,14.4,236.45,15.2Z" transform="translate(-2.15 -11.06)"/><rect class="cls-8" x="236.48" y="5.67" width="10.77" height="4.56"/><rect class="cls-8" x="236.44" y="11.97" width="10.77" height="4.56"/><circle class="cls-3" cx="12.86" cy="10.79" r="7.82"/><circle class="cls-3" cx="33.18" cy="11.23" r="5.56"/><circle class="cls-3" cx="54.15" cy="11.23" r="5.56"/><circle class="cls-3" cx="73.18" cy="11.31" r="5.56"/><circle class="cls-3" cx="92.28" cy="11.31" r="5.56"/><circle class="cls-3" cx="110.31" cy="11.44" r="5.56"/><circle class="cls-3" cx="130.28" cy="11.44" r="5.56"/><circle class="cls-3" cx="149.17" cy="11.53" r="5.56"/><circle class="cls-3" cx="169.11" cy="11.53" r="5.56"/><circle class="cls-3" cx="187.08" cy="11.62" r="5.56"/><circle class="cls-3" cx="205.98" cy="11.53" r="5.56"/><circle class="cls-3" cx="224.91" cy="11.71" r="5.56"/><text class="cls-9" transform="translate(237.72 27.01)">J1</text><text class="cls-4" transform="translate(10.32 27.26)">9</text><text class="cls-4" transform="translate(30.44 27.52)">8</text><text class="cls-4" transform="translate(51.82 27.26)">7</text><text class="cls-4" transform="translate(71.08 27.17)">6</text><text class="cls-4" transform="translate(90.18 27.17)">5</text><text class="cls-4" transform="translate(107.91 27.26)">4</text><text class="cls-4" transform="translate(128.72 27.22)">3</text><text class="cls-4" transform="translate(147.37 27.26)">2</text><text class="cls-4" transform="translate(179.03 26.96)">GND</text><text class="cls-4" transform="translate(199.4 26.82)"><tspan class="cls-10">R</tspan><tspan x="4.83" y="0">XI</tspan></text><text class="cls-4" transform="translate(218.69 27)"><tspan class="cls-11">T</tspan><tspan class="cls-12" x="4.62" y="0">X</tspan><tspan x="9.45" y="0">O</tspan></text><text class="cls-4" transform="translate(161.48 115.36)">V<tspan class="cls-13" x="4.97" y="0">C</tspan><tspan x="9.95" y="0">C</tspan></text><text class="cls-4" transform="translate(8.13 115.16)">10</text><text class="cls-4" transform="translate(28.25 115.42)">16</text><text class="cls-4" transform="translate(49.63 115.16)">14</text><text class="cls-4" transform="translate(68.54 115.94)">15</text><text class="cls-4" transform="translate(86.94 116.12)">A0</text><text class="cls-4" transform="translate(104.81 115.86)">A1</text><text class="cls-4" transform="translate(125.36 115.64)">A2</text><text class="cls-4" transform="translate(144.01 115.68)">A3</text><text class="cls-4" transform="translate(180.67 115.38)">RST</text><text class="cls-4" transform="translate(197.04 115.25)">GND</text><text class="cls-4" transform="translate(217.11 115.42)"><tspan class="cls-10">R</tspan><tspan class="cls-14" x="4.83" y="0">A</tspan><tspan x="9.81" y="0">W</tspan></text></g></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 261.56 137.8"
+   version="1.1"
+   id="svg144"
+   sodipodi:docname="ArduinoProMicro.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata148">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1555"
+     id="namedview146"
+     showgrid="false"
+     inkscape:zoom="8"
+     inkscape:cx="202.78286"
+     inkscape:cy="78.605739"
+     inkscape:window-x="1080"
+     inkscape:window-y="182"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg144" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#0f7391;}.cls-1,.cls-2,.cls-3,.cls-5,.cls-7,.cls-8{stroke:#231f20;}.cls-1,.cls-2,.cls-3,.cls-5,.cls-6,.cls-7,.cls-8{stroke-miterlimit:10;}.cls-2{fill:#393839;}.cls-3{fill:#beccd3;}.cls-4{font-size:8.9px;}.cls-4,.cls-9{fill:#fff;font-family:MyriadPro-Regular, Myriad Pro;}.cls-5{fill:#cfd1d2;}.cls-6{fill:#8c8e90;stroke:#edefa0;}.cls-7{fill:none;}.cls-8{fill:#f5f9e6;}.cls-9{font-size:9.97px;}.cls-10{letter-spacing:0em;}.cls-11{letter-spacing:0.02em;}.cls-12{letter-spacing:-0.03em;}.cls-13{letter-spacing:-0.02em;}.cls-14{letter-spacing:-0.05em;}</style>
+  </defs>
+  <polygon
+     class="cls-1"
+     points="0.5,1.02 0.5,137.3 255.33,137.3 254.55,0.5 "
+     id="polygon6"
+     style="fill:#0f7391;stroke:#231f20;stroke-miterlimit:10" />
+  <polygon
+     class="cls-2"
+     points="71.89,67.38 108.55,30.73 147.28,65.47 110.28,103.51 "
+     id="polygon8"
+     style="fill:#393839;stroke:#231f20;stroke-miterlimit:10" />
+  <text
+     class="cls-4"
+     id="text34"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="153.35001"
+     y="26.940001">GND</text>
+  <path
+     class="cls-5"
+     d="m 28.14,49.15 0.48,38.07 a 1.77,1.77 0 0 0 1.77,1.72 H 53.7 a 1.77,1.77 0 0 0 1.77,-1.78 L 55.23,48.65 a 1.76,1.76 0 0 0 -1.8,-1.71 l -23.58,0.43 a 1.76,1.76 0 0 0 -1.71,1.78 z"
+     id="path36"
+     inkscape:connector-curvature="0"
+     style="fill:#cfd1d2;stroke:#231f20;stroke-miterlimit:10" />
+  <path
+     class="cls-6"
+     d="m 30.73,51.83 v 29.31 c 0,0 -0.65,3.59 3.58,3.59 h 14.4 c 0,0 3.87,1 3.87,-3.88 v -29 a 2.28,2.28 0 0 0 -2.33,-2.33 h -17 a 2.17,2.17 0 0 0 -2.52,2.31 z"
+     id="path38"
+     inkscape:connector-curvature="0"
+     style="fill:#8c8e90;stroke:#edefa0;stroke-miterlimit:10" />
+  <path
+     class="cls-3"
+     d="m 261.07,37.15 v 51.94 h -38.92 v -8.34 h 8.7 c 0,0 0.87,-4.77 -4.78,-4.77 V 51.4 c 0,0 3.56,0.17 3.56,-6.26 h -6.94 v -8 z"
+     id="path40"
+     inkscape:connector-curvature="0"
+     style="fill:#beccd3;stroke:#231f20;stroke-miterlimit:10" />
+  <path
+     class="cls-3"
+     d="m 219.64,42.32 v 44.43 h 2.6 v -6 h 8.61 c 0,0 0.09,-4.77 -4.78,-4.77 V 51.4 c 0,0 3.56,-0.05 3.56,-6.26 h -6.94 v -2.82 z"
+     id="path42"
+     inkscape:connector-curvature="0"
+     style="fill:#beccd3;stroke:#231f20;stroke-miterlimit:10" />
+  <path
+     class="cls-7"
+     d="m 234.3,4.14 v 13.29 c 0,0 -0.35,1.87 1.87,1.87 h 11 a 1.93,1.93 0 0 0 2.07,-2.07 V 5.5 a 2.07,2.07 0 0 0 -2.28,-2.29 h -11.42 c 0,0 -1.24,0.13 -1.24,0.93 z"
+     id="path44"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#231f20;stroke-miterlimit:10" />
+  <rect
+     class="cls-8"
+     x="236.48"
+     y="5.6700001"
+     width="10.77"
+     height="4.5599999"
+     id="rect46"
+     style="fill:#f5f9e6;stroke:#231f20;stroke-miterlimit:10" />
+  <rect
+     class="cls-8"
+     x="236.44"
+     y="11.97"
+     width="10.77"
+     height="4.5599999"
+     id="rect48"
+     style="fill:#f5f9e6;stroke:#231f20;stroke-miterlimit:10" />
+  <circle
+     class="cls-3"
+     cx="12.86"
+     cy="10.79"
+     r="7.8200002"
+     id="circle50"
+     style="fill:#beccd3;stroke:#231f20;stroke-miterlimit:10" />
+  <text
+     class="cls-9"
+     id="text74"
+     style="font-size:9.97000027px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="237.72"
+     y="27.01">J1</text>
+  <text
+     class="cls-4"
+     id="text76"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="9.9118843"
+     y="27.613554">9</text>
+  <text
+     class="cls-4"
+     id="text78"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="28.69907"
+     y="27.52">8</text>
+  <text
+     class="cls-4"
+     id="text80"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="48.196079"
+     y="27.26">7</text>
+  <text
+     class="cls-4"
+     id="text82"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="67.014137"
+     y="27.17">6</text>
+  <text
+     class="cls-4"
+     id="text84"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="86.46769"
+     y="27.17">5</text>
+  <text
+     class="cls-4"
+     id="text86"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="104.72802"
+     y="27.26">4</text>
+  <text
+     class="cls-4"
+     id="text88"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="124.30058"
+     y="27.219999">3</text>
+  <text
+     class="cls-4"
+     id="text90"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="143.12735"
+     y="27.26">2</text>
+  <text
+     class="cls-4"
+     id="text92"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="174.655"
+     y="26.959999">GND</text>
+  <text
+     class="cls-4"
+     id="text98"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="196.33749"
+     y="26.82">RXI</text>
+  <text
+     class="cls-4"
+     id="text106"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="214.2525"
+     y="27">TXO</text>
+  <text
+     class="cls-4"
+     id="text112"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="156.855"
+     y="115.36">VCC</text>
+  <text
+     class="cls-4"
+     id="text114"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="6.8175001"
+     y="116.13228">10</text>
+  <text
+     class="cls-4"
+     id="text116"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="26"
+     y="116.12711">16</text>
+  <text
+     class="cls-4"
+     id="text118"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="44.916615"
+     y="116.04388">14</text>
+  <text
+     class="cls-4"
+     id="text120"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="64.165001"
+     y="115.94">15</text>
+  <text
+     class="cls-4"
+     id="text122"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="83.252502"
+     y="116.12">A0</text>
+  <text
+     class="cls-4"
+     id="text124"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="102.15835"
+     y="115.86">A1</text>
+  <text
+     class="cls-4"
+     id="text126"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="121.235"
+     y="115.64">A2</text>
+  <text
+     class="cls-4"
+     id="text128"
+     style="font-size:8.89999962px;font-family:sans-serif;fill:#ffffff;-inkscape-font-specification:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
+     x="140.13499"
+     y="115.68">A3</text>
+  <text
+     class="cls-4"
+     id="text130"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="175.42"
+     y="115.38">RST</text>
+  <text
+     class="cls-4"
+     id="text132"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="194.03999"
+     y="115.25">GND</text>
+  <text
+     class="cls-4"
+     id="text140"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.89999962px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffffff"
+     x="214.11"
+     y="115.42">RAW</text>
+  <circle
+     class="cls-3"
+     cx="12.948894"
+     cy="10.962724"
+     id="circle50-3"
+     style="fill:#beccd3;stroke:#231f20;stroke-width:1.09147286;stroke-miterlimit:10;stroke-dasharray:none"
+     r="5.6248345"
+     inkscape:tile-cx="12.948894"
+     inkscape:tile-cy="10.962724"
+     inkscape:tile-w="12.341142"
+     inkscape:tile-h="12.341142"
+     inkscape:tile-x0="6.7783226"
+     inkscape:tile-y0="4.7921528" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     id="use1267" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(19.005359)"
+     id="use1269" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(38.010718)"
+     id="use1271" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(57.016076)"
+     id="use1273" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(76.021435)"
+     id="use1275" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(95.026794)"
+     id="use1277" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(114.03215)"
+     id="use1279" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(133.03751)"
+     id="use1281" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(152.04287)"
+     id="use1283" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(171.04823)"
+     id="use1285" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(190.05359)"
+     id="use1287" />
+  <use
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(209.05895)"
+     id="use1289" />
+  <circle
+     class="cls-3"
+     cx="12.688293"
+     cy="126.3"
+     id="circle50-6"
+     style="fill:#beccd3;stroke:#231f20;stroke-miterlimit:10"
+     r="7.8200002" />
+  <use
+     transform="translate(-0.17170994,115.51)"
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     id="use1267-7" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(18.833653,115.51)"
+     id="use1269-5" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(37.839012,115.51)"
+     id="use1271-3" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(56.84437,115.51)"
+     id="use1273-5" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(75.849729,115.51)"
+     id="use1275-6" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(94.855088,115.51)"
+     id="use1277-2" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(113.86044,115.51)"
+     id="use1279-9" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(132.8658,115.51)"
+     id="use1281-1" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(151.87116,115.51)"
+     id="use1283-2" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(170.87652,115.51)"
+     id="use1285-7" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(189.88188,115.51)"
+     id="use1287-0" />
+  <use
+     height="100%"
+     width="100%"
+     x="0"
+     y="0"
+     inkscape:tiled-clone-of="#circle50-3"
+     xlink:href="#circle50-3"
+     transform="translate(208.88724,115.51)"
+     id="use1289-9" />
+</svg>

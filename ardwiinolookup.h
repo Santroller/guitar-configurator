@@ -46,6 +46,8 @@ public slots:
     static bool isOldFirmwareArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isOldArdwiino(const QSerialPortInfo& QSerialPort);
     static bool is115200(const QSerialPortInfo& QSerialPort);
+    static bool hasCurrent(const QSerialPortInfo& QSerialPort);
+    static bool hasAutoBind(const QSerialPortInfo& QSerialPort);
     inline QString getInputTypeName(ArdwiinoDefines::input value) {
         return ArdwiinoDefines::getName(value);
     }
@@ -65,6 +67,8 @@ private:
     static ArdwiinoLookup* instance;
     static QVersionNumber currentVersion;
     static QVersionNumber supports1Mhz;
+    static QVersionNumber supportsCurrent;
+    static QVersionNumber supportsAutoBind;
 };
 
 #endif // ARDWIINOLOOKUP_H

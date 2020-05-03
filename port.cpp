@@ -4,12 +4,13 @@
 #include <QProcess>
 #include <iostream>
 #include <QSettings>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), readyForRead(false)
+#include <QCoreApplication>
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), readyForRead(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -66,6 +67,17 @@ QByteArray Port::read(QByteArray id) {
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     return m_serialPort->readAll();
+}
+
+void Port::findDigital(QJSValue callback) {
+    m_hasPinDetectionCallback = true;
+    m_pinDetectionCallback = callback;
+    writeNoResp(QByteArray(1, COMMAND_FIND_DIGITAL));
+}
+void Port::findAnalog(QJSValue callback) {
+    m_hasPinDetectionCallback = true;
+    m_pinDetectionCallback = callback;
+    writeNoResp(QByteArray(1, COMMAND_FIND_ANALOG));
 }
 void Port::readData() {
     if (m_isOldArdwiino) {
@@ -145,16 +157,16 @@ void Port::jumpUNO() {
 }
 void Port::readDescription() {
     QByteArray readData;
-    auto vtype = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_CURRENT_INPUT_TYPE)));
-    auto ctype = ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_CURRENT_SUB_TYPE)));
+    auto vtype = getInputType();
+    auto ctype = getType();
     m_description = "Ardwiino - "+ m_board.name;
     if (m_isOutdated) {
         m_description += " - Outdated";
     }
     m_description += " - " + ArdwiinoDefines::getName(ctype);
     m_description += " - " + ArdwiinoDefines::getName(vtype);
-    if (vtype == ArdwiinoDefines::WII) {
-        m_description += " " + read(READ_INFO(INFO_WII_EXT)).trimmed();
+    if (vtype == ArdwiinoDefines::WII || vtype == ArdwiinoDefines::PS2) {
+        m_description += " " + read(READ_INFO(INFO_EXT)).trimmed();
     }
     m_description += " - " + m_port;
     updateControllerName();
@@ -162,14 +174,28 @@ void Port::readDescription() {
     emit descriptionChanged();
 }
 
+void Port::readyRead() {
+    if (m_hasPinDetectionCallback) {
+        QTimer::singleShot(0, [this]{
+            QJSValueList args;
+            args << QJSValue(m_serialPort->readAll()[0] & 0xff);
+            m_pinDetectionCallback.call(args);
+            m_hasPinDetectionCallback = false;
+            detectedPinChanged();
+        });
+    }
+}
 void Port::open(const QSerialPortInfo &serialPortInfo) {
     m_serialPort = new QSerialPort(serialPortInfo);
+    connect(m_serialPort, &QSerialPort::readyRead, this, &Port::readyRead);
     if (m_isArdwiino) {
         if (ArdwiinoLookup::is115200(serialPortInfo)) {
             m_serialPort->setBaudRate(QSerialPort::Baud115200);
         } else {
             m_serialPort->setBaudRate(1000000);
         }
+        m_supportsCurrent = ArdwiinoLookup::hasCurrent(serialPortInfo);
+        m_hasAutoBind = ArdwiinoLookup::hasAutoBind(serialPortInfo);
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
         m_serialPort->setParity(QSerialPort::Parity::NoParity);
@@ -191,11 +217,11 @@ void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
     if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
         qDebug() << serialPortError << m_serialPort->errorString();
-//        m_description = "Ardwiino - Error Communicating";
-//        if (m_serialPort->isOpen()) {
-//            close();
-//            portStateChanged();
-//        }
+        //        m_description = "Ardwiino - Error Communicating";
+        //        if (m_serialPort->isOpen()) {
+        //            close();
+        //            portStateChanged();
+        //        }
     }
 }
 void Port::prepareUpload() {

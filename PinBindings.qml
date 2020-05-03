@@ -13,6 +13,8 @@ Page {
     property var existingCurrentPin: ""
     property var currentPin: "";
     property var currentValue: "";
+    property var waitingForDigital: false;
+    property var waitingForAnalog: false;
     Binding { target: page; property: "currentValue"; value: scanner.selected.pins[page.currentPin || page.existingPin] }
 
     Dialog {
@@ -46,6 +48,36 @@ Page {
     }
 
     Dialog {
+        id: waitingDigitalDialog
+        title: "Waiting for a pin"
+        visible: page.waitingForDigital
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        ColumnLayout {
+            Label {
+                text: "Ground the pin you would like to assign to "+gl.labels[page.currentPin]
+            }
+        }
+    }
+
+    Dialog {
+        id: waitingAnalogDialog
+        title: "Waiting for a pin"
+        visible: page.waitingForAnalog
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        ColumnLayout {
+            Label {
+                text: "Move an axis to assign it to "+gl.labels[page.currentPin]
+            }
+        }
+    }
+
+    Dialog {
         id: pinDialog
         title: "Select a Pin for: "+gl.labels[page.currentPin]
         visible: page.currentPin
@@ -73,11 +105,12 @@ Page {
         ColumnLayout {
             anchors.fill: parent
             Image {
-                property var scaleX: 1 / sourceSize.width * paintedWidth
-                property var scaleY: 1 / sourceSize.height * paintedHeight
+                sourceSize.width: applicationWindow.width/3
+                property var selected: PinInfo.pinLocations[scanner.selected.boardImage];
+                property var scaleX: 1 / selected.width * paintedWidth
+                property var scaleY: 1 / selected.height * paintedHeight
                 property var startX: (width - paintedWidth) / 2
                 property var startY: (height - paintedHeight) / 2
-                property var selected: PinInfo.pinLocations[scanner.selected.boardImage];
                 property var r: selected.r * scaleX
                 property var pins: selected.pins
                 id: boardImage
@@ -106,6 +139,32 @@ Page {
             }
         }
         footer: RowLayout {
+            id: test
+            function received(i) {
+                page.currentValue = i;
+                page.waitingForAnalog = false;
+                page.waitingForDigital = false;
+            }
+
+            Button {
+                text: qsTr("Find Pin Binding")
+                Layout.fillWidth: true
+                visible: scanner.selected.hasAutoBind
+                onClicked: {
+                    var isAnalog = scanner.selected.pin_inverts.hasOwnProperty(page.currentPin);
+                    //The tilt pin is weird, as it is sometimes analog and sometimes digital..
+                    if (gl.labels[page.currentPin] === "Tilt Axis") {
+                        isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
+                    }
+                    if (isAnalog) {
+                        scanner.selected.findAnalog(test.received)
+                        page.waitingForAnalog = true;
+                    } else {
+                        scanner.selected.findDigital(test.received)
+                        page.waitingForDigital = true;
+                    }
+                }
+            }
             Button {
                 text: qsTr("Set Pin Binding")
                 Layout.fillWidth: true

@@ -8,17 +8,17 @@ function generatePins(count, x, y, width, startId) {
     return ret;
 }
 var pinLocations = {
-    "images/ArduinoUno.svg": {pins: [...generatePins(8,1083, 13, -40, 0), ...generatePins(6,743, 13, -40, 8), ...generatePins(6,873, 770, 40, 14)], r:30},
-    "images/ArduinoProMicro.svg": {pins: [
-            ...generatePins(2,348, 5, -31, 0),
-            ...generatePins(8,224, 5, -31, 2),
-            {x:8, y: 191, id: 10},
-            {x:39, y: 191, id: 16},
-            {x:72, y: 191, id: 14},
-            {x:103, y: 191, id: 15},
-            ...generatePins(4, 132, 191, 32, 18)
-        ], r:25},
-    "images/ArduinoLeonardo.svg": {pins: [...generatePins(8,903, 18, -35, 0), ...generatePins(6,597, 27, -35, 8), ...generatePins(6,727, 697, 35, 18)], r:25},
+    "images/ArduinoUno.svg": {width: 284, height:208, pins: [...generatePins(8,254, 16, -9, 0), ...generatePins(6,177, 16, -9, 8), ...generatePins(6,209, 186, 9, 14)], r:4},
+    "images/ArduinoProMicro.svg": {width: 262, height:138, pins: [
+            ...generatePins(2,216.75, 5, -19, 0),
+            ...generatePins(8,140.25, 5, -19, 2),
+            {x:7, y: 121, id: 10},
+            {x:26.25, y: 121, id: 16},
+            {x:45.25, y: 121, id: 14},
+            {x:64.25, y: 121, id: 15},
+            ...generatePins(4, 83.25, 121, 19, 18)
+        ], r:11.5},
+    "images/ArduinoLeonardo.svg": {width: 199, height:150, pins: [...generatePins(8,183, 5, -7, 0), ...generatePins(6,121, 5, -7, 8), ...generatePins(6,146, 141, 7, 18)], r:4},
 }
 var bindings = {
     "images/ArduinoUno.svg": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
