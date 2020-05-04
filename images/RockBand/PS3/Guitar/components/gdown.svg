@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.21 108.38"
+   id="PS3RBGuitar">
+  <metadata
+     id="metadata87">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#171717;}.cls-1,.cls-13,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke:#000;stroke-width:0.25px;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-16,.cls-17,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-2{fill:#393839;}.cls-3{fill:#939598;}.cls-4{fill:#a7a9ac;}.cls-5{fill:#414042;}.cls-6{fill:#121212;}.cls-7{fill:#f1f2f2;}.cls-10,.cls-11,.cls-12,.cls-8,.cls-9{fill:none;}.cls-8{stroke:#f15a29;}.cls-9{stroke:#1c75bc;}.cls-10{stroke:#f9ed32;}.cls-11{stroke:#be1e2d;}.cls-12{stroke:#009444;}.cls-13{fill:#4d4d4d;}.cls-14{fill:#292728;}.cls-15,.cls-17{fill:#b1b3b6;}.cls-16{fill:#464547;}.cls-16,.cls-17{stroke:#231f20;stroke-width:0.1px;}</style>
+  </defs>
+  <g
+     id="gdown"
+     transform="matrix(0.47089288,-0.47669156,0.47669156,0.47089288,-33.326153,107.90038)">
+    <path
+       style="opacity:1;vector-effect:none;fill:#7c7f85;fill-opacity:1;stroke:#231f20;stroke-width:0.15368482;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 99.391012,73.22925 c 0.586938,-0.284456 1.318958,-0.284456 1.905898,0 0.2256,0.109342 0.51802,0.270326 0.51802,0.60611 v 2.691364 c 0,0.335784 -0.23104,0.606109 -0.51802,0.606109 h -1.905898 c -0.286977,0 -0.518009,-0.270325 -0.518009,-0.606109 V 73.83536 c 0,-0.335784 0.292396,-0.496769 0.518009,-0.60611 z"
+       id="rect1681" />
+    <path
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:#231f20;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path1699"
+       d="m 97.942856,68.683159 -0.369296,-0.639639 -0.369295,-0.639639 0.738591,0 0.738591,0 -0.369296,0.639639 z"
+       transform="matrix(1.0448826,0,0,0.89752665,-2.008018,15.041616)" />
+  </g>
+</svg>

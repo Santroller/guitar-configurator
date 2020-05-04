@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg78"
+   version="1.1"
+   viewBox="0 0 227.95 158.41">
+  <metadata
+     id="metadata82">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#393839;}.cls-1,.cls-15,.cls-16,.cls-17,.cls-18,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke:#000;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-20,.cls-21,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-2,.cls-20,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-width:0.25px;}.cls-2{fill:#ba4125;}.cls-10,.cls-11,.cls-12,.cls-3,.cls-8,.cls-9{fill:#77787b;}.cls-4{fill:#4d70b3;}.cls-5{fill:#f6d854;}.cls-6{fill:#a92129;}.cls-7{fill:#5cbb59;}.cls-8{stroke:#a0410d;}.cls-9{stroke:#0054a6;}.cls-10{stroke:#ffe073;}.cls-11{stroke:#a3062a;}.cls-12{stroke:#007a4b;}.cls-13{fill:#888a8c;}.cls-13,.cls-14,.cls-19,.cls-20,.cls-21{stroke:#231f20;}.cls-14,.cls-15{fill:#2d2a2b;}.cls-16{fill:#c4c6c8;}.cls-17{fill:#6f7173;}.cls-18{fill:#999;}.cls-19{fill:#8f9194;}.cls-19,.cls-21{stroke-width:0.1px;}.cls-20{fill:#bcbec0;}.cls-21{fill:#464547;}</style>
+  </defs>
+  <g
+     id="g949"
+     transform="translate(3.2900505e-8,2.9755464e-6)">
+    <rect
+       style="fill:#bcbec0;stroke:#231f20;stroke-width:0.25px;stroke-miterlimit:10"
+       class="cls-20"
+       x="70.309998"
+       y="124.28"
+       width="3.9000001"
+       height="3.9000001"
+       rx="1.59"
+       transform="rotate(-34.6,57.459285,166.86361)"
+       id="rect66" />
+    <rect
+       style="fill:#bcbec0;stroke:#231f20;stroke-width:0.25px;stroke-miterlimit:10"
+       class="cls-20"
+       x="54.150002"
+       y="99.669998"
+       width="3.9000001"
+       height="3.9000001"
+       rx="1.59"
+       transform="rotate(-34.6,41.299371,142.24751)"
+       id="rect68" />
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 245.45 145.67"
+   id="PS3GHLesPaul">
+  <metadata
+     id="metadata53">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#292728;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;stroke-width:0.25px;}.cls-2{fill:#9d9fa2;}.cls-3,.cls-5{fill:#333132;}.cls-4{fill:#d1d3d4;}.cls-5{stroke:#231f20;}.cls-6{fill:#b34926;}.cls-7{fill:#3a58a7;}.cls-8{fill:#fbef59;}.cls-9{fill:#be1e2d;}.cls-10{fill:#538c43;}</style>
+  </defs>
+  <g
+     id="gleft"
+     transform="matrix(0.47089288,-0.47669156,0.47669156,0.47089288,1.2670627,73.164037)">
+    <path
+       style="opacity:1;vector-effect:none;fill:#7c7f85;fill-opacity:1;stroke:#231f20;stroke-width:0.15393382;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 95.52193,70.245664 h 2.700312 c 0.336915,0 0.49843,0.292388 0.608127,0.51798 0.285411,0.586885 0.285411,1.318837 0,1.905722 -0.109697,0.225592 -0.271212,0.51798 -0.608127,0.51798 H 95.52193 c -0.336906,0 -0.608134,-0.231018 -0.608134,-0.51798 v -1.905722 c 0,-0.286961 0.271228,-0.51798 0.608134,-0.51798 z"
+       id="rect1679" />
+    <path
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:#231f20;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path1699-0-1"
+       d="m 97.942856,68.683159 -0.369296,-0.639639 -0.369295,-0.639639 0.738591,0 0.738591,0 -0.369296,0.639639 z"
+       transform="matrix(0,-1.0448826,-0.89752665,0,157.05215,174.07133)" />
+  </g>
+</svg>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.21 108.38"
+   data-name="360RBGuitar"
+   id="_360RBGuitar">
+  <metadata
+     id="metadata95">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#171717;}.cls-1,.cls-13,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke:#000;stroke-width:0.25px;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-2{fill:#393839;}.cls-3{fill:#939598;}.cls-4{fill:#a7a9ac;}.cls-5{fill:#414042;}.cls-6{fill:#121212;}.cls-7{fill:#f1f2f2;}.cls-10,.cls-11,.cls-12,.cls-17,.cls-8,.cls-9{fill:none;}.cls-8{stroke:#f15a29;}.cls-9{stroke:#1c75bc;}.cls-10{stroke:#f9ed32;}.cls-11{stroke:#be1e2d;}.cls-12{stroke:#009444;}.cls-13{fill:#8c8c8c;}.cls-14{fill:#292728;}.cls-15,.cls-16{fill:#b1b3b6;}.cls-16,.cls-17,.cls-18,.cls-19{stroke:#231f20;}.cls-16{stroke-width:0.1px;}.cls-17,.cls-18,.cls-19{stroke-width:0.05px;}.cls-18{fill:#8dc63f;}.cls-19{fill:#d1d3d4;}</style>
+  </defs>
+  <g
+     id="ghome">
+    <path
+       class="cls-4"
+       d="M33.22,117.24s0,3.72,3.64,3.72a3.55,3.55,0,0,0,3.38-2.1,3.91,3.91,0,0,0,0-3.57,3.41,3.41,0,0,0-3.2-1.78A3.6,3.6,0,0,0,33.22,117.24Z"
+       transform="translate(-1.49 -34.44)"
+       id="path74" />
+    <ellipse
+       class="cls-17"
+       cx="35.49"
+       cy="82.72"
+       rx="2.88"
+       ry="2.8"
+       id="ellipse78" />
+    <path
+       class="cls-18"
+       d="M35.71,115.1a4,4,0,0,0-.72,0h0a5.76,5.76,0,0,1,1.45.72,8,8,0,0,0-1.78,3h0A8.9,8.9,0,0,1,37,116.21a3.65,3.65,0,0,1,1.08.91,4.82,4.82,0,0,1,1,1.83h0a4.64,4.64,0,0,0-1.69-3.13,4.16,4.16,0,0,1,1.4-.78h0a2.2,2.2,0,0,0-.53,0"
+       transform="translate(-1.49 -34.44)"
+       id="path80" />
+    <path
+       class="cls-18"
+       d="M35.71,115.1a2.08,2.08,0,0,1,1.3.49,2.76,2.76,0,0,1,1.34-.55"
+       transform="translate(-1.49 -34.44)"
+       id="path82" />
+    <path
+       class="cls-19"
+       d="M35,115.14a2.66,2.66,0,0,0-.88,2,2.78,2.78,0,0,0,.57,1.67,7.93,7.93,0,0,1,1.77-3A5.56,5.56,0,0,0,35,115.14Z"
+       transform="translate(-1.49 -34.44)"
+       id="path84" />
+    <path
+       class="cls-19"
+       d="M37,116.23a8.84,8.84,0,0,0-2.37,2.6A2.9,2.9,0,0,0,37,120a2.93,2.93,0,0,0,2.13-1,4.85,4.85,0,0,0-1.05-1.83A3.88,3.88,0,0,0,37,116.23Z"
+       transform="translate(-1.49 -34.44)"
+       id="path86" />
+    <path
+       class="cls-19"
+       d="M38.88,115.06a4.31,4.31,0,0,0-1.4.79A4.64,4.64,0,0,1,39.17,119a2.73,2.73,0,0,0,.68-1.93A2.61,2.61,0,0,0,38.88,115.06Z"
+       transform="translate(-1.49 -34.44)"
+       id="path88" />
+    <path
+       class="cls-19"
+       d="M37,115.61a2.72,2.72,0,0,1,1.87-.55,2.77,2.77,0,0,0-1.9-.7,3,3,0,0,0-2,.78A2.82,2.82,0,0,1,37,115.61Z"
+       transform="translate(-1.49 -34.44)"
+       id="path90" />
+  </g>
+</svg>

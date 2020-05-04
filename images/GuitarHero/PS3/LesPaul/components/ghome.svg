@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 245.45 145.67"
+   id="PS3GHLesPaul">
+  <metadata
+     id="metadata53">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#292728;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;stroke-width:0.25px;}.cls-2{fill:#9d9fa2;}.cls-3,.cls-5{fill:#333132;}.cls-4{fill:#d1d3d4;}.cls-5{stroke:#231f20;}.cls-6{fill:#b34926;}.cls-7{fill:#3a58a7;}.cls-8{fill:#fbef59;}.cls-9{fill:#be1e2d;}.cls-10{fill:#538c43;}</style>
+  </defs>
+  <g
+     id="ghome">
+    <circle
+       style="fill:#999999;stroke:#000000;stroke-width:0.25px;stroke-miterlimit:10"
+       id="circle60"
+       r="3.95"
+       cy="66.906197"
+       cx="74.825615"
+       class="cls-18" />
+    <circle
+       style="fill:#8f9194;stroke:#231f20;stroke-width:0.1px;stroke-miterlimit:10"
+       id="circle62"
+       r="2.54"
+       cy="66.846199"
+       cx="74.725616"
+       class="cls-19" />
+    <g
+       transform="translate(25.115616,-79.123807)"
+       id="Layer_28"
+       data-name="Layer 28">
+      <path
+         class="cls-21"
+         d="m 80.19,148 v 0.87 a 0.42,0.42 0 0 0 0.65,-0.33 0.8,0.8 0 0 0 -0.52,-0.95 c -0.22,-0.09 -1,-0.28 -1,-0.28 v 2.61 l 0.59,0.19 v -2.18 c 0,0 0,-0.21 0.14,-0.15 0.14,0.06 0.14,0.22 0.14,0.22 z"
+         transform="translate(-30.24,-2.88)"
+         id="path71" />
+      <path
+         class="cls-21"
+         d="m 81.61,149.29 c -0.11,-0.19 -0.72,-0.26 -0.88,-0.25 a 2.26,2.26 0 0 0 -0.66,0.11 v 0.36 l 0.63,-0.22 a 0.61,0.61 0 0 1 0.39,0 c 0.08,0 0,0.09 -0.11,0.13 l -0.91,0.32 v 0.34 l 1.29,-0.46 c 0,0 0.37,-0.14 0.25,-0.33 z"
+         transform="translate(-30.24,-2.88)"
+         id="path73" />
+      <path
+         class="cls-21"
+         d="m 78,149.41 c 0,0.11 0,0.23 0.43,0.33 a 2.1,2.1 0 0 0 0.81,0 v -0.31 l -0.18,0.07 c -0.18,0.06 -0.43,0.1 -0.5,0 -0.07,-0.1 0.06,-0.11 0.06,-0.11 l 0.62,-0.22 v -0.34 l -0.74,0.26 c 0,0 -0.45,0.21 -0.5,0.32 z"
+         transform="translate(-30.24,-2.88)"
+         id="path75" />
+    </g>
+  </g>
+</svg>

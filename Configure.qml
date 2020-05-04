@@ -6,7 +6,9 @@ import QtQuick.Layouts 1.10
 import QtQuick.Dialogs 1.0
 import net.tangentmc 1.0
 import QtGraphicalEffects 1.12
+import "pins.js" as PinInfo
 import "defines.js" as Defines
+import "keys.js" as KeyInfo
 
 
 ColumnLayout {
@@ -28,14 +30,21 @@ ColumnLayout {
                     hoverEnabled: true
                     anchors.fill: parent
                     onPositionChanged: {
-                        var s = scanner.findElement(image.base, image.width, image.height, mouseX, mouseY);
-                        if (s !== "") {
-                            image2.source = s;
-                            image2.visible = true;
-                            overlay.visible = true;
+                        var newSource = scanner.findElement(image.base, image.width, image.height, mouseX, mouseY);
+                        if (newSource != image2.source) {
+                            buttonConfig.visible = false;
+                        }
+                        
+                        image2.source  = newSource;
+                        image2.visible = overlay.visible = image2.source != "";
+                        if (image2.visible && !buttonConfig.visible) {
+                            buttonConfig.visible = true;
+                            var a = mapToItem(column, mouseX, mouseY);
+                            buttonConfig.x = a.x-buttonConfig.width/2;
+                            buttonConfig.y = a.y;
+                            buttonConfig.loadImage(image2.source);
                         } else {
-                            image2.visible = false;
-                            overlay.visible = false;
+                            buttonConfig.visible = image2.visible;
                         }
                     }
                 }
@@ -106,10 +115,192 @@ ColumnLayout {
         }
     }
     Dialog {
+        id: buttonConfig
+        property var current: PinInfo.bindings[scanner.selected.boardImage];
+        property var allLabels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+        property var isAnalog: false;
+        property var button;
+        property var label: "";
+        property var pinLabel;
+        property var pin;
+        property var existingPin: ""
+        property var existingCurrentPin: ""
+        property var currentPin: "";
+        property var currentValue: "";
+        property var waitingForDigital: false;
+        property var waitingForAnalog: false;
+        property var buttons: [];
+        property var labels: [];
+        property var pinLabels: [];
+        property var keyLabels: [];
+        property var currentKey: "";
+        property var existingCurrentKey: ""
+        property var existingKey: "";
+        property var currentKeyValue: "";
+        Binding { target: buttonConfig; property: "labels"; value: buttonConfig.buttons.map(b => buttonConfig.allLabels[b]) }
+        Binding { target: buttonConfig; property: "pinLabels"; value: buttonConfig.buttons.map(b => buttonConfig.current[scanner.selected.pins[b]] || scanner.selected.pins[b]) }
+        Binding { target: buttonConfig; property: "keyLabels"; value: buttonConfig.buttons.map(b => KeyInfo.getKeyName(scanner.selected.keys[b])) }
+        function loadImage(image) {
+            scanner.selected.loadPins();
+            scanner.selected.loadKeys();
+            button = image.toString().replace(/.*\/g(.*).svg/,"$1");
+            buttons = [button];
+            isAnalog = scanner.selected.pin_inverts.hasOwnProperty(button);
+            label = allLabels[button];
+            if (button === "strum") {
+                label = "Strum";
+                buttons = ["up","down"];
+            }
+            if (button === "ljoy") {
+                label = "Left Joystick";
+                buttons = ["l_x", "l_y"];
+                isAnalog = true;
+            }
+            if (button === "rjoy") {
+                label = "Right Joystick";
+                buttons = ["r_x", "r_y"];
+                isAnalog = true;
+            }
+        }
+        title: label || ""
+        ColumnLayout {
+            Repeater {
+                model: buttonConfig.buttons
+                ColumnLayout {
+                    Button {
+                        visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar
+                        text: qsTr("Change Pin Binding for "+buttonConfig.labels[index]+" (Currently: "+buttonConfig.pinLabels[index]+")")
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        onClicked: buttonConfig.currentPin = modelData
+                    }
+                    RowLayout {
+                        visible: buttonConfig.isAnalog
+                        Label {
+                            text: qsTr("Invert "+buttonConfig.labels[index])
+                            fontSizeMode: Text.FixedSize
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            wrapMode: Text.WordWrap
+                        }
+                        Switch {
+                            enabled: buttonConfig.isAnalog
+                            checked: !!scanner.selected.pin_inverts[modelData]
+                            onCheckedChanged: {
+                                var pins = scanner.selected.pin_inverts;
+                                pins[modelData] = checked;
+                                scanner.selected.pin_inverts = pins;
+                            }
+                        }
+                    }
+                    Button {
+                        visible: scanner.selected.isKeyboard
+                        text: qsTr("Change Key Binding for "+buttonConfig.labels[index]+" (Currently: "+buttonConfig.keyLabels[index]+")")
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        onClicked: {
+                            buttonConfig.currentKey = modelData;
+                            buttonConfig.currentKeyValue = scanner.selected.keys[modelData];
+                            keyDialog.forceActiveFocus();
+                        }
+                    }
+                }
+            }
+            RowLayout {
+                visible: buttonConfig.button === "ljoy" && (scanner.selected.isGuitar || scanner.selected.isDrum)
+                Label {
+                    text: qsTr("Map Left Joystick to D-pad")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    checked: scanner.selected.mapJoystick
+                    onCheckedChanged: {
+                        scanner.selected.mapJoystick = checked
+                    }
+                }
+            }
+            RowLayout {
+                visible: buttonConfig.button === "ljoy" && (scanner.selected.isGuitar || scanner.selected.isDrum)
+                Label {
+                    text: "Joystick Mapping Threshold"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Slider {
+                    id: slider2
+                    to: 128
+                    from: 0
+                    live: false
+                    enabled: scanner.selected.mapJoystick
+                    value: scanner.selected.joyThreshold
+                    onValueChanged: scanner.selected.joyThreshold = slider2.value
+                    background: Rectangle {
+                        y: 15
+                        implicitWidth: 200
+                        implicitHeight: 4
+                        height: implicitHeight
+                        radius: 2
+                        color: "#bdbebf"
+                    }
+                }
+            }
+            RowLayout {
+                visible: buttonConfig.isAnalog && scanner.selected.isKeyboard
+                Label {
+                    text: "Key Axis Threshold"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Slider {
+                    id: slider
+                    to: 128
+                    from: 0
+                    live: false
+                    value: scanner.selected.triggerThreshold
+                    onValueChanged: scanner.selected.triggerThreshold = slider.value
+                    background: Rectangle {
+                        y: 15
+                        implicitWidth: 200
+                        implicitHeight: 4
+                        height: implicitHeight
+                        radius: 2
+                        color: "#bdbebf"
+                    }
+                }
+            }
+
+            
+            RowLayout {
+                visible: ["back","start","home"].includes(buttonConfig.button)
+                Label {
+                    text: qsTr("Map Start + Select to PS Button / Home / Xbox Dashboard")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    checked: scanner.selected.mapStartSelectHome
+                    onCheckedChanged: {
+                        scanner.selected.mapStartSelectHome = checked
+                    }
+                }
+            }
+        }
+    }
+
+    Dialog {
         id: type
         modal: true
         standardButtons: Dialog.Close
-
+        
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         ColumnLayout {
@@ -123,7 +314,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
             }
-
+            
             ComboBox {
                 id: inputBox
                 Layout.fillWidth: true
@@ -131,10 +322,10 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("input")
                 Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
-
+                
                 onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
             }
-
+            
             Label {
                 id: inputLb1
                 text: qsTr("Controller Output Type")
@@ -145,7 +336,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
             }
-
+            
             ComboBox {
                 id: comboBox
                 Layout.fillWidth: true
@@ -153,12 +344,283 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("subtype")
                 Binding { target: comboBox; property: "currentIndex"; value: {comboBox.model.findIndex(s => s.value === scanner.selected.type)} }
-
-                onCurrentIndexChanged: scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+                
+                onCurrentIndexChanged: {
+                    scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+                    //When the controller type is changed, we need to disable any pins that are not used by that controller.
+                    scanner.selected.loadPins();
+                    var pins = scanner.selected.pins;
+                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
+                        pins[pin] = 0xFF;
+                    }
+                    scanner.selected.pins = pins;
+                    scanner.selected.savePins()
+                }
             }
         }
     }
 
+
+    Dialog {
+        id: keyOverrideDialog
+        title: "Key Conflict"
+        visible: buttonConfig.existingKey
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
+            var pins = scanner.selected.keys;
+            pins[buttonConfig.existingCurrentKey] = buttonConfig.currentKeyValue;
+            pins[buttonConfig.existingKey] = 0xFF;
+            scanner.selected.keys = pins;
+            buttonConfig.existingKey = "";
+            scanner.selected.saveKeys();
+        }
+        onRejected: buttonConfig.existingKey = "";
+        ColumnLayout {
+            Label {
+                text: "Key "+KeyInfo.getKeyName(buttonConfig.currentKeyValue)+" is already in use."
+            }
+            Label {
+                text: "Would you like to replace it?"
+            }
+        }
+    }
+
+    Dialog {
+        id: keyDialog
+        title: "Binding: "+KeyInfo.labels[buttonConfig.currentKey]
+        visible: buttonConfig.currentKey
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        modal: true
+        onAccepted: {
+            var pins = scanner.selected.keys;
+            if (pins[buttonConfig.currentKey] === buttonConfig.currentKeyValue) return;
+            if (buttonConfig.currentKeyValue !== 0xFF) {
+                //We need to make sure we compare numbers, as we have qt enums here for keys, and those are not directly equivilant
+                var existing = Object.keys(pins).find(m => Number(pins[m]) === Number(buttonConfig.currentKeyValue));
+                if (existing) {
+                    buttonConfig.existingKey = existing;
+                    buttonConfig.existingCurrentKey = buttonConfig.currentKey;
+                    buttonConfig.currentKey = "";
+                    return;
+                }
+            }
+
+            pins[buttonConfig.currentKey] = buttonConfig.currentKeyValue;
+            scanner.selected.keys = pins;
+            scanner.selected.saveKeys();
+            buttonConfig.currentKey = "";
+        }
+        onRejected: {
+            buttonConfig.currentKey = "";}
+        ColumnLayout {
+            Label {
+                text: qsTr("Press a key to assign it to " + KeyInfo.labels[buttonConfig.currentKey])
+            }
+            Label {
+                text: qsTr("Current Key: " + KeyInfo.getKeyName(buttonConfig.currentKeyValue))
+            }
+            RowLayout {
+                Button {
+                    text: qsTr("Save Key")
+                    onClicked: keyDialog.accept()
+                }
+                Button {
+                    onClicked: {
+                        buttonConfig.currentKeyValue = 0xFF;
+                        keyDialog.accept();
+                    }
+                    text: qsTr("Disable Key")
+                }
+                Button {
+                    onClicked: keyDialog.reject()
+                    text: qsTr("Cancel")
+                }
+            }
+            Item {
+                focus: true
+                Keys.onPressed: {
+                    buttonConfig.currentKeyValue = KeyInfo.findValueForEvent(event) || page.currentKeyValue;
+                    event.accepted = true;
+                }
+            }
+        }
+    }
+    Dialog {
+        id: overrideDialog
+        title: "Pin Conflict"
+        visible: buttonConfig.existingPin
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
+            var pins = scanner.selected.pins;
+            pins[buttonConfig.existingCurrentPin] = buttonConfig.currentValue;
+            pins[buttonConfig.existingPin] = 0xFF;
+            scanner.selected.pins = pins;
+            scanner.selected.savePins();
+            buttonConfig.currentPin = "";
+        }
+        onRejected: buttonConfig.existingPin = "";
+        ColumnLayout {
+            Label {
+                function getBinding() {
+                    var bindings = PinInfo.bindings[scanner.selected.boardImage];
+                    return bindings[buttonConfig.currentValue] || buttonConfig.currentValue;
+                }
+                text: "Pin "+getBinding()+" is already in use."
+            }
+            Label {
+                text: "Would you like to replace it?"
+            }
+        }
+    }
+    
+    Dialog {
+        id: waitingDigitalDialog
+        title: "Waiting for a pin"
+        visible: buttonConfig.waitingForDigital
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        ColumnLayout {
+            Label {
+                text: "Ground the pin you would like to assign to "+buttonConfig.labels[buttonConfig.currentPin]
+            }
+        }
+    }
+    
+    Dialog {
+        id: waitingAnalogDialog
+        title: "Waiting for a pin"
+        visible: buttonConfig.waitingForAnalog
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        ColumnLayout {
+            Label {
+                text: "Move an axis to assign it to "+buttonConfig.labels[buttonConfig.currentPin]
+            }
+        }
+    }
+    
+    Dialog {
+        id: pinDialog
+        title: "Select a Pin for: "+buttonConfig.labels[buttonConfig.currentPin]
+        visible: buttonConfig.currentPin
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        onAccepted: {
+            var pins = scanner.selected.pins;
+            if (pins[buttonConfig.currentPin] === buttonConfig.currentValue) return;
+            if (buttonConfig.currentValue !== 0xFF) {
+                var existing = Object.keys(pins).find(m => pins[m] === buttonConfig.currentValue);
+                if (existing) {
+                    buttonConfig.existingPin = existing;
+                    buttonConfig.existingCurrentPin = buttonConfig.currentPin;
+                    buttonConfig.currentPin = "";
+                    return;
+                }
+            }
+            pins[buttonConfig.currentPin] = buttonConfig.currentValue;
+            scanner.selected.pins = pins;
+            scanner.selected.savePins();
+            buttonConfig.currentPin = "";
+        }
+        onRejected: buttonConfig.currentPin = "";
+        modal: true
+        ColumnLayout {
+            anchors.fill: parent
+            Image {
+                sourceSize.width: applicationWindow.width/3
+                property var selected: PinInfo.pinLocations[scanner.selected.boardImage];
+                property var scaleX: 1 / selected.width * paintedWidth
+                property var scaleY: 1 / selected.height * paintedHeight
+                property var startX: (width - paintedWidth) / 2
+                property var startY: (height - paintedHeight) / 2
+                property var r: selected.r * scaleX
+                property var pins: selected.pins
+                id: boardImage
+                Layout.alignment: Qt.AlignHCenter
+                source: scanner.selected.boardImage
+                fillMode: Image.PreserveAspectFit
+                Layout.maximumHeight: applicationWindow.height/3
+                Layout.maximumWidth: applicationWindow.width/3
+                Repeater {
+                    model: boardImage.pins.length
+                    Rectangle {
+                        width: boardImage.r; height: boardImage.r
+                        x: boardImage.startX + boardImage.pins[index].x * boardImage.scaleX
+                        y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY
+                        radius: boardImage.r * 0.5
+                        border.width: 1
+                        color: buttonConfig.currentValue === boardImage.pins[index].id ? "green" : mouseArea.containsMouse ? "red":"yellow"
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: buttonConfig.currentValue = boardImage.pins[index].id
+                        }
+                    }
+                }
+            }
+        }
+        footer: RowLayout {
+            id: test
+            function received(i) {
+                buttonConfig.currentValue = i;
+                buttonConfig.waitingForAnalog = false;
+                buttonConfig.waitingForDigital = false;
+            }
+            
+            Button {
+                text: qsTr("Automatically Find Pin Binding")
+                Layout.fillWidth: true
+                visible: scanner.selected.hasAutoBind
+                onClicked: {
+                    var isAnalog = scanner.selected.pin_inverts.hasOwnProperty(buttonConfig.currentPin);
+                    //The tilt pin is weird, as it is sometimes analog and sometimes digital..
+                    if (buttonConfig.labels[buttonConfig.currentPin] === "Tilt Axis") {
+                        isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
+                    }
+                    if (isAnalog) {
+                        scanner.selected.findAnalog(test.received)
+                        buttonConfig.waitingForAnalog = true;
+                    } else {
+                        scanner.selected.findDigital(test.received)
+                        buttonConfig.waitingForDigital = true;
+                    }
+                }
+            }
+            Button {
+                text: qsTr("Set Pin Binding")
+                Layout.fillWidth: true
+                onClicked: pinDialog.accept()
+            }
+            
+            Button {
+                text: qsTr("Disable Pin Binding")
+                Layout.fillWidth: true
+                onClicked: {
+                    buttonConfig.currentValue = 0xFF;
+                    pinDialog.accept();
+                }
+            }
+            
+            Button {
+                text: qsTr("Cancel")
+                Layout.fillWidth: true
+                onClicked: pinDialog.reject()
+            }
+        }
+    }
+    
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Button {
@@ -167,34 +629,6 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 mainStack.push("leds.qml");
-            }
-        }
-        Button {
-            id: bind
-            visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar
-            text: qsTr("Configure Arduino Pin Bindings")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                scanner.selected.loadPins();
-                mainStack.push("PinBindings.qml");
-            }
-        }
-        Button {
-            id: keybind
-            visible: scanner.selected.type === ArdwiinoDefinesValues.KEYBOARD
-            text: qsTr("Configure Keyboard Bindings")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                scanner.selected.loadKeys();
-                mainStack.push("KeyBindings.qml");
-            }
-        }
-        Button {
-            id: mappings
-            text: qsTr("Configure additional settings")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                mainStack.push("Mappings.qml");
             }
         }
         Button {
@@ -208,6 +642,7 @@ ColumnLayout {
             }
         }
     }
+    
     Dialog {
         id: detectionDialog
         title: "Updating device, please wait"
@@ -216,7 +651,7 @@ ColumnLayout {
         y: (parent.height - height) / 2
         modal: true
         closePolicy: Popup.NoAutoClose
-
+        
         ColumnLayout {
             Label {
                 text: qsTr("Please wait for your controller to reboot")
@@ -226,7 +661,7 @@ ColumnLayout {
             }
         }
     }
-
+    
     Dialog {
         id: cloneDialog
         title: "Clone Hero Connector"
@@ -262,8 +697,8 @@ ColumnLayout {
                     onClicked: folderDialog.open()
                 }
             }
-
-
+            
+            
             FileDialog {
                 id: folderDialog
                 folder: ledhandler.gameFolder
@@ -271,7 +706,7 @@ ColumnLayout {
                 selectFolder: true
                 onAccepted: ledhandler.gameFolder = fileUrl
             }
-
+            
             Button {
                 id: startGame
                 text: qsTr("Start Clone Hero")
@@ -281,8 +716,7 @@ ColumnLayout {
             }
         }
     }
-
-
+    
 }
 
 

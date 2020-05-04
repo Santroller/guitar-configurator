@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.11 153.14"
+   id="PS3DrumGH">
+  <metadata
+     id="metadata74">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#333132;}.cls-1,.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-1,.cls-10,.cls-9{stroke-width:0.75px;}.cls-2{fill:#393839;}.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8{stroke-width:0.25px;}.cls-3{fill:#97999c;}.cls-4{fill:#302e2f;}.cls-5{fill:#565759;}.cls-6{fill:#cc493a;}.cls-7{fill:#496fb6;}.cls-8{fill:#46a07c;}.cls-9{fill:#db6f4b;}.cls-10{fill:#ffe17f;}.cls-11,.cls-12,.cls-13,.cls-14{fill:none;}.cls-11{stroke:#717a8d;}.cls-12{stroke:#9f5553;}.cls-13{stroke:#2ea081;}.cls-14{stroke:#b09fc1;}.cls-15{fill:#2d2a2b;}.cls-15,.cls-16,.cls-17,.cls-18{stroke:#231f20;}.cls-16,.cls-18{fill:#464547;}.cls-17{fill:#86888a;}.cls-18{stroke-width:0.1px;}</style>
+  </defs>
+  <circle
+     style="fill:#999999;fill-opacity:1;stroke:#231f20;stroke-width:0.1px;stroke-miterlimit:10"
+     id="gljoy"
+     r="4.5300002"
+     cy="29.312099"
+     cx="108.299"
+     class="cls-13" />
+</svg>

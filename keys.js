@@ -144,10 +144,10 @@ var keyMap={
 }
 
 var labels={
-    "up": "DPad Up",
-    "down": "DPad Down",
-    "left": "DPad Left",
-    "right": "DPad Right",
+    "up": "D-pad Up",
+    "down": "D-pad Down",
+    "left": "D-pad Left",
+    "right": "D-pad Right",
     "start": "Start Button",
     "back": "Back Button",
     "left_stick": "Left Stick Click",

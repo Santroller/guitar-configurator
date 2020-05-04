@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 254.89 140.88"
+   id="Controllers">
+  <metadata
+     id="metadata71">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#58595b;}.cls-1,.cls-2,.cls-3{stroke:#231f20;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8{stroke-miterlimit:10;}.cls-2{fill:#bcbec0;}.cls-3{fill:#302e2f;}.cls-4,.cls-5,.cls-6,.cls-7{fill:none;}.cls-4{stroke:#1c75bc;}.cls-5{stroke:#bb567c;}.cls-6{stroke:#5955a2;}.cls-7{stroke:#5bae41;}.cls-8{fill:#939598;stroke:#000;stroke-width:0.5px;}.cls-9{font-size:3.01px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}</style>
+  </defs>
+  <g
+     id="gy">
+    <circle
+       class="cls-2"
+       cx="191.17999"
+       cy="47.77"
+       r="7.9099998"
+       id="circle23"
+       style="fill:#bcbec0;stroke:#231f20;stroke-miterlimit:10" />
+    <path
+       class="cls-7"
+       d="m 190.88,43.43 -3.61,7 a 0.34,0.34 0 0 0 0.3,0.5 h 7.2 a 0.34,0.34 0 0 0 0.3,-0.5 l -3.59,-7 a 0.33,0.33 0 0 0 -0.6,0 z"
+       id="path47"
+       style="fill:none;stroke:#5bae41;stroke-miterlimit:10" />
+  </g>
+</svg>

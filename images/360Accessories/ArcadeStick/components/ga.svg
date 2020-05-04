@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.89 131.21"
+   data-name="360ArcadeStick"
+   id="_360ArcadeStick">
+  <metadata
+     id="metadata75">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#333132;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-7,.cls-8,.cls-9{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-2{stroke-width:0.25px;}.cls-2,.cls-7{fill:#9d9fa2;}.cls-3{font-size:4px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-4{letter-spacing:0.01em;}.cls-5{letter-spacing:-0.09em;}.cls-6,.cls-8{fill:#4f4f51;}.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-7{stroke-width:0.5px;}.cls-10,.cls-11,.cls-8,.cls-9{stroke-width:0.05px;}.cls-9{fill:none;}.cls-10{fill:#8dc63f;}.cls-11{fill:#d1d3d4;}.cls-12{fill:#0058a3;}.cls-13{fill:#1687c9;}.cls-14{fill:#f6bd17;}.cls-15{fill:#febf38;}.cls-16{fill:#6ca63c;}.cls-17{fill:#99ca3c;}.cls-18{fill:#aa1e23;}.cls-19{fill:#dd1f26;}</style>
+  </defs>
+  <g
+     id="ga">
+    <circle
+       class="cls-16"
+       cx="134.94"
+       cy="60.18"
+       r="8.18"
+       id="circle64" />
+    <path
+       class="cls-17"
+       d="M139.1,78h-2.77l-3.24,8.6h2.32l1-2.31h2.45l1,2.31h2ZM137,82.31l.56-2h.24l.6,2Z"
+       transform="translate(-2.97 -23.01)"
+       id="path66" />
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 254.38 153.9"
+   data-name="Layer 17"
+   id="Layer_17">
+  <metadata
+     id="metadata101">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#333132;}.cls-1,.cls-2,.cls-3,.cls-6,.cls-7{stroke:#000;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8{stroke-miterlimit:10;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-6,.cls-7,.cls-8{stroke-width:0.25px;}.cls-2{fill:#858585;}.cls-3{fill:#474747;}.cls-4{fill:#757575;}.cls-4,.cls-8{stroke:#231f20;}.cls-5{fill:none;stroke:#e6e7e8;}.cls-6{fill:#97999c;}.cls-7{fill:#dbdbdb;}.cls-8{fill:#878787;}.cls-9{font-size:9.57px;}.cls-10,.cls-11,.cls-12,.cls-9{fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-10{font-size:8.8px;}.cls-11{font-size:10.56px;}.cls-12{font-size:10.61px;}</style>
+  </defs>
+  <g
+     id="gLB">
+    <path
+       class="cls-8"
+       d="M4.07,26.69a8.45,8.45,0,0,1-.53-5.94c1-3.05,2.89-4.5,7.84-4.57s18.66,0,18.66,0L31.1,26.69C31.13,26.94,31.05,28.17,4.07,26.69Z"
+       transform="translate(-3.08 -5.12)"
+       id="path66" />
+    <polygon
+       class="cls-8"
+       points="37.32 8.73 26.96 11.05 27.93 21.74 37.85 19.13 37.32 8.73"
+       id="polygon68" />
+    <path
+       class="cls-8"
+       d="M4.16,19.27c3.05-6.22,10.27-5.42,10.27-5.42h26L30,16.18l-17.21,0S5.9,15.59,4.16,19.27Z"
+       transform="translate(-3.08 -5.12)"
+       id="path70" />
+    <text
+       class="cls-9"
+       transform="translate(11.14 19.89)"
+       id="text90">L</text>
+  </g>
+</svg>

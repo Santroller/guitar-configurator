@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.21 108.38"
+   data-name="360RBGuitar"
+   id="_360RBGuitar">
+  <metadata
+     id="metadata95">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#171717;}.cls-1,.cls-13,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke:#000;stroke-width:0.25px;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-2{fill:#393839;}.cls-3{fill:#939598;}.cls-4{fill:#a7a9ac;}.cls-5{fill:#414042;}.cls-6{fill:#121212;}.cls-7{fill:#f1f2f2;}.cls-10,.cls-11,.cls-12,.cls-17,.cls-8,.cls-9{fill:none;}.cls-8{stroke:#f15a29;}.cls-9{stroke:#1c75bc;}.cls-10{stroke:#f9ed32;}.cls-11{stroke:#be1e2d;}.cls-12{stroke:#009444;}.cls-13{fill:#8c8c8c;}.cls-14{fill:#292728;}.cls-15,.cls-16{fill:#b1b3b6;}.cls-16,.cls-17,.cls-18,.cls-19{stroke:#231f20;}.cls-16{stroke-width:0.1px;}.cls-17,.cls-18,.cls-19{stroke-width:0.05px;}.cls-18{fill:#8dc63f;}.cls-19{fill:#d1d3d4;}</style>
+  </defs>
+  <g
+     id="gstart">
+    <path
+       class="cls-4"
+       d="M50.91,118.79s0,3.72,3.64,3.72a3.55,3.55,0,0,0,3.39-2.1,3.88,3.88,0,0,0,0-3.57,3.38,3.38,0,0,0-3.19-1.78A3.61,3.61,0,0,0,50.91,118.79Z"
+       transform="translate(-1.49 -34.44)"
+       id="path34" />
+    <circle
+       class="cls-5"
+       cx="53.28"
+       cy="84.32"
+       r="0.76"
+       id="circle38" />
+  </g>
+</svg>

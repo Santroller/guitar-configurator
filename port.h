@@ -21,13 +21,16 @@ class Port : public QObject
     Q_PROPERTY(bool isArdwiino READ isArdwiino NOTIFY isArdwiinoChanged)
     Q_PROPERTY(bool isOutdated READ isOutdated NOTIFY outdatedChanged)
     Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY typeChanged)
+    Q_PROPERTY(bool isDrum READ isDrum NOTIFY typeChanged)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY typeChanged)
+    Q_PROPERTY(bool isKeyboard READ isKeyboard NOTIFY typeChanged)
     Q_PROPERTY(bool isRB READ isRB NOTIFY typeChanged)
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(bool hasAutoBind READ hasAutoBind NOTIFY hasAutoBindChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
+    Q_PROPERTY(QVariantMap keys MEMBER m_keys NOTIFY pinsChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
@@ -114,6 +117,12 @@ public slots:
     }
     bool isGuitar() {
         return ArdwiinoDefines::getName(getType()).toLower().contains("guitar");
+    }
+    bool isDrum() {
+        return ArdwiinoDefines::getName(getType()).toLower().contains("drum");
+    }
+    bool isKeyboard() {
+        return getType() == ArdwiinoDefines::KEYBOARD;
     }
     bool isLiveGuitar() {
         return getType() == ArdwiinoDefines::XINPUT_LIVE_GUITAR;
@@ -266,6 +275,7 @@ private:
     bool m_hasAutoBind;
     bool m_hasPinDetectionCallback;
     QJSValue m_pinDetectionCallback;
+    QVariantMap m_keys;
     QVariantMap m_pins;
     QVariantMap m_pin_inverts;
     controller_t m_controller{};

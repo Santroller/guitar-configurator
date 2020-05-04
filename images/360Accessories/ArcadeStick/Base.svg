@@ -1,1 +1,258 @@
-<svg id="_360ArcadeStick" data-name="360ArcadeStick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.89 131.21"><defs><style>.cls-1{fill:#333132;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-7,.cls-8,.cls-9{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-2{stroke-width:0.25px;}.cls-2,.cls-7{fill:#9d9fa2;}.cls-3{font-size:4px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-4{letter-spacing:0.01em;}.cls-5{letter-spacing:-0.09em;}.cls-6,.cls-8{fill:#4f4f51;}.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-7{stroke-width:0.5px;}.cls-10,.cls-11,.cls-8,.cls-9{stroke-width:0.05px;}.cls-9{fill:none;}.cls-10{fill:#8dc63f;}.cls-11{fill:#d1d3d4;}.cls-12{fill:#0058a3;}.cls-13{fill:#1687c9;}.cls-14{fill:#f6bd17;}.cls-15{fill:#febf38;}.cls-16{fill:#6ca63c;}.cls-17{fill:#99ca3c;}.cls-18{fill:#aa1e23;}.cls-19{fill:#dd1f26;}</style></defs><path class="cls-1" d="M264.22,129.3C263.07,123.85,241.78,26,241.78,26s.18-1.65-3.48-1.65S34.74,23.13,32,23.13s-3.16.58-3.47,1.91c0,0-24.37,102.7-25.14,107,0,0-1.08,4.43.61,6.13H264.22S265.37,134.78,264.22,129.3Z" transform="translate(-2.97 -23.01)"/><polygon class="cls-1" points="1.08 115.13 261.12 115.33 249.77 131.08 13.6 131.08 1.08 115.13"/><circle class="cls-2" cx="173.22" cy="54.76" r="8.51"/><circle class="cls-2" cx="193.73" cy="55.32" r="8.51"/><circle class="cls-2" cx="195.6" cy="37.27" r="7.78"/><circle class="cls-2" cx="175.73" cy="35.97" r="7.78"/><text class="cls-3" transform="translate(171.21 56.52)"><tspan class="cls-4">R</tspan><tspan x="2.19" y="0">T</tspan></text><text class="cls-3" transform="translate(192.49 56.52)"><tspan class="cls-5">L</tspan><tspan x="1.54" y="0">T</tspan></text><text class="cls-3" transform="translate(173.96 37.27)">RB</text><text class="cls-3" transform="translate(193.73 37.97)">LB</text><circle class="cls-6" cx="101.51" cy="48.69" r="10.04"/><circle class="cls-7" cx="100.21" cy="35.01" r="10.04"/><path class="cls-7" d="M103.5,71.61,102.78,68a8.56,8.56,0,0,0,2.22-.15l.68,3.85a2.37,2.37,0,0,1-1,.16A1.79,1.79,0,0,1,103.5,71.61Z" transform="translate(-2.97 -23.01)"/><path class="cls-8" d="M68.74,35.48l-.86,7.59A2.13,2.13,0,0,0,70,45.45l41.57.27a2.14,2.14,0,0,0,2.15-2.13V36.07a2.14,2.14,0,0,0-2.12-2.13l-40.7-.36A2.14,2.14,0,0,0,68.74,35.48Z" transform="translate(-2.97 -23.01)"/><ellipse class="cls-9" cx="104.35" cy="16.82" rx="2.44" ry="2.38"/><path class="cls-10" d="M106.24,38.07a2.89,2.89,0,0,0-.61,0h0a4.73,4.73,0,0,1,1.23.61,6.8,6.8,0,0,0-1.51,2.51h0a7.51,7.51,0,0,1,2-2.2,3.3,3.3,0,0,1,.92.78,4.18,4.18,0,0,1,.89,1.55h0a3.9,3.9,0,0,0-1.43-2.65,3.34,3.34,0,0,1,1.18-.67h0a2.16,2.16,0,0,0-.44,0" transform="translate(-2.97 -23.01)"/><path class="cls-10" d="M106.24,38.07a1.88,1.88,0,0,1,1.11.41,2.3,2.3,0,0,1,1.14-.46" transform="translate(-2.97 -23.01)"/><path class="cls-11" d="M105.63,38.11a2.24,2.24,0,0,0-.75,1.71,2.38,2.38,0,0,0,.48,1.42,6.83,6.83,0,0,1,1.5-2.52A4.73,4.73,0,0,0,105.63,38.11Z" transform="translate(-2.97 -23.01)"/><path class="cls-11" d="M107.37,39a7.51,7.51,0,0,0-2,2.2,2.48,2.48,0,0,0,3.82.12,4.26,4.26,0,0,0-.89-1.55A3.07,3.07,0,0,0,107.37,39Z" transform="translate(-2.97 -23.01)"/><path class="cls-11" d="M108.93,38a3.55,3.55,0,0,0-1.18.67,3.94,3.94,0,0,1,1.43,2.65,2.26,2.26,0,0,0,.58-1.63A2.21,2.21,0,0,0,108.93,38Z" transform="translate(-2.97 -23.01)"/><path class="cls-11" d="M107.35,38.51a2.29,2.29,0,0,1,1.58-.47,2.32,2.32,0,0,0-1.61-.6,2.52,2.52,0,0,0-1.69.67A2.35,2.35,0,0,1,107.35,38.51Z" transform="translate(-2.97 -23.01)"/><circle class="cls-12" cx="137.04" cy="40.07" r="8.62"/><polygon class="cls-13" points="132.24 35.15 135.01 35.15 136.69 38.1 138.56 35.15 141.03 35.15 138.46 39.47 141.84 44.65 138.83 44.65 136.69 40.84 134.75 44.52 132.24 44.52 135.05 39.37 132.24 35.15"/><circle class="cls-14" cx="156.82" cy="35.97" r="8.54"/><polygon class="cls-15" points="153.1 32.05 155.72 35.92 155.72 39.9 157.94 39.9 157.94 35.97 160.53 32.05 158.11 32.05 156.82 34.1 155.52 32.05 153.1 32.05"/><circle class="cls-16" cx="134.94" cy="60.18" r="8.18"/><path class="cls-17" d="M139.1,78h-2.77l-3.24,8.6h2.32l1-2.31h2.45l1,2.31h2ZM137,82.31l.56-2h.24l.6,2Z" transform="translate(-2.97 -23.01)"/><circle class="cls-18" cx="153.91" cy="56.52" r="8.45"/><path class="cls-19" d="M158.34,79.52a2.12,2.12,0,0,0,2.07-2.21c0-2.16-3.69-2-3.69-2h-3.05V83.7h4.77s2.16-.14,2.16-2.17S158.34,79.52,158.34,79.52Zm-.84,2.62h-2.12V80.41h2.26s.6,0,.6.87A.77.77,0,0,1,157.5,82.14Zm-.15-3.63h-2V76.74h2a.78.78,0,0,1,.89.88A.79.79,0,0,1,157.35,78.51Z" transform="translate(-2.97 -23.01)"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="_360ArcadeStick"
+   data-name="360ArcadeStick"
+   viewBox="0 0 261.89 131.21"
+   version="1.1"
+   sodipodi:docname="Base.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata75">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1555"
+     id="namedview73"
+     showgrid="false"
+     inkscape:zoom="5.1166517"
+     inkscape:cx="140.88321"
+     inkscape:cy="76.153409"
+     inkscape:window-x="1080"
+     inkscape:window-y="182"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="_360ArcadeStick" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#333132;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-7,.cls-8,.cls-9{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-2{stroke-width:0.25px;}.cls-2,.cls-7{fill:#9d9fa2;}.cls-3{font-size:4px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-4{letter-spacing:0.01em;}.cls-5{letter-spacing:-0.09em;}.cls-6,.cls-8{fill:#4f4f51;}.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-7{stroke-width:0.5px;}.cls-10,.cls-11,.cls-8,.cls-9{stroke-width:0.05px;}.cls-9{fill:none;}.cls-10{fill:#8dc63f;}.cls-11{fill:#d1d3d4;}.cls-12{fill:#0058a3;}.cls-13{fill:#1687c9;}.cls-14{fill:#f6bd17;}.cls-15{fill:#febf38;}.cls-16{fill:#6ca63c;}.cls-17{fill:#99ca3c;}.cls-18{fill:#aa1e23;}.cls-19{fill:#dd1f26;}</style>
+  </defs>
+  <path
+     class="cls-1"
+     d="M264.22,129.3C263.07,123.85,241.78,26,241.78,26s.18-1.65-3.48-1.65S34.74,23.13,32,23.13s-3.16.58-3.47,1.91c0,0-24.37,102.7-25.14,107,0,0-1.08,4.43.61,6.13H264.22S265.37,134.78,264.22,129.3Z"
+     id="path6"
+     transform="translate(-2.97 -23.01)" />
+  <polygon
+     class="cls-1"
+     points="1.08 115.13 261.12 115.33 249.77 131.08 13.6 131.08 1.08 115.13"
+     id="polygon8" />
+  <g
+     id="grt"
+     inkscape:label="#g920">
+    <circle
+       id="circle10"
+       r="8.51"
+       cy="54.76"
+       cx="173.22"
+       class="cls-2" />
+    <text
+       id="text22"
+       transform="translate(171.21 56.52)"
+       class="cls-3">
+      <tspan
+         id="tspan18"
+         class="cls-4">R</tspan>
+      <tspan
+         id="tspan20"
+         y="0"
+         x="2.19">T</tspan>
+    </text>
+  </g>
+  <g
+     id="glt"
+     inkscape:label="#g930">
+    <circle
+       id="circle12"
+       r="8.51"
+       cy="55.32"
+       cx="193.73"
+       class="cls-2" />
+    <text
+       id="text28"
+       transform="translate(192.49 56.52)"
+       class="cls-3">
+      <tspan
+         id="tspan24"
+         class="cls-5">L</tspan>
+      <tspan
+         id="tspan26"
+         y="0"
+         x="1.54">T</tspan>
+    </text>
+  </g>
+  <g
+     id="gRB"
+     inkscape:label="#g914">
+    <circle
+       id="circle16"
+       r="7.78"
+       cy="35.97"
+       cx="175.73"
+       class="cls-2" />
+    <text
+       id="text30"
+       transform="translate(173.96 37.27)"
+       class="cls-3">RB</text>
+  </g>
+  <g
+     id="gLB"
+     inkscape:label="#g924">
+    <circle
+       id="circle14"
+       r="7.78"
+       cy="37.27"
+       cx="195.6"
+       class="cls-2" />
+    <text
+       id="text32"
+       transform="translate(193.73 37.97)"
+       class="cls-3">LB</text>
+  </g>
+  <g
+     id="gdpad"
+     inkscape:label="#g885">
+    <circle
+       id="circle34"
+       r="10.04"
+       cy="48.69"
+       cx="101.51"
+       class="cls-6" />
+    <circle
+       id="circle36"
+       r="10.04"
+       cy="35.01"
+       cx="100.21"
+       class="cls-7" />
+    <path
+       id="path38"
+       transform="translate(-2.97 -23.01)"
+       d="M103.5,71.61,102.78,68a8.56,8.56,0,0,0,2.22-.15l.68,3.85a2.37,2.37,0,0,1-1,.16A1.79,1.79,0,0,1,103.5,71.61Z"
+       class="cls-7" />
+  </g>
+  <path
+     class="cls-8"
+     d="M68.74,35.48l-.86,7.59A2.13,2.13,0,0,0,70,45.45l41.57.27a2.14,2.14,0,0,0,2.15-2.13V36.07a2.14,2.14,0,0,0-2.12-2.13l-40.7-.36A2.14,2.14,0,0,0,68.74,35.48Z"
+     transform="translate(-2.97 -23.01)"
+     id="path40" />
+  <g
+     id="ghome"
+     inkscape:label="#g894">
+    <ellipse
+       id="ellipse42"
+       ry="2.38"
+       rx="2.44"
+       cy="16.82"
+       cx="104.35"
+       class="cls-9" />
+    <path
+       id="path44"
+       transform="translate(-2.97 -23.01)"
+       d="M106.24,38.07a2.89,2.89,0,0,0-.61,0h0a4.73,4.73,0,0,1,1.23.61,6.8,6.8,0,0,0-1.51,2.51h0a7.51,7.51,0,0,1,2-2.2,3.3,3.3,0,0,1,.92.78,4.18,4.18,0,0,1,.89,1.55h0a3.9,3.9,0,0,0-1.43-2.65,3.34,3.34,0,0,1,1.18-.67h0a2.16,2.16,0,0,0-.44,0"
+       class="cls-10" />
+    <path
+       id="path46"
+       transform="translate(-2.97 -23.01)"
+       d="M106.24,38.07a1.88,1.88,0,0,1,1.11.41,2.3,2.3,0,0,1,1.14-.46"
+       class="cls-10" />
+    <path
+       id="path48"
+       transform="translate(-2.97 -23.01)"
+       d="M105.63,38.11a2.24,2.24,0,0,0-.75,1.71,2.38,2.38,0,0,0,.48,1.42,6.83,6.83,0,0,1,1.5-2.52A4.73,4.73,0,0,0,105.63,38.11Z"
+       class="cls-11" />
+    <path
+       id="path50"
+       transform="translate(-2.97 -23.01)"
+       d="M107.37,39a7.51,7.51,0,0,0-2,2.2,2.48,2.48,0,0,0,3.82.12,4.26,4.26,0,0,0-.89-1.55A3.07,3.07,0,0,0,107.37,39Z"
+       class="cls-11" />
+    <path
+       id="path52"
+       transform="translate(-2.97 -23.01)"
+       d="M108.93,38a3.55,3.55,0,0,0-1.18.67,3.94,3.94,0,0,1,1.43,2.65,2.26,2.26,0,0,0,.58-1.63A2.21,2.21,0,0,0,108.93,38Z"
+       class="cls-11" />
+    <path
+       id="path54"
+       transform="translate(-2.97 -23.01)"
+       d="M107.35,38.51a2.29,2.29,0,0,1,1.58-.47,2.32,2.32,0,0,0-1.61-.6,2.52,2.52,0,0,0-1.69.67A2.35,2.35,0,0,1,107.35,38.51Z"
+       class="cls-11" />
+  </g>
+  <g
+     id="gx"
+     inkscape:label="#g898">
+    <circle
+       id="circle56"
+       r="8.62"
+       cy="40.07"
+       cx="137.04"
+       class="cls-12" />
+    <polygon
+       id="polygon58"
+       points="132.24 35.15 135.01 35.15 136.69 38.1 138.56 35.15 141.03 35.15 138.46 39.47 141.84 44.65 138.83 44.65 136.69 40.84 134.75 44.52 132.24 44.52 135.05 39.37 132.24 35.15"
+       class="cls-13" />
+  </g>
+  <g
+     id="gy"
+     inkscape:label="#g910">
+    <circle
+       id="circle60"
+       r="8.54"
+       cy="35.97"
+       cx="156.82"
+       class="cls-14" />
+    <polygon
+       id="polygon62"
+       points="153.1 32.05 155.72 35.92 155.72 39.9 157.94 39.9 157.94 35.97 160.53 32.05 158.11 32.05 156.82 34.1 155.52 32.05 153.1 32.05"
+       class="cls-15" />
+  </g>
+  <g
+     id="ga"
+     inkscape:label="#g902">
+    <circle
+       id="circle64"
+       r="8.18"
+       cy="60.18"
+       cx="134.94"
+       class="cls-16" />
+    <path
+       id="path66"
+       transform="translate(-2.97 -23.01)"
+       d="M139.1,78h-2.77l-3.24,8.6h2.32l1-2.31h2.45l1,2.31h2ZM137,82.31l.56-2h.24l.6,2Z"
+       class="cls-17" />
+  </g>
+  <g
+     id="gb"
+     inkscape:label="#g906">
+    <circle
+       id="circle68"
+       r="8.45"
+       cy="56.52"
+       cx="153.91"
+       class="cls-18" />
+    <path
+       id="path70"
+       transform="translate(-2.97 -23.01)"
+       d="M158.34,79.52a2.12,2.12,0,0,0,2.07-2.21c0-2.16-3.69-2-3.69-2h-3.05V83.7h4.77s2.16-.14,2.16-2.17S158.34,79.52,158.34,79.52Zm-.84,2.62h-2.12V80.41h2.26s.6,0,.6.87A.77.77,0,0,1,157.5,82.14Zm-.15-3.63h-2V76.74h2a.78.78,0,0,1,.89.88A.79.79,0,0,1,157.35,78.51Z"
+       class="cls-19" />
+  </g>
+</svg>

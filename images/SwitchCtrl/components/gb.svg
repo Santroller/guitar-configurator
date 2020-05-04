@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 254.38 153.9"
+   data-name="Layer 17"
+   id="Layer_17">
+  <metadata
+     id="metadata101">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#333132;}.cls-1,.cls-2,.cls-3,.cls-6,.cls-7{stroke:#000;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8{stroke-miterlimit:10;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-6,.cls-7,.cls-8{stroke-width:0.25px;}.cls-2{fill:#858585;}.cls-3{fill:#474747;}.cls-4{fill:#757575;}.cls-4,.cls-8{stroke:#231f20;}.cls-5{fill:none;stroke:#e6e7e8;}.cls-6{fill:#97999c;}.cls-7{fill:#dbdbdb;}.cls-8{fill:#878787;}.cls-9{font-size:9.57px;}.cls-10,.cls-11,.cls-12,.cls-9{fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-10{font-size:8.8px;}.cls-11{font-size:10.56px;}.cls-12{font-size:10.61px;}</style>
+  </defs>
+  <g
+     id="gb">
+    <circle
+       class="cls-4"
+       cx="184.37"
+       cy="56.69"
+       r="7.96"
+       id="circle36" />
+    <path
+       class="cls-5"
+       d="M186.42,58.6v4.91h2.06s1.11,0,1.11-1.41C189.59,61.05,188,61,188,61s1.58-.23,1.58-1.22-1.47-1.19-1.47-1.19Z"
+       transform="translate(-3.08 -5.12)"
+       id="path38" />
+    <line
+       class="cls-5"
+       x1="183.35"
+       y1="55.84"
+       x2="184.93"
+       y2="55.88"
+       id="line40" />
+  </g>
+</svg>
