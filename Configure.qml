@@ -88,9 +88,7 @@ ColumnLayout {
             text: qsTr("Configure Tilt")
             visible: scanner.selected.isGuitar
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                mainStack.push("Tilt.qml");
-            }
+            onClicked: tiltConfig.visible = true;
         }
         Button {
             id: configureContinue
@@ -114,6 +112,85 @@ ColumnLayout {
             onClicked: cloneDialog.visible = true;
         }
     }
+    Dialog {
+        id: tiltConfig
+        modal: true
+        standardButtons: Dialog.Close
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        ColumnLayout {
+            Label {
+                text: qsTr("Tilt Sensor Type: ")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.FixedSize
+            }
+            ComboBox {
+                id: tiltBox
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Defines.fillCombobox("tilt")
+                Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
+
+                onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
+            }
+
+            Label {
+                id: orientation
+                visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
+                text: qsTr("Tilt Sensor Orientation: ")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.FixedSize
+            }
+            ComboBox {
+                id: orientationBox
+                visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Defines.fillCombobox("gyro")
+                Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
+
+                onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
+            }
+
+            Label {
+                text: qsTr("Tilt Sensor Sensitivity: ")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+
+            Slider {
+                id: sliderTilt
+                Layout.fillWidth: true
+                to: 32767
+                from: -32767
+                value: scanner.selected.sensitivity
+                onValueChanged: scanner.selected.sensitivity = sliderTilt.value
+                background: Rectangle {
+                    y: 15
+                    implicitWidth: 200
+                    implicitHeight: 4
+                    height: implicitHeight
+                    radius: 2
+                    color: "#bdbebf"
+                }
+            }
+        }
+    }
+
     Dialog {
         id: buttonConfig
         property var current: PinInfo.bindings[scanner.selected.boardImage];
@@ -490,7 +567,7 @@ ColumnLayout {
         closePolicy: Popup.NoAutoClose
         ColumnLayout {
             Label {
-                text: "Ground the pin you would like to assign to "+buttonConfig.labels[buttonConfig.currentPin]
+                text: "Ground the pin you would like to assign to "+buttonConfig.allLabels[buttonConfig.currentPin]
             }
         }
     }
@@ -505,14 +582,14 @@ ColumnLayout {
         closePolicy: Popup.NoAutoClose
         ColumnLayout {
             Label {
-                text: "Move an axis to assign it to "+buttonConfig.labels[buttonConfig.currentPin]
+                text: "Move an axis to assign it to "+buttonConfig.allLabels[buttonConfig.currentPin]
             }
         }
     }
     
     Dialog {
         id: pinDialog
-        title: "Select a Pin for: "+buttonConfig.labels[buttonConfig.currentPin]
+        title: "Select a Pin for: "+buttonConfig.allLabels[buttonConfig.currentPin]
         visible: buttonConfig.currentPin
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
@@ -586,7 +663,7 @@ ColumnLayout {
                 onClicked: {
                     var isAnalog = scanner.selected.pin_inverts.hasOwnProperty(buttonConfig.currentPin);
                     //The tilt pin is weird, as it is sometimes analog and sometimes digital..
-                    if (buttonConfig.labels[buttonConfig.currentPin] === "Tilt Axis") {
+                    if (buttonConfig.allLabels[buttonConfig.currentPin] === "Tilt Axis") {
                         isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
                     }
                     if (isAnalog) {
