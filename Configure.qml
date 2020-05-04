@@ -113,6 +113,47 @@ ColumnLayout {
         }
     }
     Dialog {
+        id: ledConfig
+        modal: true
+        standardButtons: Dialog.Close
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        ColumnLayout {
+            Label {
+                text: qsTr("LED Type: ")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.FixedSize
+            }
+            ComboBox {
+                id: fretBox
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Defines.fillCombobox("fret_mode")
+                Binding { target: fretBox; property: "currentIndex"; value: fretBox.model.findIndex(s => s.value === scanner.selected.ledType) }
+
+                onCurrentIndexChanged: scanner.selected.ledType = fretBox.model[fretBox.currentIndex].value
+            }
+//            ColorDialog {
+//              id: color
+//              onCurrentColorChanged: {
+//                  var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
+//                  ledhandler.color = parseInt(result[1],16);
+//              }
+//            }
+//            Button {
+//              onClicked: color.open()
+//              id: colorBt
+//            }
+        }
+    }
+
+    Dialog {
         id: tiltConfig
         modal: true
         standardButtons: Dialog.Close
@@ -704,9 +745,7 @@ ColumnLayout {
             id: leds
             text: qsTr("Configure LEDs")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {
-                mainStack.push("leds.qml");
-            }
+            onClicked: ledConfig.visible = true;
         }
         Button {
             id: restore
