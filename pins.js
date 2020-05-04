@@ -38,6 +38,7 @@ var drumLabels = {
     "y": "Yellow Drum",
     "x": "Blue Drum",
     "LB": "Orange Drum",
+    "RB": "Kick Pedal",
     "l_x": "Joystick X Axis",
     "l_y": "Joystick Y Axis",
 }
