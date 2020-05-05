@@ -37,10 +37,10 @@
      inkscape:window-height="1555"
      id="namedview1003"
      showgrid="false"
-     inkscape:zoom="9.9169894"
-     inkscape:cx="95.348349"
-     inkscape:cy="94.270192"
-     inkscape:window-x="3640"
+     inkscape:zoom="4.9584947"
+     inkscape:cx="61.03735"
+     inkscape:cy="64.390934"
+     inkscape:window-x="1080"
      inkscape:window-y="182"
      inkscape:window-maximized="0"
      inkscape:current-layer="_360GHDrum" />
@@ -116,7 +116,8 @@
   </g>
   <g
      id="gLB"
-     inkscape:label="#g916">
+     inkscape:label="#g916"
+     transform="matrix(-1,0,0,1,260.72,2.23)">
     <path
        id="path958"
        d="m 40.85,19.43 -1,-9.06 c 0,0 -0.51,-7.39 8.93,-9.43 9.44,-2.04 12.75,8.16 12.75,8.16 l 0.77,9.43 42.05,16.71 c 0,0 3.06,0.64 1.91,3.19 C 105.11,40.98 94.53,67.12 60.61,71.07 26.69,75.02 3.36,46.24 0.42,41.87 -1.49,39.57 6.54,36.05 6.54,36.05 Z"
@@ -208,7 +209,8 @@
   </g>
   <g
      id="gy"
-     inkscape:label="#g912">
+     inkscape:label="#g912"
+     transform="matrix(-1,0,0,1,255.84627,2.0445796)">
     <path
        id="path960"
        d="m 217.79,18.11 41.19,19.2 c 0,0 3,0.84 1.69,3.31 -1.31,2.47 -16.1,30.77 -50.21,32.4 -34.11,1.63 -55.42,-28.72 -58.05,-33.24 -1.75,-2.42 6.5,-5.39 6.5,-5.39 l 34.87,-15.41 0.43,-6.48 c 0,0 -0.29,-12.37 13.77,-12.37 7.21,0 10.24,8.54 10.4,10.5 a 69.38,69.38 0 0 1 -0.59,7.48 z"
@@ -224,15 +226,16 @@
     <circle
        id="circle976"
        r="2.05"
-       cy="20.549999"
-       cx="146.71001"
+       cy="18.634096"
+       cx="109.34988"
        class="cls-15"
        style="fill:#f6bd17;stroke:#231f20;stroke-width:0.1px;stroke-miterlimit:10" />
     <polygon
        id="polygon982"
-       points="146.45,21.49 146.98,21.49 146.98,20.55 147.6,19.61 147.02,19.61 146.71,20.1 146.4,19.61 145.82,19.61 146.45,20.54 "
+       points="146.71,20.1 146.4,19.61 145.82,19.61 146.45,20.54 146.45,21.49 146.98,21.49 146.98,20.55 147.6,19.61 147.02,19.61 "
        class="cls-18"
-       style="fill:#febf38;stroke:#231f20;stroke-width:0.1px;stroke-miterlimit:10" />
+       style="fill:#febf38;stroke:#231f20;stroke-width:0.1px;stroke-miterlimit:10"
+       transform="translate(-37.360129,-1.915904)" />
   </g>
   <g
      id="ga"
