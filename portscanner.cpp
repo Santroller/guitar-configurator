@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QIcon>
 #include <QDirIterator>
+#include <QBitmap>
 PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
@@ -69,20 +70,42 @@ QStringList PortScanner::getImages(QString base) {
     images.sort();
     return images;
 }
-
-QString PortScanner::findElement(QString base, int width, int height, int mouseX, int mouseY) {
+QVector<uchar> data;
+int width;
+int height;
+QString PortScanner::findElement(QString base, int w, int h, int mouseX, int mouseY) {
     if (images.isEmpty()) {
-        auto imageList = QDir(":/"+base).entryList();
+        width = w;
+        height = h;
+        data.clear();
+        data.resize(width*height);
+        auto imageList = QDir(":/"+base+"/components").entryList();
         imageList.sort();
-        for (auto image: getImages(base+"/components")) {
+        QVector<QRgb> colorMap;
+        colorMap.push_back(qRgba(0,0,0,0));
+        colorMap.push_back(qRgba(255,255,255,255));
+        for (auto image: imageList) {
             auto i = QIcon(":/"+base+"/components/"+image).pixmap(QSize(width,height)).toImage();
-            images.push_back(QPair<QImage,QString>(i,image));
+            i = i.convertToFormat(QImage::Format_Indexed8, colorMap, Qt::AutoColor);
+            auto s2 = i.height() * i.width();
+            auto s3 = data.data();
+            auto s = i.bits();
+            while (s2--) {
+                if (*s != 0) {
+                    *s3 = *s;
+                }
+                s3++;
+                s++;
+            }
+            images.push_back(image);
+            colorMap.push_front(qRgba(0,0,0,0));
         }
     }
-    for (auto& i: images) {
-        if (i.first.pixel((double)mouseX/width*i.first.width(),(double)mouseY/height*i.first.height())) {
-            return "/"+base+"/components/"+i.second;
-        }
+    int x = (double)mouseX/w*width;
+    int y = (double)mouseY/h*height;
+    auto c = data[y*width+x];
+    if (c != 0) {
+        return "/"+base+"/components/"+images[c-1];
     }
     return "";
 }

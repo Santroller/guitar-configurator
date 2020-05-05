@@ -50,7 +50,7 @@ private:
     QList<QObject*> m_model;
     Port* m_selected;
     Programmer* programmer;
-    QList<QPair<QImage,QString>> images;
+    QStringList images;
 };
 
 #endif // PORTSCANNER_H

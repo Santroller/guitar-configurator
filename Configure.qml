@@ -31,21 +31,20 @@ ColumnLayout {
                     anchors.fill: parent
                     onPositionChanged: {
                         var newSource = scanner.findElement(image.base, image.width, image.height, mouseX, mouseY);
-                        if (newSource != image2.source) {
+                        if (newSource === "") {
+                            buttonConfig.visible = image2.visible = overlay.visible = false;
+                            image2.source = "";
+                        } else if (!image2.source.toString().endsWith(newSource)) {
                             buttonConfig.visible = false;
-                        }
-                        
-                        image2.source  = newSource;
-                        image2.visible = overlay.visible = image2.source != "";
-                        if (image2.visible && !buttonConfig.visible) {
-                            buttonConfig.visible = true;
+                            image2.source  = newSource;
+                            image2.visible = overlay.visible = buttonConfig.visible = true;
                             var a = mapToItem(column, mouseX, mouseY);
                             buttonConfig.x = a.x-buttonConfig.width/2;
                             buttonConfig.y = a.y;
                             buttonConfig.loadImage(image2.source);
-                        } else {
-                            buttonConfig.visible = image2.visible;
                         }
+
+
                     }
                 }
             }
