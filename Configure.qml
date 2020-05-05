@@ -29,15 +29,16 @@ ColumnLayout {
                 MouseArea {
                     hoverEnabled: true
                     anchors.fill: parent
+
                     onPositionChanged: {
                         var newSource = scanner.findElement(image.base, image.width, image.height, mouseX, mouseY);
                         if (newSource === "") {
-                            buttonConfig.visible = image2.visible = overlay.visible = false;
+                            buttonConfig.visible = false;
                             image2.source = "";
                         } else if (!image2.source.toString().endsWith(newSource)) {
                             buttonConfig.visible = false;
                             image2.source  = newSource;
-                            image2.visible = overlay.visible = buttonConfig.visible = true;
+                            buttonConfig.visible = true;
                             var a = mapToItem(column, mouseX, mouseY);
                             buttonConfig.x = a.x-buttonConfig.width/2;
                             buttonConfig.y = a.y;
@@ -52,7 +53,7 @@ ColumnLayout {
                 x: (applicationWindow.width-image.paintedWidth)/2
                 y: (applicationWindow.height-image.paintedHeight)/2
                 id: image2
-                visible: false
+                visible: true
                 fillMode: Image.PreserveAspectFit
                 Layout.maximumHeight: applicationWindow.height/2
                 Layout.maximumWidth: applicationWindow.width/2
@@ -60,7 +61,7 @@ ColumnLayout {
             }
             ColorOverlay {
                 id: overlay
-                visible: false
+                visible: true
                 anchors.fill: image2
                 source: image2
                 color: "#80800000"
@@ -258,8 +259,6 @@ ColumnLayout {
         Binding { target: buttonConfig; property: "pinLabels"; value: buttonConfig.buttons.map(b => buttonConfig.current[scanner.selected.pins[b]] || scanner.selected.pins[b]) }
         Binding { target: buttonConfig; property: "keyLabels"; value: buttonConfig.buttons.map(b => KeyInfo.getKeyName(scanner.selected.keys[b])) }
         function loadImage(image) {
-            scanner.selected.loadPins();
-            scanner.selected.loadKeys();
             button = image.toString().replace(/.*\/g(.*).svg/,"$1");
             buttons = [button];
             isAnalog = scanner.selected.pin_inverts.hasOwnProperty(button);

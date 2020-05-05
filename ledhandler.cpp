@@ -278,7 +278,7 @@ void LEDHandler::tick() {
             } else if (buttons & 1<<i) {
                 if (score > lastScore && lastNote & 1<<i) {
                     shownNote = lastNote;
-                    countdown = 2;
+                    countdown = 1;
                 }
                 if (countdown > 0 && shownNote & 1<<i) {
                     data.push_back((noteIsStarPower && !starPowerActivated)?3:2);

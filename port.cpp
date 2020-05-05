@@ -103,6 +103,8 @@ void Port::readData() {
         } while (m_board.name.isEmpty());
         readyForRead = true;
         readDescription();
+        loadPins();
+        loadKeys();
     }
     m_hasDFU = m_board.hasDFU;
     dfuFound();
