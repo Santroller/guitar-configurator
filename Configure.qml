@@ -106,8 +106,8 @@ ColumnLayout {
                 id:rl
                 Layout.row: index+1
                 Layout.column: 2
-                Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 Repeater {
                     id:r
                     property var buttonCount:0
@@ -122,7 +122,7 @@ ColumnLayout {
                         return [modelData];
                     }
                     Button {
-                        Layout.preferredWidth: (gl.pWidth/gl.columns/r.buttonCount) - rl.spacing
+                        Layout.preferredWidth: (gl.pWidth/gl.columns/r.buttonCount) - 6
                         Layout.fillHeight: true
                         visible: scanner.selected.isKeyboard
                         text: KeyInfo.getKeyName(scanner.selected.keys[modelData])
