@@ -23,6 +23,8 @@ ColumnLayout {
         Layout.alignment: Qt.AlignRight | Qt.AlignTop
         icon.source: scanner.isGraphical?"images/graphical.svg":"images/list.svg"
         onClicked: scanner.toggleGraphics()
+        ToolTip.visible: hovered
+        ToolTip.text: scanner.isGraphical?"Swap to List view":"Swap to Graphical view"
     }
 
     Item {
