@@ -100,7 +100,7 @@ ColumnLayout {
             }
         }
         Repeater {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             model: Object.keys(gl.labels)
             RowLayout {
                 id:rl
@@ -125,7 +125,7 @@ ColumnLayout {
                         Layout.preferredWidth: (gl.pWidth/gl.columns/r.buttonCount) - rl.spacing
                         Layout.fillHeight: true
                         visible: scanner.selected.isKeyboard
-                        text: KeyInfo.getKeyName(scanner.selected.pins[modelData])
+                        text: KeyInfo.getKeyName(scanner.selected.keys[modelData])
                         onClicked: {
                             buttonConfig.currentKey = modelData;
                             buttonConfig.currentKeyValue = scanner.selected.keys[modelData];
