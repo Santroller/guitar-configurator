@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 222.06 120.26"
+   data-name="Layer 24"
+   id="Layer_24">
+  <metadata
+     id="metadata59">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#363436;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-6{stroke:#231f20;stroke-miterlimit:10;stroke-width:0.25px;}.cls-2{fill:#292728;}.cls-3{fill:#9d9fa2;}.cls-4{fill:#b1b3b6;}.cls-5{font-size:4px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-6{fill:#333132;}</style>
+  </defs>
+  <g
+     id="ga">
+    <path
+       class="cls-4"
+       d="M222.48,63.65a60.67,60.67,0,0,0,9.59,0c.84-.13.13-.91-1.5-1.17a54.22,54.22,0,0,0,1.69-15.2l-8.41-2.67Z"
+       transform="translate(-20.35 -5.76)"
+       id="path30" />
+    <polygon
+       class="cls-4"
+       points="203.75 38.68 205.3 38.07 213.12 40.55 211.9 41.4 203.75 38.68"
+       id="polygon32" />
+    <path
+       class="cls-4"
+       d="M230.59,62.37l1.51-.69s2.94-9.84,1.57-15.22l-1.41.82S232.91,53.27,230.59,62.37Z"
+       transform="translate(-20.35 -5.76)"
+       id="path34" />
+    <path
+       class="cls-4"
+       d="M232.11,61.79l-1.36.74s2.61.55,1.32,1.12c0,0,1.11-.41,1.28-.76S233.7,62.05,232.11,61.79Z"
+       transform="translate(-20.35 -5.76)"
+       id="path36" />
+  </g>
+</svg>

@@ -13,7 +13,158 @@ import "keys.js" as KeyInfo
 
 ColumnLayout {
     id: column
+    //Since the button is being pinned to the top of the page, we need to insert an empty line to overlap the version string
+    Label {
+        Layout.alignment: Qt.AlignRight | Qt.AlignTop
+        text: " "
+    }
+
+    Button {
+        Layout.alignment: Qt.AlignRight | Qt.AlignTop
+        icon.source: scanner.isGraphical?"images/graphical.svg":"images/list.svg"
+        onClicked: scanner.toggleGraphics()
+    }
+
+    Item {
+        id:keyListener
+        focus: true
+        Keys.onPressed: {
+            buttonConfig.currentKeyValue = KeyInfo.findValueForEvent(event) || page.currentKeyValue;
+            event.accepted = true;
+        }
+    }
+    GridLayout {
+        visible: !scanner.isGraphical
+        id: gl
+        columns: scanner.selected.isKeyboard ? 4: 3
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        property var current: PinInfo.bindings[scanner.selected.boardImage]
+        property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB);
+        property var pWidth: gl.parent.width-50
+        Label {
+            text: "Actions"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+        Label {
+            text: "Pin Binding"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+        Label {
+            visible: scanner.selected.isKeyboard
+            text: "Key Binding"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+        Label {
+            text: "Invert Axis"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: Object.values(gl.labels)
+            Label {
+                Layout.row: index+1
+                Layout.column: 0
+                Layout.preferredWidth: gl.pWidth/gl.columns
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                id: label
+                text: modelData
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: Object.keys(gl.labels)
+            Button {
+                Layout.row: index+1
+                Layout.column: 1
+                Layout.preferredWidth: gl.pWidth/gl.columns
+                Layout.fillHeight: true
+                id: bt
+                text: gl.current[scanner.selected.pins[modelData]] || scanner.selected.pins[modelData]
+                onClicked: buttonConfig.currentPin = modelData;
+                ToolTip.visible: hovered
+                ToolTip.text: gl.labels[modelData]
+            }
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: Object.keys(gl.labels)
+            RowLayout {
+                id:rl
+                Layout.row: index+1
+                Layout.column: 2
+                Layout.preferredWidth: gl.pWidth/gl.columns
+                Layout.fillHeight: true
+                Repeater {
+                    id:r
+                    property var buttonCount:0
+                    property var label:""
+                    model: {
+                        label = gl.labels[modelData]
+                        if (modelData.startsWith("l_") || modelData.startsWith("r_")) {
+                            buttonCount = 2;
+                            return [modelData+"_lt", modelData+"_gt"];
+                        }
+                        buttonCount = 1;
+                        return [modelData];
+                    }
+                    Button {
+                        Layout.preferredWidth: (gl.pWidth/gl.columns/r.buttonCount) - rl.spacing
+                        Layout.fillHeight: true
+                        visible: scanner.selected.isKeyboard
+                        text: KeyInfo.getKeyName(scanner.selected.pins[modelData])
+                        onClicked: {
+                            buttonConfig.currentKey = modelData;
+                            buttonConfig.currentKeyValue = scanner.selected.keys[modelData];
+                            keyListener.forceActiveFocus();
+                        }
+                        ToolTip.visible: hovered
+                        ToolTip.text: {
+                            if (modelData.endsWith("_lt")) {
+                                return r.label + " -"
+                            } else if (modelData.endsWith("_gt")) {
+                                return r.label +" +";
+                            } else {
+                                return r.label;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: Object.keys(gl.labels)
+            Switch {
+                Layout.row: index+1
+                Layout.column: gl.columns-1
+                Layout.preferredWidth: gl.pWidth/gl.columns
+                Layout.fillHeight: true
+                enabled: scanner.selected.pin_inverts.hasOwnProperty(modelData)
+                visible: enabled
+                checked: !!scanner.selected.pin_inverts[modelData]
+                onCheckedChanged: {
+                    var pins = scanner.selected.pin_inverts;
+                    pins[modelData] = checked;
+                    scanner.selected.pin_inverts = pins;
+                }
+            }
+        }
+
+    }
     ColumnLayout {
+        visible: scanner.isGraphical
         Layout.alignment: Qt.AlignHCenter
         Item {
             Image {
@@ -139,17 +290,17 @@ ColumnLayout {
 
                 onCurrentIndexChanged: scanner.selected.ledType = fretBox.model[fretBox.currentIndex].value
             }
-//            ColorDialog {
-//              id: color
-//              onCurrentColorChanged: {
-//                  var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
-//                  ledhandler.color = parseInt(result[1],16);
-//              }
-//            }
-//            Button {
-//              onClicked: color.open()
-//              id: colorBt
-//            }
+            //            ColorDialog {
+            //              id: color
+            //              onCurrentColorChanged: {
+            //                  var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
+            //                  ledhandler.color = parseInt(result[1],16);
+            //              }
+            //            }
+            //            Button {
+            //              onClicked: color.open()
+            //              id: colorBt
+            //            }
         }
     }
 
@@ -317,7 +468,7 @@ ColumnLayout {
                         onClicked: {
                             buttonConfig.currentKey = modelData;
                             buttonConfig.currentKeyValue = scanner.selected.keys[modelData];
-                            keyDialog.forceActiveFocus();
+                            keyListener.forceActiveFocus();
                         }
                     }
                 }
@@ -554,13 +705,6 @@ ColumnLayout {
                 Button {
                     onClicked: keyDialog.reject()
                     text: qsTr("Cancel")
-                }
-            }
-            Item {
-                focus: true
-                Keys.onPressed: {
-                    buttonConfig.currentKeyValue = KeyInfo.findValueForEvent(event) || page.currentKeyValue;
-                    event.accepted = true;
                 }
             }
         }

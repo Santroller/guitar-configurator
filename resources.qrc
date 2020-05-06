@@ -343,5 +343,31 @@
         <file>images/Keyboard/components/gx.svg</file>
         <file>images/Keyboard/components/gy.svg</file>
         <file>images/Keyboard/BaseKB.svg</file>
+        <file>images/graphical.svg</file>
+        <file>images/list.svg</file>
+        <file>images/360Accessories/ArcadePad/components/ga.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gb.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gdown.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gLB.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gleft.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gleft_stick.svg</file>
+        <file>images/360Accessories/ArcadePad/components/glt.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gRB.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gright.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gright_stick.svg</file>
+        <file>images/360Accessories/ArcadePad/components/grt.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gup.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gx.svg</file>
+        <file>images/360Accessories/ArcadePad/components/gy.svg</file>
+        <file>images/360Accessories/FlightStick/components/ga.svg</file>
+        <file>images/360Accessories/FlightStick/components/gb.svg</file>
+        <file>images/360Accessories/FlightStick/components/gback.svg</file>
+        <file>images/360Accessories/FlightStick/components/gdown.svg</file>
+        <file>images/360Accessories/FlightStick/components/gLB.svg</file>
+        <file>images/360Accessories/FlightStick/components/gleft.svg</file>
+        <file>images/360Accessories/FlightStick/components/gright.svg</file>
+        <file>images/360Accessories/FlightStick/components/gup.svg</file>
+        <file>images/360Accessories/FlightStick/components/gx.svg</file>
+        <file>images/360Accessories/FlightStick/components/gy.svg</file>
     </qresource>
 </RCC>

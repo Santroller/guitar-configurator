@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 260.52 152.63"
+   data-name="360ArcadePad"
+   id="_360ArcadePad">
+  <metadata
+     id="metadata117">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#363436;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-10,.cls-11,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-width:0.5px;}.cls-2{fill:#0058a3;}.cls-3{fill:#1687c9;}.cls-4{fill:#f6bd17;}.cls-5{fill:#febf38;}.cls-6{fill:#6ca63c;}.cls-7{fill:#99ca3c;}.cls-8{fill:#aa1e23;}.cls-9{fill:#dd1f26;}.cls-10,.cls-16,.cls-17{fill:#a7a9ac;}.cls-11{fill:#939598;}.cls-12{fill:#8a8c8e;}.cls-12,.cls-17{stroke-width:0.25px;}.cls-13{fill:none;}.cls-13,.cls-14,.cls-15,.cls-16{stroke-width:0.05px;}.cls-14{fill:#8dc63f;}.cls-15{fill:#d1d3d4;}.cls-18{font-size:4.95px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-19{letter-spacing:0.01em;}.cls-20{letter-spacing:-0.09em;}</style>
+  </defs>
+  <g
+     id="grt">
+    <circle
+       class="cls-10"
+       cx="213.97"
+       cy="57.18"
+       r="9.13"
+       id="circle52" />
+    <polygon
+       class="cls-11"
+       points="214.34 53.82 214.34 55.55 216.15 55.55 216.1 60.53 217.41 60.53 217.46 55.51 219.18 55.51 219.18 53.82 214.34 53.82"
+       id="polygon54" />
+    <path
+       class="cls-11"
+       d="M214,60.3s1.38,0,1.38-2c0-1.82-1.48-1.59-1.48-1.59h-3.51v6.67H212V60.52h.43l1.81,2.84h1.72Zm-.86-1.25h-1.38V57.64h1.46a.68.68,0,0,1,.76.71C214,59.05,213.14,59.05,213.14,59.05Z"
+       transform="translate(-1.96 -2.84)"
+       id="path56" />
+    <path
+       class="cls-17"
+       d="M260,21.41s-.53,19.72-7.38,21.19-14.08,3.16-19.05-2.21c-.46-.47-.46-16.7-.46-16.7A158.07,158.07,0,0,0,260,21.41Z"
+       transform="translate(-1.96 -2.84)"
+       id="path98" />
+    <path
+       class="cls-17"
+       d="M233.08,23.69l-1.25-1s-1.17,16.4,1.58,18.41,2.15,2.86,9.19,3a12,12,0,0,1-9.06-3.68C233.38,40.25,233.08,35.06,233.08,23.69Z"
+       transform="translate(-1.96 -2.84)"
+       id="path100" />
+    <path
+       class="cls-17"
+       d="M259.86,21.23l-.32-.29L232,22.54l1.12,1.15A172.74,172.74,0,0,0,259.86,21.23Z"
+       transform="translate(-1.96 -2.84)"
+       id="path102" />
+    <text
+       class="cls-18"
+       transform="translate(241.72,32.55)"
+       id="text110"
+       style="font-size:4.94999981px;font-family:MyriadPro-Regular, 'Myriad Pro';fill:#231f20">
+      <tspan
+         class="cls-20"
+         id="tspan106"
+         style="letter-spacing:-0.09em">RT</tspan>
+    </text>
+  </g>
+</svg>

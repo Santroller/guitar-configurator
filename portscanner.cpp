@@ -9,6 +9,11 @@
 PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
+    if (settings.contains("configMode")) {
+        m_graphical = settings.value("configMode").toBool();
+    } else {
+        m_graphical = true;
+    }
 }
 void PortScanner::addPort(const QSerialPortInfo& serialPortInfo) {
     if (m_selected != nullptr) {
@@ -65,10 +70,11 @@ void PortScanner::fixLinux() {
 void PortScanner::clearImages() {
     images.clear();
 }
-QStringList PortScanner::getImages(QString base) {
-    auto images = QDir(":/"+base).entryList();
-    images.sort();
-    return images;
+
+void PortScanner::toggleGraphics() {
+    m_graphical = !m_graphical;
+    graphicalChanged();
+    settings.setValue("configMode", m_graphical);
 }
 QVector<uchar> data;
 int width;

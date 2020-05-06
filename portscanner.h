@@ -7,26 +7,32 @@
 #include <QImage>
 #include "port.h"
 #include "programmer.h"
+#include <QSettings>
 
 class PortScanner : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QList<QObject*> model READ model NOTIFY modelChanged)
     Q_PROPERTY(Port* selected MEMBER m_selected NOTIFY selectedChanged)
+    Q_PROPERTY(bool isGraphical READ isGraphical NOTIFY graphicalChanged)
 public:
     explicit PortScanner(Programmer* programmer, QObject *parent = nullptr);
     Port* selectedPort() const {
         return m_selected;
     };
 signals:
+    void graphicalChanged();
     void modelChanged();
     void selectedChanged(Port* newValue);
 public slots:
+    bool isGraphical() const {
+        return m_graphical;
+    }
     void update();
     void addPort(const QSerialPortInfo& port);
     void removePort(const QSerialPortInfo& port);
     void fixLinux();
-    QStringList getImages(QString base);
+    void toggleGraphics();
     QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
     QList<QObject*> model() const {
         return m_model;
@@ -51,6 +57,8 @@ private:
     Port* m_selected;
     Programmer* programmer;
     QStringList images;
+    bool m_graphical;
+    QSettings settings;
 };
 
 #endif // PORTSCANNER_H

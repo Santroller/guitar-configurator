@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 260.52 152.63"
+   data-name="360ArcadePad"
+   id="_360ArcadePad">
+  <metadata
+     id="metadata117">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#363436;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-10,.cls-11,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-width:0.5px;}.cls-2{fill:#0058a3;}.cls-3{fill:#1687c9;}.cls-4{fill:#f6bd17;}.cls-5{fill:#febf38;}.cls-6{fill:#6ca63c;}.cls-7{fill:#99ca3c;}.cls-8{fill:#aa1e23;}.cls-9{fill:#dd1f26;}.cls-10,.cls-16,.cls-17{fill:#a7a9ac;}.cls-11{fill:#939598;}.cls-12{fill:#8a8c8e;}.cls-12,.cls-17{stroke-width:0.25px;}.cls-13{fill:none;}.cls-13,.cls-14,.cls-15,.cls-16{stroke-width:0.05px;}.cls-14{fill:#8dc63f;}.cls-15{fill:#d1d3d4;}.cls-18{font-size:4.95px;fill:#231f20;font-family:MyriadPro-Regular, Myriad Pro;}.cls-19{letter-spacing:0.01em;}.cls-20{letter-spacing:-0.09em;}</style>
+  </defs>
+  <g
+     id="glt">
+    <path
+       class="cls-17"
+       d="M4.47,20.4S5,40.12,11.85,41.59s14.08,3.16,19-2.21c.47-.47.47-16.7.47-16.7A158.15,158.15,0,0,1,4.47,20.4Z"
+       transform="translate(-1.96 -2.84)"
+       id="path82" />
+    <path
+       class="cls-17"
+       d="M31.37,22.68l1.24-1S33.78,38,31,40.05s-2.15,2.86-9.19,3a12,12,0,0,0,9.06-3.68C31.06,39.24,31.37,34.05,31.37,22.68Z"
+       transform="translate(-1.96 -2.84)"
+       id="path84" />
+    <path
+       class="cls-17"
+       d="M4.58,20.22l.32-.29,27.58,1.6-1.12,1.15A172.74,172.74,0,0,1,4.58,20.22Z"
+       transform="translate(-1.96 -2.84)"
+       id="path86" />
+    <text
+       class="cls-18"
+       transform="translate(13.82,31.1)"
+       id="text94"
+       style="font-size:4.94999981px;font-family:MyriadPro-Regular, 'Myriad Pro';fill:#231f20">
+      <tspan
+         class="cls-19"
+         id="tspan90"
+         style="letter-spacing:0.01em">L</tspan>
+      <tspan
+         x="2.71"
+         y="0"
+         id="tspan92">T</tspan>
+    </text>
+    <circle
+       class="cls-1"
+       cx="200.17627"
+       cy="38.962414"
+       r="9.1300001"
+       id="circle6"
+       style="fill:#a7a9ac;fill-opacity:1;stroke:#231f20;stroke-width:0.5px;stroke-miterlimit:10" />
+    <polygon
+       transform="translate(190.79628,29.582414)"
+       class="cls-2"
+       points="15.34,8 15.34,5.92 9.37,5.92 9.37,8.06 11.61,8.06 11.55,14.21 13.17,14.21 13.22,8 "
+       id="polygon8"
+       style="fill:#939598;fill-opacity:1;stroke:#231f20;stroke-width:0.5px;stroke-miterlimit:10" />
+    <polygon
+       transform="translate(190.79628,29.582414)"
+       class="cls-2"
+       points="4.28,5.79 4.3,14.12 9.03,14.12 9.01,12.32 6.53,12.32 6.48,5.79 "
+       id="polygon10-6"
+       style="fill:#939598;fill-opacity:1;stroke:#231f20;stroke-width:0.5px;stroke-miterlimit:10" />
+  </g>
+</svg>
