@@ -817,6 +817,7 @@ ColumnLayout {
                 Repeater {
                     model: boardImage.pins.length
                     Rectangle {
+                        visible: !buttonConfig.isAnalog || PinInfo.checkValid(boardImage.pins[index].id, scanner.selected.boardImage)
                         width: boardImage.r; height: boardImage.r
                         x: boardImage.startX + boardImage.pins[index].x * boardImage.scaleX
                         y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY

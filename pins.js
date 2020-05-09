@@ -25,6 +25,14 @@ var bindings = {
     "images/ArduinoProMicro.svg": { 0: "TXO", 1: "RXI", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
     "images/ArduinoLeonardo.svg": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
 }
+var analog = {
+    "images/ArduinoLeonardo.svg": [18,19,20,21,22,23,4,6,7,8,9,10,12],
+    "images/ArduinoProMicro.svg": [18,19,20,21,22,23,4,6,7,8,9,10,12],
+    "images/ArudinoUno.svg": [14,15,16,17,18,19],
+}
+function checkValid(pin, board) {
+    return analog[board].includes(pin);
+}
 var drumLabels = {
     "up": "D-pad Up",
     "down": "D-pad Down",
