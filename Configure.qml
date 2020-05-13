@@ -38,39 +38,15 @@ ColumnLayout {
     GridLayout {
         visible: !scanner.isGraphical
         id: gl
+        rows: Object.values(gl.labels).length+1
         columns: 3+scanner.selected.isKeyboard+scanner.selected.hasAddressableLEDs
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         property var current: PinInfo.bindings[scanner.selected.boardImage]
         property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB);
         property var pWidth: gl.parent.width-50
+        flow: GridLayout.TopToBottom
         Label {
             text: "Actions"
-            font.pointSize: 15
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Label {
-            text: "Pin Binding"
-            font.pointSize: 15
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Label {
-            visible: scanner.selected.isKeyboard
-            text: "Key Binding"
-            font.pointSize: 15
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Label {
-            text: "Invert Axis"
-            font.pointSize: 15
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
-        Label {
-            visible: scanner.selected.hasAddressableLEDs
-            text: "LEDs"
             font.pointSize: 15
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             wrapMode: Text.WordWrap
@@ -80,8 +56,6 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: Object.values(gl.labels)
             Label {
-                Layout.row: index+1
-                Layout.column: 0
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -92,12 +66,16 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
             }
         }
+        Label {
+            text: "Pin Binding"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
         Repeater {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: Object.keys(gl.labels)
             Button {
-                Layout.row: index+1
-                Layout.column: 1
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
                 id: bt
@@ -107,13 +85,18 @@ ColumnLayout {
                 ToolTip.text: gl.labels[modelData]
             }
         }
+        Label {
+            visible: scanner.selected.isKeyboard
+            text: "Key Binding"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
         Repeater {
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-            model: Object.keys(gl.labels)
+            model: scanner.selected.isKeyboard?Object.keys(gl.labels):[]
             RowLayout {
                 id:rl
-                Layout.row: index+1
-                Layout.column: 2
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Repeater {
@@ -153,36 +136,46 @@ ColumnLayout {
                 }
             }
         }
-        Repeater {
+        Label {
+            text: "Invert Axis"
+            font.pointSize: 15
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            model: Object.keys(gl.labels)
-            Switch {
-                Layout.row: index+1
-                Layout.column: gl.columns-1-scanner.selected.hasAddressableLEDs
-                Layout.preferredWidth: gl.pWidth/gl.columns
-                Layout.fillHeight: true
-                enabled: scanner.selected.pin_inverts.hasOwnProperty(modelData)
-                visible: enabled
-                checked: !!scanner.selected.pin_inverts[modelData]
-                onCheckedChanged: {
-                    var pins = scanner.selected.pin_inverts;
-                    pins[modelData] = checked;
-                    scanner.selected.pin_inverts = pins;
-                }
-            }
+            wrapMode: Text.WordWrap
         }
         Repeater {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: Object.keys(gl.labels)
+            RowLayout {
+                Switch {
+                    Layout.preferredWidth: gl.pWidth/gl.columns
+                    Layout.fillHeight: true
+                    enabled: scanner.selected.pin_inverts.hasOwnProperty(modelData)
+                    visible: enabled
+                    checked: !!scanner.selected.pin_inverts[modelData]
+                    onCheckedChanged: {
+                        var pins = scanner.selected.pin_inverts;
+                        pins[modelData] = checked;
+                        scanner.selected.pin_inverts = pins;
+                    }
+                }
+            }
+        }
+        Label {
             visible: scanner.selected.hasAddressableLEDs
+            text: "LEDs"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: scanner.selected.hasAddressableLEDs?Object.keys(gl.labels):[]
             RowLayout {
                 id: ledRl
                 function getColor() {
                     if (!scanner.selected.colours[modelData]) return "";
                     return "#"+(scanner.selected.colours[modelData]).toString(16).padStart(6,"0");
                 }
-                Layout.row: index+1
-                Layout.column: gl.columns-1
                 Switch {
                     Component.onCompleted: checked = scanner.selected.leds.includes(modelData)
                     onCheckedChanged: {
