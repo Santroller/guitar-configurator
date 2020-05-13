@@ -369,5 +369,6 @@
         <file>images/360Accessories/FlightStick/components/gup.svg</file>
         <file>images/360Accessories/FlightStick/components/gx.svg</file>
         <file>images/360Accessories/FlightStick/components/gy.svg</file>
+        <file>DraggableItem.qml</file>
     </qresource>
 </RCC>

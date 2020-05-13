@@ -7,6 +7,7 @@ QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 QVersionNumber ArdwiinoLookup::supports1Mhz = QVersionNumber(2,2,10);
 QVersionNumber ArdwiinoLookup::supportsCurrent = QVersionNumber(3,3,7);
 QVersionNumber ArdwiinoLookup::supportsAutoBind = QVersionNumber(3,3,8);
+QVersionNumber ArdwiinoLookup::supportsMIDI = QVersionNumber(3,5,0);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
     QDir dir(QCoreApplication::applicationDirPath());
@@ -24,6 +25,11 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
 auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
     auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
     return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < currentVersion;
+}
+
+auto ArdwiinoLookup::hasMIDI(const QSerialPortInfo& serialPortInfo) -> bool {
+    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
+    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < supportsMIDI;
 }
 
 auto ArdwiinoLookup::is115200(const QSerialPortInfo& serialPortInfo) -> bool {
@@ -45,6 +51,9 @@ auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
     return serialPortInfo.vendorIdentifier() == HARMONIX_VID || serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
+}
+auto ArdwiinoLookup::isAreadyDFU(const QSerialPortInfo& serialPortInfo) -> bool {
+    return serialPortInfo.productIdentifier() == 0x0036 || serialPortInfo.productIdentifier() == 0x9207;
 }
 ArdwiinoLookup* ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty =  {"","","",0,{},"","",0,"","", false};

@@ -32,6 +32,9 @@ class LEDHandler : public QObject
     Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
     Q_PROPERTY(int color READ getColor WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(bool ready MEMBER m_ready NOTIFY readyChanged)
+    Q_PROPERTY(bool hitEnabled READ getHitEnabled WRITE setHitEnabled NOTIFY hitEnabledChanged)
+    Q_PROPERTY(bool openEnabled READ getOpenEnabled WRITE setOpenEnabled NOTIFY openEnabledChanged)
+    Q_PROPERTY(bool starPowerEnabled READ getStarPowerEnabled WRITE setStarPowerEnabled NOTIFY starPowerEnabledChanged)
 public:
     explicit LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent = nullptr);
     QTimer *timer;
@@ -42,17 +45,32 @@ public:
     int getColor() {
         return m_color;
     }
+    bool getHitEnabled() {
+        return m_hitEnabled;
+    }
+    bool getStarPowerEnabled() {
+        return m_starPowerEnabled;
+    }
+    bool getOpenEnabled() {
+        return m_openEnabled;
+    }
 signals:
     void gameFolderChanged();
     void versionChanged();
     void readyChanged();
     void colorChanged();
+    void hitEnabledChanged();
+    void starPowerEnabledChanged();
+    void openEnabledChanged();
 public slots:
     void startGame();
 private slots:
  void tick();
  void setGameFolder(QString string);
  void setColor(int rgb);
+ void setHitEnabled(bool hit);
+ void setOpenEnabled(bool open);
+ void setStarPowerEnabled(bool star);
 
 private:
  QSettings settings;
@@ -67,6 +85,9 @@ private:
  int lastScore = 0;
  int shownNote = 0;
  int countdown = 0;
+ bool m_hitEnabled;
+ bool m_starPowerEnabled;
+ bool m_openEnabled;
  uint32_t m_color = 0;
  bool m_ready;
  QString m_gameFolder;

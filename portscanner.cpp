@@ -62,7 +62,7 @@ void PortScanner::fixLinux() {
         QProcess p;
         p.start("pkexec", {"tee", "-a", "/sys/bus/usb/drivers/xpad/new_id"});
         p.waitForStarted();
-        p.write("1209 2882");
+        p.write("1209 2882 ff");
         p.closeWriteChannel();
         p.waitForFinished();
     }
@@ -107,9 +107,12 @@ QString PortScanner::findElement(QString base, int w, int h, int mouseX, int mou
             colorMap.push_front(qRgba(0,0,0,0));
         }
     }
-    int x = (double)mouseX/w*width;
-    int y = (double)mouseY/h*height;
-    auto c = data[y*width+x];
+    double x = (double)mouseX/w;
+    double y = (double)mouseY/h;
+    if (x > 1 || y > 1 || x < 0 || y < 0) return "";
+    x*= width;
+    y*=height;
+    auto c = data[(int)y*width+(int)x];
     if (c != 0) {
         return "/"+base+"/components/"+images[c-1];
     }

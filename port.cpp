@@ -5,6 +5,7 @@
 #include <iostream>
 #include <QSettings>
 #include <QCoreApplication>
+#include <algorithm>
 Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     rescan(serialPortInfo);
@@ -35,6 +36,7 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
     m_isOldArdwiino = ArdwiinoLookup::getInstance()->isOldFirmwareArdwiino(serialPortInfo);
     m_isOutdated = ArdwiinoLookup::getInstance()->isOldArdwiino(serialPortInfo);
+    m_isAlreadyDFU = ArdwiinoLookup::getInstance()->isAreadyDFU(serialPortInfo);
     if (m_isArdwiino) {
         m_description = "Ardwiino - Reading Controller Information";
         m_port = serialPortInfo.systemLocation();
@@ -102,9 +104,8 @@ void Port::readData() {
             m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
         } while (m_board.name.isEmpty());
         readyForRead = true;
+        readAllData();
         readDescription();
-        loadPins();
-        loadKeys();
     }
     m_hasDFU = m_board.hasDFU;
     dfuFound();
@@ -112,28 +113,74 @@ void Port::readData() {
     boardImageChanged();
     readyChanged();
 }
+void Port::readAllData() {
+    loadPins();
+    loadKeys();
+    loadLEDs();
+    uint8_t id = read_single(READ_CONFIG(CONFIG_SUB_TYPE));
+    if (id == REAL_DRUM_SUBTYPE) {
+        id = ArdwiinoDefines::XINPUT_GUITAR_HERO_DRUMS;
+    }
+    if (id == REAL_GUITAR_SUBTYPE) {
+        id = ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR;
+    }
+    m_type = ArdwiinoDefines::subtype(id);
+    typeChanged();
+    m_orientation = ArdwiinoDefines::gyro(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
+    orientationChanged();
+    m_input_type = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
+    inputTypeChanged();
+    m_tilt = ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
+    tiltTypeChanged();
+    m_led = ArdwiinoDefines::fret_mode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
+    ledTypeChanged();
+    m_trigger_threshold = read_single(READ_CONFIG(CONFIG_THRESHOLD_TRIGGER));
+    triggerThresholdChanged();
+    m_joy_threshold = read_single(READ_CONFIG(CONFIG_THRESHOLD_JOY));
+    joyThresholdChanged();
+    m_map_joy = read_single(READ_CONFIG(CONFIG_MAP_JOY_DPAD));
+    mapJoystickChanged();
+    m_map_start_sel_home = read_single(READ_CONFIG(CONFIG_MAP_START_SEL_HOME));
+    mapStartSelectHomeChanged();
+    m_sensitivity = read_single(READ_CONFIG(CONFIG_TILT_SENSITIVITY));
+    tiltSensitivityChanged();
+
+}
+
 void Port::write(QByteArray id) {
     m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     m_serialPort->readLine();
 }
+void Port::pushWrite(QByteArray id) {
+    m_dataToWrite.enqueue(id);
+}
+
 
 void Port::writeNoResp(QByteArray id) {
     m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
 }
-
-void Port::startConfiguring() {
-    write(QByteArray(1,COMMAND_START_CONFIG));
-}
-
 void Port::writeConfig() {
+    m_isReady = false;
+    readyChanged();
     m_serialPort->flush();
-    m_serialPort->write(QByteArray(1,COMMAND_APPLY_CONFIG));
-    m_serialPort->waitForBytesWritten();
-    close();
-    portStateChanged();
+    saveKeys();
+    savePins();
+    saveLEDs();
+    saveMIDI();
+    pushWrite(WRITE_CONFIG(CONFIG_INPUT_TYPE, m_input_type));
+    pushWrite(WRITE_CONFIG(CONFIG_TILT_TYPE, m_tilt));
+    pushWrite(WRITE_CONFIG(CONFIG_MPU_6050_ORIENTATION, m_orientation));
+    pushWrite(WRITE_CONFIG(CONFIG_LED_TYPE, m_led));
+    pushWrite(WRITE_CONFIG(CONFIG_MAP_JOY_DPAD, m_map_joy));
+    pushWrite(WRITE_CONFIG(CONFIG_MAP_START_SEL_HOME, m_map_start_sel_home));
+    pushWrite(WRITE_CONFIG(CONFIG_THRESHOLD_TRIGGER, m_trigger_threshold));
+    pushWrite(WRITE_CONFIG(CONFIG_THRESHOLD_JOY, m_joy_threshold));
+    pushWrite(WRITE_CONFIG(CONFIG_TILT_SENSITIVITY, m_sensitivity));
+    pushWrite(QByteArray(1,COMMAND_APPLY_CONFIG));
+    m_serialPort->write(WRITE_CONFIG(CONFIG_SUB_TYPE, m_type));
 }
 void Port::prepareUpdate() {
     if (board().hasDFU) {
@@ -159,16 +206,18 @@ void Port::jumpUNO() {
 }
 void Port::readDescription() {
     QByteArray readData;
-    auto vtype = getCurrentInputType();
-    auto ctype = getCurrentType();
     m_description = "Ardwiino - "+ m_board.name;
     if (m_isOutdated) {
         m_description += " - Outdated";
     }
-    m_description += " - " + ArdwiinoDefines::getName(ctype);
-    m_description += " - " + ArdwiinoDefines::getName(vtype);
-    if (vtype == ArdwiinoDefines::WII || vtype == ArdwiinoDefines::PS2) {
-        m_description += " " + read(READ_INFO(INFO_EXT)).trimmed();
+    m_description += " - " + ArdwiinoDefines::getName(m_type);
+    uint8_t ext = read_single(READ_INFO(INFO_EXT));
+    if (m_input_type == ArdwiinoDefines::WII)  {
+        m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::wii_ext_type)ext);
+    } else if(m_input_type == ArdwiinoDefines::PS2) {
+        m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
+    } else {
+        m_description += " - " + ArdwiinoDefines::getName(m_input_type);
     }
     m_description += " - " + m_port;
     updateControllerName();
@@ -186,6 +235,16 @@ void Port::readyRead() {
             detectedPinChanged();
         });
     }
+    if (!m_dataToWrite.isEmpty()) {
+        m_serialPort->flush();
+        m_serialPort->readAll();
+        m_serialPort->write(m_dataToWrite.dequeue());
+        if (m_dataToWrite.isEmpty()) {
+            m_serialPort->waitForBytesWritten();
+            close();
+            portStateChanged();
+        }
+    }
 }
 void Port::open(const QSerialPortInfo &serialPortInfo) {
     m_serialPort = new QSerialPort(serialPortInfo);
@@ -198,6 +257,7 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
         }
         m_supportsCurrent = ArdwiinoLookup::hasCurrent(serialPortInfo);
         m_hasAutoBind = ArdwiinoLookup::hasAutoBind(serialPortInfo);
+        m_hasMIDI = ArdwiinoLookup::hasMIDI(serialPortInfo);
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
         m_serialPort->setParity(QSerialPort::Parity::NoParity);
@@ -303,96 +363,177 @@ void Port::loadKeys() {
 }
 
 void Port::saveKeys() {
-    write(WRITE_CONFIG(CONFIG_KEY_UP, uint8_t(m_keys["up"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_DOWN, uint8_t(m_keys["down"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_LEFT, uint8_t(m_keys["left"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_RIGHT, uint8_t(m_keys["right"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_START, uint8_t(m_keys["start"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_SELECT, uint8_t(m_keys["back"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_LEFT_STICK, uint8_t(m_keys["left_stick"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_RIGHT_STICK, uint8_t(m_keys["right_stick"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_LB, uint8_t(m_keys["LB"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_UP, uint8_t(m_keys["up"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_DOWN, uint8_t(m_keys["down"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_LEFT, uint8_t(m_keys["left"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_RIGHT, uint8_t(m_keys["right"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_START, uint8_t(m_keys["start"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_SELECT, uint8_t(m_keys["back"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_LEFT_STICK, uint8_t(m_keys["left_stick"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_RIGHT_STICK, uint8_t(m_keys["right_stick"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_LB, uint8_t(m_keys["LB"].toUInt())));
 
-    write(WRITE_CONFIG(CONFIG_KEY_RB, uint8_t(m_keys["RB"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_HOME, uint8_t(m_keys["home"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_CAPTURE, uint8_t(m_keys["capture"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_A, uint8_t(m_keys["a"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_B, uint8_t(m_keys["b"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_X, uint8_t(m_keys["x"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_Y, uint8_t(m_keys["y"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_LT, uint8_t(m_keys["lt"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_KEY_RT, uint8_t(m_keys["rt"].toUInt())));
-    write(WRITE_CONFIG_PINS(CONFIG_KEY_L_X, uint8_t(m_keys["l_x_lt"].toUInt()),uint8_t(m_keys["l_x_gt"].toUInt())));
-    write(WRITE_CONFIG_PINS(CONFIG_KEY_L_Y, uint8_t(m_keys["l_y_lt"].toUInt()),uint8_t(m_keys["l_y_gt"].toUInt())));
-    write(WRITE_CONFIG_PINS(CONFIG_KEY_R_X, uint8_t(m_keys["r_x_lt"].toUInt()),uint8_t(m_keys["r_x_gt"].toUInt())));
-    write(WRITE_CONFIG_PINS(CONFIG_KEY_R_Y, uint8_t(m_keys["r_y_lt"].toUInt()),uint8_t(m_keys["r_y_gt"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_RB, uint8_t(m_keys["RB"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_HOME, uint8_t(m_keys["home"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_CAPTURE, uint8_t(m_keys["capture"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_A, uint8_t(m_keys["a"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_B, uint8_t(m_keys["b"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_X, uint8_t(m_keys["x"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_Y, uint8_t(m_keys["y"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_LT, uint8_t(m_keys["lt"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_KEY_RT, uint8_t(m_keys["rt"].toUInt())));
+    pushWrite(WRITE_CONFIG_PINS(CONFIG_KEY_L_X, uint8_t(m_keys["l_x_lt"].toUInt()),uint8_t(m_keys["l_x_gt"].toUInt())));
+    pushWrite(WRITE_CONFIG_PINS(CONFIG_KEY_L_Y, uint8_t(m_keys["l_y_lt"].toUInt()),uint8_t(m_keys["l_y_gt"].toUInt())));
+    pushWrite(WRITE_CONFIG_PINS(CONFIG_KEY_R_X, uint8_t(m_keys["r_x_lt"].toUInt()),uint8_t(m_keys["r_x_gt"].toUInt())));
+    pushWrite(WRITE_CONFIG_PINS(CONFIG_KEY_R_Y, uint8_t(m_keys["r_y_lt"].toUInt()),uint8_t(m_keys["r_y_gt"].toUInt())));
 }
 
 void Port::loadPins() {
     m_pins.clear();
-    if (getInputType() != ArdwiinoDefines::WII) {
-        m_pins["up"] = read_single(READ_CONFIG(CONFIG_PIN_UP));
-        m_pins["down"] = read_single(READ_CONFIG(CONFIG_PIN_DOWN));
-        m_pins["left"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT));
-        m_pins["right"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT));
-        m_pins["start"] = read_single(READ_CONFIG(CONFIG_PIN_START));
-        m_pins["back"] = read_single(READ_CONFIG(CONFIG_PIN_SELECT));
-        m_pins["left_stick"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT_STICK));
-        m_pins["right_stick"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT_STICK));
-        m_pins["LB"] = read_single(READ_CONFIG(CONFIG_PIN_LB));
-        m_pins["RB"] = read_single(READ_CONFIG(CONFIG_PIN_RB));
-        m_pins["home"] = read_single(READ_CONFIG(CONFIG_PIN_HOME));
-        m_pins["capture"] = read_single(READ_CONFIG(CONFIG_PIN_CAPTURE));
-        m_pins["a"] = read_single(READ_CONFIG(CONFIG_PIN_A));
-        m_pins["b"] = read_single(READ_CONFIG(CONFIG_PIN_B));
-        m_pins["x"] = read_single(READ_CONFIG(CONFIG_PIN_X));
-        m_pins["y"] = read_single(READ_CONFIG(CONFIG_PIN_Y));
-        m_pins["lt"] = read_single(READ_CONFIG(CONFIG_PIN_LT));
-        m_pins["rt"] = read_single(READ_CONFIG(CONFIG_PIN_RT));
-        m_pins["l_x"] = read_single(READ_CONFIG(CONFIG_PIN_L_X));
-        m_pins["l_y"] = read_single(READ_CONFIG(CONFIG_PIN_L_Y));
-        m_pins["r_x"] = read_single(READ_CONFIG(CONFIG_PIN_R_X));
-        m_pins["r_y"] = read_single(READ_CONFIG(CONFIG_PIN_R_Y));
-        m_pin_inverts["lt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_LT));
-        m_pin_inverts["rt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_RT));
-        m_pin_inverts["l_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_X));
-        m_pin_inverts["l_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_Y));
-        m_pin_inverts["r_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_X));
-    }
+    m_pins["up"] = read_single(READ_CONFIG(CONFIG_PIN_UP));
+    m_pins["down"] = read_single(READ_CONFIG(CONFIG_PIN_DOWN));
+    m_pins["left"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT));
+    m_pins["right"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT));
+    m_pins["start"] = read_single(READ_CONFIG(CONFIG_PIN_START));
+    m_pins["back"] = read_single(READ_CONFIG(CONFIG_PIN_SELECT));
+    m_pins["left_stick"] = read_single(READ_CONFIG(CONFIG_PIN_LEFT_STICK));
+    m_pins["right_stick"] = read_single(READ_CONFIG(CONFIG_PIN_RIGHT_STICK));
+    m_pins["LB"] = read_single(READ_CONFIG(CONFIG_PIN_LB));
+    m_pins["RB"] = read_single(READ_CONFIG(CONFIG_PIN_RB));
+    m_pins["home"] = read_single(READ_CONFIG(CONFIG_PIN_HOME));
+    m_pins["capture"] = read_single(READ_CONFIG(CONFIG_PIN_CAPTURE));
+    m_pins["a"] = read_single(READ_CONFIG(CONFIG_PIN_A));
+    m_pins["b"] = read_single(READ_CONFIG(CONFIG_PIN_B));
+    m_pins["x"] = read_single(READ_CONFIG(CONFIG_PIN_X));
+    m_pins["y"] = read_single(READ_CONFIG(CONFIG_PIN_Y));
+    m_pins["lt"] = read_single(READ_CONFIG(CONFIG_PIN_LT));
+    m_pins["rt"] = read_single(READ_CONFIG(CONFIG_PIN_RT));
+    m_pins["l_x"] = read_single(READ_CONFIG(CONFIG_PIN_L_X));
+    m_pins["l_y"] = read_single(READ_CONFIG(CONFIG_PIN_L_Y));
+    m_pins["r_x"] = read_single(READ_CONFIG(CONFIG_PIN_R_X));
+    m_pins["r_y"] = read_single(READ_CONFIG(CONFIG_PIN_R_Y));
+    m_pin_inverts["lt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_LT));
+    m_pin_inverts["rt"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_RT));
+    m_pin_inverts["l_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_X));
+    m_pin_inverts["l_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_L_Y));
+    m_pin_inverts["r_x"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_X));
     m_pins["r_y"] = read_single(READ_CONFIG(CONFIG_PIN_R_Y));
     m_pin_inverts["r_y"] = read_single(READ_CONFIG(CONFIG_AXIS_INVERT_R_Y));
 }
 
 void Port::savePins() {
-    if (getInputType() != ArdwiinoDefines::WII) {
-        write(WRITE_CONFIG(CONFIG_PIN_UP, uint8_t(m_pins["up"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_DOWN, uint8_t(m_pins["down"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_LEFT, uint8_t(m_pins["left"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_RIGHT, uint8_t(m_pins["right"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_START, uint8_t(m_pins["start"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_SELECT, uint8_t(m_pins["back"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_LEFT_STICK, uint8_t(m_pins["left_stick"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_RIGHT_STICK, uint8_t(m_pins["right_stick"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_LB, uint8_t(m_pins["LB"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_RB, uint8_t(m_pins["RB"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_HOME, uint8_t(m_pins["home"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_A, uint8_t(m_pins["a"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_B, uint8_t(m_pins["b"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_X, uint8_t(m_pins["x"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_Y, uint8_t(m_pins["y"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_LT, uint8_t(m_pins["lt"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_RT, uint8_t(m_pins["rt"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_L_X, uint8_t(m_pins["l_x"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_L_Y, uint8_t(m_pins["l_y"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_PIN_R_X, uint8_t(m_pins["r_x"].toUInt())));
-        write(WRITE_CONFIG(CONFIG_AXIS_INVERT_LT, m_pin_inverts["lt"].toBool()));
-        write(WRITE_CONFIG(CONFIG_AXIS_INVERT_RT, m_pin_inverts["rt"].toBool()));
-        write(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_X, m_pin_inverts["l_x"].toBool()));
-        write(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_Y, m_pin_inverts["l_y"].toBool()));
-        write(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_X, m_pin_inverts["r_x"].toBool()));
-    }
-    write(WRITE_CONFIG(CONFIG_PIN_R_Y, uint8_t(m_pins["r_y"].toUInt())));
-    write(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_Y, m_pin_inverts["r_y"].toBool()));
+    //TODO: ArdwiinoDefines::getInstance()->get_buttons_entries(); should allow us to turn this into a loop, see loadLEDs
+    //TODO: however to do this we may need to turn CONFIG_PIN_x into enums.
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_UP, uint8_t(m_pins["up"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_DOWN, uint8_t(m_pins["down"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_LEFT, uint8_t(m_pins["left"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_RIGHT, uint8_t(m_pins["right"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_START, uint8_t(m_pins["start"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_SELECT, uint8_t(m_pins["back"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_LEFT_STICK, uint8_t(m_pins["left_stick"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_RIGHT_STICK, uint8_t(m_pins["right_stick"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_LB, uint8_t(m_pins["LB"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_RB, uint8_t(m_pins["RB"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_HOME, uint8_t(m_pins["home"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_A, uint8_t(m_pins["a"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_B, uint8_t(m_pins["b"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_X, uint8_t(m_pins["x"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_Y, uint8_t(m_pins["y"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_LT, uint8_t(m_pins["lt"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_RT, uint8_t(m_pins["rt"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_L_X, uint8_t(m_pins["l_x"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_L_Y, uint8_t(m_pins["l_y"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_R_X, uint8_t(m_pins["r_x"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_LT, m_pin_inverts["lt"].toBool()));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_RT, m_pin_inverts["rt"].toBool()));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_X, m_pin_inverts["l_x"].toBool()));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_L_Y, m_pin_inverts["l_y"].toBool()));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_X, m_pin_inverts["r_x"].toBool()));
+    pushWrite(WRITE_CONFIG(CONFIG_PIN_R_Y, uint8_t(m_pins["r_y"].toUInt())));
+    pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_Y, m_pin_inverts["r_y"].toBool()));
 }
-
+void Port::loadMIDI() {
+    if (!m_hasMIDI) return;
+    m_midi_note.clear();
+    m_midi_type.clear();
+    m_midi_channel.clear();
+    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
+    QMap<int, QString> inv;
+    for (auto k : buttons.keys()) {
+        inv[buttons[k].toUInt()] = k;
+    }
+    for (int i =0; i < buttons.size();i++) {
+        uint8_t note = read_single(READ_CONFIG(CONFIG_MIDI_NOTE)+QByteArray(1,i));
+        uint8_t type = read_single(READ_CONFIG(CONFIG_MIDI_TYPE)+QByteArray(1,i));
+        uint8_t channel = read_single(READ_CONFIG(CONFIG_MIDI_CHANNEL)+QByteArray(1,i));
+        m_midi_note[inv[i]] = note;
+        m_midi_type[inv[i]] = type;
+        m_midi_channel[inv[i]] = channel;
+    }
+    midiChanged();
+}
+void Port::saveMIDI() {
+    if (!m_hasMIDI) return;
+    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
+    QMap<int, QString> inv;
+    for (auto k : buttons.keys()) {
+        inv[buttons[k].toUInt()] = k;
+    }
+    for (int i =0; i < buttons.size();i++) {
+        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_NOTE,i,m_midi_note[inv[i]].toUInt()));
+        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_TYPE,i,m_midi_note[inv[i]].toUInt()));
+        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_CHANNEL,i,m_midi_note[inv[i]].toUInt()));
+    }
+}
+void Port::saveLEDs() {
+    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
+    for (int i =0; i < buttons.size();i++) {
+        int pin = 0;
+        if (i < m_leds.size()) {
+            QString btn = m_leds[i].toString();
+            pin = buttons[btn].toInt()+1;
+            uint32_t col = m_colours[btn].toUInt();
+            QByteArray colours = WRITE_CONFIG(CONFIG_LED_COLOURS,i)+QByteArray((char*)&col,4);
+            pushWrite(colours);
+        }
+        QByteArray pins = WRITE_CONFIG_PINS(CONFIG_LED_PINS,i,pin);
+        pushWrite(pins);
+    }
+    //We want to make ch led data write immedaitely, as this to a user feels more like a tool config change than a firmware change
+    //TODO: honestly, it would make more sense to just write the led colours directly instead of having this map.
+    std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
+    for (uint i =0; i < keys.size(); i++) {
+        uint32_t col = m_gh_colours[keys[i]].toUInt();
+        QByteArray colours = WRITE_CONFIG(CONFIG_LED_GH_COLOURS,i)+QByteArray((char*)&col,4);
+        if (m_dataToWrite.isEmpty()) {
+            write(colours);
+        } else {
+            pushWrite(colours);
+        }
+    }
+}
+void Port::loadLEDs() {
+    if (!hasAddressableLEDs() || !m_hasMIDI) return;
+    m_leds.clear();
+    m_colours.clear();
+    m_gh_colours.clear();
+    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
+    QMap<int, QString> inv;
+    for (auto k : buttons.keys()) {
+        inv[buttons[k].toUInt()] = k;
+    }
+    for (int i =0; i < buttons.size();i++) {
+        uint8_t pin = read_single(READ_CONFIG(CONFIG_LED_PINS)+QByteArray(1,i))-1;
+        auto colour = ((uint32_t*)read(READ_CONFIG(CONFIG_LED_COLOURS)+QByteArray(1,i)).data())[0];
+        //Stop reading leds when we have read all of them
+        if (pin == 255) break;
+        m_leds.push_back(inv[pin]);
+        m_colours[inv[pin]] = colour;
+    }
+    std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
+    for (uint i =0; i < keys.size(); i++) {
+        m_gh_colours[keys[i]] = QVariant(((uint32_t*)read(READ_CONFIG(CONFIG_LED_GH_COLOURS)+QByteArray(1,i)).data())[0]);
+    }
+    ledsChanged();
+}
 

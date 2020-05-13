@@ -25,7 +25,7 @@ Page {
             source: {
                 let index = devices.currentIndex;
                 if (index === -1 || !devices.model[index].ready) return "images/NoController.svg";
-                return Defines.getBoardImage(devices.model[index].currentType);
+                return Defines.getBoardImage(devices.model[index].type);
             }
             sourceSize.width: applicationWindow.width/3
             fillMode: Image.PreserveAspectFit
@@ -137,7 +137,6 @@ Page {
                 scanner.selected = devices.model[devices.currentIndex];
                 programmer.setRestoring(false);
                 if (scanner.selected.isArdwiino) {
-                    scanner.selected.startConfiguring();
                     mainStack.replace("Configure.qml");
                 } else {
                     mainStack.replace("Programmer.qml");

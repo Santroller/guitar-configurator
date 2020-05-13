@@ -38,7 +38,7 @@ ColumnLayout {
     GridLayout {
         visible: !scanner.isGraphical
         id: gl
-        columns: scanner.selected.isKeyboard ? 4: 3
+        columns: 3+scanner.selected.isKeyboard+scanner.selected.hasAddressableLEDs
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         property var current: PinInfo.bindings[scanner.selected.boardImage]
         property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB);
@@ -68,6 +68,14 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             wrapMode: Text.WordWrap
         }
+        Label {
+            visible: scanner.selected.hasAddressableLEDs
+            text: "LEDs"
+            font.pointSize: 15
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            wrapMode: Text.WordWrap
+        }
+
         Repeater {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             model: Object.values(gl.labels)
@@ -150,7 +158,7 @@ ColumnLayout {
             model: Object.keys(gl.labels)
             Switch {
                 Layout.row: index+1
-                Layout.column: gl.columns-1
+                Layout.column: gl.columns-1-scanner.selected.hasAddressableLEDs
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
                 enabled: scanner.selected.pin_inverts.hasOwnProperty(modelData)
@@ -160,6 +168,55 @@ ColumnLayout {
                     var pins = scanner.selected.pin_inverts;
                     pins[modelData] = checked;
                     scanner.selected.pin_inverts = pins;
+                }
+            }
+        }
+        Repeater {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            model: Object.keys(gl.labels)
+            visible: scanner.selected.hasAddressableLEDs
+            RowLayout {
+                id: ledRl
+                function getColor() {
+                    if (!scanner.selected.colours[modelData]) return "";
+                    return "#"+(scanner.selected.colours[modelData]).toString(16).padStart(6,"0");
+                }
+                Layout.row: index+1
+                Layout.column: gl.columns-1
+                Switch {
+                    Component.onCompleted: checked = scanner.selected.leds.includes(modelData)
+                    onCheckedChanged: {
+                        var leds = scanner.selected.leds;
+                        var colours = scanner.selected.colours;
+                        if (!checked) {
+                            leds.splice(leds.indexOf(modelData),1);
+                        } else if (!leds.includes(modelData)){
+                            leds.push(modelData);
+                            if (!colours[modelData]) {
+                                colours[modelData] = 0;
+                            }
+                        }
+                        scanner.selected.leds = leds;
+                        scanner.selected.colours = colours;
+                    }
+                }
+                Rectangle {
+                    radius: colorBt2.height
+                    visible: scanner.selected.leds.includes(modelData) && scanner.selected.hasAddressableLEDs
+                    color: ledRl.getColor()
+                    width: colorBt2.height
+                    height: colorBt2.height
+                }
+                Button {
+                    visible: scanner.selected.leds.includes(modelData) && scanner.selected.hasAddressableLEDs
+                    text: "Change colour"
+                    onClicked: {
+                        ledhandler.color = scanner.selected.colours[modelData];
+                        color.currentColor = ledRl.getColor();
+                        buttonConfig.currentLED = modelData;
+                        color.open()
+                    }
+                    id: colorBt2
                 }
             }
         }
@@ -271,8 +328,12 @@ ColumnLayout {
         standardButtons: Dialog.Close
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
+        width: applicationWindow.width / 2
+        height: applicationWindow.height /2
 
         ColumnLayout {
+            id: mainContent
+            anchors.fill: parent
             Label {
                 text: qsTr("LED Type: ")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -292,17 +353,55 @@ ColumnLayout {
 
                 onCurrentIndexChanged: scanner.selected.ledType = fretBox.model[fretBox.currentIndex].value
             }
-            //            ColorDialog {
-            //              id: color
-            //              onCurrentColorChanged: {
-            //                  var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
-            //                  ledhandler.color = parseInt(result[1],16);
-            //              }
-            //            }
-            //            Button {
-            //              onClicked: color.open()
-            //              id: colorBt
-            //            }
+            Label {
+                text: qsTr("LED Order (drag to change)")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            ListView {
+                visible: scanner.selected.hasAddressableLEDs
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                id: listView
+                model: scanner.selected.leds
+                orientation: ListView.Horizontal
+                delegate: DraggableItem {
+                    label: buttonConfig.allLabels[modelData]
+                    Rectangle {
+                        height: {
+                            var a = listView.width / scanner.selected.leds.length;
+                            if (a > listView.height) return listView.height;
+                            return a;
+                        }
+
+                        width: height
+                        color: "#"+(scanner.selected.colours[modelData]).toString(16).padStart(6,"0");
+
+                        // Bottom line border
+                        Rectangle {
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                bottom: parent.bottom
+                            }
+                            height: 1
+                            color: "lightgrey"
+                        }
+                    }
+
+                    draggedItemParent: mainContent
+
+                    onMoveItemRequested: {
+                        scanner.selected.moveLED(from, to);
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -371,7 +470,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 to: 32767
                 from: -32767
-                value: scanner.selected.sensitivity
+                Component.onCompleted: value = scanner.selected.sensitivity
                 onValueChanged: scanner.selected.sensitivity = sliderTilt.value
                 background: Rectangle {
                     y: 15
@@ -385,6 +484,31 @@ ColumnLayout {
         }
     }
 
+    ColorDialog {
+        id: color
+        onCurrentColorChanged: {
+            var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
+            ledhandler.color = parseInt(result[1],16);
+        }
+        onAccepted: {
+            if (ghLedRp.currentOption) {
+                var ghColours = scanner.selected.ghColours;
+                ghColours[ghLedRp.currentOption] = ledhandler.color;
+                ledhandler.color = 0;
+                scanner.selected.ghColours = ghColours;
+                ghLedRp.currentOption = "";
+            } else {
+                var colours = scanner.selected.colours;
+                colours[buttonConfig.currentLED] = ledhandler.color;
+                ledhandler.color = 0;
+                scanner.selected.colours = colours;
+            }
+            scanner.selected.saveLEDs();
+        }
+        onRejected: {
+            ledhandler.color = 0;
+        }
+    }
     Dialog {
         id: buttonConfig
         property var current: PinInfo.bindings[scanner.selected.boardImage];
@@ -404,6 +528,7 @@ ColumnLayout {
         property var labels: [];
         property var pinLabels: [];
         property var keyLabels: [];
+        property var currentLED: "";
         property var currentKey: "";
         property var existingCurrentKey: ""
         property var existingKey: "";
@@ -436,11 +561,19 @@ ColumnLayout {
             Repeater {
                 model: buttonConfig.buttons
                 ColumnLayout {
+                    id:buttonConfigButton
+                    function getColor() {
+                        if (!scanner.selected.colours[modelData]) return "";
+                        return "#"+(scanner.selected.colours[modelData]).toString(16).padStart(6,"0");
+                    }
                     Button {
                         visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar
                         text: qsTr("Change Pin Binding for "+buttonConfig.labels[index]+" (Currently: "+buttonConfig.pinLabels[index]+")")
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        onClicked: buttonConfig.currentPin = modelData
+                        onClicked: {
+                            buttonConfig.currentValue = scanner.selected.pins[modelData];
+                            buttonConfig.currentPin = modelData
+                        }
                     }
                     RowLayout {
                         visible: buttonConfig.isAnalog
@@ -473,6 +606,58 @@ ColumnLayout {
                             keyListener.forceActiveFocus();
                         }
                     }
+                    RowLayout {
+                        visible: scanner.selected.hasAddressableLEDs
+                        Label {
+                            text: qsTr("Enable LEDs for Pin")
+                            fontSizeMode: Text.FixedSize
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            wrapMode: Text.WordWrap
+                        }
+                        Switch {
+                            id:sw
+                            checked: scanner.selected.leds.includes(modelData)
+                            onCheckedChanged: {
+                                var leds = scanner.selected.leds;
+                                var colours = scanner.selected.colours;
+                                if (!checked) {
+                                    leds.splice(leds.indexOf(modelData),1);
+                                } else if (!leds.includes(modelData)){
+                                    leds.push(modelData);
+                                    if (!colours[modelData]) {
+                                        colours[modelData] = 0;
+                                    }
+                                }
+                                scanner.selected.leds = leds;
+                                scanner.selected.colours = colours;
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        Button {
+                            enabled: scanner.selected.leds.includes(modelData)
+                            visible: scanner.selected.hasAddressableLEDs
+                            text: "Set LED colour"
+                            onClicked: {
+                                ledhandler.color = scanner.selected.colours[modelData];
+                                color.currentColor = buttonConfigButton.getColor();
+                                buttonConfig.currentLED = modelData;
+                                color.open()
+                            }
+                            id: colorBt
+                        }
+                        Rectangle {
+                            color: buttonConfigButton.getColor()
+                            width: colorBt.height
+                            height: colorBt.height
+                        }
+                    }
+
+
                 }
             }
             RowLayout {
@@ -487,7 +672,7 @@ ColumnLayout {
                     wrapMode: Text.WordWrap
                 }
                 Switch {
-                    checked: scanner.selected.mapJoystick
+                    Component.onCompleted: checked = scanner.selected.mapJoystick
                     onCheckedChanged: {
                         scanner.selected.mapJoystick = checked
                     }
@@ -506,7 +691,7 @@ ColumnLayout {
                     from: 0
                     live: false
                     enabled: scanner.selected.mapJoystick
-                    value: scanner.selected.joyThreshold
+                    Component.onCompleted: value = scanner.selected.joyThreshold
                     onValueChanged: scanner.selected.joyThreshold = slider2.value
                     background: Rectangle {
                         y: 15
@@ -519,9 +704,9 @@ ColumnLayout {
                 }
             }
             RowLayout {
-                visible: buttonConfig.isAnalog && scanner.selected.isKeyboard
+                visible: buttonConfig.isAnalog && (scanner.selected.isKeyboard || scanner.selected.hasAddressableLEDs)
                 Label {
-                    text: "Key Axis Threshold"
+                    text: "Key Axis Threshold / LED Axis Threshold"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     wrapMode: Text.WordWrap
                 }
@@ -530,7 +715,7 @@ ColumnLayout {
                     to: 128
                     from: 0
                     live: false
-                    value: scanner.selected.triggerThreshold
+                    Component.onCompleted: value = scanner.selected.triggerThreshold
                     onValueChanged: scanner.selected.triggerThreshold = slider.value
                     background: Rectangle {
                         y: 15
@@ -556,10 +741,22 @@ ColumnLayout {
                     wrapMode: Text.WordWrap
                 }
                 Switch {
-                    checked: scanner.selected.mapStartSelectHome
+                    Component.onCompleted: checked = scanner.selected.mapStartSelectHome
                     onCheckedChanged: {
                         scanner.selected.mapStartSelectHome = checked
                     }
+                }
+            }
+            ComboBox {
+                visible: scanner.selected.isMIDI
+                id: midiBox
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Defines.fillCombobox("midi_type")
+                Binding { target: midiBox; property: "currentIndex"; value: {midiBox.model.findIndex(s => s.value === scanner.selected.midi_type[buttonConfig.button])} }
+
+                onCurrentIndexChanged: {
                 }
             }
         }
@@ -617,13 +814,11 @@ ColumnLayout {
                 onCurrentIndexChanged: {
                     scanner.selected.type = comboBox.model[comboBox.currentIndex].value
                     //When the controller type is changed, we need to disable any pins that are not used by that controller.
-                    scanner.selected.loadPins();
                     var pins = scanner.selected.pins;
                     for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
                         pins[pin] = 0xFF;
                     }
                     scanner.selected.pins = pins;
-                    scanner.selected.savePins()
                 }
             }
         }
@@ -741,7 +936,23 @@ ColumnLayout {
             }
         }
     }
-    
+    Dialog {
+        title: "Writing Data"
+        visible: !scanner.selected.ready
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        ColumnLayout {
+            Label {
+                text: "Your configuration is writing, please wait"
+            }
+
+            BusyIndicator {
+                Layout.alignment: Qt.AlignHCenter
+            }
+        }
+    }
     Dialog {
         id: waitingDigitalDialog
         title: "Waiting for a pin"
@@ -823,13 +1034,15 @@ ColumnLayout {
                         y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY
                         radius: boardImage.r * 0.5
                         border.width: 1
-                        color: buttonConfig.currentValue === boardImage.pins[index].id ? "green" : mouseArea.containsMouse ? "red":"yellow"
+                        color: (buttonConfig.currentValue === boardImage.pins[index].id || mouseArea.containsMouse) ? "green" : Object.values(scanner.selected.pins).includes(boardImage.pins[index].id)?"red":"yellow"
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: buttonConfig.currentValue = boardImage.pins[index].id
                         }
+                        ToolTip.visible: mouseArea.containsMouse && Object.values(scanner.selected.pins).includes(boardImage.pins[index].id)
+                        ToolTip.text: buttonConfig.allLabels[Object.keys(scanner.selected.pins)[Object.values(scanner.selected.pins).indexOf(boardImage.pins[index].id)]] || ""
                     }
                 }
             }
@@ -974,6 +1187,65 @@ ColumnLayout {
                 enabled: ledhandler.ready
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: ledhandler.startGame();
+            }
+            Repeater {
+                id: ghLedRp
+                property var currentOption;
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Object.keys(scanner.selected.ghColours)
+                RowLayout {
+                    visible: scanner.selected.hasAddressableLEDs
+                    id: ghLedRl
+                    Label {
+                        text: qsTr("Led Config: "+modelData)
+                        fontSizeMode: Text.FixedSize
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        wrapMode: Text.WordWrap
+                    }
+                    function getColor() {
+                        return "#"+(scanner.selected.ghColours[modelData]).toString(16).padStart(6,"0");
+                    }
+                    Layout.row: index+1
+                    Layout.column: gl.columns-1
+                    Switch {
+                        Component.onCompleted: {
+                            switch (modelData) {
+                            case "Note Hit": checked = ledhandler.hitEnabled; break;
+                            case "Open Note": checked = ledhandler.openEnabled; break;
+                            case "Star Power": checked = ledhandler.starPowerEnabled; break;
+                            }
+                        }
+
+                        onCheckedChanged: {
+                            switch (modelData) {
+                            case "Note Hit": ledhandler.hitEnabled = checked; break;
+                            case "Open Note": ledhandler.openEnabled = checked; break;
+                            case "Star Power": ledhandler.starPowerEnabled = checked; break;
+                            }
+                        }
+                    }
+                    Rectangle {
+                        radius: colorBt3.height
+                        visible: scanner.selected.hasAddressableLEDs
+                        color: ghLedRl.getColor()
+                        width: colorBt3.height
+                        height: colorBt3.height
+                    }
+                    Button {
+                        visible: scanner.selected.hasAddressableLEDs
+                        text: "Change colour"
+                        onClicked: {
+                            ghLedRp.currentOption = modelData
+                            ledhandler.color = scanner.selected.ghColours[modelData];
+                            color.currentColor = ghLedRl.getColor();
+                            color.open()
+                        }
+                        id: colorBt3
+                    }
+                }
             }
         }
     }

@@ -13,10 +13,6 @@ Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::NOT_
 }
 
 auto Programmer::detectBoard() -> board_t {
-    if (!m_port->board().hasDFU) {
-        return m_port->board();
-    }
-    auto board = ArdwiinoLookup::boards[0];
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("binaries");
     for (board_t board: ArdwiinoLookup::boards) {
@@ -30,7 +26,7 @@ auto Programmer::detectBoard() -> board_t {
             return board;
         }
     }
-    return board;
+    return {};
 }
 void Programmer::programDFU() {
     board_t board = detectBoard();
@@ -109,6 +105,10 @@ auto Programmer::program(Port* port) -> bool {
     bool ret = false;
     m_port = port;
     if (m_status == Status::WAIT) {
+        if (m_port->isAlreadyDFU()) {
+            programAvrDude();
+            return true;
+        }
         if (m_restore) {
             m_status = Status::DFU_CONNECT;
             m_port->jumpUNO();

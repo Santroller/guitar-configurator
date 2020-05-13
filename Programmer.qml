@@ -128,7 +128,6 @@ Page {
                     if (programmer.restore) {
                         mainStack.replace("Welcome.qml")
                     } else {
-                        scanner.selected.startConfiguring();
                         mainStack.replace("Configure.qml")
                     }
                 }

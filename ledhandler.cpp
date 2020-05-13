@@ -51,7 +51,25 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     if (settings.contains("cloneHeroDir")) {
         m_gameFolder = settings.value("cloneHeroDir").toString();
     }
+    m_hitEnabled = settings.contains("led_hit") && settings.value("led_hit").toBool();
+    m_openEnabled = settings.contains("led_open") && settings.value("led_open").toBool();
+    m_starPowerEnabled = settings.contains("led_star_power") && settings.value("led_star_power").toBool();
     findVersion();
+}
+void LEDHandler::setHitEnabled(bool hit) {
+    m_hitEnabled = hit;
+    settings.setValue("led_hit",hit);
+    hitEnabledChanged();
+}
+void LEDHandler::setOpenEnabled(bool open) {
+    m_openEnabled = open;
+    settings.setValue("led_open",open);
+    openEnabledChanged();
+}
+void LEDHandler::setStarPowerEnabled(bool hit) {
+    m_starPowerEnabled = hit;
+    settings.setValue("led_star_power",hit);
+    starPowerEnabledChanged();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
     gameFolder = gameFolder.replace("file://","");
@@ -75,10 +93,11 @@ void LEDHandler::setColor(int color) {
     g = (pow(g / 255.0, 2.8) * 255 + 0.5);
     b = (pow(b / 255.0, 2.8) * 255 + 0.5);
     if (scanner->selectedPort() && scanner->selectedPort()->isReady()) {
-        QByteArray a = "g";
+        QByteArray a = QByteArray(1,COMMAND_SET_LED_COLOUR);
         a.append((char)b).append((char)g).append((char)r);
         scanner->selectedPort()->write(a);
     }
+    m_color = color;
 }
 void LEDHandler::findVersion() {
     QString hash;
@@ -256,7 +275,7 @@ void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
-    QByteArray data("l");
+    QByteArray data(1,COMMAND_SET_GH_LEDS);
     int score = *(size_t*)(cbuf+offsetScore);
     bool noteIsStarPower = *(cbuf+offsetIsStarPower);
     bool starPowerActivated = *(cbuf+offsetStarPowerActivated);

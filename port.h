@@ -10,10 +10,12 @@
 #include <math.h>
 #include "ardwiino_defines.h"
 #include <QJSValue>
+#include <QQueue>
 #define READ_INFO(slot) QByteArray(1, COMMAND_READ_INFO) + QByteArray(1,slot)
 #define READ_CONFIG(slot) QByteArray(1, COMMAND_READ_CONFIG_VALUE) + QByteArray(1,slot)
-#define WRITE_CONFIG(slot, value) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot) + QByteArray(1, value)
-#define WRITE_CONFIG_PINS(slot, neg,pos) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot) + QByteArray(1, neg) + QByteArray(1, pos)
+#define WRITE_CONFIG_HEADER(slot) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot)
+#define WRITE_CONFIG(slot, value) WRITE_CONFIG_HEADER(slot) + QByteArray(1, value)
+#define WRITE_CONFIG_PINS(slot, neg,pos) WRITE_CONFIG_HEADER(slot) + QByteArray(1, neg) + QByteArray(1, pos)
 class Port : public QObject
 {
     Q_OBJECT
@@ -26,26 +28,32 @@ class Port : public QObject
     Q_PROPERTY(bool isKeyboard READ isKeyboard NOTIFY typeChanged)
     Q_PROPERTY(bool isRB READ isRB NOTIFY typeChanged)
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
+    Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY typeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(bool hasAutoBind READ hasAutoBind NOTIFY hasAutoBindChanged)
+    Q_PROPERTY(bool hasAddressableLEDs READ hasAddressableLEDs NOTIFY ledTypeChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
     Q_PROPERTY(QVariantMap keys MEMBER m_keys NOTIFY pinsChanged)
+    Q_PROPERTY(QVariantMap midi_type MEMBER m_midi_type NOTIFY midiChanged)
+    Q_PROPERTY(QVariantMap midi_note MEMBER m_midi_note NOTIFY midiChanged)
+    Q_PROPERTY(QVariantMap midi_channel MEMBER m_midi_channel NOTIFY midiChanged)
+    Q_PROPERTY(QVariantList leds MEMBER m_leds NOTIFY ledsChanged)
+    Q_PROPERTY(QVariantMap colours MEMBER m_colours NOTIFY ledsChanged)
+    Q_PROPERTY(QVariantMap ghColours MEMBER m_gh_colours NOTIFY ledsChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
-    Q_PROPERTY(ArdwiinoDefines::input inputType READ getInputType WRITE setInputType NOTIFY inputTypeChanged)
-    Q_PROPERTY(ArdwiinoDefines::input currentInputType READ getCurrentInputType NOTIFY inputTypeChanged)
-    Q_PROPERTY(ArdwiinoDefines::subtype type READ getType WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(ArdwiinoDefines::subtype currentType READ getCurrentType NOTIFY typeChanged)
-    Q_PROPERTY(ArdwiinoDefines::gyro orientation READ getOrientation WRITE setOrientation NOTIFY orientationChanged)
-    Q_PROPERTY(ArdwiinoDefines::tilt tiltType READ getTiltType WRITE setTiltType NOTIFY tiltTypeChanged)
-    Q_PROPERTY(ArdwiinoDefines::fret_mode ledType READ getLedType WRITE setLedType NOTIFY ledTypeChanged)
-    Q_PROPERTY(int sensitivity READ getSensitivity WRITE setSensitivity NOTIFY tiltSensitivityChanged)
-    Q_PROPERTY(int triggerThreshold READ getTriggerThreshold WRITE setTriggerThreshold NOTIFY triggerThresholdChanged)
-    Q_PROPERTY(int joyThreshold READ getJoyThreshold WRITE setJoyThreshold NOTIFY joyThresholdChanged)
-    Q_PROPERTY(bool mapJoystick READ getMapJoystick WRITE setMapJoystick NOTIFY mapJoystickChanged)
-    Q_PROPERTY(bool mapStartSelectHome READ getMapStartSelectHome WRITE setMapStartSelectHome NOTIFY mapStartSelectHomeChanged)
+    Q_PROPERTY(ArdwiinoDefines::input inputType MEMBER m_input_type NOTIFY inputTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::subtype type MEMBER m_type NOTIFY typeChanged)
+    Q_PROPERTY(ArdwiinoDefines::gyro orientation MEMBER m_orientation NOTIFY orientationChanged)
+    Q_PROPERTY(ArdwiinoDefines::tilt tiltType MEMBER m_tilt NOTIFY tiltTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::fret_mode ledType MEMBER m_led NOTIFY ledTypeChanged)
+    Q_PROPERTY(int sensitivity MEMBER m_sensitivity NOTIFY tiltSensitivityChanged)
+    Q_PROPERTY(int triggerThreshold MEMBER m_trigger_threshold NOTIFY triggerThresholdChanged)
+    Q_PROPERTY(int joyThreshold MEMBER m_joy_threshold NOTIFY joyThresholdChanged)
+    Q_PROPERTY(bool mapJoystick MEMBER m_map_joy NOTIFY mapJoystickChanged)
+    Q_PROPERTY(bool mapStartSelectHome MEMBER m_map_start_sel_home NOTIFY mapStartSelectHomeChanged)
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
@@ -83,10 +91,15 @@ signals:
     void mapJoystickChanged();
     void mapStartSelectHomeChanged();
     void detectedPinChanged();
+    void ledsChanged();
+    void midiChanged();
 
 public slots:
     void readyRead();
     void writeConfig();
+    bool isAlreadyDFU() const {
+        return m_isAlreadyDFU;
+    }
     bool isReady() const {
         return m_isReady;
     }
@@ -116,26 +129,31 @@ public slots:
         return m_isOutdated;
     }
     bool isGuitar() {
-        return ArdwiinoDefines::getName(getType()).toLower().contains("guitar");
+        return ArdwiinoDefines::getName(m_type).toLower().contains("guitar");
     }
     bool isDrum() {
-        return ArdwiinoDefines::getName(getType()).toLower().contains("drum");
+        return ArdwiinoDefines::getName(m_type).toLower().contains("drum");
+    }
+    bool isMIDI() {
+        return ArdwiinoDefines::getName(m_type).toLower().contains("midi");
     }
     bool isKeyboard() {
-        return getType() == ArdwiinoDefines::KEYBOARD;
+        return m_type == ArdwiinoDefines::KEYBOARD;
     }
     bool isLiveGuitar() {
-        return getType() == ArdwiinoDefines::XINPUT_LIVE_GUITAR;
+        return m_type == ArdwiinoDefines::XINPUT_LIVE_GUITAR;
     }
     bool isWii() {
-        return getInputType() == ArdwiinoDefines::WII;
+        return m_input_type == ArdwiinoDefines::WII;
     }
     bool isRB() {
-        ArdwiinoDefines::subtype s = getType();
-        return s == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || s == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
+        return m_type == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || m_type == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
     }
     bool hasAutoBind() {
         return m_hasAutoBind;
+    }
+    bool hasAddressableLEDs() {
+        return m_led == ArdwiinoDefines::APA102;
     }
     QString getPort() const {
         return m_port;
@@ -146,100 +164,30 @@ public slots:
     QString getBoardImage() const {
         return m_board.image;
     }
-    ArdwiinoDefines::subtype getType() {
-        if (readyForRead && m_serialPort) {
-            uint8_t id = read_single(READ_CONFIG(CONFIG_SUB_TYPE));
-            if (id == REAL_DRUM_SUBTYPE) {
-                id = ArdwiinoDefines::XINPUT_GUITAR_HERO_DRUMS;
-            }
-            if (id == REAL_GUITAR_SUBTYPE) {
-                id = ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR;
-            }
-            return ArdwiinoDefines::subtype(id);
-        }
-        return ArdwiinoDefines::XINPUT_GAMEPAD;
-    }
-    ArdwiinoDefines::subtype getCurrentType() {
-        if (!m_supportsCurrent) return getType();
-        if (readyForRead && m_serialPort) return ArdwiinoDefines::subtype(read_single(READ_CONFIG(CONFIG_CURRENT_SUB_TYPE)));
-        return ArdwiinoDefines::XINPUT_GAMEPAD;
-    }
-    ArdwiinoDefines::gyro getOrientation() {
-        return ArdwiinoDefines::gyro(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
-    }
-    ArdwiinoDefines::input getInputType() {
-        return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
-    }
-    ArdwiinoDefines::input getCurrentInputType() {
-        if (!m_supportsCurrent) return getInputType();
-        return ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_CURRENT_INPUT_TYPE)));
-    }
-    ArdwiinoDefines::tilt getTiltType() {
-        return ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
-    }
-    ArdwiinoDefines::fret_mode getLedType() {
-        return ArdwiinoDefines::fret_mode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
-    }
     void findDigital(QJSValue callback);
     void findAnalog(QJSValue callback);
-    void setType(ArdwiinoDefines::subtype value) {
-        write(WRITE_CONFIG(CONFIG_SUB_TYPE, value));
-        typeChanged();
-    }
-    void setInputType(ArdwiinoDefines::input value) {
-        write(WRITE_CONFIG(CONFIG_INPUT_TYPE, value));
-        inputTypeChanged();
 
-    }
-    void setTiltType(ArdwiinoDefines::tilt value) {
-        write(WRITE_CONFIG(CONFIG_TILT_TYPE, value));
-        tiltTypeChanged();
-    }
-    void setOrientation(ArdwiinoDefines::gyro value) {
-        write(WRITE_CONFIG(CONFIG_MPU_6050_ORIENTATION, value));
-        orientationChanged();
-    }
-    void setLedType(ArdwiinoDefines::fret_mode value) {
-        write(WRITE_CONFIG(CONFIG_LED_TYPE, value));
-        ledTypeChanged();
-    }
-    void setMapJoystick(bool value) {
-        write(WRITE_CONFIG(CONFIG_MAP_JOY_DPAD, value));
-        mapJoystickChanged();
-    }
-    void setMapStartSelectHome(bool value) {
-        write(WRITE_CONFIG(CONFIG_MAP_START_SEL_HOME, value));
-        mapStartSelectHomeChanged();
-    }
-    void setTriggerThreshold(uint8_t value) {
-        write(WRITE_CONFIG(CONFIG_THRESHOLD_TRIGGER, value));
-        triggerThresholdChanged();
 
-    }
-    void setJoyThreshold(uint8_t value) {
-        write(WRITE_CONFIG(CONFIG_THRESHOLD_JOY, value));
-        joyThresholdChanged();
+    void moveLED(int from, int to) {
+        m_leds.move(from,to);
+        ledsChanged();
     }
     uint8_t getTriggerThreshold() {
-        return read_single(READ_CONFIG(CONFIG_THRESHOLD_TRIGGER));
+        return m_trigger_threshold;
     }
     uint8_t getJoyThreshold() {
-        return read_single(READ_CONFIG(CONFIG_THRESHOLD_JOY));
+        return m_joy_threshold;
     }
     bool getMapJoystick() {
-        return read_single(READ_CONFIG(CONFIG_MAP_JOY_DPAD));
+        return m_map_joy;
     }
     bool getMapStartSelectHome() {
-        return read_single(READ_CONFIG(CONFIG_MAP_START_SEL_HOME));
+        return m_map_start_sel_home;
     }
     void handleError(QSerialPort::SerialPortError serialPortError);
-    void startConfiguring();
     void readDescription();
-    void loadPins();
-    void savePins();
-    void loadKeys();
-    void saveKeys();
     void prepareUpdate();
+    void readAllData();
     int getTilt() {
         //TODO: We currently do not expose this from the serial api, and probably should.
 //        QByteArray a;
@@ -249,13 +197,19 @@ public slots:
         return 0;
     }
     int getSensitivity() {
-        return read_single(READ_CONFIG(CONFIG_TILT_SENSITIVITY));
-    }
-    void setSensitivity(int s) {
-        write(WRITE_CONFIG(CONFIG_TILT_SENSITIVITY, s));
-        tiltSensitivityChanged();
+        return m_sensitivity;
     }
 private:
+    void pushWrite(QByteArray id);
+    QQueue<QByteArray> m_dataToWrite;
+    void loadPins();
+    void savePins();
+    void loadKeys();
+    void saveKeys();
+    void saveLEDs();
+    void loadLEDs();
+    void loadMIDI();
+    void saveMIDI();
     void readData();
     void updateControllerName();
     uint8_t read_single(QByteArray id);
@@ -274,12 +228,31 @@ private:
     bool m_isReady;
     bool m_hasAutoBind;
     bool m_hasPinDetectionCallback;
+    bool m_isAlreadyDFU;
+    bool m_hasMIDI;
     QJSValue m_pinDetectionCallback;
     QVariantMap m_keys;
     QVariantMap m_pins;
+    QVariantList m_leds;
+    QVariantMap m_colours;
+    QVariantMap m_gh_colours;
     QVariantMap m_pin_inverts;
+    QVariantMap m_midi_type;
+    QVariantMap m_midi_note;
+    QVariantMap m_midi_channel;
     controller_t m_controller{};
     bool readyForRead;
+    ArdwiinoDefines::subtype m_type = ArdwiinoDefines::XINPUT_GAMEPAD;
+    ArdwiinoDefines::gyro m_orientation;
+    ArdwiinoDefines::tilt m_tilt;
+    ArdwiinoDefines::fret_mode m_led;
+    ArdwiinoDefines::input m_input_type;
+    uint8_t m_trigger_threshold;
+    uint8_t m_joy_threshold;
+    bool m_map_joy;
+    bool m_map_start_sel_home;
+    int m_sensitivity;
+
 };
 
 #endif // PORT_H

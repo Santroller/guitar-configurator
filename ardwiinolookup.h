@@ -5,9 +5,7 @@
 #include <QSerialPortInfo>
 #include <QKeySequence>
 #include <QList>
-#include "submodules/Ardwiino/src/shared/input/input_wii_ext.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
-#include "submodules/Ardwiino/src/shared/controller/controller.h"
 #include "ardwiino_defines.h"
 #include <QVersionNumber>
 #define ARDWIINO_VID 0x1209
@@ -46,8 +44,10 @@ public slots:
     static bool isOldFirmwareArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isOldArdwiino(const QSerialPortInfo& QSerialPort);
     static bool is115200(const QSerialPortInfo& QSerialPort);
+    static bool hasMIDI(const QSerialPortInfo& QSerialPort);
     static bool hasCurrent(const QSerialPortInfo& QSerialPort);
     static bool hasAutoBind(const QSerialPortInfo& QSerialPort);
+    static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
     inline QString getInputTypeName(ArdwiinoDefines::input value) {
         return ArdwiinoDefines::getName(value);
     }
@@ -69,6 +69,7 @@ private:
     static QVersionNumber supports1Mhz;
     static QVersionNumber supportsCurrent;
     static QVersionNumber supportsAutoBind;
+    static QVersionNumber supportsMIDI;
 };
 
 #endif // ARDWIINOLOOKUP_H
