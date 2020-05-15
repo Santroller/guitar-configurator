@@ -183,7 +183,7 @@ void Port::writeConfig() {
     pushWrite(WRITE_CONFIG(CONFIG_THRESHOLD_TRIGGER, m_trigger_threshold));
     pushWrite(WRITE_CONFIG(CONFIG_THRESHOLD_JOY, m_joy_threshold));
     pushWrite(WRITE_CONFIG(CONFIG_TILT_SENSITIVITY, m_sensitivity));
-    pushWrite(QByteArray(1,COMMAND_APPLY_CONFIG));
+    pushWrite(QByteArray(1,COMMAND_REBOOT));
     m_serialPort->write(WRITE_CONFIG(CONFIG_SUB_TYPE, m_type));
 }
 void Port::prepareUpdate() {
