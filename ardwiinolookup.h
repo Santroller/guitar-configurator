@@ -41,13 +41,11 @@ public:
 public slots:
     static QString lookupType(uint8_t type);
     static bool isArdwiino(const QSerialPortInfo &info);
-    static bool isOldFirmwareArdwiino(const QSerialPortInfo& QSerialPort);
-    static bool isOldArdwiino(const QSerialPortInfo& QSerialPort);
-    static bool is115200(const QSerialPortInfo& QSerialPort);
-    static bool hasMIDI(const QSerialPortInfo& QSerialPort);
-    static bool hasCurrent(const QSerialPortInfo& QSerialPort);
-    static bool hasAutoBind(const QSerialPortInfo& QSerialPort);
+    static bool isIncompatibleArdwiino(const QSerialPortInfo& QSerialPort);
+    static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
+    static bool is115200(const QSerialPortInfo& QSerialPort);
+    static bool isOld(const QString& QSerialPort);
     inline QString getInputTypeName(ArdwiinoDefines::input value) {
         return ArdwiinoDefines::getName(value);
     }

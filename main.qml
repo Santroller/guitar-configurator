@@ -12,7 +12,15 @@ ApplicationWindow {
     Universal.accent: Universal.Violet
     Page {
         anchors.fill: parent
-        id: page
+        //Since the button is being pinned to the top of the page, we need to insert an empty line to overlap the version string
+        StackView {
+            id: mainStack
+            initialItem: welcome
+            anchors.fill: parent
+            Welcome {
+                id:welcome
+            }
+        }
         header: Item {
             id: element
             ColumnLayout {
@@ -67,15 +75,6 @@ ApplicationWindow {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignRight
                 fontSizeMode: Text.Fit
-            }
-        }
-
-        StackView {
-            id: mainStack
-            initialItem: welcome
-            anchors.fill: parent
-            Welcome {
-                id:welcome
             }
         }
     }

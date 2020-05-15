@@ -30,7 +30,6 @@ class Port : public QObject
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY typeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
-    Q_PROPERTY(bool hasAutoBind READ hasAutoBind NOTIFY hasAutoBindChanged)
     Q_PROPERTY(bool hasAddressableLEDs READ hasAddressableLEDs NOTIFY ledTypeChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
@@ -149,9 +148,6 @@ public slots:
     bool isRB() {
         return m_type == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || m_type == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
     }
-    bool hasAutoBind() {
-        return m_hasAutoBind;
-    }
     bool hasAddressableLEDs() {
         return m_led == ArdwiinoDefines::APA102;
     }
@@ -221,15 +217,12 @@ private:
     QSerialPort* m_serialPort;
     board_t m_board;
     bool m_isArdwiino;
-    bool m_isOldArdwiino;
+    bool m_isOldAPIArdwiino;
     bool m_isOutdated;
-    bool m_supportsCurrent;
     bool m_hasDFU;
     bool m_isReady;
-    bool m_hasAutoBind;
     bool m_hasPinDetectionCallback;
     bool m_isAlreadyDFU;
-    bool m_hasMIDI;
     QJSValue m_pinDetectionCallback;
     QVariantMap m_keys;
     QVariantMap m_pins;

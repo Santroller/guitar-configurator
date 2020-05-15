@@ -31,7 +31,9 @@ boardImages[TangentMC.ArdwiinoDefinesValues.PS3_GUITAR_HERO_DRUMS] = "images/Gui
 boardImages[TangentMC.ArdwiinoDefinesValues.PS3_ROCK_BAND_DRUMS] = "images/RockBand/PS3/Drum";
 boardImages[TangentMC.ArdwiinoDefinesValues.WII_ROCK_BAND_GUITAR] = "images/RockBand/Wii/Guitar";
 boardImages[TangentMC.ArdwiinoDefinesValues.WII_ROCK_BAND_DRUMS] = "images/RockBand/Wii/Drum";
-boardImages[TangentMC.ArdwiinoDefinesValues.MIDI_GUITAR] = "images/GuitarHero/360/Guitar";
+boardImages[TangentMC.ArdwiinoDefinesValues.MIDI_GUITAR] = "images/GuitarHero/360/LesPaul";
+boardImages[TangentMC.ArdwiinoDefinesValues.MIDI_DRUMS] = "images/GuitarHero/360/Drum";
+boardImages[TangentMC.ArdwiinoDefinesValues.MIDI_CONTROLLER] = "images/360Accessories/ArcadePad";
 
 
 function getBoardImage(type) {

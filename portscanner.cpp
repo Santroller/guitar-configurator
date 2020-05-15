@@ -109,7 +109,7 @@ QString PortScanner::findElement(QString base, int w, int h, int mouseX, int mou
     }
     double x = (double)mouseX/w;
     double y = (double)mouseY/h;
-    if (x > 1 || y > 1 || x < 0 || y < 0) return "";
+    if (x >= 1 || y >= 1 || x < 0 || y < 0) return "";
     x*= width;
     y*=height;
     auto c = data[(int)y*width+(int)x];

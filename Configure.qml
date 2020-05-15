@@ -631,9 +631,9 @@ ColumnLayout {
                     }
 
                     RowLayout {
+                        visible: scanner.selected.hasAddressableLEDs
                         Button {
                             enabled: scanner.selected.leds.includes(modelData)
-                            visible: scanner.selected.hasAddressableLEDs
                             text: "Set LED colour"
                             onClicked: {
                                 ledhandler.color = scanner.selected.colours[modelData];
@@ -650,6 +650,94 @@ ColumnLayout {
                         }
                     }
 
+                    RowLayout {
+                        Label {
+                            text: qsTr("MIDI Type")
+                            fontSizeMode: Text.FixedSize
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            wrapMode: Text.WordWrap
+                        }
+                        ComboBox {
+                            Layout.fillWidth: true
+                            textRole: "key"
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            model: Defines.fillCombobox("midi_type")
+                            currentIndex: model.findIndex(s => s.value === scanner.selected.midi_type[modelData])
+
+
+                            onActivated: {
+                                var pins = scanner.selected.midi_type;
+                                if (pins[modelData] !== undefined) {
+                                    pins[modelData] = model[currentIndex].value;
+                                    scanner.selected.midi_type = pins;
+                                }
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        visible: scanner.selected.isMIDI
+                        Label {
+                            text: qsTr("MIDI Note")
+                            fontSizeMode: Text.FixedSize
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            wrapMode: Text.WordWrap
+                        }
+                        SpinBox {
+                            property var notes: ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
+                            id: noteBox
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            value: scanner.selected.midi_note[modelData] || 0
+                            onValueChanged: {
+                                var pins = scanner.selected.midi_note;
+                                if (pins[modelData] !== undefined) {
+                                    pins[modelData] = value;
+                                    scanner.selected.midi_note = pins;
+                                }
+
+                            }
+                            textFromValue: (value)=>""+value+" - "+notes[(value)%12]+(((value+6)/12)-2).toFixed(0)
+                            from: 0
+                            to: 127
+                            //TODO: implement textFromValue and valueFromText, so it displays as noteoctave (aka A0) and can be entered that way.
+                        }
+                    }
+
+                    RowLayout {
+                        visible: scanner.selected.isMIDI
+                        Label {
+                            text: qsTr("MIDI Channel")
+                            fontSizeMode: Text.FixedSize
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            wrapMode: Text.WordWrap
+                        }
+                        SpinBox {
+                            id: chanBox
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                            value: scanner.selected.midi_channel[modelData] || 0
+                            onValueChanged: {
+                                var pins = scanner.selected.midi_channel;
+                                if (pins[modelData] !== undefined) {
+                                    pins[modelData] = value;
+                                    scanner.selected.midi_channel = pins;
+                                }
+
+                            }
+                            from: 1
+                            to: 10
+                        }
+                    }
 
                 }
             }
@@ -738,18 +826,6 @@ ColumnLayout {
                     onCheckedChanged: {
                         scanner.selected.mapStartSelectHome = checked
                     }
-                }
-            }
-            ComboBox {
-                visible: scanner.selected.isMIDI
-                id: midiBox
-                Layout.fillWidth: true
-                textRole: "key"
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("midi_type")
-                Binding { target: midiBox; property: "currentIndex"; value: {midiBox.model.findIndex(s => s.value === scanner.selected.midi_type[buttonConfig.button])} }
-
-                onCurrentIndexChanged: {
                 }
             }
         }
@@ -1051,7 +1127,6 @@ ColumnLayout {
             Button {
                 text: qsTr("Automatically Find Pin Binding")
                 Layout.fillWidth: true
-                visible: scanner.selected.hasAutoBind
                 onClicked: {
                     var isAnalog = scanner.selected.pin_inverts.hasOwnProperty(buttonConfig.currentPin);
                     //The tilt pin is weird, as it is sometimes analog and sometimes digital..

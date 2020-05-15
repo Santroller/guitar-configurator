@@ -6,12 +6,12 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <algorithm>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty),  m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     rescan(serialPortInfo);
 }
 
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isOldArdwiino(false), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -34,8 +34,8 @@ void Port::handleConnection(const QSerialPortInfo& info) {
 
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
-    m_isOldArdwiino = ArdwiinoLookup::getInstance()->isOldFirmwareArdwiino(serialPortInfo);
-    m_isOutdated = ArdwiinoLookup::getInstance()->isOldArdwiino(serialPortInfo);
+    m_isOldAPIArdwiino = ArdwiinoLookup::getInstance()->isOldAPIArdwiino(serialPortInfo);
+    m_isOutdated = ArdwiinoLookup::getInstance()->isIncompatibleArdwiino(serialPortInfo);
     m_isAlreadyDFU = ArdwiinoLookup::getInstance()->isAreadyDFU(serialPortInfo);
     if (m_isArdwiino) {
         m_description = "Ardwiino - Reading Controller Information";
@@ -72,24 +72,24 @@ QByteArray Port::read(QByteArray id) {
 }
 
 void Port::findDigital(QJSValue callback) {
+    write(QByteArray(1, COMMAND_FIND_DIGITAL));
     m_hasPinDetectionCallback = true;
     m_pinDetectionCallback = callback;
-    writeNoResp(QByteArray(1, COMMAND_FIND_DIGITAL));
 }
 void Port::findAnalog(QJSValue callback) {
+    write(QByteArray(1, COMMAND_FIND_ANALOG));
     m_hasPinDetectionCallback = true;
     m_pinDetectionCallback = callback;
-    writeNoResp(QByteArray(1, COMMAND_FIND_ANALOG));
 }
 void Port::readData() {
-    if (m_isOldArdwiino) {
+    if (m_isOldAPIArdwiino) {
         do {
             //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
             m_board = ArdwiinoLookup::findByBoard(read(READ_INFO('f')).trimmed().split('-')[0]);
         } while (m_board.name.isEmpty());
         m_description = "Ardwiino - "+ m_board.name+" - Unsupported firmware";
         m_isArdwiino = false;
-        m_isOldArdwiino = false;
+        m_isOldAPIArdwiino = false;
         emit descriptionChanged();
     } else {
         //If we have an uno, and it is in avrdude mode, send the commands to jump back to ardwiino mode. You can tell it is in avrdude mode as we receive all of the frame commands, including 0x7f.
@@ -103,8 +103,11 @@ void Port::readData() {
             //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
             m_board = ArdwiinoLookup::findByBoard(read(READ_INFO(INFO_BOARD)).trimmed());
         } while (m_board.name.isEmpty());
+        m_isOutdated |= ArdwiinoLookup::getInstance()->isOld(read(READ_INFO(INFO_VERSION)));
         readyForRead = true;
-        readAllData();
+        if (!m_isOutdated) {
+            readAllData();
+        }
         readDescription();
     }
     m_hasDFU = m_board.hasDFU;
@@ -117,6 +120,7 @@ void Port::readAllData() {
     loadPins();
     loadKeys();
     loadLEDs();
+    loadMIDI();
     uint8_t id = read_single(READ_CONFIG(CONFIG_SUB_TYPE));
     if (id == REAL_DRUM_SUBTYPE) {
         id = ArdwiinoDefines::XINPUT_GUITAR_HERO_DRUMS;
@@ -209,17 +213,19 @@ void Port::readDescription() {
     m_description = "Ardwiino - "+ m_board.name;
     if (m_isOutdated) {
         m_description += " - Outdated";
-    }
-    m_description += " - " + ArdwiinoDefines::getName(m_type);
-    uint8_t ext = read_single(READ_INFO(INFO_EXT));
-    if (m_input_type == ArdwiinoDefines::WII)  {
-        m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::wii_ext_type)ext);
-    } else if(m_input_type == ArdwiinoDefines::PS2) {
-        m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
     } else {
-        m_description += " - " + ArdwiinoDefines::getName(m_input_type);
+        m_description += " - " + ArdwiinoDefines::getName(m_type);
+        uint8_t ext = read_single(READ_INFO(INFO_EXT));
+        if (m_input_type == ArdwiinoDefines::WII)  {
+            m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::wii_ext_type)ext);
+        } else if(m_input_type == ArdwiinoDefines::PS2) {
+            m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
+        } else {
+            m_description += " - " + ArdwiinoDefines::getName(m_input_type);
+        }
     }
     m_description += " - " + m_port;
+
     updateControllerName();
     emit typeChanged();
     emit descriptionChanged();
@@ -228,11 +234,14 @@ void Port::readDescription() {
 void Port::readyRead() {
     if (m_hasPinDetectionCallback) {
         QTimer::singleShot(0, [this]{
-            QJSValueList args;
-            args << QJSValue(m_serialPort->readAll()[0] & 0xff);
-            m_pinDetectionCallback.call(args);
-            m_hasPinDetectionCallback = false;
-            detectedPinChanged();
+            auto read = m_serialPort->readAll();
+            if ((read[0] & 0xff) == 'd') {
+                QJSValueList args;
+                args << QJSValue(read[1] & 0xff);
+                m_pinDetectionCallback.call(args);
+                m_hasPinDetectionCallback = false;
+                detectedPinChanged();
+            }
         });
     }
     if (!m_dataToWrite.isEmpty()) {
@@ -255,9 +264,6 @@ void Port::open(const QSerialPortInfo &serialPortInfo) {
         } else {
             m_serialPort->setBaudRate(1000000);
         }
-        m_supportsCurrent = ArdwiinoLookup::hasCurrent(serialPortInfo);
-        m_hasAutoBind = ArdwiinoLookup::hasAutoBind(serialPortInfo);
-        m_hasMIDI = ArdwiinoLookup::hasMIDI(serialPortInfo);
         m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
         m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
         m_serialPort->setParity(QSerialPort::Parity::NoParity);
@@ -453,7 +459,6 @@ void Port::savePins() {
     pushWrite(WRITE_CONFIG(CONFIG_AXIS_INVERT_R_Y, m_pin_inverts["r_y"].toBool()));
 }
 void Port::loadMIDI() {
-    if (!m_hasMIDI) return;
     m_midi_note.clear();
     m_midi_type.clear();
     m_midi_channel.clear();
@@ -473,7 +478,6 @@ void Port::loadMIDI() {
     midiChanged();
 }
 void Port::saveMIDI() {
-    if (!m_hasMIDI) return;
     auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
     QMap<int, QString> inv;
     for (auto k : buttons.keys()) {
@@ -481,8 +485,8 @@ void Port::saveMIDI() {
     }
     for (int i =0; i < buttons.size();i++) {
         pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_NOTE,i,m_midi_note[inv[i]].toUInt()));
-        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_TYPE,i,m_midi_note[inv[i]].toUInt()));
-        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_CHANNEL,i,m_midi_note[inv[i]].toUInt()));
+        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_TYPE,i,m_midi_type[inv[i]].toUInt()));
+        pushWrite(WRITE_CONFIG_PINS(CONFIG_MIDI_CHANNEL,i,m_midi_channel[inv[i]].toUInt()));
     }
 }
 void Port::saveLEDs() {
@@ -513,7 +517,6 @@ void Port::saveLEDs() {
     }
 }
 void Port::loadLEDs() {
-    if (!hasAddressableLEDs() || !m_hasMIDI) return;
     m_leds.clear();
     m_colours.clear();
     m_gh_colours.clear();

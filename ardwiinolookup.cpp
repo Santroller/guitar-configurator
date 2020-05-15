@@ -5,9 +5,6 @@
 #include <QDir>
 QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 QVersionNumber ArdwiinoLookup::supports1Mhz = QVersionNumber(2,2,10);
-QVersionNumber ArdwiinoLookup::supportsCurrent = QVersionNumber(3,3,7);
-QVersionNumber ArdwiinoLookup::supportsAutoBind = QVersionNumber(3,3,8);
-QVersionNumber ArdwiinoLookup::supportsMIDI = QVersionNumber(3,5,0);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
     QDir dir(QCoreApplication::applicationDirPath());
@@ -22,31 +19,20 @@ auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
     return ArdwiinoDefines::getName(ArdwiinoDefines::subtype(type));
 }
 
-auto ArdwiinoLookup::isOldArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
-    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < currentVersion;
+auto ArdwiinoLookup::isIncompatibleArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
+    return isArdwiino(serialPortInfo) && (serialPortInfo.serialNumber() == "1.2" || versionRegex.match(serialPortInfo.serialNumber()).hasMatch());
 }
-
-auto ArdwiinoLookup::hasMIDI(const QSerialPortInfo& serialPortInfo) -> bool {
-    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
-    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < supportsMIDI;
+auto ArdwiinoLookup::isOld(const QString& version) -> bool {
+    auto match = versionRegex.match(version.trimmed());
+    return QVersionNumber::fromString(match.captured(1)) < currentVersion;
+}
+auto ArdwiinoLookup::isOldAPIArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
+    return isArdwiino(serialPortInfo) && serialPortInfo.serialNumber() == "1.2";
 }
 
 auto ArdwiinoLookup::is115200(const QSerialPortInfo& serialPortInfo) -> bool {
     auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
     return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) < supports1Mhz;
-}
-auto ArdwiinoLookup::hasCurrent(const QSerialPortInfo& serialPortInfo) -> bool {
-    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
-    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) >= supportsCurrent;
-}
-auto ArdwiinoLookup::hasAutoBind(const QSerialPortInfo& serialPortInfo) -> bool {
-    auto match = versionRegex.match(serialPortInfo.serialNumber().toLower());
-    return isArdwiino(serialPortInfo) && match.hasMatch() && QVersionNumber::fromString(match.captured(1)) >= supportsAutoBind;
-}
-
-auto ArdwiinoLookup::isOldFirmwareArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
-    return isArdwiino(serialPortInfo) && !versionRegex.match(serialPortInfo.serialNumber().toLower()).hasMatch();
 }
 //Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {
