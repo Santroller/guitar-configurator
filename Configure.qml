@@ -1141,6 +1141,8 @@ ColumnLayout {
                         buttonConfig.waitingForDigital = true;
                     }
                 }
+                ToolTip.visible: hovered && scanner.selected.boardShortName() === "uno"
+                ToolTip.text: "Note that automatic pin detection does not work with pin 13"
             }
             Button {
                 text: qsTr("Set Pin Binding")

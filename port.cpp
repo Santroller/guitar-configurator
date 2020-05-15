@@ -152,7 +152,7 @@ void Port::readAllData() {
 }
 
 void Port::write(QByteArray id) {
-    m_serialPort->write(id);
+    m_serialPort->write(id+QByteArray(1,'\n'));
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     m_serialPort->readLine();
@@ -235,9 +235,9 @@ void Port::readyRead() {
     if (m_hasPinDetectionCallback) {
         QTimer::singleShot(0, [this]{
             auto read = m_serialPort->readAll();
-            if ((read[0] & 0xff) == 'd') {
+            if (read.contains('d')) {
                 QJSValueList args;
-                args << QJSValue(read[1] & 0xff);
+                args << QJSValue(read[read.indexOf('d')+1] & 0xff);
                 m_pinDetectionCallback.call(args);
                 m_hasPinDetectionCallback = false;
                 detectedPinChanged();
@@ -503,16 +503,14 @@ void Port::saveLEDs() {
         QByteArray pins = WRITE_CONFIG_PINS(CONFIG_LED_PINS,i,pin);
         pushWrite(pins);
     }
-    //We want to make ch led data write immedaitely, as this to a user feels more like a tool config change than a firmware change
-    //TODO: honestly, it would make more sense to just write the led colours directly instead of having this map.
-    std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
-    for (uint i =0; i < keys.size(); i++) {
-        uint32_t col = m_gh_colours[keys[i]].toUInt();
-        QByteArray colours = WRITE_CONFIG(CONFIG_LED_GH_COLOURS,i)+QByteArray((char*)&col,4);
-        if (m_dataToWrite.isEmpty()) {
+    if (m_dataToWrite.isEmpty()) {
+        //We want to make ch led data write immedaitely, as this to a user feels more like a tool config change than a firmware change
+        //TODO: honestly, it would make more sense to just write the led colours directly instead of having this map.
+        std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
+        for (uint i =0; i < keys.size(); i++) {
+            uint32_t col = m_gh_colours[keys[i]].toUInt();
+            QByteArray colours = WRITE_CONFIG(CONFIG_LED_GH_COLOURS,i)+QByteArray((char*)&col,4);
             write(colours);
-        } else {
-            pushWrite(colours);
         }
     }
 }

@@ -105,6 +105,9 @@ auto Programmer::program(Port* port) -> bool {
     bool ret = false;
     m_port = port;
     if (m_status == Status::WAIT) {
+        if (m_port->isArdwiino()) {
+            m_port->jump();
+        }
         if (m_port->isAlreadyDFU()) {
             programAvrDude();
             return true;
