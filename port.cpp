@@ -152,7 +152,7 @@ void Port::readAllData() {
 }
 
 void Port::write(QByteArray id) {
-    m_serialPort->write(QByteArray(1,'\n')+id);
+    m_serialPort->write(id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     m_serialPort->readLine();
@@ -247,7 +247,7 @@ void Port::readyRead() {
     if (!m_dataToWrite.isEmpty()) {
         m_serialPort->flush();
         m_serialPort->readAll();
-        m_serialPort->write(QByteArray(1,'\n')+m_dataToWrite.dequeue());
+        m_serialPort->write(m_dataToWrite.dequeue());
         if (m_dataToWrite.isEmpty()) {
             m_serialPort->waitForBytesWritten();
             close();
