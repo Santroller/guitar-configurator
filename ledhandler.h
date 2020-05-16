@@ -30,7 +30,6 @@ class LEDHandler : public QObject
     Q_OBJECT
     Q_PROPERTY(QString gameFolder READ getGameFolder WRITE setGameFolder NOTIFY gameFolderChanged)
     Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
-    Q_PROPERTY(int color READ getColor WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(bool ready MEMBER m_ready NOTIFY readyChanged)
     Q_PROPERTY(bool hitEnabled READ getHitEnabled WRITE setHitEnabled NOTIFY hitEnabledChanged)
     Q_PROPERTY(bool openEnabled READ getOpenEnabled WRITE setOpenEnabled NOTIFY openEnabledChanged)
@@ -64,10 +63,10 @@ signals:
     void openEnabledChanged();
 public slots:
     void startGame();
+    void setColor(int rgb, QString button);
 private slots:
  void tick();
  void setGameFolder(QString string);
- void setColor(int rgb);
  void setHitEnabled(bool hit);
  void setOpenEnabled(bool open);
  void setStarPowerEnabled(bool star);

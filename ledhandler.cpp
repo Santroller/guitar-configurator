@@ -83,7 +83,7 @@ void readList(QJsonArray arr, QList<qint64>* list) {
         list->push_back(a.toVariant().toLongLong());
     }
 }
-void LEDHandler::setColor(int color) {
+void LEDHandler::setColor(int color, QString button) {
     uint32_t ucolor = color;
     //Gamma-correct values
     uint8_t r = ucolor >> 16 & 0xff;
@@ -297,7 +297,7 @@ void LEDHandler::tick() {
             } else if (buttons & 1<<i) {
                 if (score > lastScore && lastNote & 1<<i) {
                     shownNote = lastNote;
-                    countdown = 1;
+                    countdown = 0;
                 }
                 if (countdown > 0 && shownNote & 1<<i) {
                     data.push_back((noteIsStarPower && !starPowerActivated)?3:2);

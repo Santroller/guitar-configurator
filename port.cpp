@@ -152,7 +152,7 @@ void Port::readAllData() {
 }
 
 void Port::write(QByteArray id) {
-    m_serialPort->write(id+QByteArray(1,'\n'));
+    m_serialPort->write(QByteArray(1,'\n')+id);
     m_serialPort->waitForBytesWritten();
     m_serialPort->waitForReadyRead();
     m_serialPort->readLine();
@@ -247,7 +247,7 @@ void Port::readyRead() {
     if (!m_dataToWrite.isEmpty()) {
         m_serialPort->flush();
         m_serialPort->readAll();
-        m_serialPort->write(m_dataToWrite.dequeue());
+        m_serialPort->write(QByteArray(1,'\n')+m_dataToWrite.dequeue());
         if (m_dataToWrite.isEmpty()) {
             m_serialPort->waitForBytesWritten();
             close();
@@ -491,7 +491,8 @@ void Port::saveMIDI() {
 }
 void Port::saveLEDs() {
     auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
-    for (int i =0; i < buttons.size();i++) {
+    int i;
+    for (i =0; i < buttons.size();i++) {
         int pin = 0;
         if (i < m_leds.size()) {
             QString btn = m_leds[i].toString();
@@ -502,16 +503,6 @@ void Port::saveLEDs() {
         }
         QByteArray pins = WRITE_CONFIG_PINS(CONFIG_LED_PINS,i,pin);
         pushWrite(pins);
-    }
-    if (m_dataToWrite.isEmpty()) {
-        //We want to make ch led data write immedaitely, as this to a user feels more like a tool config change than a firmware change
-        //TODO: honestly, it would make more sense to just write the led colours directly instead of having this map.
-        std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
-        for (uint i =0; i < keys.size(); i++) {
-            uint32_t col = m_gh_colours[keys[i]].toUInt();
-            QByteArray colours = WRITE_CONFIG(CONFIG_LED_GH_COLOURS,i)+QByteArray((char*)&col,4);
-            write(colours);
-        }
     }
 }
 void Port::loadLEDs() {
@@ -530,10 +521,6 @@ void Port::loadLEDs() {
         if (pin == 255) break;
         m_leds.push_back(inv[pin]);
         m_colours[inv[pin]] = colour;
-    }
-    std::vector<QString> keys = {"Note Hit","Star Power","Open Note"};
-    for (uint i =0; i < keys.size(); i++) {
-        m_gh_colours[keys[i]] = QVariant(((uint32_t*)read(READ_CONFIG(CONFIG_LED_GH_COLOURS)+QByteArray(1,i)).data())[0]);
     }
     ledsChanged();
 }
