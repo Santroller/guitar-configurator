@@ -41,9 +41,6 @@ public:
     QString getGameFolder() {
         return m_gameFolder;
     }
-    int getColor() {
-        return m_color;
-    }
     bool getHitEnabled() {
         return m_hitEnabled;
     }
@@ -62,6 +59,7 @@ signals:
     void starPowerEnabledChanged();
     void openEnabledChanged();
 public slots:
+    int gammaCorrect(int color);
     void startGame();
     void setColor(int rgb, QString button);
 private slots:
@@ -87,10 +85,12 @@ private:
  bool m_hitEnabled;
  bool m_starPowerEnabled;
  bool m_openEnabled;
- uint32_t m_color = 0;
  bool m_ready;
+ uint32_t m_hit;
+ uint32_t m_star_power;
+ uint32_t m_open;
  QString m_gameFolder;
- QByteArray lastData;
+ QMap<QString,uint32_t> lastData;
  qint64 base=0;
  qint64 readFromProc(quint64 , qint64 addr, qint64 *buf);
  qint64 readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf);
@@ -117,6 +117,7 @@ private:
  mach_port_t task;
 #endif
 
+ void setLEDs(QMap<QString, uint32_t> leds);
 };
 
 #endif // CLONEHEROINFO_H

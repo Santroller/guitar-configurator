@@ -5,12 +5,12 @@
 #include <QDir>
 #include <QThread>
 #if defined Q_OS_LINUX
-    #include <proc/readproc.h>
-    #include <proc/version.h>
+#include <proc/readproc.h>
+#include <proc/version.h>
 #endif
 #if defined Q_OS_WIN
-    #include <Windows.h>
-    #include <Psapi.h>
+#include <Windows.h>
+#include <Psapi.h>
 #endif
 LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent) : QObject(parent), scanner(scanner)
 {
@@ -83,7 +83,18 @@ void readList(QJsonArray arr, QList<qint64>* list) {
         list->push_back(a.toVariant().toLongLong());
     }
 }
-void LEDHandler::setColor(int color, QString button) {
+void LEDHandler::setLEDs(QMap<QString,uint32_t> leds) {
+    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
+    QByteArray a = QByteArray(1,COMMAND_SET_LED_COLOUR);
+    for (auto a2: scanner->selectedPort()->getLEDs()) {
+        uint32_t c = leds.value(a2.toString(),0);
+        a.append((char*)&c,4);
+    }
+    if (scanner->selectedPort() && scanner->selectedPort()->isReady()) {
+        scanner->selectedPort()->write(a);
+    }
+}
+int LEDHandler::gammaCorrect(int color) {
     uint32_t ucolor = color;
     //Gamma-correct values
     uint8_t r = ucolor >> 16 & 0xff;
@@ -92,12 +103,12 @@ void LEDHandler::setColor(int color, QString button) {
     r = (pow(r / 255.0, 2.8) * 255 + 0.5);
     g = (pow(g / 255.0, 2.8) * 255 + 0.5);
     b = (pow(b / 255.0, 2.8) * 255 + 0.5);
-    if (scanner->selectedPort() && scanner->selectedPort()->isReady()) {
-        QByteArray a = QByteArray(1,COMMAND_SET_LED_COLOUR);
-        a.append((char)b).append((char)g).append((char)r);
-        scanner->selectedPort()->write(a);
-    }
-    m_color = color;
+    return r<<16|g<<8|b;
+}
+void LEDHandler::setColor(int color, QString button) {
+    QMap<QString,uint32_t> leds;
+    leds[button] = color;
+    setLEDs(leds);
 }
 void LEDHandler::findVersion() {
     QString hash;
@@ -244,11 +255,11 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
     return qint64(read);
 #endif
 #if defined Q_OS_MAC
-        size = _word_align(size);
-        vm_size_t data_cnt;
-        kern_return_t kernret = vm_read_overwrite(task, (vm_address_t)addr, size, (vm_address_t)buf, &data_cnt);
-        if (kernret == KERN_SUCCESS) return kernret;
-        return -1;
+    size = _word_align(size);
+    vm_size_t data_cnt;
+    kern_return_t kernret = vm_read_overwrite(task, (vm_address_t)addr, size, (vm_address_t)buf, &data_cnt);
+    if (kernret == KERN_SUCCESS) return kernret;
+    return -1;
 
 #endif
 }
@@ -275,7 +286,6 @@ void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
-    QByteArray data(1,COMMAND_SET_GH_LEDS);
     int score = *(size_t*)(cbuf+offsetScore);
     bool noteIsStarPower = *(cbuf+offsetIsStarPower);
     bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
@@ -288,24 +298,25 @@ void LEDHandler::tick() {
         shownNote = lastNote;
         countdown = 2;
     }
+    QMap<QString,uint32_t> data;
+    QStringList names = {"a","b","y","x","LB"};
+    m_hit = gammaCorrect(0xFFFFFF);
+    m_star_power = 0x00BFFF;
+    m_open = 0xFF00FF;
     for (int i =0; i < 5; i++) {
-        if (addr < 0) {
-            data.push_back((char)0);
-        } else {
+        if (addr > 0) {
             if (countdown > 0 && shownNote & 1<<6) {
-                data.push_back((noteIsStarPower || starPowerActivated)?3:4);
+                data[names[i]] = (noteIsStarPower || starPowerActivated)?m_star_power:m_open;
             } else if (buttons & 1<<i) {
                 if (score > lastScore && lastNote & 1<<i) {
                     shownNote = lastNote;
                     countdown = 0;
                 }
-                if (countdown > 0 && shownNote & 1<<i) {
-                    data.push_back((noteIsStarPower && !starPowerActivated)?3:2);
-                } else {
-                    data.push_back(starPowerActivated?2:1);
+                if (shownNote & 1<<i) {
+                    data[names[i]] = (noteIsStarPower && !starPowerActivated)?m_star_power:scanner->selectedPort()->getColours()[names[i]].toUInt();
                 }
-            } else {
-                data.push_back(starPowerActivated?3:0);
+            } else if (starPowerActivated){
+                data[names[i]] = m_star_power;
             }
         }
     }
@@ -319,7 +330,7 @@ void LEDHandler::tick() {
         disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
     }
     if (scanner->selectedPort() && scanner->selectedPort()->isReady() && data != lastData) {
-        scanner->selectedPort()->write(data);
+        setLEDs(data);
         lastData = data;
     }
 

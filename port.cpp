@@ -508,7 +508,6 @@ void Port::saveLEDs() {
 void Port::loadLEDs() {
     m_leds.clear();
     m_colours.clear();
-    m_gh_colours.clear();
     auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
     QMap<int, QString> inv;
     for (auto k : buttons.keys()) {

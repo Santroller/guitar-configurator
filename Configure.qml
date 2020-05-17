@@ -479,24 +479,25 @@ ColumnLayout {
 
     ColorDialog {
         id: color
+        property var colorVal: 0
         onCurrentColorChanged: {
             var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(color.currentColor);
-            ledhandler.color = parseInt(result[1],16);
+            colorVal = ledhandler.gammaCorrect(parseInt(result[1],16));
+            ledhandler.setColor(colorVal,ghLedRp.currentOption?ghLedRp.currentOption:buttonConfig.currentLED);
         }
         onAccepted: {
             if (ghLedRp.currentOption) {
                 var ghColours = scanner.selected.ghColours;
-                ghColours[ghLedRp.currentOption] = ledhandler.color;
-                ledhandler.color = 0;
+                ghColours[ghLedRp.currentOption] = colorVal;
+                ledhandler.setColor(0,ghLedRp.currentOption);
                 scanner.selected.ghColours = ghColours;
                 ghLedRp.currentOption = "";
             } else {
                 var colours = scanner.selected.colours;
-                colours[buttonConfig.currentLED] = ledhandler.color;
-                ledhandler.color = 0;
+                colours[buttonConfig.currentLED] = colorVal;
+                ledhandler.setColor(0,buttonConfig.currentLED);
                 scanner.selected.colours = colours;
             }
-            scanner.selected.saveLEDs();
         }
         onRejected: {
             ledhandler.color = 0;

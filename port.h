@@ -39,7 +39,6 @@ class Port : public QObject
     Q_PROPERTY(QVariantMap midi_channel MEMBER m_midi_channel NOTIFY midiChanged)
     Q_PROPERTY(QVariantList leds MEMBER m_leds NOTIFY ledsChanged)
     Q_PROPERTY(QVariantMap colours MEMBER m_colours NOTIFY ledsChanged)
-    Q_PROPERTY(QVariantMap ghColours MEMBER m_gh_colours NOTIFY ledsChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
@@ -157,6 +156,12 @@ public slots:
     bool ready() const {
         return m_isReady;
     }
+    QVariantList getLEDs() const {
+        return m_leds;
+    }
+    QVariantMap getColours() const {
+        return m_colours;
+    }
     QString getBoardImage() const {
         return m_board.image;
     }
@@ -228,7 +233,6 @@ private:
     QVariantMap m_pins;
     QVariantList m_leds;
     QVariantMap m_colours;
-    QVariantMap m_gh_colours;
     QVariantMap m_pin_inverts;
     QVariantMap m_midi_type;
     QVariantMap m_midi_note;
