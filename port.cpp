@@ -10,7 +10,14 @@ Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(par
 {
     rescan(serialPortInfo);
 }
-
+Port::Port(board_t board, QObject *parent) : QObject(parent),  m_serialPort(nullptr), m_board(board), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+{
+    m_description = boardName()+" DFU";
+    m_port = "dfu";
+    m_isReady = true;
+    m_isAlreadyDFU = true;
+    m_isArdwiino = false;
+}
 Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
     m_description = "Searching for devices";
@@ -24,9 +31,27 @@ void Port::close() {
         portStateChanged();
     }
 }
-
+void Port::scanAfterDFU() {
+    m_isAlreadyDFU = false;
+    m_serialPort->setBaudRate(1000000);
+    m_serialPort->open(QSerialPort::ReadWrite);
+    m_serialPort->write(QByteArray(1,COMMAND_REBOOT));
+    m_serialPort->waitForBytesWritten();
+    m_serialPort->close();
+}
 void Port::handleConnection(const QSerialPortInfo& info) {
-    if (m_serialPort && !m_serialPort->isOpen()) {
+    if (m_isAlreadyDFU && m_board.hasDFU) {
+        if (m_serialPort == nullptr) {
+            m_port = info.systemLocation();
+            m_serialPort = new QSerialPort(info);
+            m_serialPort->setBaudRate(1000000);
+            m_serialPort->open(QSerialPort::ReadWrite);
+            jump();
+            m_serialPort->setBaudRate(115200);
+            m_serialPort->open(QSerialPort::ReadWrite);
+            jump();
+        }
+    } else if (m_serialPort && !m_serialPort->isOpen()) {
         rescan(info);
         open(info);
     }
@@ -320,7 +345,7 @@ void Port::prepareUpload() {
 }
 
 void Port::prepareRescan() {
-    if (m_serialPort->isOpen()) {
+    if (m_serialPort && m_serialPort->isOpen()) {
         close();
     }
     portStateChanged();

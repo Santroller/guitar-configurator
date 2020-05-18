@@ -308,7 +308,10 @@ ColumnLayout {
             id: returnMenu
             text: qsTr("Program a different device")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: mainStack.replace("Welcome.qml");
+            onClicked: {
+                scanner.deselect();
+                mainStack.replace("Welcome.qml");
+            }
         }
         Button {
             id: startClone

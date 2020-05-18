@@ -13,7 +13,7 @@ class PortScanner : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QList<QObject*> model READ model NOTIFY modelChanged)
-    Q_PROPERTY(Port* selected MEMBER m_selected NOTIFY selectedChanged)
+    Q_PROPERTY(Port* selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(bool isGraphical READ isGraphical NOTIFY graphicalChanged)
 public:
     explicit PortScanner(Programmer* programmer, QObject *parent = nullptr);
@@ -23,10 +23,14 @@ public:
 signals:
     void graphicalChanged();
     void modelChanged();
-    void selectedChanged(Port* newValue);
+    void selectedChanged();
 public slots:
     bool isGraphical() const {
         return m_graphical;
+    }
+    void setSelected(Port* port);
+    Port* getSelected() const {
+        return m_selected;
     }
     void update();
     void addPort(const QSerialPortInfo& port);
@@ -34,8 +38,12 @@ public slots:
     void fixLinux();
     void toggleGraphics();
     QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
+    void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QList<QObject*> model() const {
         return m_model;
+    }
+    Port* isSelected() const {
+        return m_selected;
     }
 
     inline QString getOSString() {
@@ -59,6 +67,7 @@ private:
     QStringList images;
     bool m_graphical;
     QSettings settings;
+    QProcess* m_process[sizeof(ArdwiinoLookup::boards) / sizeof(ArdwiinoLookup::boards[0])];
 };
 
 #endif // PORTSCANNER_H

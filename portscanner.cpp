@@ -6,6 +6,7 @@
 #include <QIcon>
 #include <QDirIterator>
 #include <QBitmap>
+#include <QCoreApplication>
 PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
@@ -14,8 +15,10 @@ PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(pare
     } else {
         m_graphical = true;
     }
+    setSelected(nullptr);
 }
 void PortScanner::addPort(const QSerialPortInfo& serialPortInfo) {
+    if (programmer->getStatus() == Status::AVRDUDE) return;
     if (m_selected != nullptr) {
         m_selected->handleConnection(serialPortInfo);
         programmer->program(m_selected);
@@ -52,6 +55,68 @@ void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
         m_model.push_back(new Port());
     }
     emit modelChanged();
+}
+void PortScanner::setSelected(Port* port) {
+    m_selected = port;
+    if (port != nullptr) {
+        for (auto process: m_process) {
+            if (process) {
+                process->kill();
+            }
+        }
+        m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "dfu";}),m_model.end());
+        selectedChanged();
+        return;
+    }
+    auto dir = QDir(QCoreApplication::applicationDirPath());
+    dir.cd("binaries");
+    int i = 0;
+    for (board_t board: ArdwiinoLookup::boards) {
+        if (board.originalFirmware == "") {
+            m_process[i++] = nullptr;
+            continue;
+        }
+        m_process[i] = new QProcess();
+        m_process[i]->setWorkingDirectory(dir.path());
+        connect(qApp, SIGNAL(aboutToQuit()), m_process[i], SLOT(terminate()));
+        connect(m_process[i], static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &PortScanner::complete);
+        m_process[i]->start(dir.filePath("dfu-programmer"), {board.processor, "get"});
+        i++;
+    }
+    selectedChanged();
+}
+void PortScanner::complete(int exitCode, QProcess::ExitStatus exitStatus) {
+    (void)exitCode;
+    (void)exitStatus;
+    auto dir = QDir(QCoreApplication::applicationDirPath());
+    dir.cd("binaries");
+    int i = 0;
+    if (m_selected != nullptr) return;
+    for (auto process: m_process) {
+        if (process != nullptr) {
+            if (process->exitCode() == exitCode && process->state() == process->NotRunning) {
+                QObject::disconnect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &PortScanner::complete);
+                QObject::disconnect(qApp, SIGNAL(aboutToQuit()), process, SLOT(terminate()));
+                auto board = ArdwiinoLookup::boards[i];
+                if (exitCode == 0) {
+                    if(std::find_if(m_model.begin(), m_model.end(), [board](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "dfu" && (dynamic_cast<Port*>(object))->getBoard().processor == board.processor;}) == m_model.end()) {
+                        m_model.push_back(new Port(board));
+                        m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
+                        emit modelChanged();
+                    }
+                } else {
+                    m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [board](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "dfu" && (dynamic_cast<Port*>(object))->getBoard().processor == board.processor;}),m_model.end());
+                }
+                m_process[i] = new QProcess();
+                m_process[i]->setWorkingDirectory(dir.path());
+                connect(qApp, SIGNAL(aboutToQuit()), m_process[i], SLOT(terminate()));
+                connect(m_process[i], static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &PortScanner::complete);
+                m_process[i]->start(dir.filePath("dfu-programmer"), {ArdwiinoLookup::boards[i].processor, "get"});
+            }
+        }
+        i++;
+    }
+
 }
 void PortScanner::fixLinux() {
     QFile f("/sys/bus/usb/drivers/xpad/new_id");

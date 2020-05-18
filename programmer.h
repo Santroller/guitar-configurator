@@ -33,6 +33,9 @@ public slots:
     bool getRestore() {
         return m_restore;
     }
+    Status::Value getStatus() {
+        return m_status;
+    }
     void setRestoring(bool restore) {
         m_restore = restore;
         m_process_out = "";

@@ -108,6 +108,12 @@ auto Programmer::program(Port* port) -> bool {
         if (m_port->isArdwiino()) {
             m_port->jump();
         }
+        if (m_port->getBoard().hasDFU && m_port->isAlreadyDFU()) {
+            m_port->setBoard(m_port->getBoard().shortName.replace("-"+m_port->getBoard().processor,""),0);
+            m_status = Status::DFU_CONNECT;
+            programDFU();
+            return true;
+        }
         if (m_port->isAlreadyDFU()) {
             programAvrDude();
             return true;
@@ -131,8 +137,13 @@ auto Programmer::program(Port* port) -> bool {
             programAvrDude();
         }
     } else if (m_status == Status::DFU_DISCONNECT) {
-        m_status = Status::COMPLETE;
-        ret = true;
+        if (m_port->getBoard().hasDFU && m_port->isAlreadyDFU()) {
+            m_status = Status::AVRDUDE;
+            programAvrDude();
+        } else {
+            m_status = Status::COMPLETE;
+            ret = true;
+        }
     }
     emit statusChanged(m_status);
     emit statusVChanged(getStatusDescription());
@@ -149,7 +160,10 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     switch (m_status) {
     case Status::AVRDUDE:
         if (exitCode == 0) {
-            if (m_port->getBoard().hasDFU) {
+            if (m_port->getBoard().hasDFU && m_port->isAlreadyDFU()) {
+                m_status = Status::COMPLETE;
+                m_port->scanAfterDFU();
+            } else if (m_port->getBoard().hasDFU) {
                 m_status = Status::DFU_CONNECT;
                 m_port->jumpUNO();
                 programDFU();

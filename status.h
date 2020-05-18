@@ -8,6 +8,7 @@ public:
     enum Value {
         NOT_PROGRAMMING,
         WAIT,
+        WAIT_AVRDUDE,
         AVRDUDE,
         DFU_CONNECT,
         DFU_ERASE,
@@ -22,6 +23,7 @@ public:
         switch(value) {
         case Value::NOT_PROGRAMMING: return "Not Programming";
         case Value::WAIT: return "Waiting";
+        case Value::WAIT_AVRDUDE: return "Waiting for Avrdude";
         case Value::DFU_CONNECT: return "Waiting for DFU Mode";
         case Value::AVRDUDE: return "Programming Main Controller";
         case Value::DFU_DISCONNECT: return "Waiting for Reconnection";

@@ -28,7 +28,6 @@ ApplicationWindow {
                     Label {
                         visible: scanner.selected
                         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                        id: dev
                         text: qsTr("Connected Device: ")
                         wrapMode: Text.WordWrap
                         font.bold: true
@@ -38,7 +37,6 @@ ApplicationWindow {
                     }
                     Button {
                         visible: scanner.selected
-                        id: refreshBt
                         text: qsTr("Refresh")
                         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                         onClicked: scanner.selected.readDescription()
@@ -47,7 +45,6 @@ ApplicationWindow {
                 Label {
                     visible: scanner.selected
                     Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                    id: status
                     text: (scanner.selected && scanner.selected.description || "").replace(/-/g,"<br/>")
                     wrapMode: Text.WordWrap
                     font.bold: true
@@ -64,7 +61,6 @@ ApplicationWindow {
                 font.pointSize: 30
             }
             Label {
-                id: updates
                 text: updateHandler.updateInfo
                 textFormat: Text.PlainText
                 renderType: Text.QtRendering

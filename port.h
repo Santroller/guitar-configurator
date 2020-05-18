@@ -55,6 +55,7 @@ class Port : public QObject
 public:
     explicit Port(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     explicit Port(QObject *parent = nullptr);
+    explicit Port(board_t board, QObject *parent = nullptr);
     board_t getBoard() const {
         return m_board;
     }
@@ -95,6 +96,7 @@ signals:
 public slots:
     void readyRead();
     void writeConfig();
+    void scanAfterDFU();
     bool isAlreadyDFU() const {
         return m_isAlreadyDFU;
     }
@@ -118,7 +120,9 @@ public slots:
     }
     void setBoard(QString boardName, uint freq) {
         m_board = ArdwiinoLookup::getInstance()->findByBoard(boardName);
-        m_board.cpuFrequency = freq;
+        if (freq != 0) {
+            m_board.cpuFrequency = freq;
+        }
     }
     bool isArdwiino() const {
         return m_isArdwiino;
