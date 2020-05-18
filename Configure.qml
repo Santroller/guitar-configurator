@@ -80,7 +80,11 @@ ColumnLayout {
                 Layout.fillHeight: true
                 id: bt
                 text: gl.current[scanner.selected.pins[modelData]] || scanner.selected.pins[modelData]
-                onClicked: buttonConfig.currentPin = modelData;
+                onClicked: {
+                    buttonConfig.currentValue = scanner.selected.pins[modelData];
+                    buttonConfig.currentPin = modelData
+                }
+
                 ToolTip.visible: hovered
                 ToolTip.text: gl.labels[modelData]
             }
