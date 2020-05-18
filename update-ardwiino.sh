@@ -15,5 +15,3 @@ rm -r src/micro/bin
 make build-all
 cp -rf output/* ../../firmware/
 cd ../../
-git add .
-git commit -m "Update Ardwiino"

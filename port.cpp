@@ -128,15 +128,15 @@ void Port::readAllData() {
     if (id == REAL_GUITAR_SUBTYPE) {
         id = ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR;
     }
-    m_type = ArdwiinoDefines::subtype(id);
+    m_type = ArdwiinoDefines::SubType(id);
     typeChanged();
-    m_orientation = ArdwiinoDefines::gyro(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
+    m_orientation = ArdwiinoDefines::GyroOrientation(read_single(READ_CONFIG(CONFIG_MPU_6050_ORIENTATION)));
     orientationChanged();
-    m_input_type = ArdwiinoDefines::input(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
+    m_input_type = ArdwiinoDefines::InputType(read_single(READ_CONFIG(CONFIG_INPUT_TYPE)));
     inputTypeChanged();
-    m_tilt = ArdwiinoDefines::tilt(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
+    m_tilt = ArdwiinoDefines::TiltType(read_single(READ_CONFIG(CONFIG_TILT_TYPE)));
     tiltTypeChanged();
-    m_led = ArdwiinoDefines::fret_mode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
+    m_led = ArdwiinoDefines::FretLedMode(read_single(READ_CONFIG(CONFIG_LED_TYPE)));
     ledTypeChanged();
     m_trigger_threshold = read_single(READ_CONFIG(CONFIG_THRESHOLD_TRIGGER));
     triggerThresholdChanged();
@@ -217,7 +217,7 @@ void Port::readDescription() {
         m_description += " - " + ArdwiinoDefines::getName(m_type);
         uint8_t ext = read_single(READ_INFO(INFO_EXT));
         if (m_input_type == ArdwiinoDefines::WII)  {
-            m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::wii_ext_type)ext);
+            m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)ext);
         } else if(m_input_type == ArdwiinoDefines::PS2) {
             m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
         } else {

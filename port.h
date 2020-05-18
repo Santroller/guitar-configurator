@@ -6,7 +6,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include "ardwiinolookup.h"
-#include "submodules/Ardwiino/src/shared/output/usb/API.h"
+#include "submodules/Ardwiino/src/shared/output/serial_commands.h"
 #include <math.h>
 #include "ardwiino_defines.h"
 #include <QJSValue>
@@ -42,11 +42,11 @@ class Port : public QObject
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_PROPERTY(bool hasDFU MEMBER m_hasDFU NOTIFY dfuFound)
     Q_PROPERTY(bool isOpen READ getOpen NOTIFY portStateChanged)
-    Q_PROPERTY(ArdwiinoDefines::input inputType MEMBER m_input_type NOTIFY inputTypeChanged)
-    Q_PROPERTY(ArdwiinoDefines::subtype type MEMBER m_type NOTIFY typeChanged)
-    Q_PROPERTY(ArdwiinoDefines::gyro orientation MEMBER m_orientation NOTIFY orientationChanged)
-    Q_PROPERTY(ArdwiinoDefines::tilt tiltType MEMBER m_tilt NOTIFY tiltTypeChanged)
-    Q_PROPERTY(ArdwiinoDefines::fret_mode ledType MEMBER m_led NOTIFY ledTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::InputType inputType MEMBER m_input_type NOTIFY inputTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::SubType type MEMBER m_type NOTIFY typeChanged)
+    Q_PROPERTY(ArdwiinoDefines::GyroOrientation orientation MEMBER m_orientation NOTIFY orientationChanged)
+    Q_PROPERTY(ArdwiinoDefines::TiltType tiltType MEMBER m_tilt NOTIFY tiltTypeChanged)
+    Q_PROPERTY(ArdwiinoDefines::FretLedMode ledType MEMBER m_led NOTIFY ledTypeChanged)
     Q_PROPERTY(int sensitivity MEMBER m_sensitivity NOTIFY tiltSensitivityChanged)
     Q_PROPERTY(int triggerThreshold MEMBER m_trigger_threshold NOTIFY triggerThresholdChanged)
     Q_PROPERTY(int joyThreshold MEMBER m_joy_threshold NOTIFY joyThresholdChanged)
@@ -237,13 +237,13 @@ private:
     QVariantMap m_midi_type;
     QVariantMap m_midi_note;
     QVariantMap m_midi_channel;
-    controller_t m_controller{};
+    Controller_t m_controller{};
     bool readyForRead;
-    ArdwiinoDefines::subtype m_type = ArdwiinoDefines::XINPUT_GAMEPAD;
-    ArdwiinoDefines::gyro m_orientation;
-    ArdwiinoDefines::tilt m_tilt;
-    ArdwiinoDefines::fret_mode m_led;
-    ArdwiinoDefines::input m_input_type;
+    ArdwiinoDefines::SubType m_type = ArdwiinoDefines::XINPUT_GAMEPAD;
+    ArdwiinoDefines::GyroOrientation m_orientation;
+    ArdwiinoDefines::TiltType m_tilt;
+    ArdwiinoDefines::FretLedMode m_led;
+    ArdwiinoDefines::InputType m_input_type;
     uint8_t m_trigger_threshold;
     uint8_t m_joy_threshold;
     bool m_map_joy;

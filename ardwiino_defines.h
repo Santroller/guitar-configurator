@@ -8,8 +8,8 @@ class ArdwiinoDefines: public QObject {
     Q_OBJECT
 public:
 #include "submodules/Ardwiino/src/shared/config/defines.h"
-#include "submodules/Ardwiino/src/shared/input/input_wii_ext.h"
-#include "submodules/Ardwiino/src/shared/input/input_ps2_cnt.h"
+#include "submodules/Ardwiino/src/shared/input/inputs/wii_ext.h"
+#include "submodules/Ardwiino/src/shared/input/inputs/ps2_cnt.h"
     static ArdwiinoDefines* getInstance();
     static QString fixKey(QString string) {
           auto sentence = string.toLower().split("_");
@@ -32,14 +32,14 @@ public:
         }
         return map;
     }
-    JS_ENUM(tilt)
-    JS_ENUM(input)
-    JS_ENUM(subtype)
-    JS_ENUM(gyro)
-    JS_ENUM(firmware_type)
-    JS_ENUM(fret_mode)
-    JS_ENUM(midi_type)
-    JS_ENUM(wii_ext_type)
+    JS_ENUM(TiltType)
+    JS_ENUM(InputType)
+    JS_ENUM(SubType)
+    JS_ENUM(GyroOrientation)
+    JS_ENUM(FirmwareType)
+    JS_ENUM(FretLedMode)
+    JS_ENUM(MidiType)
+    JS_ENUM(WiiExtType)
     JS_ENUM(PsxControllerType)
     enum buttons {
         up,down,left,right,start,back,left_stick,right_stick,LB,RB,home,capture,a,b,x,y,lt,rt,l_x,l_y,r_x,r_y

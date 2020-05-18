@@ -16,7 +16,7 @@ ArdwiinoLookup::ArdwiinoLookup(QObject *parent):QObject(parent) {
 }
 
 auto ArdwiinoLookup::lookupType(uint8_t type) -> QString {
-    return ArdwiinoDefines::getName(ArdwiinoDefines::subtype(type));
+    return ArdwiinoDefines::getName(ArdwiinoDefines::SubType(type));
 }
 
 auto ArdwiinoLookup::isIncompatibleArdwiino(const QSerialPortInfo& serialPortInfo) -> bool {

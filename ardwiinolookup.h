@@ -46,13 +46,13 @@ public slots:
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
     static bool is115200(const QSerialPortInfo& QSerialPort);
     static bool isOld(const QString& QSerialPort);
-    inline QString getInputTypeName(ArdwiinoDefines::input value) {
+    inline QString getInputTypeName(ArdwiinoDefines::InputType value) {
         return ArdwiinoDefines::getName(value);
     }
-    inline QString getOrientationName(ArdwiinoDefines::gyro value) {
+    inline QString getOrientationName(ArdwiinoDefines::GyroOrientation value) {
         return ArdwiinoDefines::getName(value);
     }
-    inline QString getTiltTypeName(ArdwiinoDefines::tilt value) {
+    inline QString getTiltTypeName(ArdwiinoDefines::TiltType value) {
         return ArdwiinoDefines::getName(value);
     }
     inline QString getKeyName(QVariantList sequence) {

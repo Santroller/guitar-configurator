@@ -341,12 +341,13 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("fret_mode")
+                model: Defines.fillCombobox("FretLedMode")
                 Binding { target: fretBox; property: "currentIndex"; value: fretBox.model.findIndex(s => s.value === scanner.selected.ledType) }
 
                 onCurrentIndexChanged: scanner.selected.ledType = fretBox.model[fretBox.currentIndex].value
             }
             Label {
+                visible: scanner.selected.hasAddressableLEDs
                 text: qsTr("LED Order (drag to change)")
                 fontSizeMode: Text.FixedSize
                 verticalAlignment: Text.AlignVCenter
@@ -419,7 +420,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("tilt")
+                model: Defines.fillCombobox("TiltType")
                 Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
 
                 onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
@@ -442,7 +443,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("gyro")
+                model: Defines.fillCombobox("GyroOrientation")
                 Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
 
                 onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
@@ -652,6 +653,7 @@ ColumnLayout {
                     }
 
                     RowLayout {
+                        visible: scanner.selected.isMIDI
                         Label {
                             text: qsTr("MIDI Type")
                             fontSizeMode: Text.FixedSize
@@ -665,7 +667,7 @@ ColumnLayout {
                             Layout.fillWidth: true
                             textRole: "key"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                            model: Defines.fillCombobox("midi_type")
+                            model: Defines.fillCombobox("MidiType")
                             currentIndex: model.findIndex(s => s.value === scanner.selected.midi_type[modelData])
 
 
@@ -856,7 +858,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("input")
+                model: Defines.fillCombobox("InputType")
                 Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
                 
                 onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
@@ -878,7 +880,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("subtype")
+                model: Defines.fillCombobox("SubType")
                 Binding { target: comboBox; property: "currentIndex"; value: {comboBox.model.findIndex(s => s.value === scanner.selected.type)} }
                 
                 onCurrentIndexChanged: {
