@@ -33,6 +33,10 @@ var analog = {
 function checkValid(pin, board) {
     return analog[board].includes(pin);
 }
+function getBindings(board) {
+    return (pin)=>(bindings[board][pin] || pin);
+}
+
 var drumLabels = {
     "up": "D-pad Up",
     "down": "D-pad Down",

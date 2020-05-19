@@ -51,15 +51,21 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     if (settings.contains("cloneHeroDir")) {
         m_gameFolder = settings.value("cloneHeroDir").toString();
     }
-    m_hitEnabled = settings.contains("led_hit") && settings.value("led_hit").toBool();
+    m_star_power = settings.value("led_star_power_color",QVariant(0x00BFFF)).toUInt();
+    m_open = settings.value("led_open_color",QVariant(0xFF00FF)).toUInt();
     m_openEnabled = settings.contains("led_open") && settings.value("led_open").toBool();
     m_starPowerEnabled = settings.contains("led_star_power") && settings.value("led_star_power").toBool();
     findVersion();
 }
-void LEDHandler::setHitEnabled(bool hit) {
-    m_hitEnabled = hit;
-    settings.setValue("led_hit",hit);
-    hitEnabledChanged();
+void LEDHandler::setOpenColor(int color) {
+    m_open = color;
+    settings.setValue("led_open_color",color);
+    openColorChanged();
+}
+void LEDHandler::setStarPowerColor(int color) {
+    m_star_power = color;
+    settings.setValue("led_star_power_color",color);
+    starPowerColorChanged();
 }
 void LEDHandler::setOpenEnabled(bool open) {
     m_openEnabled = open;
@@ -106,8 +112,13 @@ int LEDHandler::gammaCorrect(int color) {
     return r<<16|g<<8|b;
 }
 void LEDHandler::setColor(int color, QString button) {
+    setColors(color, QStringList(button));
+}
+void LEDHandler::setColors(int color, QStringList buttons) {
     QMap<QString,uint32_t> leds;
-    leds[button] = color;
+    for (auto button: buttons) {
+        leds[button] = color;
+    }
     setLEDs(leds);
 }
 void LEDHandler::findVersion() {
@@ -300,9 +311,6 @@ void LEDHandler::tick() {
     }
     QMap<QString,uint32_t> data;
     QStringList names = {"a","b","y","x","LB"};
-    m_hit = gammaCorrect(0xFFFFFF);
-    m_star_power = 0x00BFFF;
-    m_open = 0xFF00FF;
     for (int i =0; i < 5; i++) {
         if (addr > 0) {
             if (countdown > 0 && shownNote & 1<<6) {

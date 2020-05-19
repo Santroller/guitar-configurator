@@ -7,6 +7,7 @@ function fillCombobox(name) {
     for (let key in entries) {
         model.push({key: key, value: entries[key]});
     }
+    model.sort((s,s2)=>s.value-s2.value);
     return model;
 }
 

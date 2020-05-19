@@ -370,5 +370,13 @@
         <file>images/360Accessories/FlightStick/components/gx.svg</file>
         <file>images/360Accessories/FlightStick/components/gy.svg</file>
         <file>DraggableItem.qml</file>
+        <file>CloneHeroDialog.qml</file>
+        <file>ColorPickerDialog.qml</file>
+        <file>CloneHeroDialogColorRow.qml</file>
+        <file>InteractiveController.qml</file>
+        <file>ButtonConfigDialog.qml</file>
+        <file>PinBinding.qml</file>
+        <file>KeyBinding.qml</file>
+        <file>ListController.qml</file>
     </qresource>
 </RCC>

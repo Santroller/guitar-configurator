@@ -31,9 +31,10 @@ class LEDHandler : public QObject
     Q_PROPERTY(QString gameFolder READ getGameFolder WRITE setGameFolder NOTIFY gameFolderChanged)
     Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
     Q_PROPERTY(bool ready MEMBER m_ready NOTIFY readyChanged)
-    Q_PROPERTY(bool hitEnabled READ getHitEnabled WRITE setHitEnabled NOTIFY hitEnabledChanged)
     Q_PROPERTY(bool openEnabled READ getOpenEnabled WRITE setOpenEnabled NOTIFY openEnabledChanged)
     Q_PROPERTY(bool starPowerEnabled READ getStarPowerEnabled WRITE setStarPowerEnabled NOTIFY starPowerEnabledChanged)
+    Q_PROPERTY(int openColor READ getOpenColor WRITE setOpenColor NOTIFY openColorChanged)
+    Q_PROPERTY(int starPowerColor READ getStarPowerColor WRITE setStarPowerColor NOTIFY starPowerColorChanged)
 public:
     explicit LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent = nullptr);
     QTimer *timer;
@@ -41,33 +42,40 @@ public:
     QString getGameFolder() {
         return m_gameFolder;
     }
-    bool getHitEnabled() {
-        return m_hitEnabled;
-    }
     bool getStarPowerEnabled() {
         return m_starPowerEnabled;
     }
     bool getOpenEnabled() {
         return m_openEnabled;
     }
+    int getOpenColor() {
+        return m_open;
+    }
+    int getStarPowerColor() {
+        return m_star_power;
+    }
 signals:
     void gameFolderChanged();
     void versionChanged();
     void readyChanged();
     void colorChanged();
-    void hitEnabledChanged();
     void starPowerEnabledChanged();
     void openEnabledChanged();
+    void starPowerColorChanged();
+    void openColorChanged();
+    void hitColorChanged();
 public slots:
     int gammaCorrect(int color);
     void startGame();
     void setColor(int rgb, QString button);
+    void setColors(int rgb, QStringList button);
 private slots:
  void tick();
  void setGameFolder(QString string);
- void setHitEnabled(bool hit);
  void setOpenEnabled(bool open);
  void setStarPowerEnabled(bool star);
+ void setStarPowerColor(int color);
+ void setOpenColor(int color);
 
 private:
  QSettings settings;
@@ -82,11 +90,9 @@ private:
  int lastScore = 0;
  int shownNote = 0;
  int countdown = 0;
- bool m_hitEnabled;
  bool m_starPowerEnabled;
  bool m_openEnabled;
  bool m_ready;
- uint32_t m_hit;
  uint32_t m_star_power;
  uint32_t m_open;
  QString m_gameFolder;

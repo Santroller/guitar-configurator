@@ -12,7 +12,7 @@ Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(par
 }
 Port::Port(board_t board, QObject *parent) : QObject(parent),  m_serialPort(nullptr), m_board(board), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
 {
-    m_description = boardName()+" DFU";
+    m_description = boardName()+" in restore mode";
     m_port = "dfu";
     m_isReady = true;
     m_isAlreadyDFU = true;
