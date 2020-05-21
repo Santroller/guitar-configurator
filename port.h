@@ -30,6 +30,8 @@ class Port : public QObject
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY typeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
+    Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
+    Q_PROPERTY(bool disconnected READ isDisconnected NOTIFY disconnectedChanged)
     Q_PROPERTY(bool hasAddressableLEDs READ hasAddressableLEDs NOTIFY ledTypeChanged)
     Q_PROPERTY(QVariantMap pin_inverts MEMBER m_pin_inverts NOTIFY pinInvertsChanged)
     Q_PROPERTY(QVariantMap pins MEMBER m_pins NOTIFY pinsChanged)
@@ -66,6 +68,7 @@ public:
     void jumpUNO();
     void jump();
     void handleConnection(const QSerialPortInfo& info);
+    void handleDisconnection(const QSerialPortInfo& info);
     void write(QByteArray id);
     void writeNoResp(QByteArray id);
 signals:
@@ -92,6 +95,8 @@ signals:
     void detectedPinChanged();
     void ledsChanged();
     void midiChanged();
+    void disconnectedChanged();
+    void validChanged();
 
 public slots:
     void readyRead();
@@ -102,6 +107,12 @@ public slots:
     }
     bool isReady() const {
         return m_isReady;
+    }
+    bool isValid() const {
+        return m_isValid;
+    }
+    bool isDisconnected() const {
+        return m_disconnected;
     }
     QString description() const {
         return m_description;
@@ -230,6 +241,7 @@ private:
     bool m_isOutdated;
     bool m_hasDFU;
     bool m_isReady;
+    bool m_disconnected;
     bool m_hasPinDetectionCallback;
     bool m_isAlreadyDFU;
     QJSValue m_pinDetectionCallback;
@@ -250,6 +262,7 @@ private:
     ArdwiinoDefines::InputType m_input_type;
     uint8_t m_trigger_threshold;
     uint8_t m_joy_threshold;
+    bool m_isValid;
     bool m_map_joy;
     bool m_map_start_sel_home;
     int m_sensitivity;

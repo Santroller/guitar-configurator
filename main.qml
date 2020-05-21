@@ -24,9 +24,9 @@ ApplicationWindow {
         header: Item {
             id: element
             ColumnLayout {
+                visible: scanner.hasSelected
                 RowLayout {
                     Label {
-                        visible: scanner.selected
                         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                         text: qsTr("Connected Device: ")
                         wrapMode: Text.WordWrap
@@ -36,14 +36,12 @@ ApplicationWindow {
                         fontSizeMode: Text.FixedSize
                     }
                     Button {
-                        visible: scanner.selected
                         text: qsTr("Refresh")
                         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                         onClicked: scanner.selected.readDescription()
                     }
                 }
                 Label {
-                    visible: scanner.selected
                     Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                     text: (scanner.selected && scanner.selected.description || "").replace(/-/g,"<br/>")
                     wrapMode: Text.WordWrap

@@ -6,11 +6,11 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <algorithm>
-Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty),  m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+Port::Port(const QSerialPortInfo &serialPortInfo, QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty),  m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false), m_isValid(true)
 {
     rescan(serialPortInfo);
 }
-Port::Port(board_t board, QObject *parent) : QObject(parent),  m_serialPort(nullptr), m_board(board), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+Port::Port(board_t board, QObject *parent) : QObject(parent),  m_serialPort(nullptr), m_board(board), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false), m_isValid(true)
 {
     m_description = boardName()+" in restore mode";
     m_port = "dfu";
@@ -18,7 +18,7 @@ Port::Port(board_t board, QObject *parent) : QObject(parent),  m_serialPort(null
     m_isAlreadyDFU = true;
     m_isArdwiino = false;
 }
-Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false)
+Port::Port(QObject *parent) : QObject(parent), m_board(ArdwiinoLookup::empty), m_isReady(false), m_hasPinDetectionCallback(false), readyForRead(false), m_isValid(false)
 {
     m_description = "Searching for devices";
     m_port = "searching";
@@ -39,9 +39,17 @@ void Port::scanAfterDFU() {
     m_serialPort->waitForBytesWritten();
     m_serialPort->close();
 }
+void Port::handleDisconnection(const QSerialPortInfo &info) {
+    if (info.portName() == m_serialPort->portName()) {
+        m_serialPort->close();
+        m_disconnected = true;
+        disconnectedChanged();
+    }
+}
 void Port::handleConnection(const QSerialPortInfo& info) {
     if (m_isAlreadyDFU && m_board.hasDFU) {
         if (m_serialPort == nullptr) {
+            m_disconnected = false;
             m_port = info.systemLocation();
             m_serialPort = new QSerialPort(info);
             m_serialPort->setBaudRate(1000000);
@@ -58,6 +66,7 @@ void Port::handleConnection(const QSerialPortInfo& info) {
 }
 
 void Port::rescan(const QSerialPortInfo &serialPortInfo) {
+    m_disconnected = false;
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
     m_isOldAPIArdwiino = ArdwiinoLookup::getInstance()->isOldAPIArdwiino(serialPortInfo);
     m_isOutdated = ArdwiinoLookup::getInstance()->isIncompatibleArdwiino(serialPortInfo);

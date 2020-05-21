@@ -7,7 +7,7 @@
 #include <QDirIterator>
 #include <QBitmap>
 #include <QCoreApplication>
-PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_selected(nullptr), programmer(programmer)
+PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), programmer(programmer)
 {
     m_model.push_back(new Port());
     if (settings.contains("configMode")) {
@@ -19,7 +19,7 @@ PortScanner::PortScanner(Programmer *programmer, QObject *parent) : QObject(pare
 }
 void PortScanner::addPort(const QSerialPortInfo& serialPortInfo) {
     if (programmer->getStatus() == Status::AVRDUDE) return;
-    if (m_selected != nullptr) {
+    if (m_selected != nullptr && m_hasSelected) {
         m_selected->handleConnection(serialPortInfo);
         programmer->program(m_selected);
         if (!programmer->getRestore()) {
@@ -48,7 +48,7 @@ void PortScanner::update() {
 }
 void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
     if (m_selected != nullptr) {
-        //Pass through to selected, replace its scanning implementation
+        m_selected->handleDisconnection(serialPortInfo);
     }
     m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [serialPortInfo](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == serialPortInfo.systemLocation();}), m_model.end());
     if (m_model.length() == 0) {
@@ -59,6 +59,7 @@ void PortScanner::removePort(const QSerialPortInfo& serialPortInfo) {
 void PortScanner::setSelected(Port* port) {
     m_selected = port;
     if (port != nullptr) {
+        m_hasSelected = true;
         for (auto process: m_process) {
             if (process) {
                 process->kill();
@@ -66,6 +67,7 @@ void PortScanner::setSelected(Port* port) {
         }
         m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "dfu";}),m_model.end());
         selectedChanged();
+        hasSelectedChanged();
         return;
     }
     auto dir = QDir(QCoreApplication::applicationDirPath());

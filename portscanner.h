@@ -15,6 +15,7 @@ class PortScanner : public QObject
     Q_PROPERTY(QList<QObject*> model READ model NOTIFY modelChanged)
     Q_PROPERTY(Port* selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(bool isGraphical READ isGraphical NOTIFY graphicalChanged)
+    Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
 public:
     explicit PortScanner(Programmer* programmer, QObject *parent = nullptr);
     Port* selectedPort() const {
@@ -24,6 +25,7 @@ signals:
     void graphicalChanged();
     void modelChanged();
     void selectedChanged();
+    void hasSelectedChanged();
 public slots:
     bool isGraphical() const {
         return m_graphical;
@@ -42,9 +44,6 @@ public slots:
     QList<QObject*> model() const {
         return m_model;
     }
-    Port* isSelected() const {
-        return m_selected;
-    }
 
     inline QString getOSString() {
 #ifdef Q_OS_LINUX
@@ -60,6 +59,7 @@ public slots:
         return false;
     }
 private:
+    bool m_hasSelected;
     void clearImages();
     QList<QObject*> m_model;
     Port* m_selected;

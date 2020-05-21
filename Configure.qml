@@ -141,6 +141,7 @@ ColumnLayout {
             text: qsTr("Program a different device")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
+                scanner.hasSelected = false;
                 mainStack.replace("Welcome.qml");
             }
         }
@@ -186,6 +187,27 @@ ColumnLayout {
 
             BusyIndicator {
                 Layout.alignment: Qt.AlignHCenter
+            }
+        }
+    }
+    Dialog {
+        title: "Controller Disconnected"
+        visible: scanner.selected.disconnected
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        closePolicy: Popup.NoAutoClose
+        standardButtons: Dialog.Ok
+        onVisibleChanged: {
+            scanner.hasSelected = false;
+        }
+
+        onAccepted:  {
+            mainStack.replace("Welcome.qml");
+        }
+        ColumnLayout {
+            Label {
+                text: "Your controller has been disconnected."
             }
         }
     }
