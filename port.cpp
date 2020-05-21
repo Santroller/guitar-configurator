@@ -132,6 +132,8 @@ void Port::readData() {
         readyForRead = true;
         if (!m_isOutdated) {
             readAllData();
+        } else {
+            setBoard(m_board.shortName, read(READ_INFO(INFO_CPU_FREQ)).trimmed().replace("UL","").toInt());
         }
         readDescription();
     }
