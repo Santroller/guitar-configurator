@@ -97,14 +97,14 @@ QByteArray Port::read(QByteArray id) {
 }
 
 void Port::findDigital(QJSValue callback) {
-    write(QByteArray(1, COMMAND_FIND_DIGITAL));
     m_hasPinDetectionCallback = true;
     m_pinDetectionCallback = callback;
+    writeNoResp(QByteArray(1, COMMAND_FIND_DIGITAL));
 }
 void Port::findAnalog(QJSValue callback) {
-    write(QByteArray(1, COMMAND_FIND_ANALOG));
     m_hasPinDetectionCallback = true;
     m_pinDetectionCallback = callback;
+    writeNoResp(QByteArray(1, COMMAND_FIND_ANALOG));
 }
 void Port::readData() {
     if (m_isOldAPIArdwiino) {
@@ -240,10 +240,11 @@ void Port::readDescription() {
         m_description += " - Outdated";
     } else {
         m_description += " - " + ArdwiinoDefines::getName(m_type);
-        uint8_t ext = read_single(READ_INFO(INFO_EXT));
         if (m_input_type == ArdwiinoDefines::WII)  {
+            uint16_t ext = read_16(READ_INFO(INFO_EXT));
             m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)ext);
         } else if(m_input_type == ArdwiinoDefines::PS2) {
+            uint8_t ext = read_single(READ_INFO(INFO_EXT));
             m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
         } else {
             m_description += " - " + ArdwiinoDefines::getName(m_input_type);

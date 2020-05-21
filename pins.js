@@ -151,6 +151,7 @@ function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
 
 function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
     if (isWii && isGuitar) return {"r_y": "Tilt Axis"}
+    if (isWii) return {};
     if (isDrum) return drumLabels;
     if (isRB) return guitarRBLabels;
     if (isLiveGuitar) return guitarLiveLabels;
