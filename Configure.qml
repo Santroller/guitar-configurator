@@ -27,7 +27,7 @@ ColumnLayout {
     }
 
     CloneHeroDialog {
-
+        id:cloneDialog
     }
 
     ButtonConfigDialog {
@@ -150,7 +150,7 @@ ColumnLayout {
             text: qsTr("Link to Clone Hero")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             enabled: true
-            onClicked: cloneDialog.visible = true;
+            onClicked: cloneDialog.open()
         }
     }
     RowLayout {
@@ -239,7 +239,7 @@ ColumnLayout {
                 model: scanner.selected.leds
                 orientation: ListView.Horizontal
                 delegate: DraggableItem {
-                    label: listView.labels[modelData] || ""
+                    label: listView.labels[modelData]
                     Rectangle {
                         height: {
                             var a = listView.width / scanner.selected.leds.length;
