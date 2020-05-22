@@ -40,7 +40,7 @@ void Port::scanAfterDFU() {
     m_serialPort->close();
 }
 void Port::handleDisconnection(const QSerialPortInfo &info) {
-    if (info.portName() == m_serialPort->portName()) {
+    if (m_serialPort->isOpen() && info.portName() == m_serialPort->portName()) {
         m_serialPort->close();
         m_disconnected = true;
         disconnectedChanged();
