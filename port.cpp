@@ -343,8 +343,6 @@ void Port::readyRead() {
     if (!m_dataToWrite.isEmpty()) {
         m_serialPort->flush();
         m_serialPort->readAll();
-        qDebug() <<m_dataToWrite.head();
-        qDebug() << m_dataToWrite.size();
         m_serialPort->write(m_dataToWrite.dequeue());
         if (m_dataToWrite.isEmpty()) {
             m_serialPort->waitForBytesWritten();
