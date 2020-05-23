@@ -343,6 +343,8 @@ void Port::readyRead() {
     if (!m_dataToWrite.isEmpty()) {
         m_serialPort->flush();
         m_serialPort->readAll();
+        qDebug() <<m_dataToWrite.head();
+        qDebug() << m_dataToWrite.size();
         m_serialPort->write(m_dataToWrite.dequeue());
         if (m_dataToWrite.isEmpty()) {
             m_serialPort->waitForBytesWritten();
@@ -603,7 +605,7 @@ void Port::saveLEDs() {
             QString btn = m_leds[i].toString();
             pin = buttons[btn].toInt()+1;
             uint32_t col = m_colours[btn].toUInt();
-            QByteArray colours = data_extra_pins(COMMAND_WRITE_CONFIG_VALUE,CONFIG_LED_COLOURS,i,col);
+            QByteArray colours = data_extra_pins_32(COMMAND_WRITE_CONFIG_VALUE,CONFIG_LED_COLOURS,i,col);
             pushWrite(colours);
         }
         QByteArray pins = data_extra_pins(COMMAND_WRITE_CONFIG_VALUE,CONFIG_LED_PINS,i,pin);

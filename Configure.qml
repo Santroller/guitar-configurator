@@ -261,7 +261,7 @@ ColumnLayout {
                 model: scanner.selected.leds
                 orientation: ListView.Horizontal
                 delegate: DraggableItem {
-                    label: listView.labels[modelData]
+                    label: listView.labels[modelData] || ""
                     Rectangle {
                         height: {
                             var a = listView.width / scanner.selected.leds.length;
