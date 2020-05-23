@@ -11,11 +11,6 @@
 #include "ardwiino_defines.h"
 #include <QJSValue>
 #include <QQueue>
-#define READ_INFO(slot) QByteArray(1, COMMAND_READ_INFO) + QByteArray(1,slot)
-#define READ_CONFIG(slot) QByteArray(1, COMMAND_READ_CONFIG_VALUE) + QByteArray(1,slot)
-#define WRITE_CONFIG_HEADER(slot) QByteArray(1, COMMAND_WRITE_CONFIG_VALUE) + QByteArray(1, slot)
-#define WRITE_CONFIG(slot, value) WRITE_CONFIG_HEADER(slot) + QByteArray(1, value)
-#define WRITE_CONFIG_PINS(slot, neg,pos) WRITE_CONFIG_HEADER(slot) + QByteArray(1, neg) + QByteArray(1, pos)
 class Port : public QObject
 {
     Q_OBJECT
@@ -228,8 +223,6 @@ private:
     void saveMIDI();
     void readData();
     void updateControllerName();
-    uint8_t read_single(QByteArray id);
-    uint16_t read_16(QByteArray id);
     QByteArray read(QByteArray);
     void rescan(const QSerialPortInfo &serialPortInfo);
     QString m_description;
@@ -267,6 +260,15 @@ private:
     bool m_map_start_sel_home;
     int m_sensitivity;
 
+    uint8_t read_8(QByteArray a);
+    uint16_t read_16(QByteArray a);
+    uint32_t read_32(QByteArray a);
+    QByteArray data_slot(uint8_t slot);
+    QByteArray data_data(uint8_t slot, uint8_t data);
+    QByteArray data_extra(uint8_t slot, uint8_t data, uint8_t extra);
+    QList<uint8_t> read_8_2(QByteArray a);
+    QByteArray data_extra_pins(uint8_t slot, uint8_t data, uint8_t extra, uint8_t extra2);
+    QByteArray data_extra_pins_32(uint8_t slot, uint8_t data, uint8_t extra, uint32_t extra2);
 };
 
 #endif // PORT_H
