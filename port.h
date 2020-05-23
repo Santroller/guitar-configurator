@@ -263,12 +263,12 @@ private:
     uint8_t read_8(QByteArray a);
     uint16_t read_16(QByteArray a);
     uint32_t read_32(QByteArray a);
+    QList<uint8_t> read_8_n(QByteArray a, uint8_t count);
     QByteArray data_slot(uint8_t slot);
     QByteArray data_data(uint8_t slot, uint8_t data);
     QByteArray data_extra(uint8_t slot, uint8_t data, uint8_t extra);
-    QList<uint8_t> read_8_2(QByteArray a);
-    QByteArray data_extra_pins(uint8_t slot, uint8_t data, uint8_t extra, uint8_t extra2);
-    QByteArray data_extra_pins_32(uint8_t slot, uint8_t data, uint8_t extra, uint32_t extra2);
+    QByteArray data_extra_pins(uint8_t slot, uint8_t data, uint8_t pin, uint8_t extra);
+    QByteArray data_extra_pins_32(uint8_t slot, uint8_t data, uint8_t pin, uint32_t extra);
 };
 
 #endif // PORT_H

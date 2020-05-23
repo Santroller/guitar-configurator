@@ -115,25 +115,35 @@ QByteArray Port::data_extra(uint8_t slot, uint8_t data, uint8_t extra) {
     ds << extra;
     return a;
 }
-QByteArray Port::data_extra_pins(uint8_t slot, uint8_t data, uint8_t extra, uint8_t extra2) {
+QByteArray Port::data_extra_pins(uint8_t slot, uint8_t data, uint8_t pin, uint8_t extra) {
     QByteArray a;
     QDataStream ds(&a, QIODevice::ReadWrite);
     ds.setByteOrder(QDataStream::LittleEndian);
     ds << slot;
     ds << data;
+    ds << pin;
     ds << extra;
-    ds << extra2;
     return a;
 }
-QByteArray Port::data_extra_pins_32(uint8_t slot, uint8_t data, uint8_t extra, uint32_t extra2) {
+QByteArray Port::data_extra_pins_32(uint8_t slot, uint8_t data, uint8_t pin, uint32_t extra) {
     QByteArray a;
     QDataStream ds(&a, QIODevice::ReadWrite);
     ds.setByteOrder(QDataStream::LittleEndian);
     ds << slot;
     ds << data;
+    ds << pin;
     ds << extra;
-    ds << extra2;
     return a;
+}
+QList<uint8_t> Port::read_8_n(QByteArray a, uint8_t count) {
+    QDataStream ds(a);
+    QList<uint8_t> list;
+    uint8_t tmp;
+    for (uint8_t i =0; i < count; i++) {
+        ds >> tmp;
+        list << tmp;
+    }
+    return list;
 }
 uint8_t Port::read_8(QByteArray a) {
     QDataStream ds(read(a));
@@ -381,11 +391,6 @@ void Port::handleError(QSerialPort::SerialPortError serialPortError)
 {
     if (serialPortError != QSerialPort::SerialPortError::NoError && serialPortError != QSerialPort::NotOpenError) {
         qDebug() << serialPortError << m_serialPort->errorString();
-        //        m_description = "Ardwiino - Error Communicating";
-        //        if (m_serialPort->isOpen()) {
-        //            close();
-        //            portStateChanged();
-        //        }
     }
 }
 void Port::prepareUpload() {
@@ -429,16 +434,6 @@ void Port::updateControllerName() {
     settings.setValue("OEMName", m_description);
 #endif
 }
-QList<uint8_t> Port::read_8_2(QByteArray a) {
-    QDataStream ds(a);
-    QList<uint8_t> list;
-    uint8_t i;
-    ds >> i;
-    list << i;
-    ds >> i;
-    list << i;
-    return list;
-}
 void Port::loadKeys() {
     m_keys.clear();
     m_keys["up"] = read_8(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_UP));
@@ -459,16 +454,16 @@ void Port::loadKeys() {
     m_keys["y"] = read_8(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_Y));
     m_keys["lt"] = read_8(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_LT));
     m_keys["rt"] = read_8(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_RT));
-    auto a = read_8_2(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_L_X));
+    auto a = read_8_n(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_L_X),2);
     m_keys["l_x_lt"] = a[0];
     m_keys["l_x_gt"] = a[1];
-    a = read_8_2(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_L_Y));
+    a = read_8_n(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_L_Y),2);
     m_keys["l_y_lt"] = a[0];
     m_keys["l_y_gt"] = a[1];
-    a = read_8_2(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_R_X));
+    a = read_8_n(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_R_X),2);
     m_keys["r_x_lt"] = a[0];
     m_keys["r_x_gt"] = a[1];
-    a = read_8_2(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_R_Y));
+    a = read_8_n(data_data(COMMAND_READ_CONFIG_VALUE,CONFIG_KEY_R_Y),2);
     m_keys["r_y_lt"] = a[0];
     m_keys["r_y_gt"] = a[1];
 }
