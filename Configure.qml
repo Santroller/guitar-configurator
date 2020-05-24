@@ -92,13 +92,29 @@ ColumnLayout {
             ComboBox {
                 id: comboBox
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: Object.keys(Defines.getTypeCombobox())
+                Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.indexOf(Defines.findTypeDevice(scanner.selected.type)[0])}
+                onActivated: {
+                    scanner.selected.type = comboBox2.model[0].value
+                    comboBox2.currentIndex = 0;
+                    //When the controller type is changed, we need to disable any pins that are not used by that controller.
+                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
+                        scanner.selected.pins[pin] = 0xFF;
+                    }
+                }
+            }
+
+            ComboBox {
+                id: comboBox2
+                Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                model: Defines.fillCombobox("SubType")
-                Binding { target: comboBox; property: "currentIndex"; value: {comboBox.model.findIndex(s => s.value === scanner.selected.type)} }
+                model: Defines.getTypeCombobox()[comboBox.model[comboBox.currentIndex]]
+                Binding { target: comboBox2; property: "currentIndex"; value: comboBox2.model.findIndex(s => s.value === scanner.selected.type)}
 
-                onCurrentIndexChanged: {
-                    scanner.selected.type = comboBox.model[comboBox.currentIndex].value
+                onActivated: {
+                    scanner.selected.type = comboBox2.model[comboBox2.currentIndex].value
                     //When the controller type is changed, we need to disable any pins that are not used by that controller.
                     for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
                         scanner.selected.pins[pin] = 0xFF;

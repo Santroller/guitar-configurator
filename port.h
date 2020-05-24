@@ -146,7 +146,7 @@ public slots:
         return ArdwiinoDefines::getName(m_type).toLower().contains("midi");
     }
     bool isKeyboard() {
-        return m_type == ArdwiinoDefines::KEYBOARD;
+        return m_type >= ArdwiinoDefines::KEYBOARD_GAMEPAD && m_type <= ArdwiinoDefines::KEYBOARD_ROCK_BAND_DRUMS;
     }
     bool isLiveGuitar() {
         return m_type == ArdwiinoDefines::XINPUT_LIVE_GUITAR;

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg52"
+   version="1.1"
+   viewBox="0 0 250.73 148.38">
+  <metadata
+     id="metadata56">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#2d2a2b;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke:#231f20;stroke-miterlimit:10;}.cls-1,.cls-2,.cls-3,.cls-4{stroke-width:0.5px;}.cls-2{fill:#58595b;}.cls-3{fill:#b1b3b6;}.cls-4,.cls-7{fill:#9d9fa2;}.cls-5{fill:#fff;}.cls-5,.cls-6,.cls-7{stroke-width:0.25px;}.cls-6{fill:#231f20;}</style>
+  </defs>
+  <g
+     id="ghome">
+    <circle
+       class="cls-3"
+       cx="47.400002"
+       cy="136.82001"
+       r="3.55"
+       id="circle40"
+       style="fill:#b1b3b6;stroke:#231f20;stroke-width:0.5px;stroke-miterlimit:10" />
+    <path
+       class="cls-7"
+       d="m 46.51,134.89 a 2,2 0 1 0 2.74,0.92 2,2 0 0 0 -2.74,-0.92 z m 1.47,2.92 a 1.24,1.24 0 1 1 0.56,-1.66 1.23,1.23 0 0 1 -0.56,1.66 z"
+       id="path44"
+       style="fill:#9d9fa2;stroke:#231f20;stroke-width:0.25px;stroke-miterlimit:10" />
+  </g>
+</svg>

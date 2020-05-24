@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg88"
+   version="1.1"
+   viewBox="0 0 225.44 155.98">
+  <metadata
+     id="metadata92">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:#393839;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;stroke-width:0.25px;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-2{fill:#464547;}.cls-3{fill:#d75d5e;}.cls-4{fill:#919396;}.cls-5{fill:#fff682;}.cls-6{fill:#4d7aae;}.cls-7{fill:#009d6f;}.cls-8{fill:#fff462;}.cls-9{fill:#5aa2d8;}.cls-10{fill:#2cb67a;}.cls-11{fill:#3e3e3f;}.cls-12{fill:#848689;}.cls-13{fill:#6ca63c;}.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24{stroke:#231f20;}.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20{stroke-width:0.1px;}.cls-14{fill:#0058a3;}.cls-15{fill:#f6bd17;}.cls-16{fill:#aa1e23;}.cls-17{fill:#1687c9;}.cls-18{fill:#febf38;}.cls-19{fill:#99ca3c;}.cls-20{fill:#dd1f26;}.cls-21{fill:none;}.cls-21,.cls-22,.cls-23,.cls-24{stroke-width:0.05px;}.cls-22{fill:#8dc63f;}.cls-23{fill:#d1d3d4;}.cls-24{fill:#9d9fa2;}</style>
+  </defs>
+  <g
+     id="ggc">
+    <path
+       class="cls-4"
+       d="m 148.24,49.43 c 0,0 -4.16,20.07 32.68,25.91 28.19,4.79 52,-17.82 42.1,-32 C 215.37,32.56 199.11,23.6 172.15,29.52 150.24,35 148.24,49.43 148.24,49.43 Z"
+       id="path34"
+       style="fill:#919396;stroke:#000000;stroke-width:0.25px;stroke-miterlimit:10" />
+    <path
+       class="cls-10"
+       d="m 189.84,39.84 a 9.77,9.77 0 0 0 -5.91,-0.34 c -1.92,0.46 -4.18,1.37 -3.82,3.1 0.61,3 6.39,3 6.39,3 0,0 6.74,0.17 6.09,-3 a 4.09,4.09 0 0 0 -2.75,-2.76 z"
+       id="path40"
+       style="fill:#2cb67a;stroke:#000000;stroke-width:0.25px;stroke-miterlimit:10" />
+  </g>
+</svg>

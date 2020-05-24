@@ -16,7 +16,14 @@ public:
           for(auto i = 0; i< sentence.size(); i++){
              sentence[i] = sentence[i][0].toUpper() + sentence[i].right(sentence[i].size()-1);
           }
-          return sentence.join(" ").replace("Ps2","PS2").replace("Ps3","PS3").replace("Apa102", "APA102").replace("Midi","MIDI").replace("Dualshock","DualShock").replace("Udraw","uDraw");
+          return sentence.join(" ")
+                  .replace("Ps2","PS2")
+                  .replace("Ps3","PS3")
+                  .replace("Apa102", "APA102")
+                  .replace("Midi","MIDI")
+                  .replace("Dualshock","DualShock")
+                  .replace("Udraw","uDraw")
+                  .replace("Xinput","XInput");
     }
     static QVariantMap getEntries(QMetaEnum e) {
         QVariantMap map;

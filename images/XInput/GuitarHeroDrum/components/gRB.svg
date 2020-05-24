@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   viewBox="0 0 261.11 153.14"
+   data-name="360GHDrum"
+   id="_360GHDrum">
+  <metadata
+     id="metadata1005">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs932">
+    <style
+       id="style930">.cls-1{fill:#333132;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke:#000;}.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-2,.cls-20,.cls-21,.cls-22,.cls-23,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;}.cls-1,.cls-8,.cls-9{stroke-width:0.75px;}.cls-2{fill:#393839;}.cls-10,.cls-11,.cls-12,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke-width:0.25px;}.cls-3{fill:#565759;}.cls-4{fill:#302e2f;}.cls-5{fill:#cc493a;}.cls-6{fill:#496fb6;}.cls-7{fill:#46a07c;}.cls-8{fill:#db6f4b;}.cls-9{fill:#ffe17f;}.cls-10{fill:#2d2a2b;}.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23{stroke:#231f20;}.cls-11{fill:#464547;}.cls-12{fill:#86888a;}.cls-13{fill:#6ca63c;}.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20{stroke-width:0.1px;}.cls-14{fill:#0058a3;}.cls-15{fill:#f6bd17;}.cls-16{fill:#aa1e23;}.cls-17{fill:#1687c9;}.cls-18{fill:#febf38;}.cls-19{fill:#99ca3c;}.cls-20{fill:#dd1f26;}.cls-21{fill:none;}.cls-21,.cls-22,.cls-23{stroke-width:0.15px;}.cls-22{fill:#8dc63f;}.cls-23{fill:#d1d3d4;}</style>
+  </defs>
+  <g
+     id="gRB">
+    <path
+       class="cls-10"
+       d="M86.15,128.2a22.4,22.4,0,0,0-2.65,6.16c-.47,2.65-.63,10.06-.63,10.06a19.22,19.22,0,0,0,1.64,7.33c1.72,3.9,7.49,2.81,7.49,2.81s14.47-.2,25.89.78,8.79.43,27.82,3.08a7,7,0,0,0,2.51-.06s8.89-2.52,8.43-17.78c0-11.64-8.25-12.38-8.25-12.38s-7.78.74-26.44.74A237.12,237.12,0,0,1,92,126.78S88.12,125.82,86.15,128.2Z"
+       transform="translate(-2.02 -6.76)"
+       id="path966" />
+    <path
+       class="cls-11"
+       d="M99,129.23a54.39,54.39,0,0,1-7.2-.76c-2.1-.52-3-.29-4.09,2.11a31.13,31.13,0,0,0-1.64,4.33l-.58,10s.82,4.73,1.75,6.49.94,2,6,1.81,9-.23,9-.23.88.47.88-.88,0-3.27,0-3.27-.08-.77,1.08-.77,3.68.12,3.68.12.5.08.5-.82c0-1.14.43-12,.43-12s.21-.49-.49-.49-4.36-.15-4.36-.15L104,130s.11-.44-.65-.47S99,129.23,99,129.23Z"
+       transform="translate(-2.02 -6.76)"
+       id="path968" />
+    <path
+       class="cls-12"
+       d="M104.62,129.9v4.57s2.9.14,3.89.14.76,1.06.76,1.06l-.47,11.93a1,1,0,0,1-1.08,1h-3.27s-.71-.14-.71,1v3.08s-.14.59,1.38.59,17.49.9,25.21,2.21S157,159.73,157,159.73a1,1,0,0,0,.93-.17,55.62,55.62,0,0,1,9.33-3.86c3.69-1.08,8.36-2.25,8.36-2.25a1.15,1.15,0,0,0,1-.91c.32-.94,2.37-7.08,2.37-8.19s-1.38-8.3-1.38-8.3-.06-.59-1.11-.82a40,40,0,0,1-8.63-2.93c-3.48-1.75-8.07-4.53-8.07-4.53a6.13,6.13,0,0,0-1.58.15c-1.46.2-24.33,2.1-34.47,2.1S104.62,129.9,104.62,129.9Z"
+       transform="translate(-2.02 -6.76)"
+       id="path970" />
+  </g>
+</svg>
