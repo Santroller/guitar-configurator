@@ -7,21 +7,21 @@
         <file>keys.js</file>
         <file>pins.js</file>
         <file>defines.js</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/ga.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gb.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gback.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gdown.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/ghome.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gLB.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gleft.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gljoy.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gRB.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gright.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gstart.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gup.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gx.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/components/gy.svg</file>
-        <file>images/Keyboard/GuitarHeroDrum/Base.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/ga.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gb.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gback.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gdown.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gLB.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gljoy.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gRB.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gright.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gstart.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gup.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gx.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/Base.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/ga.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gb.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gback.svg</file>
@@ -56,23 +56,23 @@
         <file>images/Keyboard/LiveGuitar/components/gx.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gy.svg</file>
         <file>images/Keyboard/LiveGuitar/Base.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/ga.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gb.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gback.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gbc.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gdown.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/ggc.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/ghome.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gleft.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gljoy.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gRB.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gright.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gstart.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gup.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gx.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gy.svg</file>
-        <file>images/Keyboard/RockBandDrum/components/gyc.svg</file>
-        <file>images/Keyboard/RockBandDrum/Base.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/ga.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gb.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gback.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gbc.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gdown.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/ggc.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/ghome.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gleft.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gljoy.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gRB.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gright.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gstart.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gup.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gx.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gy.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gyc.svg</file>
+        <file>images/Keyboard/RockBandDrums/Base.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/ga.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gb.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gback.svg</file>
@@ -106,21 +106,21 @@
         <file>images/Keyboard/WorldTour/components/gx.svg</file>
         <file>images/Keyboard/WorldTour/components/gy.svg</file>
         <file>images/Keyboard/WorldTour/Base.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/ga.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gb.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gback.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gdown.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/ghome.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gLB.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gleft.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gljoy.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gRB.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gright.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gstart.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gup.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gx.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/components/gy.svg</file>
-        <file>images/MIDI/GuitarHeroDrum/Base.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/ga.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gb.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gback.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gdown.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gLB.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gljoy.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gRB.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gright.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gstart.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gup.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gx.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/Base.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/ga.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gb.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gback.svg</file>
@@ -155,23 +155,23 @@
         <file>images/MIDI/LiveGuitar/components/gx.svg</file>
         <file>images/MIDI/LiveGuitar/components/gy.svg</file>
         <file>images/MIDI/LiveGuitar/Base.svg</file>
-        <file>images/MIDI/RockBandDrum/components/ga.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gb.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gback.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gbc.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gdown.svg</file>
-        <file>images/MIDI/RockBandDrum/components/ggc.svg</file>
-        <file>images/MIDI/RockBandDrum/components/ghome.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gleft.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gljoy.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gRB.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gright.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gstart.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gup.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gx.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gy.svg</file>
-        <file>images/MIDI/RockBandDrum/components/gyc.svg</file>
-        <file>images/MIDI/RockBandDrum/Base.svg</file>
+        <file>images/MIDI/RockBandDrums/components/ga.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gb.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gback.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gbc.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gdown.svg</file>
+        <file>images/MIDI/RockBandDrums/components/ggc.svg</file>
+        <file>images/MIDI/RockBandDrums/components/ghome.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gleft.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gljoy.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gRB.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gright.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gstart.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gup.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gx.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gy.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gyc.svg</file>
+        <file>images/MIDI/RockBandDrums/Base.svg</file>
         <file>images/MIDI/RockBandGuitar/components/ga.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gb.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gback.svg</file>
@@ -443,21 +443,21 @@
         <file>images/XInput/Gamepad/components/gx.svg</file>
         <file>images/XInput/Gamepad/components/gy.svg</file>
         <file>images/XInput/Gamepad/Base.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/ga.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gb.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gback.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gdown.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/ghome.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gLB.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gleft.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gljoy.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gRB.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gright.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gstart.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gup.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gx.svg</file>
-        <file>images/XInput/GuitarHeroDrum/components/gy.svg</file>
-        <file>images/XInput/GuitarHeroDrum/Base.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/ga.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gb.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gback.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gdown.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gLB.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gljoy.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gRB.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gright.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gstart.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gup.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gx.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/XInput/GuitarHeroDrums/Base.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/ga.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gb.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gback.svg</file>
@@ -492,23 +492,23 @@
         <file>images/XInput/LiveGuitar/components/gx.svg</file>
         <file>images/XInput/LiveGuitar/components/gy.svg</file>
         <file>images/XInput/LiveGuitar/Base.svg</file>
-        <file>images/XInput/RockBandDrum/components/ga.svg</file>
-        <file>images/XInput/RockBandDrum/components/gb.svg</file>
-        <file>images/XInput/RockBandDrum/components/gback.svg</file>
-        <file>images/XInput/RockBandDrum/components/gbc.svg</file>
-        <file>images/XInput/RockBandDrum/components/gdown.svg</file>
-        <file>images/XInput/RockBandDrum/components/ggc.svg</file>
-        <file>images/XInput/RockBandDrum/components/ghome.svg</file>
-        <file>images/XInput/RockBandDrum/components/gleft.svg</file>
-        <file>images/XInput/RockBandDrum/components/gljoy.svg</file>
-        <file>images/XInput/RockBandDrum/components/gRB.svg</file>
-        <file>images/XInput/RockBandDrum/components/gright.svg</file>
-        <file>images/XInput/RockBandDrum/components/gstart.svg</file>
-        <file>images/XInput/RockBandDrum/components/gup.svg</file>
-        <file>images/XInput/RockBandDrum/components/gx.svg</file>
-        <file>images/XInput/RockBandDrum/components/gy.svg</file>
-        <file>images/XInput/RockBandDrum/components/gyc.svg</file>
-        <file>images/XInput/RockBandDrum/Base.svg</file>
+        <file>images/XInput/RockBandDrums/components/ga.svg</file>
+        <file>images/XInput/RockBandDrums/components/gb.svg</file>
+        <file>images/XInput/RockBandDrums/components/gback.svg</file>
+        <file>images/XInput/RockBandDrums/components/gbc.svg</file>
+        <file>images/XInput/RockBandDrums/components/gdown.svg</file>
+        <file>images/XInput/RockBandDrums/components/ggc.svg</file>
+        <file>images/XInput/RockBandDrums/components/ghome.svg</file>
+        <file>images/XInput/RockBandDrums/components/gleft.svg</file>
+        <file>images/XInput/RockBandDrums/components/gljoy.svg</file>
+        <file>images/XInput/RockBandDrums/components/gRB.svg</file>
+        <file>images/XInput/RockBandDrums/components/gright.svg</file>
+        <file>images/XInput/RockBandDrums/components/gstart.svg</file>
+        <file>images/XInput/RockBandDrums/components/gup.svg</file>
+        <file>images/XInput/RockBandDrums/components/gx.svg</file>
+        <file>images/XInput/RockBandDrums/components/gy.svg</file>
+        <file>images/XInput/RockBandDrums/components/gyc.svg</file>
+        <file>images/XInput/RockBandDrums/Base.svg</file>
         <file>images/XInput/RockBandGuitar/components/ga.svg</file>
         <file>images/XInput/RockBandGuitar/components/gb.svg</file>
         <file>images/XInput/RockBandGuitar/components/gback.svg</file>
