@@ -96,7 +96,7 @@ Dialog {
                 RowLayout {
                     visible: scanner.selected.hasAddressableLEDs
                     Label {
-                        text: qsTr("Enable LEDs for Pin")
+                        text: qsTr("Enable LEDs for "+KeyInfo.labels[modelData])
                         fontSizeMode: Text.FixedSize
                         verticalAlignment: Text.AlignVCenter
                         font.bold: true
@@ -125,7 +125,7 @@ Dialog {
                 }
 
                 RowLayout {
-                    visible: scanner.selected.leds.includes(modelData)
+                    visible: scanner.selected.hasAddressableLEDs && scanner.selected.leds.includes(modelData)
                     Button {
                         text: "Set LED colour"
                         onClicked: color.open()
