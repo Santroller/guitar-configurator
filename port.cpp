@@ -322,7 +322,9 @@ void Port::readDescription() {
         m_description += " - " + ArdwiinoDefines::getName(m_type);
         if (m_input_type == ArdwiinoDefines::WII)  {
             uint16_t ext = read_16(data_data(COMMAND_READ_INFO,INFO_EXT));
-            m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)ext);
+            auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)ext);
+            if (extName == "Unknown") extName = "Wii Unknown Extension";
+            m_description += " - " + extName;
         } else if(m_input_type == ArdwiinoDefines::PS2) {
             uint8_t ext = read_8(data_data(COMMAND_READ_INFO,INFO_EXT));
             m_description += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);

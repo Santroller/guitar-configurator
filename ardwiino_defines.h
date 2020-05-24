@@ -47,7 +47,9 @@ public:
     JS_ENUM_NO_FIX(buttons)
     template <class T>
     static QString getName(T arg) {
-        return fixKey(QMetaEnum::fromType<T>().valueToKey(arg));
+        auto id = QMetaEnum::fromType<T>().valueToKey(arg);
+        if (QString(id).isEmpty()) return "Unknown";
+        return fixKey(id);
     }
 private:
     static ArdwiinoDefines* instance;
