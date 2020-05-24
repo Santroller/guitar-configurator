@@ -14,7 +14,8 @@ Dialog {
     id: buttonDialog
     property var buttons: [];
     property var pins: PinInfo.getBindings(scanner.selected.boardImage);
-    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+    //We don't want the wii specific labels, as they are only needed for the list controller
+    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, false, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
     property var isAnalog: false;
     property var hasPosNeg: false;
     function loadButton(button,cursorX,cursorY) {

@@ -302,6 +302,8 @@ ColumnLayout {
         standardButtons: Dialog.Close
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
+        property var pins: PinInfo.getBindings(scanner.selected.boardImage);
+        property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
         ColumnLayout {
             Label {
                 text: qsTr("Tilt Sensor Type: ")
@@ -370,6 +372,232 @@ ColumnLayout {
                     height: implicitHeight
                     radius: 2
                     color: "#bdbebf"
+                }
+            }
+            Label {
+                text: "Pin Binding"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            RowLayout {
+                PinBinding {
+                    id: pinBinding
+                    currentPin: "r_y"
+                }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    text: tiltConfig.pins(scanner.selected.pins["r_y"])
+                    onClicked: pinBinding.open()
+
+                    ToolTip.visible: hovered
+                    ToolTip.text: tiltConfig.labels["r_y"]
+                }
+            }
+            Label {
+                visible: scanner.selected.isKeyboard
+                text: "Key Binding"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            RowLayout {
+                visible: scanner.selected.isKeyboard
+                id:rl
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Repeater {
+                    id:r
+                    property var buttonCount:0
+                    property var label:""
+                    model: {
+                        label = tiltConfig.labels["r_y"]
+                        buttonCount = 2;
+                        return ["r_y_lt","r_y_gt"];
+                    }
+                    RowLayout {
+                        KeyBinding {
+                            id: keyBinding
+                            currentKey: modelData
+                        }
+
+                        Button {
+                            id: keyButton
+                            Layout.preferredWidth: (tiltConfig.pWidth/tiltConfig.columns/r.buttonCount) - 6
+                            Layout.fillHeight: true
+                            visible: scanner.selected.isKeyboard
+                            text: KeyInfo.getKeyName(scanner.selected.keys[modelData])
+                            onClicked: keyBinding.open()
+                            ToolTip.visible: hovered
+                            ToolTip.text: {
+                                if (modelData.endsWith("_lt")) {
+                                    return r.label + " -"
+                                } else if (modelData.endsWith("_gt")) {
+                                    return r.label +" +";
+                                } else {
+                                    return r.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Label {
+                text: "Invert Tilt Axis"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: enabled
+                checked: !!scanner.selected.pin_inverts["r_y"]
+                onCheckedChanged: {
+                    var pins = scanner.selected.pin_inverts;
+                    pins["r_y"] = checked;
+                    scanner.selected.pin_inverts = pins;
+                }
+            }
+            Label {
+                visible: scanner.selected.hasAddressableLEDs
+                text: "LEDs"
+                font.pointSize: 15
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            RowLayout {
+                visible: scanner.selected.hasAddressableLEDs
+                Layout.fillWidth: true
+                Switch {
+                    Component.onCompleted: checked = scanner.selected.leds.includes("r_y")
+                    onCheckedChanged: {
+                        var leds = scanner.selected.leds;
+                        var colours = scanner.selected.colours;
+                        if (!checked) {
+                            leds.splice(leds.indexOf("r_y"),1);
+                        } else if (!leds.includes("r_y")){
+                            leds.push("r_y");
+                            if (!colours["r_y"]) {
+                                colours["r_y"] = 0;
+                            }
+                        }
+                        scanner.selected.leds = leds;
+                        scanner.selected.colours = colours;
+                    }
+                }
+                Rectangle {
+                    radius: colorBt2.height
+                    visible: scanner.selected.leds.includes("r_y") && scanner.selected.hasAddressableLEDs
+                    color: "#"+(scanner.selected.colours["r_y"] || 0).toString(16).padStart(6,"0")
+                    width: colorBt2.height
+                    height: colorBt2.height
+                }
+                ColorPickerDialog {
+                    id: color
+                    buttons: ["r_y"]
+                    colorVal: scanner.selected.colours["r_y"]
+                    onColorChanged: {
+                        var colours = scanner.selected.colours;
+                        colours["r_y"] = colorVal;
+                        scanner.selected.colours = colours;
+                    }
+                }
+                Button {
+                    visible: scanner.selected.leds.includes("r_y") && scanner.selected.hasAddressableLEDs
+                    text: "Change colour"
+                    onClicked: color.open()
+                    id: colorBt2
+                }
+            }
+            RowLayout {
+                visible: scanner.selected.isMIDI
+                Label {
+                    text: qsTr("MIDI Type")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                ComboBox {
+                    Layout.fillWidth: true
+                    textRole: "key"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    model: Defines.fillCombobox("MidiType")
+                    currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.midi_type["r_y"]))
+                    onActivated: {
+                        var midi_type = scanner.selected.midi_type;
+                        midi_type["r_y"] = model[currentIndex].value;
+                        scanner.selected.midi_type = midi_type;
+                    }
+                }
+            }
+
+            RowLayout {
+                visible: scanner.selected.isMIDI
+                Label {
+                    text: qsTr("MIDI Note")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                SpinBox {
+                    property var notes: ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
+                    id: noteBox
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    value: scanner.selected.midi_note["r_y"] || 0
+                    onValueChanged: {
+                        var midi_note = scanner.selected.midi_note;
+                        midi_note["r_y"] = value
+                        scanner.selected.midi_note = midi_note;
+                    }
+
+                    editable: true
+                    inputMethodHints: Qt.ImhNone
+                    textFromValue: (value)=>notes[(value)%12]+(((value+6)/12)-2).toFixed(0)
+                    from: 0
+                    to: 127
+                    validator: RegExpValidator { regExp: /^(\w#?)(-?\d+)$/ }
+                    valueFromText: (text)=>{
+                                       var matches = text.match(/^(\w#?)(-?\d+)$/)
+                                       var note = notes.indexOf(matches[1]);
+                                       var octave = parseInt(matches[2]);
+                                       return ((octave + 1)*12)+note;
+                                   }
+                }
+            }
+
+            RowLayout {
+                visible: scanner.selected.isMIDI
+                Label {
+                    text: qsTr("MIDI Channel")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                SpinBox {
+                    id: chanBox
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    value: scanner.selected.midi_channel["r_y"] || 0
+                    onValueChanged: {
+                        var midi_channel = scanner.selected.midi_channel;
+                        midi_channel["r_y"] = value;
+                        scanner.selected.midi_channel = midi_channel;
+                    }
+
+                    from: 1
+                    to: 10
                 }
             }
         }

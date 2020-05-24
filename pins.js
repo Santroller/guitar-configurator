@@ -112,6 +112,20 @@ var guitarLiveLabels = {
     "r_x": "Whammy",
     "r_y": "Tilt Axis",
 }
+var wiiLabels = {
+    "lt": "Left Shoulder Axis",
+    "rt": "Right Shoulder Axis",
+    "l_x": "Left Joystick X Axis",
+    "l_y": "Left Joystick Y Axis",
+    "r_x": "Right Joystick X Axis",
+    "r_y": "Right Joystick Y Axis"
+}
+var wiiGuitarLabels = {
+    "l_x": "Joystick X Axis",
+    "l_y": "Joystick Y Axis",
+    "r_x": "Whammy",
+    "r_y": "Tilt Axis",
+}
 
 var defLabels = {
     "up": "D-pad Up",
@@ -150,8 +164,10 @@ function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
 }
 
 function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
-    if (isWii && isGuitar) return {"r_y": "Tilt Axis"}
-    if (isWii) return {};
+    if (isWii) {
+        if (isGuitar) return wiiGuitarLabels;
+        return wiiLabels;
+    }
     if (isDrum) return drumLabels;
     if (isRB) return guitarRBLabels;
     if (isLiveGuitar) return guitarLiveLabels;

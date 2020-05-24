@@ -13,7 +13,7 @@ import "keys.js" as KeyInfo
 GridLayout {
     id: gl
     rows: Object.values(gl.labels).length+1
-    columns: 3+scanner.selected.isKeyboard+scanner.selected.hasAddressableLEDs
+    columns: 2+scanner.selected.isKeyboard+scanner.selected.hasAddressableLEDs+(scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar)
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
     property var pins: PinInfo.getBindings(scanner.selected.boardImage);
     property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
@@ -41,6 +41,7 @@ GridLayout {
         }
     }
     Label {
+        visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || (scanner.selected.isGuitar)
         text: "Pin Binding"
         font.pointSize: 15
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -50,11 +51,13 @@ GridLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         model: Object.keys(gl.labels)
         RowLayout {
+            visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar
             PinBinding {
                 id: pinBinding
                 currentPin: modelData
             }
             Button {
+                visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || (modelData == "r_y" && scanner.selected.isGuitar)
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
                 text: gl.pins(scanner.selected.pins[modelData])
@@ -122,6 +125,7 @@ GridLayout {
     }
     Label {
         text: "Invert Axis"
+        enabled: scanner.selected.pin_inverts.hasOwnProperty("r_y")
         font.pointSize: 15
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         wrapMode: Text.WordWrap
