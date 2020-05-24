@@ -11,6 +11,7 @@ function fillCombobox(name) {
     return model;
 }
 
+//Turn a type id into the keys for each box
 function findTypeDevice(id) {
     var st = getTypeCombobox();
     for (var type in st) {
@@ -49,7 +50,7 @@ function getBoardComponents(type) {
 
 function getBoardBase(type) {
     let a = findTypeDevice(type);
+    //The controller type needs to be joined up as the images are not stored with spaces.
     a[1] = a[1].split(" ").join("");
     return "images/"+a.join("/");
-//    return boardImages[type+""];
 }
