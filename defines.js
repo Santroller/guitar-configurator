@@ -52,5 +52,6 @@ function getBoardBase(type) {
     let a = findTypeDevice(type);
     //The controller type needs to be joined up as the images are not stored with spaces.
     a[1] = a[1].split(" ").join("");
+    if (!a[1].length) a = [a[0]];
     return "images/"+a.join("/");
 }

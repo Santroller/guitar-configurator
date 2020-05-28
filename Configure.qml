@@ -110,6 +110,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                visible: Defines.getTypeCombobox()[comboBox.model[comboBox.currentIndex]][0].key.length
                 model: Defines.getTypeCombobox()[comboBox.model[comboBox.currentIndex]]
                 Binding { target: comboBox2; property: "currentIndex"; value: comboBox2.model.findIndex(s => s.value === scanner.selected.type)}
 
