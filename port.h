@@ -155,7 +155,7 @@ public slots:
         return m_input_type == ArdwiinoDefines::WII;
     }
     bool isRB() {
-        return m_type == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || m_type == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR;
+        return m_type == ArdwiinoDefines::WII_ROCK_BAND_GUITAR || m_type == ArdwiinoDefines::PS3_ROCK_BAND_GUITAR || m_type == ArdwiinoDefines::XINPUT_ROCK_BAND_GUITAR;
     }
     bool hasAddressableLEDs() {
         return m_led == ArdwiinoDefines::APA102;
