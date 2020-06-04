@@ -75,14 +75,15 @@ jobs:
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
+          version: 5.12.7
       - uses: actions/checkout@v1
         with:
           submodules: true
       - name: Build
         run: |
-          export Qt5_DIR=$GITHUB_WORKSPACE/../Qt/5.12.7/gcc_64
-          export PATH=$Qt5_DIR/bin:$PATH
-          export 
+          # export Qt5_DIR=$GITHUB_WORKSPACE/../Qt/5.12.7/gcc_64
+          # export PATH=$Qt5_DIR/bin:$PATH
+          # export 
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
