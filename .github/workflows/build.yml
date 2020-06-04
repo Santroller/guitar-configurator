@@ -82,6 +82,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
+          sudo apt-get install build-essential
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
