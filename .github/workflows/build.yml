@@ -37,7 +37,7 @@ jobs:
           mkdir build
           cd build
           mkdir -p guitar-configurator.app/Contents/MacOS
-          cmake CONFIG+=release ../
+          cmake -DCMAKE_BUILD_TYPE=Release ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
         run: |
@@ -84,7 +84,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake CONFIG+=release PREFIX=/usr ../
+          cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
           make -j$(nproc)
           make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - name: Bundle
@@ -125,7 +125,9 @@ jobs:
       - name: Build
         run: |
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake CONFIG+=release guitar-configurator.pro
+          mkdir release
+          cd release
+          cmake -DCMAKE_BUILD_TYPE=Release ..\
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
