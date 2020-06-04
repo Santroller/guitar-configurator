@@ -137,6 +137,7 @@ jobs:
           xcopy firmware /O/X/E/H/K/I deploy\firmware
           xcopy binaries\win /O/X/E/H/K/I deploy\binaries
           copy release\*.json deploy
+          find
           cp release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
