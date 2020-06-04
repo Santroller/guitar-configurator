@@ -81,7 +81,7 @@ jobs:
       - name: Build
         run: |
           export Qt5_DIR=$GITHUB_WORKSPACE/../Qt/5.12.8/gcc_64
-          export PATH=$Qt5_DIR/bin
+          export PATH=$Qt5_DIR/bin:$PATH
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
