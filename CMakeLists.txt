@@ -16,12 +16,13 @@ find_package ( Threads REQUIRED )
 
 execute_process(
              COMMAND
-                 git describe --always --tags --abbrev=0
+				 git describe --always --tags --abbrev=0 
+		     WORKING_DIRECTORY 
+				 "${PROJECT_SOURCE_DIR}"
              RESULT_VARIABLE
                  SHORT_HASH_RESULT
              OUTPUT_VARIABLE
                  VERSION_NUMBER)
-
 add_definitions( -DVERSION_NUMBER=${VERSION_NUMBER} )
 set ( guitar-configurator_HDRS
 	status.h
