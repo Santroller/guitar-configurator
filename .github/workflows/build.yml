@@ -82,7 +82,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          gcc --version
+          sudo apt-get install gcc g++
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
