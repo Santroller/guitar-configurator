@@ -73,13 +73,14 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.6.3
         with: 
-          # cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
       - uses: actions/checkout@v1
         with:
           submodules: true
       - name: Build
         run: |
+          export Qt5_Dir=$GITHUB_WORKSPACE/Qt/5.12.8/gcc_64
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
