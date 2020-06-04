@@ -42,7 +42,6 @@ jobs:
       - name: Bundle
         run: |
           cd build
-          find
           mkdir -p guitar-configurator.app/Contents/MacOS/binaries
           mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
@@ -91,8 +90,9 @@ jobs:
           cd build
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          find
-          ./linuxdeployqt-continuous-x86_64.AppImage guitar-configurator.desktop -appimage -qmldir=../ 
+          mkdir bin
+          cp guitar-configurator bin
+          ./linuxdeployqt-continuous-x86_64.AppImage usr/share/applications/guitar-configurator.desktop -appimage -qmldir=../ 
           mkdir artifacts
           mv Guitar_Configurator*.AppImage* artifacts/guitar-configurator-linux.AppImage
       - uses: actions/upload-artifact@v1
