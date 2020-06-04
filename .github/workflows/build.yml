@@ -87,7 +87,6 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ../ 
           make -j$(nproc)
-          make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - name: Bundle
         run: |
           cd build
