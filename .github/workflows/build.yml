@@ -90,9 +90,9 @@ jobs:
           cd build
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          mkdir usr/bin
-          cp guitar-configurator usr/bin
-          ./linuxdeployqt-continuous-x86_64.AppImage usr/share/applications/guitar-configurator.desktop -appimage -qmldir=../ 
+          mkdir appdir/usr/bin
+          cp guitar-configurator appdir/usr/bin
+          ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/guitar-configurator.desktop -appimage -qmldir=../ 
           mkdir artifacts
           mv Guitar_Configurator*.AppImage* artifacts/guitar-configurator-linux.AppImage
       - uses: actions/upload-artifact@v1
