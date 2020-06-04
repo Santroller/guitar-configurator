@@ -84,8 +84,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
-          cat CMakeFiles/CMakeError.log
+          cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../ || cat CMakeFiles/CMakeError.log
           make -j$(nproc)
           make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - name: Bundle
