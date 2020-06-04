@@ -82,7 +82,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=../Qt -DPREFIX=/usr ../
           make -j$(nproc)
           make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - name: Bundle
