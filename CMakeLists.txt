@@ -5,9 +5,8 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
 set( THREADS_PREFER_PTHREAD_FLAG ON )
 add_definitions ( -Wall )
-find_package ( Qt5Widgets REQUIRED )
+
 find_package ( Qt5Core REQUIRED )
-find_package ( Qt5Gui REQUIRED )
 find_package ( Qt5SerialPort REQUIRED )
 find_package ( Qt5Network REQUIRED )
 find_package ( Qt5QuickControls2 REQUIRED )
@@ -22,7 +21,9 @@ execute_process(
              RESULT_VARIABLE
                  SHORT_HASH_RESULT
              OUTPUT_VARIABLE
-                 VERSION_NUMBER)
+				 VERSION_NUMBER
+			 OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 add_definitions( -DVERSION_NUMBER="${VERSION_NUMBER}" )
 set ( guitar-configurator_HDRS
 	status.h
@@ -84,4 +85,4 @@ elseif (WIN32)
 endif()
 file(COPY ${BINARIES} DESTINATION binaries)
 add_executable ( guitar-configurator ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
-target_link_libraries ( guitar-configurator  Qt5::Core Qt5::Gui Qt5::Widgets Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads )
+target_link_libraries ( guitar-configurator  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads )
