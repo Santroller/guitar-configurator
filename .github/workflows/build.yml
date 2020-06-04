@@ -27,6 +27,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.4.0
         with: 
+          version: 5.12.7
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
       - uses: actions/checkout@v1
@@ -81,9 +82,6 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          # export Qt5_DIR=$GITHUB_WORKSPACE/../Qt/5.12.7/gcc_64
-          # export PATH=$Qt5_DIR/bin:$PATH
-          # export 
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
@@ -114,6 +112,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.4.0
         with: 
+          version: 5.12.7
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
       - name: Install QtTools
