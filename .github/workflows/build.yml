@@ -37,7 +37,7 @@ jobs:
           mkdir build
           cd build
           mkdir -p guitar-configurator.app/Contents/MacOS
-          qmake CONFIG+=release ../
+          cmake CONFIG+=release ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
         run: |
@@ -84,7 +84,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          qmake CONFIG+=release PREFIX=/usr ../
+          cmake CONFIG+=release PREFIX=/usr ../
           make -j$(nproc)
           make INSTALL_ROOT=../appdir -j$(nproc) install ; find ../appdir/
       - name: Bundle
@@ -125,7 +125,7 @@ jobs:
       - name: Build
         run: |
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          qmake -config release -tp vc -spec win32-msvc guitar-configurator.pro
+          cmake -release guitar-configurator.pro
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
@@ -133,9 +133,7 @@ jobs:
           mkdir deploy
           xcopy firmware /O/X/E/H/K/I deploy\firmware
           xcopy binaries\win /O/X/E/H/K/I deploy\binaries
-          copy memory-locations.json deploy\memory-locations.json
-          powershell -Command "Invoke-WebRequest -Uri https://dlpublic.b-cdn.net/win64-index.json -OutFile deploy\ch-index.json"
-          powershell -Command "Invoke-WebRequest -Uri https://dltest.b-cdn.net/win64-index.json -OutFile deploy\ch-index-test.json"
+          copy release\*.json deploy
           cp release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data

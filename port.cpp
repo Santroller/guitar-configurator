@@ -206,7 +206,7 @@ void Port::readData() {
             //Sometimes it takes a few readings to start getting real data. Luckily, its rather easy to test if the controller has returned real data or not.
             m_board = ArdwiinoLookup::findByBoard(read(data_data(COMMAND_READ_INFO,INFO_BOARD)).trimmed());
         } while (m_board.name.isEmpty());
-        m_isOutdated |= ArdwiinoLookup::getInstance()->isOld(read(data_data(COMMAND_READ_INFO,INFO_VERSION)));
+//        m_isOutdated |= ArdwiinoLookup::getInstance()->isOld(read(data_data(COMMAND_READ_INFO,INFO_VERSION)));
         readyForRead = true;
         if (!m_isOutdated) {
             readAllData();
