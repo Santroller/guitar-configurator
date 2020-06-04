@@ -79,9 +79,9 @@ jobs:
         with:
           submodules: true
       - name: Build
-        env: 
-          CMAKE_PREFIX_PATH: ../Qt 
         run: |
+          export CMAKE_PREFIX_PATH=$Qt5_DIR
+          echo $Qt5_DIR
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
