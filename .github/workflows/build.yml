@@ -37,7 +37,7 @@ jobs:
           mkdir build
           cd build
           mkdir -p guitar-configurator.app/Contents/MacOS
-          cmake -DCMAKE_BUILD_TYPE=Release ../
+          cmake ../
           make -j$(sysctl -n hw.logicalcpu)
       - name: Bundle
         run: |
@@ -83,7 +83,7 @@ jobs:
           sudo apt-get install libprocps-dev
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ../ 
+          cmake ../ 
           make -j$(nproc)
       - name: Bundle
         run: |
@@ -128,7 +128,7 @@ jobs:
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
-          cmake -DCMAKE_BUILD_TYPE=Release ..\
+          cmake ..\
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
@@ -137,7 +137,7 @@ jobs:
           xcopy firmware /O/X/E/H/K/I deploy\firmware
           xcopy binaries\win /O/X/E/H/K/I deploy\binaries
           copy release\*.json deploy
-          tree
+          tree /F
           cp release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
