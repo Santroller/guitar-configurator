@@ -80,7 +80,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          export Qt5_DIR=$GITHUB_WORKSPACE/../Qt/5.12.8/gcc_64
+          export Qt5_DIR=`realpath $GITHUB_WORKSPACE/../Qt/5.12.8/gcc_64`
           export PATH=$Qt5_DIR/bin:$PATH
           export 
           mkdir build
