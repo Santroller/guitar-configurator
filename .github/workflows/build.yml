@@ -79,9 +79,8 @@ jobs:
         with:
           submodules: true
       - name: Build
-        env: 
-          CMAKE_PREFIX_PATH: ${{ GITHUB_WORKSPACE }}/Qt
         run: |
+          export CMAKE_PREFIX_PATH=${{ GITHUB_WORKSPACE }}/Qt
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DPREFIX=/usr ../
