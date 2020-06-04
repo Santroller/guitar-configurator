@@ -23,7 +23,7 @@ execute_process(
                  SHORT_HASH_RESULT
              OUTPUT_VARIABLE
                  VERSION_NUMBER)
-add_definitions( -DVERSION_NUMBER=${VERSION_NUMBER} )
+add_definitions( -DVERSION_NUMBER="${VERSION_NUMBER}" )
 set ( guitar-configurator_HDRS
 	status.h
 	submodules/Ardwiino/src/shared/config/config.h
