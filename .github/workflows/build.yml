@@ -18,12 +18,12 @@ jobs:
       - name: Install Libs
         run: |
           npm i -g appdmg
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: QtCache-${{ runner.os }}
+      # - name: Cache Qt
+      #   id: cache-qt
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ../Qt
+      #     key: QtCache-${{ runner.os }}
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.4.0
         with: 
