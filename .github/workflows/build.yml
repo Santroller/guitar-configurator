@@ -125,7 +125,7 @@ jobs:
       - name: Build
         run: |
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake -release guitar-configurator.pro
+          cmake CONFIG+=release guitar-configurator.pro
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
