@@ -44,9 +44,9 @@ jobs:
           cd build
           mkdir -p guitar-configurator.app/Contents/MacOS/binaries
           mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
-          cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
-          cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/Frameworks
-          cp -rf ../memory-locations.json guitar-configurator.app/Contents/MacOS/memory-locations.json
+          cp -rf binaries guitar-configurator.app/Contents/MacOS
+          cp -rf binaries/* guitar-configurator.app/Contents/MacOS/Frameworks
+          cp -rf *.json guitar-configurator.app/Contents/MacOS
           cp -rf firmware guitar-configurator.app/Contents/MacOS
           macdeployqt guitar-configurator.app -qmldir=../
           codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
