@@ -42,7 +42,6 @@ jobs:
       - name: Bundle
         run: |
           cd build
-          find .
           mkdir -p guitar-configurator.app/Contents/MacOS/binaries
           mkdir -p guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf ../binaries/mac/* guitar-configurator.app/Contents/MacOS/binaries
