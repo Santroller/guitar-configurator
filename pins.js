@@ -126,6 +126,14 @@ var wiiGuitarLabels = {
     "r_x": "Whammy",
     "r_y": "Tilt Axis",
 }
+var mouseLabels = {
+    "a": "Left Click",
+    "b": "Right Click",
+    "l_x": "Mouse Movement X",
+    "l_y": "Mouse Movement Y",
+    "r_x": "Vertical Scroll",
+    "r_y": "Horizontal Scroll"
+}
 
 var defLabels = {
     "up": "D-pad Up",
@@ -151,9 +159,9 @@ var defLabels = {
     "r_y": "Right Joystick Y Axis",
 }
 
-function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
+function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
     let unused = [];
-    let labels = getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum);
+    let labels = getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse);
     if (labels === defLabels) return unused;
     for (let label in defLabels) {
         if (!(label in labels)) {
@@ -163,7 +171,10 @@ function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
     return unused;
 }
 
-function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum) {
+function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
+    if (isMouse) {
+        return mouseLabels;
+    }
     if (isWii) {
         if (isGuitar) return wiiGuitarLabels;
         return wiiLabels;

@@ -17,16 +17,25 @@ ColumnLayout {
     property var cursorX;
     property var cursorY;
     Item {
+        // It isnt possible to get the aspect ratio of an SVG image with qml easily.
+        // We need it to scale in the right direction, so we just create a version of the image that is never rendered, just to grab its aspect ratio
+        Image {
+            id: hiddenImg
+            source: Defines.getBoardImage(scanner.selected.type)
+            visible: false
+            sourceSize.width: applicationWindow.width/2
+        }
         Image {
             x: (applicationWindow.width-image.paintedWidth)/2
             y: (applicationWindow.height-image.paintedHeight)/2
             property var base: Defines.getBoardBase(scanner.selected.type);
             id: image
             source: Defines.getBoardImage(scanner.selected.type)
-            fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/2
             Layout.maximumWidth: applicationWindow.width/2
-            sourceSize.width: applicationWindow.width/2
+            // We want to use the bigger dimension as the dimension that we scale to. 0 means automatically work out size.
+            sourceSize.width: hiddenImg.paintedWidth > hiddenImg.paintedHeight ? applicationWindow.width/2: 0
+            sourceSize.height: hiddenImg.paintedHeight > hiddenImg.paintedWidth ? applicationWindow.height/2: 0
             MouseArea {
                 hoverEnabled: true
                 anchors.fill: parent
@@ -56,7 +65,9 @@ ColumnLayout {
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/2
             Layout.maximumWidth: applicationWindow.width/2
-            sourceSize.width: applicationWindow.width/2
+            // We want to use the bigger dimension as the dimension that we scale to. 0 means automatically work out size.
+            sourceSize.width: hiddenImg.paintedWidth > hiddenImg.paintedHeight ? applicationWindow.width/2: 0
+            sourceSize.height: hiddenImg.paintedHeight > hiddenImg.paintedWidth ? applicationWindow.height/2: 0
         }
         ColorOverlay {
             visible: true

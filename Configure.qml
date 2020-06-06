@@ -270,7 +270,7 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
             }
             ListView {
-                property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+                property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
                 visible: scanner.selected.hasAddressableLEDs
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -320,7 +320,7 @@ ColumnLayout {
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         property var pins: PinInfo.getBindings(scanner.selected.boardImage);
-        property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+        property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
         ColumnLayout {
             Label {
                 text: qsTr("Tilt Sensor Type: ")

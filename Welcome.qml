@@ -29,6 +29,7 @@ Page {
             }
             sourceSize.width: applicationWindow.width/3
             fillMode: Image.PreserveAspectFit
+            Layout.maximumHeight: applicationWindow.height/3
         }
         Label {
             text: " "

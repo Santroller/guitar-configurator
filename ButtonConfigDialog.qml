@@ -15,7 +15,7 @@ Dialog {
     property var buttons: [];
     property var pins: PinInfo.getBindings(scanner.selected.boardImage);
     //We don't want the wii specific labels, as they are only needed for the list controller
-    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, false, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, false, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
     property var isAnalog: false;
     property var hasPosNeg: false;
     function loadButton(button,cursorX,cursorY) {
@@ -33,7 +33,15 @@ Dialog {
             title = "Right Joystick";
             buttons = ["r_x", "r_y"];
             isAnalog = true;
-        } else {
+        } else if (button === "scroll") {
+            title = "Mouse Scroll";
+            buttons = ["r_x","r_y"];
+            isAnalog = true;
+        } else if (button === "mouse") {
+            title = "Mouse Movement";
+            buttons = ["l_x","l_y"];
+            isAnalog = true;
+        }else {
             title = labels[button];
             isAnalog = scanner.selected.pin_inverts.hasOwnProperty(button);
         }
@@ -96,7 +104,7 @@ Dialog {
                 RowLayout {
                     visible: scanner.selected.hasAddressableLEDs
                     Label {
-                        text: qsTr("Enable LEDs for "+KeyInfo.labels[modelData])
+                        text: qsTr("Enable LEDs for "+buttonDialog.labels[modelData])
                         fontSizeMode: Text.FixedSize
                         verticalAlignment: Text.AlignVCenter
                         font.bold: true

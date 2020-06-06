@@ -24,6 +24,7 @@ class Port : public QObject
     Q_PROPERTY(bool isRB READ isRB NOTIFY typeChanged)
     Q_PROPERTY(bool isWii READ isWii NOTIFY inputTypeChanged)
     Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY typeChanged)
+    Q_PROPERTY(bool isMouse READ isMouse NOTIFY typeChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
     Q_PROPERTY(bool disconnected READ isDisconnected NOTIFY disconnectedChanged)
@@ -147,6 +148,9 @@ public slots:
     }
     bool isKeyboard() {
         return m_type >= ArdwiinoDefines::KEYBOARD_GAMEPAD && m_type <= ArdwiinoDefines::KEYBOARD_ROCK_BAND_DRUMS;
+    }
+    bool isMouse() {
+        return m_type == ArdwiinoDefines::MOUSE;
     }
     bool isLiveGuitar() {
         return m_type == ArdwiinoDefines::XINPUT_LIVE_GUITAR;

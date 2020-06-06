@@ -16,7 +16,7 @@ GridLayout {
     columns: 2+scanner.selected.isKeyboard+scanner.selected.hasAddressableLEDs+(scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.isGuitar)
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
     property var pins: PinInfo.getBindings(scanner.selected.boardImage);
-    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum);
+    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
     property var pWidth: gl.parent.width-50
     flow: GridLayout.TopToBottom
     Label {

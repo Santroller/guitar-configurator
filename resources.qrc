@@ -611,5 +611,10 @@
         <file>images/MIDI/Gamepad/components/gx.svg</file>
         <file>images/MIDI/Gamepad/components/gy.svg</file>
         <file>images/MIDI/Gamepad/Base.svg</file>
+        <file>images/Mouse/components/ga.svg</file>
+        <file>images/Mouse/components/gb.svg</file>
+        <file>images/Mouse/components/gmouse.svg</file>
+        <file>images/Mouse/components/gscroll.svg</file>
+        <file>images/Mouse/Base.svg</file>
     </qresource>
 </RCC>

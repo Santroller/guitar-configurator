@@ -4,6 +4,8 @@
         "string": "cpp",
         "string_view": "cpp",
         "kauth": "cpp",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "deque": "cpp",
+        "vector": "cpp"
     }
 }
