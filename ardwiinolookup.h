@@ -23,7 +23,6 @@ typedef struct {
     QString protocol;
     QString processor;
     uint cpuFrequency;
-    QString originalFirmware;
     QString image;
     bool hasDFU;
 } board_t;
@@ -33,7 +32,7 @@ class ArdwiinoLookup: public QObject
     Q_OBJECT
 public:
     static ArdwiinoLookup* getInstance();
-    static const board_t boards[5];
+    static const board_t boards[11];
     static const board_t detectBoard(const QSerialPortInfo &serialPortInfo);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject *parent = nullptr);

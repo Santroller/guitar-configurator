@@ -27,7 +27,7 @@ ColumnLayout {
     Image {
         id: image
         Layout.alignment: Qt.AlignHCenter
-        source: "images/Upload.svg"
+        source: "/images/Upload.svg"
         fillMode: Image.PreserveAspectFit
         sourceSize.width: applicationWindow.width/10
     }
@@ -95,7 +95,7 @@ ColumnLayout {
             Image {
                 id: dfuImg
                 Layout.alignment: Qt.AlignHCenter
-                source: "images/ArduinoUnoDFU.svg"
+                source: "/images/ArduinoUnoDFU.svg"
                 fillMode: Image.PreserveAspectFit
                 Layout.maximumHeight: applicationWindow.height/3
                 Layout.maximumWidth: applicationWindow.width/3

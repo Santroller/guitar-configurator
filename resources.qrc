@@ -1,12 +1,22 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Welcome.qml</file>
-        <file>Configure.qml</file>
-        <file>Programmer.qml</file>
-        <file>keys.js</file>
-        <file>pins.js</file>
-        <file>defines.js</file>
+        <file>qml/main.qml</file>
+        <file>qml/Welcome.qml</file>
+        <file>qml/Configure.qml</file>
+        <file>qml/Programmer.qml</file>
+        <file>qml/keys.js</file>
+        <file>qml/pins.js</file>
+        <file>qml/defines.js</file>
+        <file>qml/ListController.qml</file>
+        <file>qml/PinBinding.qml</file>
+        <file>qml/ButtonConfigDialog.qml</file>
+        <file>qml/CloneHeroDialog.qml</file>
+        <file>qml/CloneHeroDialogColorRow.qml</file>
+        <file>qml/ColorPickerDialog.qml</file>
+        <file>qml/DraggableItem.qml</file>
+        <file>qml/InteractiveController.qml</file>
+        <file>qml/KeyBinding.qml</file>
+        <file>qml/KeySelect.qml</file>
         <file>images/Keyboard/GuitarHeroDrums/components/ga.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/components/gb.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/components/gback.svg</file>
@@ -565,16 +575,6 @@
         <file>images/list.svg</file>
         <file>images/NoController.svg</file>
         <file>images/Upload.svg</file>
-        <file>ListController.qml</file>
-        <file>PinBinding.qml</file>
-        <file>ButtonConfigDialog.qml</file>
-        <file>CloneHeroDialog.qml</file>
-        <file>CloneHeroDialogColorRow.qml</file>
-        <file>ColorPickerDialog.qml</file>
-        <file>DraggableItem.qml</file>
-        <file>InteractiveController.qml</file>
-        <file>KeyBinding.qml</file>
-        <file>KeySelect.qml</file>
         <file>images/Keyboard/Gamepad/components/ga.svg</file>
         <file>images/Keyboard/Gamepad/components/gb.svg</file>
         <file>images/Keyboard/Gamepad/components/gback.svg</file>

@@ -49,7 +49,7 @@ auto main(int argc, char *argv[]) -> int
     engine.rootContext()->setContextProperty("scanner", scanner);
     engine.rootContext()->setContextProperty("programmer", programmer);
     engine.rootContext()->setContextProperty("ledhandler", ledhandler);
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

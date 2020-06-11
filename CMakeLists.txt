@@ -5,13 +5,14 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
 set( THREADS_PREFER_PTHREAD_FLAG ON )
 add_definitions ( -Wall )
-
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package ( Qt5Core REQUIRED )
 find_package ( Qt5SerialPort REQUIRED )
 find_package ( Qt5Network REQUIRED )
 find_package ( Qt5QuickControls2 REQUIRED )
 find_package ( Qt5Svg REQUIRED )
 find_package ( Threads REQUIRED )
+find_package ( HIDAPI )
 
 execute_process(
              COMMAND
@@ -45,6 +46,7 @@ set ( guitar-configurator_SRCS
 	unixserialhotplug.cpp
 	updatehandler.cpp
 	winserialhotplug.cpp
+	outdated_ardwiino.cpp
 	)
 
 set ( guitar-configurator_RSCS
@@ -62,12 +64,13 @@ set ( guitar-configurator_MOCS
 	unixserialhotplug.h
 	updatehandler.h
 	status.h
+	outdated_ardwiino.h
 	)
 QT5_WRAP_CPP(MOCS ${guitar-configurator_MOCS})
 math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
 file(COPY firmware DESTINATION .)
 file(COPY memory-locations.json DESTINATION .)
-set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/icon.icns)
+set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/images/icons/icon.icns)
 if (APPLE)
     file(GLOB BINARIES "binaries/mac/*")
     file(COPY binaries/mac DESTINATION .)
@@ -78,7 +81,7 @@ if (APPLE)
     set(MACOSX_BUNDLE_INFO_PLIST MacOSXDebugBundleInfo.plist.in)
 elseif (UNIX) 
     file(COPY guitar-configurator.desktop DESTINATION appdir/usr/share/applications )
-    file(COPY icon.png DESTINATION appdir/usr/share/icons/hicolor/256x256/apps )
+    file(COPY images/icons/icon.png DESTINATION appdir/usr/share/icons/hicolor/256x256/apps )
     file(GLOB BINARIES "binaries/linux-${BITS}/*")
     file(DOWNLOAD https://dlpublic.b-cdn.net/linux-index.json ${CMAKE_BINARY_DIR}/ch-index.json)
     file(DOWNLOAD https://dltest.b-cdn.net/linux-index.json ${CMAKE_BINARY_DIR}/ch-index-test.json)
@@ -86,8 +89,8 @@ elseif (WIN32)
     file(GLOB BINARIES "binaries/win/*")
     file(DOWNLOAD https://dlpublic.b-cdn.net/win${BITS}-index.json ${CMAKE_BINARY_DIR}/ch-index.json)
     file(DOWNLOAD https://dltest.b-cdn.net/win${BITS}-index.json ${CMAKE_BINARY_DIR}/ch-index-test.json)
-	file(COPY icon.ico DESTINATION .)
+	file(COPY images/icons/icon.ico DESTINATION .)
 endif()
 file(COPY ${BINARIES} DESTINATION binaries)
 add_executable ( ${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${myApp_ICON} ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} project.rc)
-target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads )
+target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads HIDAPI::hidapi )

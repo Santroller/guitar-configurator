@@ -16,7 +16,7 @@ auto Programmer::detectBoard() -> board_t {
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("binaries");
     for (board_t board: ArdwiinoLookup::boards) {
-        if (board.originalFirmware == "") continue;
+        if (!board.shortName.startsWith(m_port->board().shortName)) continue;
         m_process = new QProcess();
         m_process->setWorkingDirectory(dir.path());
         connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
@@ -30,10 +30,11 @@ auto Programmer::detectBoard() -> board_t {
 }
 void Programmer::programDFU() {
     board_t board = detectBoard();
-    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency)+".hex";
+    QString hexFile = "ardwiino-" + board.hexFile + "-"+board.processor+"-"+QString::number(board.cpuFrequency);
     if (m_restore) {
-        hexFile = board.originalFirmware;
+        hexFile += "-restore";
     }
+    hexFile += ".hex";
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
     m_process_out.clear();

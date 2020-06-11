@@ -20,7 +20,7 @@ ColumnLayout {
     }
     Button {
         Layout.alignment: Qt.AlignRight | Qt.AlignTop
-        icon.source: scanner.isGraphical?"images/graphical.svg":"images/list.svg"
+        icon.source: scanner.isGraphical?"/images/graphical.svg":"/images/list.svg"
         onClicked: scanner.toggleGraphics()
         ToolTip.visible: hovered
         ToolTip.text: scanner.isGraphical?"Swap to List view":"Swap to Graphical view"
@@ -183,7 +183,6 @@ ColumnLayout {
             id: restore
             text: qsTr("Restore Device back to Arduino")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            visible: scanner.selected.hasDFU
             onClicked: {
                 programmer.setRestoring(true);
                 mainStack.replace("Programmer.qml");

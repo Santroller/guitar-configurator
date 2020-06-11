@@ -98,6 +98,7 @@ public slots:
     void readyRead();
     void writeConfig();
     void scanAfterDFU();
+    void touch();
     bool isAlreadyDFU() const {
         return m_isAlreadyDFU;
     }

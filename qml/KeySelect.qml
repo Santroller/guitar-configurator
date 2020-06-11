@@ -20,8 +20,8 @@ Page {
                 return ret;
             }
             property var locations: {
-                "images/uno.png": {pins: [...g(8,1083, 13, -40, 0), ...g(6,743, 13, -40, 8), ...g(6,873, 770, 40, 14)], r:30},
-                "images/micro.png": {pins: [
+                "/images/uno.png": {pins: [...g(8,1083, 13, -40, 0), ...g(6,743, 13, -40, 8), ...g(6,873, 770, 40, 14)], r:30},
+                "/images/micro.png": {pins: [
                         ...g(2,348, 5, -31, 0),
                         ...g(8,224, 5, -31, 2),
                         {x:8, y: 191, id: 10},
@@ -30,7 +30,7 @@ Page {
                         {x:103, y: 191, id: 15},
                         ...g(4, 132, 191, 32, 18)
                     ], r:25},
-                "images/leonardo.png": {pins: [...g(8,903, 18, -35, 0), ...g(6,597, 27, -35, 8), ...g(6,727, 697, 35, 14)], r:25},
+                "/images/leonardo.png": {pins: [...g(8,903, 18, -35, 0), ...g(6,597, 27, -35, 8), ...g(6,727, 697, 35, 14)], r:25},
             }
             property var scaleX: 1 / sourceSize.width * paintedWidth
             property var scaleY: 1 / sourceSize.height * paintedHeight

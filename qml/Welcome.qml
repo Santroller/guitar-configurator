@@ -24,7 +24,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter
             source: {
                 let index = devices.currentIndex;
-                if (index === -1 || !devices.model[index].ready) return "images/NoController.svg";
+                if (index === -1 || !devices.model[index].ready) return "/images/NoController.svg";
                 return Defines.getBoardImage(devices.model[index].type);
             }
             sourceSize.width: applicationWindow.width/3

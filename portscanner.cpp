@@ -74,7 +74,7 @@ void PortScanner::setSelected(Port* port) {
     dir.cd("binaries");
     int i = 0;
     for (board_t board: ArdwiinoLookup::boards) {
-        if (board.originalFirmware == "") {
+        if (board.protocol == "dfu") {
             m_process[i++] = nullptr;
             continue;
         }
