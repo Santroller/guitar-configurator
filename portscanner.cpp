@@ -11,7 +11,7 @@
 #include <QIcon>
 #include <QProcess>
 #include <algorithm>
-#ifdef Q_OS_UNIX
+#if Q_OS_UNIX
 #include <libusb-1.0/libusb.h>
 #else
 #include <libusb/libusb.h>
