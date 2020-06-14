@@ -18,7 +18,6 @@ jobs:
       - name: Install Libs
         run: |
           npm i -g appdmg
-          brew install libusb
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -89,7 +88,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:fpoussin/ppa
           sudo apt-get update
-          sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev
+          sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev libhidapi-hidraw0 libhidapi-dev
           mkdir build
           cd build
           cmake ../ 
@@ -133,7 +132,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          xcopy libraries/QtUsb/Qt /O/X/E/H/K/I ../
+          xcopy libraries/QtUsb/Qt ../ /O/X/E/H/K/I 
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
@@ -143,12 +142,12 @@ jobs:
       - name: Bundle
         run: |
           mkdir deploy
-          xcopy firmware /O/X/E/H/K/I deploy\firmware
-          xcopy binaries\win /O/X/E/H/K/I deploy\binaries
+          xcopy firmware deploy\firmware /O/X/E/H/K/I 
+          xcopy binaries\win deploy\binaries /O/X/E/H/K/I 
           copy release\*.json deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
-          xcopy /O/X/E/H/K/I deploy installer\packages\net.tangentmc.guitar_configurator\data
+          xcopy deploy installer\packages\net.tangentmc.guitar_configurator\data /O/X/E/H/K/I 
           mkdir artifacts
           powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\config\config.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"

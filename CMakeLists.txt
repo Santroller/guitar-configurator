@@ -14,7 +14,6 @@ find_package ( Qt5QuickControls2 REQUIRED )
 find_package ( Qt5Svg REQUIRED )
 find_package ( Threads REQUIRED )
 find_package ( Qt5Usb REQUIRED )
-# find_package ( HIDAPI REQUIRED )
 
 execute_process(
              COMMAND
