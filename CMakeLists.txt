@@ -15,7 +15,6 @@ find_package ( Qt5Svg REQUIRED )
 find_package ( Threads REQUIRED )
 find_package ( Qt5Usb REQUIRED )
 find_package ( HIDAPI REQUIRED )
-find_package ( LibUSB REQUIRED )
 
 execute_process(
              COMMAND
@@ -108,4 +107,4 @@ elseif (WIN32)
 endif()
 file(COPY ${BINARIES} DESTINATION binaries)
 add_executable ( ${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${myApp_ICON} ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} resources/project.rc)
-target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads Qt5::Usb HIDAPI::hidapi LibUSB  )
+target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads Qt5::Usb HIDAPI::hidapi usb-1.0  )
