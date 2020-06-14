@@ -87,6 +87,7 @@ jobs:
       - name: Build
         run: |
           sudo add-apt-repository ppa:fpoussin/ppa
+          sudo apt-get update
           sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev
           mkdir build
           cd build
