@@ -134,7 +134,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          robocopy "libraries\QtUsb\Qt\*" "..\Qt\" /e
+          robocopy ".\libraries\QtUsb\Qt\*" "..\Qt\" /e
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
@@ -144,12 +144,12 @@ jobs:
       - name: Bundle
         run: |
           mkdir deploy
-          robocopy firmware deploy\firmware /e
-          robocopy binaries\win deploy\binaries /e
+          robocopy ".\firmware" ".\deploy\firmware" /e
+          robocopy ".\binaries\win" ".\deploy\binaries" /e
           copy release\*.json deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
-          robocopy deploy installer\packages\net.tangentmc.guitar_configurator\data /e
+          robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e
           mkdir artifacts
           powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\config\config.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"
