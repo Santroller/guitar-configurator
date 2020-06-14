@@ -8,7 +8,6 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
-#include <QHidDevice>
 #include <QIcon>
 #include <QProcess>
 #include <algorithm>

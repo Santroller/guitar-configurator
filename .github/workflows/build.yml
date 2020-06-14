@@ -18,6 +18,8 @@ jobs:
       - name: Install Libs
         run: |
           npm i -g appdmg
+          brew install pkgconfig
+          brew install libusb
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -132,7 +134,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          xcopy libraries/QtUsb/Qt ../ /O/X/E/H/K/I 
+          robocopy "libraries\QtUsb\Qt\*" "..\Qt\" /e
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
@@ -142,12 +144,12 @@ jobs:
       - name: Bundle
         run: |
           mkdir deploy
-          xcopy firmware deploy\firmware /O/X/E/H/K/I 
-          xcopy binaries\win deploy\binaries /O/X/E/H/K/I 
+          robocopy firmware deploy\firmware /e
+          robocopy binaries\win deploy\binaries /e
           copy release\*.json deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
-          xcopy deploy installer\packages\net.tangentmc.guitar_configurator\data /O/X/E/H/K/I 
+          robocopy deploy installer\packages\net.tangentmc.guitar_configurator\data /e
           mkdir artifacts
           powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\config\config.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"
