@@ -19,7 +19,7 @@ jobs:
         run: |
           npm i -g appdmg
           brew install pkgconfig
-          brew install libusb
+          brew install hidapi
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -90,7 +90,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:fpoussin/ppa
           sudo apt-get update
-          sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev libhidapi-hidraw0 libhidapi-dev
+          sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev libhidapi-hidraw0 libhidapi-dev libusb-1.0-0 libusb-1.0-0-dev
           mkdir build
           cd build
           cmake ../ 
