@@ -1,13 +1,15 @@
 #ifndef ARDWIINOLOOKUP_H
 #define ARDWIINOLOOKUP_H
-#include <QObject>
-#include <QTimer>
-#include <QSerialPortInfo>
 #include <QKeySequence>
 #include <QList>
-#include "submodules/Ardwiino/src/shared/config/config.h"
-#include "ardwiino_defines.h"
+#include <QObject>
+#include <QSerialPortInfo>
+#include <QTimer>
 #include <QVersionNumber>
+#include <QUsbDevice>
+
+#include "ardwiino_defines.h"
+#include "submodules/Ardwiino/src/shared/config/config.h"
 #define ARDWIINO_VID 0x1209
 #define ARDWIINO_PID 0x2882
 #define SONY_VID 0x12ba
@@ -27,24 +29,26 @@ typedef struct {
     bool hasDFU;
 } board_t;
 
-class ArdwiinoLookup: public QObject
-{
+class ArdwiinoLookup : public QObject {
     Q_OBJECT
-public:
+   public:
     static ArdwiinoLookup* getInstance();
     static const board_t boards[11];
-    static const board_t detectBoard(const QSerialPortInfo &serialPortInfo);
+    static const board_t detectBoard(const QUsbDevice::Id &usbDeviceId);
+    static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
-    explicit ArdwiinoLookup(QObject *parent = nullptr);
+    explicit ArdwiinoLookup(QObject* parent = nullptr);
     static const board_t findByBoard(const QString& board);
-public slots:
-    static QString lookupType(uint8_t type);
-    static bool isArdwiino(const QSerialPortInfo &info);
-    static bool isIncompatibleArdwiino(const QSerialPortInfo& QSerialPort);
+   public slots:
+    static bool isArdwiino(const QSerialPortInfo& info);
+    static bool isArdwiino(const QUsbDevice::Id &usbDeviceId);
     static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
-    static bool is115200(const QSerialPortInfo& QSerialPort);
-    static bool isOld(const QString& QSerialPort);
+
+    inline QString getTypeName(uint8_t type) {
+        return ArdwiinoDefines::getName(ArdwiinoDefines::SubType(type));
+    }
+
     inline QString getInputTypeName(ArdwiinoDefines::InputType value) {
         return ArdwiinoDefines::getName(value);
     }
@@ -60,7 +64,8 @@ public slots:
         }
         return QKeySequence(sequence[0].toInt()).toString();
     }
-private:
+
+   private:
     static ArdwiinoLookup* instance;
     static QVersionNumber currentVersion;
     static QVersionNumber supports1Mhz;
@@ -69,4 +74,4 @@ private:
     static QVersionNumber supportsMIDI;
 };
 
-#endif // ARDWIINOLOOKUP_H
+#endif  // ARDWIINOLOOKUP_H

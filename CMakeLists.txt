@@ -6,13 +6,15 @@ set( CMAKE_AUTOMOC ON )
 set( THREADS_PREFER_PTHREAD_FLAG ON )
 add_definitions ( -Wall )
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/submodules/QtUsb")
 find_package ( Qt5Core REQUIRED )
 find_package ( Qt5SerialPort REQUIRED )
 find_package ( Qt5Network REQUIRED )
 find_package ( Qt5QuickControls2 REQUIRED )
 find_package ( Qt5Svg REQUIRED )
 find_package ( Threads REQUIRED )
-find_package ( HIDAPI )
+find_package ( Qt5Usb REQUIRED )
+find_package ( HIDAPI REQUIRED )
 
 execute_process(
              COMMAND
@@ -27,26 +29,34 @@ execute_process(
 
 add_definitions( -DVERSION_NUMBER="${VERSION_NUMBER}" )
 set ( guitar-configurator_HDRS
-	status.h
-	submodules/Ardwiino/src/shared/config/config.h
-	submodules/Ardwiino/src/shared/config/defaults.h
-	submodules/Ardwiino/src/shared/config/defines.h
-	submodules/Ardwiino/src/shared/controller/controller.h
-	winserialhotplug.h
+		status.h
+		submodules/Ardwiino/src/shared/config/config.h
+		submodules/Ardwiino/src/shared/config/defaults.h
+		submodules/Ardwiino/src/shared/config/defines.h
+		submodules/Ardwiino/src/shared/controller/controller.h
+        serial/winserialhotplug.h
+		devices/dfu_arduino.h
+		devices/ardwiino.h
 	)
 
 set ( guitar-configurator_SRCS
-	arduino_defines.cpp
-	ardwiinolookup.cpp
-	ledhandler.cpp
-	main.cpp
-	port.cpp
-	portscanner.cpp
-	programmer.cpp
-	unixserialhotplug.cpp
-	updatehandler.cpp
-	winserialhotplug.cpp
-	outdated_ardwiino.cpp
+		arduino_defines.cpp
+		ardwiinolookup.cpp
+		ledhandler.cpp
+		main.cpp
+		port.cpp
+		portscanner.cpp
+		programmer.cpp
+		updatehandler.cpp
+		devices/outdated_ardwiino.cpp
+		serial/winserialhotplug.cpp
+		serial/unixserialhotplug.cpp
+		devices/device.cpp
+		devices/serialdevice.cpp
+		devices/dfu_arduino.cpp
+		devices/null_device.cpp
+		devices/ardwiino.cpp
+		devices/arduino.cpp
 	)
 
 set ( guitar-configurator_RSCS
@@ -55,21 +65,25 @@ set ( guitar-configurator_RSCS
 QT5_ADD_RESOURCES(RSCS ${guitar-configurator_RSCS})
 
 set ( guitar-configurator_MOCS
-	ardwiino_defines.h
-	ardwiinolookup.h
-	ledhandler.h
-	port.h
-	portscanner.h
-	programmer.h
-	unixserialhotplug.h
-	updatehandler.h
-	status.h
-	outdated_ardwiino.h
+		ardwiino_defines.h
+		ardwiinolookup.h
+		ledhandler.h
+		port.h
+		portscanner.h
+		programmer.h
+		updatehandler.h
+		status.h
+		devices/outdated_ardwiino.h
+		serial/unixserialhotplug.h
+		devices/device.h
+        devices/serialdevice.h
+		devices/null_device.h
+		devices/arduino.h
 	)
 QT5_WRAP_CPP(MOCS ${guitar-configurator_MOCS})
 math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
 file(COPY firmware DESTINATION .)
-file(COPY memory-locations.json DESTINATION .)
+file(COPY resources/memory-locations.json DESTINATION .)
 set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/images/icons/icon.icns)
 if (APPLE)
     file(GLOB BINARIES "binaries/mac/*")
@@ -77,10 +91,10 @@ if (APPLE)
     file(DOWNLOAD https://dlpublic.b-cdn.net/mac-index.json ${CMAKE_BINARY_DIR}/ch-index.json)
     file(DOWNLOAD https://dltest.b-cdn.net/mac-index.json ${CMAKE_BINARY_DIR}/ch-index-test.json)
     set_source_files_properties(${myApp_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    set(MACOSX_BUNDLE_ICON_FILE icon.icns)
-    set(MACOSX_BUNDLE_INFO_PLIST MacOSXDebugBundleInfo.plist.in)
+    set(MACOSX_BUNDLE_ICON_FILE resources/icon.icns)
+    set(MACOSX_BUNDLE_INFO_PLIST resources/MacOSXDebugBundleInfo.plist.in)
 elseif (UNIX) 
-    file(COPY guitar-configurator.desktop DESTINATION appdir/usr/share/applications )
+    file(COPY resources/guitar-configurator.desktop DESTINATION appdir/usr/share/applications )
     file(COPY images/icons/icon.png DESTINATION appdir/usr/share/icons/hicolor/256x256/apps )
     file(GLOB BINARIES "binaries/linux-${BITS}/*")
     file(DOWNLOAD https://dlpublic.b-cdn.net/linux-index.json ${CMAKE_BINARY_DIR}/ch-index.json)
@@ -92,5 +106,5 @@ elseif (WIN32)
 	file(COPY images/icons/icon.ico DESTINATION .)
 endif()
 file(COPY ${BINARIES} DESTINATION binaries)
-add_executable ( ${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${myApp_ICON} ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} project.rc)
-target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads HIDAPI::hidapi )
+add_executable ( ${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${myApp_ICON} ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} resources/project.rc)
+target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads Qt5::Usb  )

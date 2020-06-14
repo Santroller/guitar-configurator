@@ -1,3 +1,6 @@
 [submodule "submodules/Ardwiino"]
 	path = submodules/Ardwiino
 	url = https://github.com/sanjay900/Ardwiino
+[submodule "submodules/QtUsb"]
+	path = submodules/QtUsb
+	url = https://github.com/fpoussin/QtUsb

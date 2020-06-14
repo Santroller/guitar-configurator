@@ -27,8 +27,9 @@ UnixSerialHotplug::UnixSerialHotplug(PortScanner *scanner, QObject *parent) : QO
             continue;
 #endif
         m_port_list.push_back(a);
-        scanner->addPort(a);
+        scanner->serialDeviceDetected(a);
     }
+    // Techncially, instead of a loop we could use QFileSystemWatcher to watch the /dev directory
 }
 
 auto comp(const QSerialPortInfo &a, const QSerialPortInfo &b) -> bool
@@ -56,7 +57,7 @@ void UnixSerialHotplug::tick()
             if (p.portName().startsWith("cu"))
                 continue;
 #endif
-            scanner->addPort(p);
+            scanner->serialDeviceDetected(p);
         }
     }
     diff.clear();
@@ -64,7 +65,7 @@ void UnixSerialHotplug::tick()
     std::set_difference(m_port_list.begin(), m_port_list.end(), newSp.begin(), newSp.end(), std::inserter(diff, diff.begin()), comp);
     for (const auto &p : diff)
     {
-        scanner->removePort(p);
+        scanner->serialDeviceUnplugged(p);
     }
     m_port_list = newSp;
 }

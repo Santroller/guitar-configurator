@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- qusbendpoint.cpp -->
+  <title>QUsbEndpoint Class | Qt Usb 0.6.2</title>
+  <link rel="stylesheet" type="text/css" href="style/offline-simple.css" />
+  <script type="text/javascript">
+    document.getElementsByTagName("link").item(0).setAttribute("href", "style/offline.css");
+    // loading style sheet breaks anchors that were jumped to before
+    // so force jumping to anchor again
+    setTimeout(function() {
+        var anchor = location.hash;
+        // need to jump to different anchor first (e.g. none)
+        location.hash = "#";
+        setTimeout(function() {
+            location.hash = anchor;
+        }, 0);
+    }, 0);
+  </script>
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="main">
+    <div class="main-rounded">
+      <div class="navigationbar">
+        <table><tr>
+<td ><a href="../qtdoc/index.html">Qt 0.6</a></td><td >Qt Usb</td><td ><a href="qtusb-module.html">C++ Classes</a></td><td >QUsbEndpoint</td></tr></table><table class="buildversion"><tr>
+<td id="buildversion" width="100%" align="right">Qt 0.6&#x2e;2 Reference Documentation</td>
+        </tr></table>
+      </div>
+    </div>
+<div class="content">
+<div class="line">
+<div class="content mainContent">
+<div class="sidebar">
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#reimplemented-public-functions">Reimplemented Public Functions</a></li>
+<li class="level1"><a href="#public-slots">Public Slots</a></li>
+<li class="level1"><a href="#signals">Signals</a></li>
+<li class="level1"><a href="#reimplemented-protected-functions">Reimplemented Protected Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">QUsbEndpoint Class</h1>
+<!-- $$$QUsbEndpoint-brief -->
+<p>This class handles transfers between endpoints and the host. <a href="#details">More...</a></p>
+<!-- @@@QUsbEndpoint -->
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign">   <span class="preprocessor">#include &lt;QUsbEndpoint&gt;</span>
+</td></tr><tr><td class="memItemLeft rightAlign topAlign"> qmake:</td><td class="memItemRight bottomAlign"> QT += usb</td></tr><tr><td class="memItemLeft rightAlign topAlign"> Inherits:</td><td class="memItemRight bottomAlign"> <a href="../qtcore/qiodevice.html">QIODevice</a></td></tr></table></div><ul>
+<li><a href="qusbendpoint-members.html">List of all members, including inherited members</a></li>
+</ul>
+<p><b>Note:</b> All functions in this class are <a href="../qtdoc/threads-reentrancy.html">reentrant</a>.</p>
+<a name="public-types"></a>
+<h2 id="public-types">Public Types</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#Status-enum">Status</a></b> { transferCompleted, transferError, transferTimeout, transferCanceled, transferStall, &hellip;, transferOverflow }</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#Type-enum">Type</a></b> { controlEndpoint, isochronousEndpoint, bulkEndpoint, interruptEndpoint, streamEndpoint }</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#bRequest-enum">bRequest</a></b> { requestGetStatus, requestClearFeature, requestSetFeature, requestSetAddress, requestGetDescriptor, &hellip;, requestIsochDelay }</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#bmRequestType-enum">bmRequestType</a></b> { requestStandard, requestClass, requestVendor, requestReserved, recipientDevice, &hellip;, recipientOther }</td></tr>
+</table></div>
+<a name="properties"></a>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn"><b><a href="qusbendpoint.html#polling-prop">polling</a></b> : bool</li>
+<li class="fn"><b><a href="qusbendpoint.html#type-prop">type</a></b> : const Type</li>
+</ul>
+<a name="public-functions"></a>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#QUsbEndpoint">QUsbEndpoint</a></b>(QUsbDevice *<i>dev</i>, QUsbEndpoint::Type <i>type</i>, quint8 <i>ep</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#dtor.QUsbEndpoint">~QUsbEndpoint</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> quint8 </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#endpoint">endpoint</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#makeControlPacket">makeControlPacket</a></b>(char *<i>buffer</i>, QUsbEndpoint::bmRequestType <i>bmRequestType</i>, QUsbEndpoint::bRequest <i>bRequest</i>, quint16 <i>wValue</i>, quint16 <i>wIndex</i>, quint16 <i>wLength</i>) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#poll">poll</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#polling">polling</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#setPolling">setPolling</a></b>(bool <i>enable</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QUsbEndpoint::Status </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#status">status</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QUsbEndpoint::Type </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#type">type</a></b>() const</td></tr>
+</table></div>
+<a name="reimplemented-public-functions"></a>
+<h2 id="reimplemented-public-functions">Reimplemented Public Functions</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual qint64 </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#bytesAvailable">bytesAvailable</a></b>() const override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual qint64 </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#bytesToWrite">bytesToWrite</a></b>() const override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#close">close</a></b>() override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#isSequential">isSequential</a></b>() const override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#open">open</a></b>(QIODevice::OpenMode <i>mode</i>) override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#waitForBytesWritten">waitForBytesWritten</a></b>(int <i>msecs</i>) override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#waitForReadyRead">waitForReadyRead</a></b>(int <i>msecs</i>) override</td></tr>
+</table></div>
+<a name="public-slots"></a>
+<h2 id="public-slots">Public Slots</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#cancelTransfer">cancelTransfer</a></b>()</td></tr>
+</table></div>
+<a name="signals"></a>
+<h2 id="signals">Signals</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#error">error</a></b>(QUsbEndpoint::Status <i>error</i>)</td></tr>
+</table></div>
+<a name="reimplemented-protected-functions"></a>
+<h2 id="reimplemented-protected-functions">Reimplemented Protected Functions</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual qint64 </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#readData">readData</a></b>(char *<i>data</i>, qint64 <i>maxSize</i>) override</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual qint64 </td><td class="memItemRight bottomAlign"><b><a href="qusbendpoint.html#writeData">writeData</a></b>(const char *<i>data</i>, qint64 <i>maxSize</i>) override</td></tr>
+</table></div>
+<a name="details"></a>
+<!-- $$$QUsbEndpoint-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<p>It works on top of libusb's async module. The <a href="qusbdevice.html">QUsbDevice</a> is set as parent object. You need one object per endpoint and direction.</p>
+</div>
+<!-- @@@QUsbEndpoint -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$Status$$$transferCompleted$$$transferError$$$transferTimeout$$$transferCanceled$$$transferStall$$$transferNoDevice$$$transferOverflow -->
+<h3 class="fn" id="Status-enum"><a name="Status-enum"></a>enum QUsbEndpoint::<span class="name">Status</span></h3>
+<p>This enum describres the last transfer status.</p>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tblval">Value</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferCompleted</code></td><td class="topAlign tblval"><code>0</code></td><td class="topAlign">Transfer completed without errors. At least one byte transfered.</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferError</code></td><td class="topAlign tblval"><code>1</code></td><td class="topAlign">Transfer completed with unknown error.</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferTimeout</code></td><td class="topAlign tblval"><code>2</code></td><td class="topAlign">Transfer timed out.</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferCanceled</code></td><td class="topAlign tblval"><code>3</code></td><td class="topAlign">Transfer canceled.</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferStall</code></td><td class="topAlign tblval"><code>4</code></td><td class="topAlign">Transfer stalled (most likely hardware issue).</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferNoDevice</code></td><td class="topAlign tblval"><code>5</code></td><td class="topAlign">Device not found.</td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::transferOverflow</code></td><td class="topAlign tblval"><code>6</code></td><td class="topAlign">More data received than requested.</td></tr>
+</table></div>
+<!-- @@@Status -->
+<!-- $$$Type$$$controlEndpoint$$$isochronousEndpoint$$$bulkEndpoint$$$interruptEndpoint$$$streamEndpoint -->
+<h3 class="fn" id="Type-enum"><a name="Type-enum"></a>enum QUsbEndpoint::<span class="name">Type</span></h3>
+<p>This enum describres the type of endpoint this object handles.</p>
+<div class="table"><table class="valuelist"><tr><th class="tblConst">Constant</th><th class="tblVal">Value</th></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::controlEndpoint</code></td><td class="topAlign tblval"><code>0</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::isochronousEndpoint</code></td><td class="topAlign tblval"><code>1</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::bulkEndpoint</code></td><td class="topAlign tblval"><code>2</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::interruptEndpoint</code></td><td class="topAlign tblval"><code>3</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::streamEndpoint</code></td><td class="topAlign tblval"><code>4</code></td></tr>
+</table></div>
+<!-- @@@Type -->
+<!-- $$$bRequest$$$requestGetStatus$$$requestClearFeature$$$requestSetFeature$$$requestSetAddress$$$requestGetDescriptor$$$requestSetDescriptor$$$requestGetConfiguration$$$requestSetConfiguration$$$requestGetInterface$$$requestSetInterface$$$requestSynchFrame$$$requestSetSel$$$requestIsochDelay -->
+<h3 class="fn" id="bRequest-enum"><a name="bRequest-enum"></a>enum QUsbEndpoint::<span class="name">bRequest</span></h3>
+<p>This enum describres a bRequest packet.</p>
+<div class="table"><table class="valuelist"><tr><th class="tblConst">Constant</th><th class="tblVal">Value</th></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestGetStatus</code></td><td class="topAlign tblval"><code>0x00</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestClearFeature</code></td><td class="topAlign tblval"><code>0x01</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetFeature</code></td><td class="topAlign tblval"><code>0x03</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetAddress</code></td><td class="topAlign tblval"><code>0x05</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestGetDescriptor</code></td><td class="topAlign tblval"><code>0x06</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetDescriptor</code></td><td class="topAlign tblval"><code>0x07</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestGetConfiguration</code></td><td class="topAlign tblval"><code>0x08</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetConfiguration</code></td><td class="topAlign tblval"><code>0x09</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestGetInterface</code></td><td class="topAlign tblval"><code>0x0A</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetInterface</code></td><td class="topAlign tblval"><code>0x0B</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSynchFrame</code></td><td class="topAlign tblval"><code>0x0C</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestSetSel</code></td><td class="topAlign tblval"><code>0x30</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestIsochDelay</code></td><td class="topAlign tblval"><code>0x31</code></td></tr>
+</table></div>
+<!-- @@@bRequest -->
+<!-- $$$bmRequestType$$$requestStandard$$$requestClass$$$requestVendor$$$requestReserved$$$recipientDevice$$$recipientInterface$$$recipientEndpoint$$$recipientOther -->
+<h3 class="fn" id="bmRequestType-enum"><a name="bmRequestType-enum"></a>enum QUsbEndpoint::<span class="name">bmRequestType</span></h3>
+<p>This enum describres a bmRequestType packet.</p>
+<div class="table"><table class="valuelist"><tr><th class="tblConst">Constant</th><th class="tblVal">Value</th></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestStandard</code></td><td class="topAlign tblval"><code>(0x00 &lt; 5)</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestClass</code></td><td class="topAlign tblval"><code>(0x01 &lt; 5)</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestVendor</code></td><td class="topAlign tblval"><code>(0x02 &lt; 5)</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::requestReserved</code></td><td class="topAlign tblval"><code>(0x03 &lt; 5)</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::recipientDevice</code></td><td class="topAlign tblval"><code>0x00</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::recipientInterface</code></td><td class="topAlign tblval"><code>0x01</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::recipientEndpoint</code></td><td class="topAlign tblval"><code>0x02</code></td></tr>
+<tr><td class="topAlign"><code>QUsbEndpoint::recipientOther</code></td><td class="topAlign tblval"><code>0x03</code></td></tr>
+</table></div>
+<!-- @@@bmRequestType -->
+</div>
+<div class="prop">
+<h2>Property Documentation</h2>
+<!-- $$$polling-prop$$$polling$$$setPollingbool -->
+<h3 class="fn" id="polling-prop"><a name="polling-prop"></a><span class="name">polling</span> : <span class="type">bool</span></h3>
+<p>polling status.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft topAlign rightAlign"> bool </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="qusbendpoint.html#polling">polling</a></b></span>()</td></tr>
+<tr><td class="memItemLeft topAlign rightAlign"> void </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="qusbendpoint.html#setPolling">setPolling</a></b></span>(bool <i>enable</i>)</td></tr>
+</table></div>
+<!-- @@@polling -->
+<!-- $$$type-prop$$$type -->
+<h3 class="fn" id="type-prop"><a name="type-prop"></a><span class="name">type</span> : const <span class="type"><a href="qusbendpoint.html#Type-enum">Type</a></span></h3>
+<p>Transfer type.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft topAlign rightAlign"> QUsbEndpoint::Type </td><td class="memItemRight bottomAlign"><span class="name"><b><a href="qusbendpoint.html#type">type</a></b></span>() const</td></tr>
+</table></div>
+<!-- @@@type -->
+</div>
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$QUsbEndpoint[overload1]$$$QUsbEndpointQUsbDevice*QUsbEndpoint::Typequint8 -->
+<h3 class="fn" id="QUsbEndpoint"><a name="QUsbEndpoint"></a>QUsbEndpoint::<span class="name">QUsbEndpoint</span>(<span class="type"><a href="qusbdevice.html">QUsbDevice</a></span> *<i>dev</i>, <span class="type"><a href="qusbendpoint.html#Type-enum">QUsbEndpoint::Type</a></span> <i>type</i>, <span class="type"><a href="../qtcore/qtglobal.html#quint8-typedef">quint8</a></span> <i>ep</i>)</h3>
+<p>QUsbEndpoint constructor.</p>
+<p>This create an object of the given <i>type</i> for the <i>ep</i> endpoint.</p>
+<p><i>dev</i> will be set as parent object.</p>
+<!-- @@@QUsbEndpoint -->
+<!-- $$$cancelTransfer[overload1]$$$cancelTransfer -->
+<h3 class="fn" id="cancelTransfer"><a name="cancelTransfer"></a><code>[slot] </code><span class="type">void</span> QUsbEndpoint::<span class="name">cancelTransfer</span>()</h3>
+<!-- @@@cancelTransfer -->
+<!-- $$$error[overload1]$$$errorQUsbEndpoint::Status -->
+<h3 class="fn" id="error"><a name="error"></a><code>[signal] </code><span class="type">void</span> QUsbEndpoint::<span class="name">error</span>(<span class="type"><a href="qusbendpoint.html#Status-enum">QUsbEndpoint::Status</a></span> <i>error</i>)</h3>
+<p>emits a signal on any transfer <i>error</i>.</p>
+<!-- @@@error -->
+<!-- $$$~QUsbEndpoint[overload1]$$$~QUsbEndpoint -->
+<h3 class="fn" id="dtor.QUsbEndpoint"><a name="dtor.QUsbEndpoint"></a><code>[virtual] </code>QUsbEndpoint::<span class="name">~QUsbEndpoint</span>()</h3>
+<p>Will cancel all transfers on exit.</p>
+<!-- @@@~QUsbEndpoint -->
+<!-- $$$bytesAvailable[overload1]$$$bytesAvailable -->
+<h3 class="fn" id="bytesAvailable"><a name="bytesAvailable"></a><code>[override virtual] </code><span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> QUsbEndpoint::<span class="name">bytesAvailable</span>() const</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#bytesAvailable">QIODevice::bytesAvailable</a>() const.</p>
+<p>Bytes available to read.</p>
+<!-- @@@bytesAvailable -->
+<!-- $$$bytesToWrite[overload1]$$$bytesToWrite -->
+<h3 class="fn" id="bytesToWrite"><a name="bytesToWrite"></a><code>[override virtual] </code><span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> QUsbEndpoint::<span class="name">bytesToWrite</span>() const</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#bytesToWrite">QIODevice::bytesToWrite</a>() const.</p>
+<p>Bytes left to write.</p>
+<!-- @@@bytesToWrite -->
+<!-- $$$close[overload1]$$$close -->
+<h3 class="fn" id="close"><a name="close"></a><code>[override virtual] </code><span class="type">void</span> QUsbEndpoint::<span class="name">close</span>()</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#close">QIODevice::close</a>().</p>
+<p>Close the transfer.</p>
+<p>This will cancel any ongoing transfers.</p>
+<!-- @@@close -->
+<!-- $$$endpoint -->
+<h3 class="fn" id="endpoint"><a name="endpoint"></a><span class="type"><a href="../qtcore/qtglobal.html#quint8-typedef">quint8</a></span> QUsbEndpoint::<span class="name">endpoint</span>() const</h3>
+<p>Returns the transfer <code>endpoint</code>.</p>
+<p><b>Note:</b> Getter function for property <a href="">endpoint</a>. </p><!-- @@@endpoint -->
+<!-- $$$isSequential[overload1]$$$isSequential -->
+<h3 class="fn" id="isSequential"><a name="isSequential"></a><code>[override virtual] </code><span class="type">bool</span> QUsbEndpoint::<span class="name">isSequential</span>() const</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#isSequential">QIODevice::isSequential</a>() const.</p>
+<p>Always returns <code>true</code>.</p>
+<!-- @@@isSequential -->
+<!-- $$$makeControlPacket[overload1]$$$makeControlPacketchar*QUsbEndpoint::bmRequestTypeQUsbEndpoint::bRequestquint16quint16quint16 -->
+<h3 class="fn" id="makeControlPacket"><a name="makeControlPacket"></a><span class="type">void</span> QUsbEndpoint::<span class="name">makeControlPacket</span>(<span class="type">char</span> *<i>buffer</i>, <span class="type"><a href="qusbendpoint.html#bmRequestType-enum">QUsbEndpoint::bmRequestType</a></span> <i>bmRequestType</i>, <span class="type"><a href="qusbendpoint.html#bRequest-enum">QUsbEndpoint::bRequest</a></span> <i>bRequest</i>, <span class="type"><a href="../qtcore/qtglobal.html#quint16-typedef">quint16</a></span> <i>wValue</i>, <span class="type"><a href="../qtcore/qtglobal.html#quint16-typedef">quint16</a></span> <i>wIndex</i>, <span class="type"><a href="../qtcore/qtglobal.html#quint16-typedef">quint16</a></span> <i>wLength</i>) const</h3>
+<p>Create a control packet using <i>buffer</i>, <i>bmRequestType</i>, <i>bRequest</i>, <i>wValue</i>, <i>bRequest</i>, <i>wIndex</i>, <i>wLength</i>.</p>
+<!-- @@@makeControlPacket -->
+<!-- $$$open[overload1]$$$openQIODevice::OpenMode -->
+<h3 class="fn" id="open"><a name="open"></a><code>[override virtual] </code><span class="type">bool</span> QUsbEndpoint::<span class="name">open</span>(<span class="type"><a href="../qtcore/qiodevice.html#OpenModeFlag-enum">QIODevice::OpenMode</a></span> <i>mode</i>)</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#open">QIODevice::open</a>(QIODevice::OpenMode mode).</p>
+<p>Open the endpoint with <i>mode</i>.</p>
+<p>Returns <code>true</code> on success.</p>
+<!-- @@@open -->
+<!-- $$$poll[overload1]$$$poll -->
+<h3 class="fn" id="poll"><a name="poll"></a><span class="type">bool</span> QUsbEndpoint::<span class="name">poll</span>()</h3>
+<p>Manual IN (read) polling.</p>
+<p>return <code>true</code> if successful.</p>
+<!-- @@@poll -->
+<!-- $$$polling -->
+<h3 class="fn" id="polling"><a name="polling"></a><span class="type">bool</span> QUsbEndpoint::<span class="name">polling</span>()</h3>
+<p>Get polling status.</p>
+<p>return <code>true</code> if enabled.</p>
+<p><b>Note:</b> Getter function for property <a href="qusbendpoint.html#polling-prop">polling</a>. </p><p><b>See also </b><a href="qusbendpoint.html#setPolling">setPolling</a>().</p>
+<!-- @@@polling -->
+<!-- $$$readData[overload1]$$$readDatachar*qint64 -->
+<h3 class="fn" id="readData"><a name="readData"></a><code>[override virtual protected] </code><span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> QUsbEndpoint::<span class="name">readData</span>(<span class="type">char</span> *<i>data</i>, <span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> <i>maxSize</i>)</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#readData">QIODevice::readData</a>(char *data, qint64 maxSize).</p>
+<p>/reimp</p>
+<p>Read <i>maxSize</i> bytes from the internal buffer to <i>data</i>.</p>
+<p>Returns <code>read</code> bytes.</p>
+<!-- @@@readData -->
+<!-- $$$setPolling -->
+<h3 class="fn" id="setPolling"><a name="setPolling"></a><span class="type">void</span> QUsbEndpoint::<span class="name">setPolling</span>(<span class="type">bool</span> <i>enable</i>)</h3>
+<p><i>enable</i> or disable automating polling.</p>
+<p><b>Note:</b> Setter function for property <a href="qusbendpoint.html#polling-prop">polling</a>. </p><p><b>See also </b><a href="qusbendpoint.html#polling">polling</a>().</p>
+<!-- @@@setPolling -->
+<!-- $$$status[overload1]$$$status -->
+<h3 class="fn" id="status"><a name="status"></a><span class="type"><a href="qusbendpoint.html#Status-enum">QUsbEndpoint::Status</a></span> QUsbEndpoint::<span class="name">status</span>() const</h3>
+<p>Get the endpoint <code>status</code>.</p>
+<!-- @@@status -->
+<!-- $$$type -->
+<h3 class="fn" id="type"><a name="type"></a><span class="type"><a href="qusbendpoint.html#Type-enum">QUsbEndpoint::Type</a></span> QUsbEndpoint::<span class="name">type</span>() const</h3>
+<p>Returns <code>the</code> transfer type.</p>
+<p><b>Note:</b> Getter function for property <a href="qusbendpoint.html#type-prop">type</a>. </p><!-- @@@type -->
+<!-- $$$waitForBytesWritten[overload1]$$$waitForBytesWrittenint -->
+<h3 class="fn" id="waitForBytesWritten"><a name="waitForBytesWritten"></a><code>[override virtual] </code><span class="type">bool</span> QUsbEndpoint::<span class="name">waitForBytesWritten</span>(<span class="type">int</span> <i>msecs</i>)</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#waitForBytesWritten">QIODevice::waitForBytesWritten</a>(int msecs).</p>
+<p>Wait for at least one byte to be written for <i>msecs</i> milliseconds.</p>
+<p>Returns <code>true</code> if any data was written before timeout.</p>
+<!-- @@@waitForBytesWritten -->
+<!-- $$$waitForReadyRead[overload1]$$$waitForReadyReadint -->
+<h3 class="fn" id="waitForReadyRead"><a name="waitForReadyRead"></a><code>[override virtual] </code><span class="type">bool</span> QUsbEndpoint::<span class="name">waitForReadyRead</span>(<span class="type">int</span> <i>msecs</i>)</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#waitForReadyRead">QIODevice::waitForReadyRead</a>(int msecs).</p>
+<p>Wait for at least one byte to be available for <i>msecs</i> milliseconds.</p>
+<p>Returns <code>true</code> if any data was read before timeout.</p>
+<!-- @@@waitForReadyRead -->
+<!-- $$$writeData[overload1]$$$writeDataconstchar*qint64 -->
+<h3 class="fn" id="writeData"><a name="writeData"></a><code>[override virtual protected] </code><span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> QUsbEndpoint::<span class="name">writeData</span>(const <span class="type">char</span> *<i>data</i>, <span class="type"><a href="../qtcore/qtglobal.html#qint64-typedef">qint64</a></span> <i>maxSize</i>)</h3>
+<p>Reimplements: <a href="../qtcore/qiodevice.html#writeData">QIODevice::writeData</a>(const char *data, qint64 maxSize).</p>
+<p>Copies <i>maxSize</i> bytes from <i>data</i> to the internal write buffer and schedules an OUT transfer.</p>
+<p>Returns <code>bytes</code> written to the buffer.</p>
+<!-- @@@writeData -->
+</div>
+        </div>
+       </div>
+   </div>
+   </div>
+</div>
+<div class="footer">
+   <p>
+   <acronym title="Copyright">&copy;</acronym> 2020 The Qt Company Ltd.
+   Documentation contributions included herein are the copyrights of
+   their respective owners.<br/>    The documentation provided herein is licensed under the terms of the    <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation    License version 1.3</a> as published by the Free Software Foundation.<br/>    Qt and respective logos are trademarks of The Qt Company Ltd.     in Finland and/or other countries worldwide. All other trademarks are property
+   of their respective owners. </p>
+</div>
+</body>
+</html>

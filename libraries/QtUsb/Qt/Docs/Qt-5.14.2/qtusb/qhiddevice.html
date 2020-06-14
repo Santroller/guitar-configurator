@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- qhiddevice.cpp -->
+  <title>QHidDevice Class | Qt Usb 0.6.2</title>
+  <link rel="stylesheet" type="text/css" href="style/offline-simple.css" />
+  <script type="text/javascript">
+    document.getElementsByTagName("link").item(0).setAttribute("href", "style/offline.css");
+    // loading style sheet breaks anchors that were jumped to before
+    // so force jumping to anchor again
+    setTimeout(function() {
+        var anchor = location.hash;
+        // need to jump to different anchor first (e.g. none)
+        location.hash = "#";
+        setTimeout(function() {
+            location.hash = anchor;
+        }, 0);
+    }, 0);
+  </script>
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="main">
+    <div class="main-rounded">
+      <div class="navigationbar">
+        <table><tr>
+<td ><a href="../qtdoc/index.html">Qt 0.6</a></td><td >Qt Usb</td><td ><a href="qtusb-module.html">C++ Classes</a></td><td >QHidDevice</td></tr></table><table class="buildversion"><tr>
+<td id="buildversion" width="100%" align="right">Qt 0.6&#x2e;2 Reference Documentation</td>
+        </tr></table>
+      </div>
+    </div>
+<div class="content">
+<div class="line">
+<div class="content mainContent">
+<div class="sidebar">
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">QHidDevice Class</h1>
+<!-- $$$QHidDevice-brief -->
+<p>This class handles all HID operations. <a href="#details">More...</a></p>
+<!-- @@@QHidDevice -->
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign">   <span class="preprocessor">#include &lt;QHidDevice&gt;</span>
+</td></tr><tr><td class="memItemLeft rightAlign topAlign"> qmake:</td><td class="memItemRight bottomAlign"> QT += usb</td></tr><tr><td class="memItemLeft rightAlign topAlign"> Inherits:</td><td class="memItemRight bottomAlign"> <a href="../qtcore/qobject.html">QObject</a></td></tr></table></div><ul>
+<li><a href="qhiddevice-members.html">List of all members, including inherited members</a></li>
+</ul>
+<p><b>Note:</b> All functions in this class are <a href="../qtdoc/threads-reentrancy.html">reentrant</a>.</p>
+<a name="public-functions"></a>
+<h2 id="public-functions">Public Functions</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#close">close</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> qint32 </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#getFeatureReport">getFeatureReport</a></b>(QByteArray *<i>data</i>, int <i>len</i> = -1)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#isOpen">isOpen</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#manufacturer">manufacturer</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#open">open</a></b>(quint16 <i>vid</i>, quint16 <i>pid</i>, const QString *<i>serial</i> = Q_NULLPTR)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#product">product</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> qint32 </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#read">read</a></b>(QByteArray *<i>data</i>, int <i>len</i> = -1, int <i>timeout</i> = -1)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> qint32 </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#sendFeatureReport">sendFeatureReport</a></b>(const QByteArray *<i>data</i>, int <i>len</i> = -1)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#serialNumber">serialNumber</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> qint32 </td><td class="memItemRight bottomAlign"><b><a href="qhiddevice.html#write">write</a></b>(const QByteArray *<i>data</i>, int <i>len</i> = -1)</td></tr>
+</table></div>
+<a name="details"></a>
+<!-- $$$QHidDevice-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+</div>
+<!-- @@@QHidDevice -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$close[overload1]$$$close -->
+<h3 class="fn" id="close"><a name="close"></a><span class="type">void</span> QHidDevice::<span class="name">close</span>()</h3>
+<p>Close the device.</p>
+<!-- @@@close -->
+<!-- $$$getFeatureReport[overload1]$$$getFeatureReportQByteArray*int -->
+<h3 class="fn" id="getFeatureReport"><a name="getFeatureReport"></a><span class="type"><a href="../qtcore/qtglobal.html#qint32-typedef">qint32</a></span> QHidDevice::<span class="name">getFeatureReport</span>(<span class="type"><a href="../qtcore/qbytearray.html">QByteArray</a></span> *<i>data</i>, <span class="type">int</span> <i>len</i> = -1)</h3>
+<p>Get a feature report.</p>
+<!-- @@@getFeatureReport -->
+<!-- $$$isOpen[overload1]$$$isOpen -->
+<h3 class="fn" id="isOpen"><a name="isOpen"></a><span class="type">bool</span> QHidDevice::<span class="name">isOpen</span>() const</h3>
+<p>Returns <code>true</code> if device is open.</p>
+<!-- @@@isOpen -->
+<!-- $$$manufacturer[overload1]$$$manufacturer -->
+<h3 class="fn" id="manufacturer"><a name="manufacturer"></a><span class="type"><a href="../qtcore/qstring.html">QString</a></span> QHidDevice::<span class="name">manufacturer</span>()</h3>
+<p>Returns the manufacturer string.</p>
+<!-- @@@manufacturer -->
+<!-- $$$open[overload1]$$$openquint16quint16constQString* -->
+<h3 class="fn" id="open"><a name="open"></a><span class="type">bool</span> QHidDevice::<span class="name">open</span>(<span class="type"><a href="../qtcore/qtglobal.html#quint16-typedef">quint16</a></span> <i>vid</i>, <span class="type"><a href="../qtcore/qtglobal.html#quint16-typedef">quint16</a></span> <i>pid</i>, const <span class="type"><a href="../qtcore/qstring.html">QString</a></span> *<i>serial</i> = Q_NULLPTR)</h3>
+<p>Opens the HID device, using <i>vid</i> Vendor ID, <i>pid</i> Product ID, and an optional <i>serial</i> number. Returns <code>true</code> on sucess.</p>
+<!-- @@@open -->
+<!-- $$$product[overload1]$$$product -->
+<h3 class="fn" id="product"><a name="product"></a><span class="type"><a href="../qtcore/qstring.html">QString</a></span> QHidDevice::<span class="name">product</span>()</h3>
+<p>Returns the product string.</p>
+<!-- @@@product -->
+<!-- $$$read[overload1]$$$readQByteArray*intint -->
+<h3 class="fn" id="read"><a name="read"></a><span class="type"><a href="../qtcore/qtglobal.html#qint32-typedef">qint32</a></span> QHidDevice::<span class="name">read</span>(<span class="type"><a href="../qtcore/qbytearray.html">QByteArray</a></span> *<i>data</i>, <span class="type">int</span> <i>len</i> = -1, <span class="type">int</span> <i>timeout</i> = -1)</h3>
+<p>Read from device to <i>data</i>.</p>
+<p><i>len</i> defaults to the size of <i>data</i>. <i>timeout</i> defaults to -1 (unlimited, blocking).</p>
+<!-- @@@read -->
+<!-- $$$sendFeatureReport[overload1]$$$sendFeatureReportconstQByteArray*int -->
+<h3 class="fn" id="sendFeatureReport"><a name="sendFeatureReport"></a><span class="type"><a href="../qtcore/qtglobal.html#qint32-typedef">qint32</a></span> QHidDevice::<span class="name">sendFeatureReport</span>(const <span class="type"><a href="../qtcore/qbytearray.html">QByteArray</a></span> *<i>data</i>, <span class="type">int</span> <i>len</i> = -1)</h3>
+<p>Send a Feature report.</p>
+<!-- @@@sendFeatureReport -->
+<!-- $$$serialNumber[overload1]$$$serialNumber -->
+<h3 class="fn" id="serialNumber"><a name="serialNumber"></a><span class="type"><a href="../qtcore/qstring.html">QString</a></span> QHidDevice::<span class="name">serialNumber</span>()</h3>
+<p>Returns the serial number string.</p>
+<!-- @@@serialNumber -->
+<!-- $$$write[overload1]$$$writeconstQByteArray*int -->
+<h3 class="fn" id="write"><a name="write"></a><span class="type"><a href="../qtcore/qtglobal.html#qint32-typedef">qint32</a></span> QHidDevice::<span class="name">write</span>(const <span class="type"><a href="../qtcore/qbytearray.html">QByteArray</a></span> *<i>data</i>, <span class="type">int</span> <i>len</i> = -1)</h3>
+<p>Write <i>data</i> to device.</p>
+<p><i>len</i> defaults to the size of <i>data</i>.</p>
+<!-- @@@write -->
+</div>
+        </div>
+       </div>
+   </div>
+   </div>
+</div>
+<div class="footer">
+   <p>
+   <acronym title="Copyright">&copy;</acronym> 2020 The Qt Company Ltd.
+   Documentation contributions included herein are the copyrights of
+   their respective owners.<br/>    The documentation provided herein is licensed under the terms of the    <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation    License version 1.3</a> as published by the Free Software Foundation.<br/>    Qt and respective logos are trademarks of The Qt Company Ltd.     in Finland and/or other countries worldwide. All other trademarks are property
+   of their respective owners. </p>
+</div>
+</body>
+</html>

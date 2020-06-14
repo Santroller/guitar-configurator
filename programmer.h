@@ -6,6 +6,9 @@
 #include <QDebug>
 #include "port.h"
 #include "status.h"
+#include "devices/ardwiino.h"
+#include "devices/dfu_arduino.h"
+#include "devices/arduino.h"
 
 class Programmer : public QObject
 {
@@ -55,6 +58,12 @@ public slots:
 private:
     void programDFU();
     void programAvrDude();
+    void dfuDeviceAdded(DfuArduino* device);
+    void dfuDeviceUnplugged(DfuArduino* device);
+    void ardwiinoDeviceAdded(Ardwiino* device);
+    void ardwiinoDeviceUnplugged(Ardwiino* device);
+    void arduinoDeviceAdded(Arduino* device);
+    void arduinoDeviceUnplugged(Arduino* device);
     QProcess* m_process{};
     QString m_process_out;
     double m_process_percent{};

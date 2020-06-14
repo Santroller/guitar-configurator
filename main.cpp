@@ -11,9 +11,9 @@
 #include "ardwiino_defines.h"
 #include "ledhandler.h"
 #ifdef Q_OS_WIN
-#include "winserialhotplug.h"
+#include "serial/winserialhotplug.h"
 #else
-#include "unixserialhotplug.h"
+#include "serial/unixserialhotplug.h"
 #endif
 
 auto main(int argc, char *argv[]) -> int

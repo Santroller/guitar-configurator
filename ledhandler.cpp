@@ -324,7 +324,7 @@ void LEDHandler::tick() {
                     countdown = 0;
                 }
                 if (shownNote & 1<<i) {
-                    data[names[i]] = (noteIsStarPower && !starPowerActivated)?m_star_power:scanner->selectedPort()->getColours()[names[i]].toUInt();
+                    // data[names[i]] = (noteIsStarPower && !starPowerActivated)?m_star_power:scanner->getSelected()->getColours()[names[i]].toUInt();
                 }
             } else if (starPowerActivated){
                 data[names[i]] = m_star_power;
@@ -340,10 +340,10 @@ void LEDHandler::tick() {
 #endif
         disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
     }
-    if (scanner->selectedPort() && scanner->selectedPort()->isReady() && data != lastData) {
-        setLEDs(data);
-        lastData = data;
-    }
+    // if (scanner->selectedPort() && scanner->getSelected()->isReady() && data != lastData) {
+    //     setLEDs(data);
+    //     lastData = data;
+    // }
 
 }
 

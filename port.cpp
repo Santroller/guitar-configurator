@@ -69,7 +69,6 @@ void Port::rescan(const QSerialPortInfo &serialPortInfo) {
     m_disconnected = false;
     m_isArdwiino = ArdwiinoLookup::getInstance()->isArdwiino(serialPortInfo);
     m_isOldAPIArdwiino = ArdwiinoLookup::getInstance()->isOldAPIArdwiino(serialPortInfo);
-    m_isOutdated = ArdwiinoLookup::getInstance()->isIncompatibleArdwiino(serialPortInfo);
     m_isAlreadyDFU = ArdwiinoLookup::getInstance()->isAreadyDFU(serialPortInfo);
     if (m_isArdwiino) {
         m_description = "Ardwiino - Reading Controller Information";

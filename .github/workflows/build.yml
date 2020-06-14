@@ -32,6 +32,12 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: true
+      - name: Build QtUsb
+        run: |
+          cd submodules/QtUsb
+          mkdir build && cd build
+          qmake CONFIG+=qtusb-static ..
+          make install
       - name: Build
         run: |
           mkdir build
@@ -80,7 +86,8 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          sudo apt-get install libprocps-dev
+          sudo add-apt-repository ppa:fpoussin/ppa
+          sudo apt-get install libprocps-dev libqt5usb5 libqt5usb5-dev
           mkdir build
           cd build
           cmake ../ 
@@ -124,6 +131,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
+          xcopy libraries/QtUsb/* /O/X/E/H/K/I ../Qt/
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release

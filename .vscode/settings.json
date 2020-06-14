@@ -63,7 +63,15 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "qserialport": "cpp",
+        "qthread": "cpp",
+        "qjsvalue": "cpp",
+        "qusbinfo": "cpp",
+        "qprocess": "cpp",
+        "*.def": "cpp",
+        "qdebug": "cpp",
+        "qserialportinfo": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
