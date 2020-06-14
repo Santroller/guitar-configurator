@@ -18,6 +18,7 @@ jobs:
       - name: Install Libs
         run: |
           npm i -g appdmg
+          brew install libusb
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -132,7 +133,7 @@ jobs:
           submodules: true
       - name: Build
         run: |
-          xcopy libraries/QtUsb/* /O/X/E/H/K/I ../Qt/
+          xcopy libraries/QtUsb/Qt /O/X/E/H/K/I ../
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
