@@ -15,6 +15,8 @@ QByteArray Ardwiino::readData(int id) {
     QByteArray data(120, '\0');
     data[0] = id;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    // Remove report id from report
+    data.remove(0,1);
     return data;
 }
 QString Ardwiino::getDescription() {
