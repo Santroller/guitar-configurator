@@ -15,7 +15,7 @@ class SerialDevice : public Device {
     QSerialPort* m_serialPort;
     QByteArray readWrite(QByteArray data);
    private:
-    inline virtual bool isEqual(const Device& other) {
+    inline virtual bool isEqual(const Device& other) const {
         return m_serialPort->portName() == static_cast<const SerialDevice&>(other).m_serialPort->portName();
     }
 };

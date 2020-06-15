@@ -31,5 +31,5 @@ class Device : public QObject {
    protected:
     board_t m_board;
    private:
-    virtual bool isEqual(const Device& other) const = 0;
+    virtual bool isEqual(const Device& other) = 0;
 };
