@@ -6,12 +6,11 @@
 #include <QList>
 #include <QImage>
 #include "port.h"
+#include <QTimer>
 #include "programmer.h"
 #include <QSettings>
 #include "devices/device.h"
 #include "devices/outdated_ardwiino.h"
-#include <QUsbInfo>
-#include <QUsbDevice>
 
 class PortScanner : public QObject
 {
@@ -28,6 +27,7 @@ signals:
     void selectedChanged();
     void hasSelectedChanged();
 public slots:
+    void tick();
     bool isGraphical() const {
         return m_graphical;
     }
@@ -38,8 +38,6 @@ public slots:
     void update();
     void serialDeviceDetected(const QSerialPortInfo& port);
     void serialDeviceUnplugged(const QSerialPortInfo& port);
-    void usbDeviceDetected(const QUsbDevice::Id& id);
-    void usbDeviceUnplugged(const QUsbDevice::Id& id);
     void fixLinux();
     void toggleGraphics();
     QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
@@ -73,7 +71,7 @@ private:
     QSettings settings;
     QList<QProcess*> m_processes;
     Device* m_emptyDevice;
-    QUsbInfo usbInfo;
+    QTimer *timer;
 };
 
 #endif // PORTSCANNER_H

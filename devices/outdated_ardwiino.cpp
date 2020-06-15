@@ -5,7 +5,7 @@
 OutdatedArdwiino::OutdatedArdwiino(const QSerialPortInfo &serialPortInfo, QObject *parent) : SerialDevice(serialPortInfo, parent), m_isOldAPI(serialPortInfo.serialNumber() == OLD_ARDWIINO_API_SERIAL) {
     
 }
-void OutdatedArdwiino::open() {
+bool OutdatedArdwiino::open() {
     if (m_serialPort->open(QIODevice::ReadWrite)) {
         QThread *thread = QThread::create([this] {
             //We need a delay on linux for unos, as the 328p gets rebooted when we open.
@@ -30,7 +30,9 @@ void OutdatedArdwiino::open() {
             });
         });
         thread->start();
+        return true;
     }
+    return false;
 }
 bool OutdatedArdwiino::isReady() {
     return !m_board.name.isEmpty() && m_serialPort->isOpen();

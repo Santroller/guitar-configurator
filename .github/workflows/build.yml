@@ -34,12 +34,6 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: recursive
-      - name: Build QtUsb
-        run: |
-          cd submodules/QtUsb
-          mkdir build && cd build
-          qmake INCLUDEPATH+=/usr/local/Cellar/libusb/1.0.23/include CONFIG+=qtusb-static ..
-          make install
       - name: Build
         run: |
           mkdir build
@@ -86,15 +80,9 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: recursive
-      - name: Build QtUsb
-        run: |
-          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libusb-1.0-0 libusb-1.0-0-dev
-          cd submodules/QtUsb
-          mkdir build && cd build
-          qmake CONFIG+=qtusb-static ..
-          make install
       - name: Build
         run: |
+          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev
           mkdir build
           cd build
           cmake ../ 
@@ -139,7 +127,6 @@ jobs:
       - name: Build
         run: |
           setx HIDAPI_ROOT_DIR libraries\hidapi-win\x64
-          robocopy ".\libraries\QtUsb\Qt" "..\Qt" /e
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           mkdir release
           cd release
@@ -149,12 +136,12 @@ jobs:
       - name: Bundle
         run: |
           mkdir deploy
-          robocopy ".\firmware" ".\deploy\firmware" /e
-          robocopy ".\binaries\win" ".\deploy\binaries" /e
+          robocopy ".\firmware" ".\deploy\firmware" /e /njh /njs /ndl /nc /ns /nfl
+          robocopy ".\binaries\win" ".\deploy\binaries" /e /njh /njs /ndl /nc /ns /nfl
           copy release\*.json deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
-          robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e
+          robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e /njh /njs /ndl /nc /ns /nfl
           mkdir artifacts
           powershell -Command "(gc installer\config\config.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\config\config.xml"
           powershell -Command "(gc installer\packages\net.tangentmc.guitar_configurator\meta\package.xml) -replace '1.0.0', (git describe --abbrev=0 --tags) | Out-File -encoding ASCII installer\packages\net.tangentmc.guitar_configurator\meta\package.xml"

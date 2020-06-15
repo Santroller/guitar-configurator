@@ -11,6 +11,6 @@ bool NullDevice::isReady() {
 void NullDevice::close() {
     
 }
-void NullDevice::open() {
-    
+bool NullDevice::open() {
+    return true;
 }

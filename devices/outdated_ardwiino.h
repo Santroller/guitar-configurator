@@ -18,7 +18,7 @@ class OutdatedArdwiino : public SerialDevice {
     explicit OutdatedArdwiino(const QSerialPortInfo &serialPortInfo, QObject *parent = nullptr);
     QString getDescription();
     bool isReady();
-    virtual void open();
+    virtual bool open();
     virtual void close();
     inline virtual bool isEqual(const Device& other) const {
         return m_serialPort->portName() == static_cast<const OutdatedArdwiino&>(other).m_serialPort->portName();

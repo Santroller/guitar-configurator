@@ -19,7 +19,7 @@ class Device : public QObject {
     explicit Device(QObject *parent = nullptr);
     virtual QString getDescription() = 0;
     virtual bool isReady() = 0;
-    virtual void open() = 0;
+    virtual bool open() = 0;
     virtual void close() = 0;
     void setBoardType(QString board);
     inline bool operator==(const Device& other) {

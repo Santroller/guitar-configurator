@@ -1,13 +1,15 @@
 #include "ardwiino.h"
 
-Ardwiino::Ardwiino(QUsbDevice::Id usbId, wchar_t* serialNumber, unsigned short version, QObject* parent) : Device(parent), m_usbId(usbId), m_serialNumber(serialNumber), m_version(version) {
+Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId) {
+    m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
 }
-void Ardwiino::open() {
-    m_hiddev = hid_open(m_usbId.vid, m_usbId.pid, m_serialNumber);
+bool Ardwiino::open() {
+    m_hiddev = hid_open(m_usbId->vendor_id, m_usbId->product_id, m_usbId->serial_number);
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
     }
+    return m_hiddev;
 }
 QByteArray Ardwiino::readData(int id) {
     QByteArray data(120, '\0');

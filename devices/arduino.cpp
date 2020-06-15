@@ -11,8 +11,8 @@ bool Arduino::isReady() {
 void Arduino::close() {
     SerialDevice::close();
 }
-void Arduino::open() {
-    
+bool Arduino::open() {
+    return true;
 }
 QString Arduino::getDescription() {
     return m_board.name;

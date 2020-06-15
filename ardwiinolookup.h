@@ -6,7 +6,6 @@
 #include <QSerialPortInfo>
 #include <QTimer>
 #include <QVersionNumber>
-#include <QUsbDevice>
 
 #include "ardwiino_defines.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
@@ -34,14 +33,14 @@ class ArdwiinoLookup : public QObject {
    public:
     static ArdwiinoLookup* getInstance();
     static const board_t boards[11];
-    static const board_t detectBoard(const QUsbDevice::Id &usbDeviceId);
+    static const board_t detectBoard(struct hid_device_info *usbDeviceId);
     static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject* parent = nullptr);
     static const board_t findByBoard(const QString& board);
    public slots:
     static bool isArdwiino(const QSerialPortInfo& info);
-    static bool isArdwiino(const QUsbDevice::Id &usbDeviceId);
+    static bool isArdwiino(struct hid_device_info *usbDeviceId);
     static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
 

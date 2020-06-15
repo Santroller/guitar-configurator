@@ -21,7 +21,7 @@ class Arduino : public SerialDevice {
     QString versionCmd;
     QString freqCmd;
     virtual void close();
-    virtual void open();
+    virtual bool open();
     inline virtual bool isEqual(const Device& other) const {
         return m_serialPort->portName() == static_cast<const Arduino&>(other).m_serialPort->portName();
     }

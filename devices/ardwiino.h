@@ -7,19 +7,17 @@
 #include <QQueue>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <QUsbDevice>
-#include <QUsbInfo>
 #include <hidapi/hidapi.h>
 
 #include "device.h"
 class Ardwiino : public Device {
     Q_OBJECT
    public:
-    explicit Ardwiino(QUsbDevice::Id usbId, wchar_t* serialNumber, unsigned short version, QObject* parent = nullptr);
+    explicit Ardwiino(struct hid_device_info *usbDeviceId, QObject* parent = nullptr);
     QString getDescription();
     bool isReady();
     virtual void close();
-    virtual void open();
+    virtual bool open();
    signals:
     void descriptionChanged();
     void readyChanged();
@@ -29,13 +27,12 @@ class Ardwiino : public Device {
     QString m_processor;
 
    private:
-    QUsbDevice::Id m_usbId;
-    wchar_t* m_serialNumber;
+    struct hid_device_info *m_usbId;
     hid_device* m_hiddev;
-    unsigned short m_version;
     QByteArray readData(int id);
+    QString m_serialNum;
     inline virtual bool isEqual(const Device& other) const {
         auto& otherD = static_cast<const Ardwiino&>(other);
-        return m_serialNumber == otherD.m_serialNumber && m_version == otherD.m_version;
+        return m_serialNum == otherD.m_serialNum;
     }
 };

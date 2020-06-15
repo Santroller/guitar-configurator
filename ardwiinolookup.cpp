@@ -5,7 +5,7 @@
 #include <QRegularExpression>
 
 #include "QDebug"
-#include <QUsbDevice>
+#include <hidapi/hidapi.h>
 QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent) : QObject(parent) {
@@ -24,8 +24,8 @@ auto ArdwiinoLookup::isOldAPIArdwiino(const QSerialPortInfo &serialPortInfo) -> 
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
     return serialPortInfo.vendorIdentifier() == HARMONIX_VID || serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
-auto ArdwiinoLookup::isArdwiino(const QUsbDevice::Id &usbDeviceId) -> bool {
-    return usbDeviceId.vid == HARMONIX_VID || usbDeviceId.vid == SONY_VID || usbDeviceId.vid == SWITCH_VID || (usbDeviceId.vid == ARDWIINO_VID && usbDeviceId.pid == ARDWIINO_PID);
+auto ArdwiinoLookup::isArdwiino(struct hid_device_info *usbDeviceId) -> bool {
+    return usbDeviceId->vendor_id == HARMONIX_VID || usbDeviceId->vendor_id == SONY_VID || usbDeviceId->vendor_id == SWITCH_VID || (usbDeviceId->vendor_id == ARDWIINO_VID && usbDeviceId->product_id == ARDWIINO_PID);
 }
 auto ArdwiinoLookup::isAreadyDFU(const QSerialPortInfo &serialPortInfo) -> bool {
     return serialPortInfo.productIdentifier() == 0x0036 || serialPortInfo.productIdentifier() == 0x9207;
@@ -65,10 +65,10 @@ auto ArdwiinoLookup::detectBoard(const QSerialPortInfo &serialPortInfo) -> const
     }
     return empty;
 }
-auto ArdwiinoLookup::detectBoard(const QUsbDevice::Id &usbDeviceId) -> const board_t {
+auto ArdwiinoLookup::detectBoard(struct hid_device_info *usbDeviceId) -> const board_t {
     for (const auto &board : boards) {
         for (auto &pid : board.productIDs) {
-            if (pid && pid == usbDeviceId.pid) {
+            if (pid && pid == usbDeviceId->product_id) {
                 return board;
             }
         }

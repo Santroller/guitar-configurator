@@ -19,7 +19,7 @@ class NullDevice : public Device {
     virtual QString getDescription();
     virtual bool isReady();
     virtual void close();
-    virtual void open();
+    virtual bool open();
    signals:
     void descriptionChanged();
     void readyChanged();
