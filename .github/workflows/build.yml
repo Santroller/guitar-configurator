@@ -20,6 +20,7 @@ jobs:
           npm i -g appdmg
           brew install pkgconfig
           brew install hidapi
+          brew link libusb
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
