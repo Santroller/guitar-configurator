@@ -37,10 +37,9 @@ jobs:
           submodules: true
       - name: Build QtUsb
         run: |
-          find /usr/local/Cellar/libusb/1.0.23/include/libusb-1.0
           cd submodules/QtUsb
           mkdir build && cd build
-          qmake CONFIG+=qtusb-static ..
+          qmake INCLUDEPATH+=/usr/local/Cellar/libusb/1.0.23/include CONFIG+=qtusb-static ..
           make install
       - name: Build
         run: |
