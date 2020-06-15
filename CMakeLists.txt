@@ -113,3 +113,8 @@ add_executable ( ${PROJECT_NAME} MACOSX_BUNDLE WIN32 ${myApp_ICON} ${guitar-conf
 target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads ${HIDAPI_LIBRARIES} )
 include_directories(${HIDAPI_INCLUDE_DIRS})
 link_directories(${HIDAPI_LIBRARY_DIRS})
+message(${HIDAPI_LIBRARIES})
+if (${HIDAPI_LIBRARY_DIRS}) 
+	message(${HIDAPI_LIBRARY_DIRS})
+endif()
+message(${HIDAPI_INCLUDE_DIRS})
