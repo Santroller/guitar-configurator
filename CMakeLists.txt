@@ -16,7 +16,7 @@ if (UNIX)
 	pkg_search_module(HIDAPI REQUIRED hidapi-libusb hidapi)
 elseif (WIN32)
 	set(HIDAPI_LIBRARY_DIRS ${CMAKE_SOURCE_DIR}/libraries/hidapi-win/x${BITS})
-	set(HIDAPI_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/hidapi)
+	set(HIDAPI_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/hidapi/hidapi)
 	set(HIDAPI_LIBRARIES hidapi)
 endif()
 execute_process(
