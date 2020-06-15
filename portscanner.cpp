@@ -1,6 +1,6 @@
 #include "portscanner.h"
 
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 
 #include <QBitmap>
 #include <QCoreApplication>
