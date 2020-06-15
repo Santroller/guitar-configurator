@@ -7,7 +7,7 @@
 #include <QQueue>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 
 #include "device.h"
 class Ardwiino : public Device {
