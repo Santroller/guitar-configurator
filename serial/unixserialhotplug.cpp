@@ -4,7 +4,6 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-#include <hidapi/hidapi.h>
 #include <QThread>
 int res;
 unsigned char buf[65];
