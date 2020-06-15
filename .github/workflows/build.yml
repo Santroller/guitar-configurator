@@ -51,13 +51,13 @@ jobs:
           cp -rf *.json guitar-configurator.app/Contents/MacOS
           cp -rf firmware guitar-configurator.app/Contents/MacOS
           macdeployqt guitar-configurator.app -qmldir=../
-          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
+          codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           mkdir artifacts
-          cp ../appdmg.json .
-          cp ../icon.icns .
-          cp ../dmg-background.png .
+          cp ../resources/appdmg.json .
+          cp ../resources/icon.icns .
+          cp ../resources/dmg-background.png .
           appdmg appdmg.json artifacts/guitar-configurator-macOS.dmg
-          codesign --entitlements ../entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
+          codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
       - uses: actions/upload-artifact@v1
         with:
           name: mac

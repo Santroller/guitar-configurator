@@ -74,4 +74,5 @@ CMakeLists.txt.user
 !binaries/**/*
 !installer/*
 !installer/**/*
+!libraries/**/*
 build/
