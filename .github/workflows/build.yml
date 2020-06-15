@@ -33,7 +33,7 @@ jobs:
           modules: qtserialport qtquickcontrols2 
       - uses: actions/checkout@v1
         with:
-          submodules: true
+          submodules: recursive
       - name: Build QtUsb
         run: |
           cd submodules/QtUsb
@@ -85,7 +85,7 @@ jobs:
           modules: qtserialport qtquickcontrols2 
       - uses: actions/checkout@v1
         with:
-          submodules: true
+          submodules: recursive
       - name: Build QtUsb
         run: |
           sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libusb-1.0-0 libusb-1.0-0-dev
@@ -135,7 +135,7 @@ jobs:
         shell: cmd
       - uses: actions/checkout@v1
         with:
-          submodules: true
+          submodules: recursive
       - name: Build
         run: |
           setx HIDAPI_ROOT_DIR libraries\hidapi-win\x64
