@@ -9,11 +9,7 @@
 #include <QSerialPortInfo>
 #include <QUsbDevice>
 #include <QUsbInfo>
-#ifdef Q_OS_MACOS
-#include <hidapi.h>
-#else
 #include <hidapi/hidapi.h>
-#endif
 
 #include "device.h"
 class Ardwiino : public Device {
