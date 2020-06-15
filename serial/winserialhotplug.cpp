@@ -13,7 +13,7 @@ bool operator== (const QSerialPortInfo &lhs, const QSerialPortInfo &rhs)
 WinSerialHotplug::WinSerialHotplug(PortScanner* scanner):scanner(scanner) {
     for (auto a:QSerialPortInfo::availablePorts()) {
         m_port_list.push_back(a);
-        scanner->addPort(a);
+        scanner->serialDeviceDetected(a);
     }
 }
 bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
@@ -33,7 +33,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     for (auto p: QSerialPortInfo::availablePorts()) {
                         if (p.portName().contains(QString(reinterpret_cast<QChar*>(lpdbv->dbcp_name)))) {
                             m_port_list.push_back(p);
-                            scanner->addPort(p);
+                            scanner->serialDeviceDetected(p);
                             return false;
                         }
                     }
@@ -46,7 +46,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     for (auto p: m_port_list) {
                         if (p.portName().contains(QString(reinterpret_cast<QChar*>(lpdbv->dbcp_name)))) {
                             m_port_list.removeOne(p);
-                            scanner->removePort(p);
+                            scanner->serialDeviceUnplugged(p);
                             return false;
                         }
                     }
