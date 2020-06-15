@@ -54,8 +54,8 @@ jobs:
           codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           mkdir artifacts
           cp ../resources/appdmg.json .
-          cp ../resources/icon.icns .
-          cp ../resources/dmg-background.png .
+          cp ../images/icons/icon.icns .
+          cp ../images/icons/dmg-background.png .
           appdmg appdmg.json artifacts/guitar-configurator-macOS.dmg
           codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
       - uses: actions/upload-artifact@v1
