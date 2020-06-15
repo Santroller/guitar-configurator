@@ -137,6 +137,8 @@ jobs:
         with:
           submodules: true
       - name: Build
+        env: 
+          HIDAPI_ROOT_DIR: D:\a\guitar-configurator\submodules\QtUsb\hidapi
         run: |
           robocopy ".\libraries\QtUsb\Qt" "..\Qt" /e
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
