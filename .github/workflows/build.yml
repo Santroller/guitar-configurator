@@ -138,6 +138,7 @@ jobs:
           robocopy ".\firmware" ".\deploy\firmware" /e /njh /njs /ndl /nc /ns /nfl
           robocopy ".\binaries\win" ".\deploy\binaries" /e /njh /njs /ndl /nc /ns /nfl
           copy release\*.json deploy
+          copy release\hidapi.dll deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e /njh /njs /ndl /nc /ns /nfl
