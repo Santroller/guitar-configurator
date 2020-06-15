@@ -7,9 +7,13 @@
 #include <QQueue>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <QUsbInfo>
 #include <QUsbDevice>
+#include <QUsbInfo>
+#ifdef Q_OS_MACOS
+#include <hidapi.h>
+#else
 #include <hidapi/hidapi.h>
+#endif
 
 #include "device.h"
 class Ardwiino : public Device {
@@ -23,7 +27,7 @@ class Ardwiino : public Device {
    signals:
     void descriptionChanged();
     void readyChanged();
-    
+
    protected:
     board_t m_board;
     QString m_processor;
