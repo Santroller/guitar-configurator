@@ -5,7 +5,7 @@
 #include <QRegularExpression>
 
 #include "QDebug"
-#include <hidapi/hidapi.h>
+#include <hidapi.h>
 QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent) : QObject(parent) {
