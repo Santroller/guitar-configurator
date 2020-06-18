@@ -31,6 +31,7 @@ class Ardwiino : public Device {
     hid_device* m_hiddev;
     QByteArray readData(int id);
     QString m_serialNum;
+    Configuration_t configuration;
     inline virtual bool isEqual(const Device& other) const {
         auto& otherD = static_cast<const Ardwiino&>(other);
         return m_serialNum == otherD.m_serialNum;

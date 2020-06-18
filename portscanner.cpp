@@ -51,7 +51,9 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         proc->start(dir.filePath("dfu-programmer"), {processor, "get"});
     }
 }
+bool found =false;
 void PortScanner::tick() {
+    if (found) return;
     struct hid_device_info *devs, *cur_dev;
     devs = hid_enumerate(0x0, 0x0);
     cur_dev = devs;
@@ -115,6 +117,7 @@ void PortScanner::add(Device* device) {
     if (device->open()) {
         m_model.append(device);
         update();
+        found = true;
     } 
 }
 void PortScanner::remove(Device* device) {
