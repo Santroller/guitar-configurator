@@ -1,10 +1,18 @@
 #include "ardwiino.h"
-
+#define USAGE_GAMEPAD 0x05
 Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId) {
     m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
 }
 bool Ardwiino::open() {
-    m_hiddev = hid_open(m_usbId->vendor_id, m_usbId->product_id, m_usbId->serial_number);
+#ifdef Q_OS_WIN32
+    //For whatever reason the interface number is only 0 for the gamepad
+    if (m_usbId->interface_number != 0) return false;
+#endif
+#ifdef Q_OS_MACOS
+    //The gamepad usage specifically contains our feature requests, so only that one should be opened!
+    if (m_usbId->usage != USAGE_GAMEPAD) return false;
+#endif
+    m_hiddev = hid_open_path(m_usbId->path);
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
@@ -16,6 +24,11 @@ QByteArray Ardwiino::readData(int id) {
     QByteArray data(sizeof(Configuration_t), '\0');
     data[0] = id;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    auto err = hid_error(m_hiddev);
+    if (err) {
+        // TODO: handle errors
+        qDebug() << QString::fromWCharArray(err);
+    }
     return data;
 }
 QString Ardwiino::getDescription() {
