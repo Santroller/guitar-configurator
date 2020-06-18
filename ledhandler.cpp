@@ -262,7 +262,7 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
 #endif
 
 #if defined Q_OS_WIN
-    quint64 read;
+    SIZE_T read;
     if (!ReadProcessMemory(pid->hProcess, reinterpret_cast<const char *>(addr), buf, size, &read)) {
         return -1;
     }
