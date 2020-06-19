@@ -20,6 +20,7 @@ class NullDevice : public Device {
     virtual bool isReady();
     virtual void close();
     virtual bool open();
+    virtual void bootloader();
    signals:
     void descriptionChanged();
     void readyChanged();

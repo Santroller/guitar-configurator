@@ -3,7 +3,6 @@
 #include <QThread>
 #define OLD_ARDWIINO_API_SERIAL "1.2"
 OutdatedArdwiino::OutdatedArdwiino(const QSerialPortInfo &serialPortInfo, QObject *parent) : SerialDevice(serialPortInfo, parent), m_isOldAPI(serialPortInfo.serialNumber() == OLD_ARDWIINO_API_SERIAL) {
-    
 }
 bool OutdatedArdwiino::open() {
     if (m_serialPort->open(QIODevice::ReadWrite)) {
@@ -45,4 +44,15 @@ QString OutdatedArdwiino::getDescription() {
         return "Outdated Ardwiino - Loading Information";
     }
     return "Outdated Ardwiino - " + m_board.name;
+}
+void OutdatedArdwiino::bootloader() {
+    QString cmd;
+    if (m_board.protocol == "avr109") {
+        cmd = "e";
+    } else {
+        cmd = "j";
+    }
+    m_serialPort->write(cmd.toUtf8());
+    m_serialPort->waitForBytesWritten();
+    close();
 }

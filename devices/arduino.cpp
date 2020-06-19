@@ -17,3 +17,19 @@ bool Arduino::open() {
 QString Arduino::getDescription() {
     return m_board.name;
 }
+void Arduino::bootloader() {
+    close();
+    m_serialPort->setBaudRate(QSerialPort::Baud1200);
+    m_serialPort->setDataBits(QSerialPort::DataBits::Data8);
+    m_serialPort->setStopBits(QSerialPort::StopBits::OneStop);
+    m_serialPort->setParity(QSerialPort::Parity::NoParity);
+    //We need this setting, but it has been deprecated. In the future when it is removed, it will be the default behaviour and will not be required anymore.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    m_serialPort->setSettingsRestoredOnClose(false);
+#pragma GCC diagnostic pop
+    if (m_serialPort->open(QIODevice::WriteOnly)) {
+        m_serialPort->setDataTerminalReady(false);
+    }
+    close();
+}

@@ -8,6 +8,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <hidapi.h>
+#include "submodules/Ardwiino/src/shared/config/config.h"
 
 #include "device.h"
 class Ardwiino : public Device {
@@ -18,6 +19,7 @@ class Ardwiino : public Device {
     bool isReady();
     virtual void close();
     virtual bool open();
+    virtual void bootloader();
    signals:
     void descriptionChanged();
     void readyChanged();

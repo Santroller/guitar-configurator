@@ -21,6 +21,7 @@ class Device : public QObject {
     virtual bool isReady() = 0;
     virtual bool open() = 0;
     virtual void close() = 0;
+    virtual void bootloader() = 0;
     void setBoardType(QString board);
     inline bool operator==(const Device& other) {
         return typeid(*this) == typeid(other) && isEqual(other);

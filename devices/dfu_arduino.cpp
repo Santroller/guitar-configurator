@@ -12,3 +12,6 @@ void DfuArduino::close() {
 bool DfuArduino::open() {
     return true;
 }
+void DfuArduino::bootloader() {
+    
+}

@@ -405,7 +405,7 @@ void Port::prepareUpload() {
         if (!m_serialPort->isOpen()) {
             m_serialPort->open(QIODevice::WriteOnly);
         }
-        m_serialPort->write(data_slot(COMMAND_JUMP_BOOTLOADER_UNO));
+        m_serialPort->write(data_slot(COMMAND_JUMP_BOOTLOADER));
         m_serialPort->waitForBytesWritten();
         close();
     }

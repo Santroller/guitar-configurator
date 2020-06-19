@@ -1,4 +1,6 @@
 #include "ardwiino.h"
+
+#include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
 Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId) {
     m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
@@ -17,6 +19,7 @@ bool Ardwiino::open() {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         configuration = *(Configuration_t*)readData(COMMAND_CONFIG).data();
+        qDebug() << readData(COMMAND_CONFIG);
     }
     return m_hiddev;
 }
@@ -50,6 +53,11 @@ QString Ardwiino::getDescription() {
     } else {
         desc += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::InputType)configuration.main.inputType);
     }
+    // On windows, we can actually write the description to registry in a way that applications will pick it up.
+#ifdef Q_OS_WIN
+    QSettings settings("HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\VID_1209&PID_2882", QSettings::NativeFormat);
+    settings.setValue("OEMName", desc);
+#endif
     return desc;
 }
 bool Ardwiino::isReady() {
@@ -60,4 +68,7 @@ void Ardwiino::close() {
         hid_close(m_hiddev);
         m_hiddev = NULL;
     }
+}
+void Ardwiino::bootloader() {
+    // QString cmd = 
 }

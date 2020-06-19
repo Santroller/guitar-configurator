@@ -17,6 +17,7 @@ class DfuArduino : public Device {
     bool isReady();
     virtual void close();
     virtual bool open();
+    virtual void bootloader();
    signals:
     void descriptionChanged();
     void readyChanged();

@@ -14,3 +14,6 @@ void NullDevice::close() {
 bool NullDevice::open() {
     return true;
 }
+void NullDevice::bootloader() {
+    
+}
