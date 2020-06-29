@@ -18,15 +18,20 @@ bool Ardwiino::open() {
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
-        configuration = *(Configuration_t*)readData(COMMAND_CONFIG).data();
-        qDebug() << readData(COMMAND_CONFIG);
+        configuration = *(Configuration_t*)readData(COMMAND_READ_CONFIG).data();
+    } else {
+        qDebug() << "UNABLE TO OPEN";
     }
     return m_hiddev;
 }
 QByteArray Ardwiino::readData(int id) {
     QByteArray data(sizeof(Configuration_t), '\0');
-    data[0] = id;
+    data[0] = 0;
+    data[1] = id;
+    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    data[0] = 0;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    data.remove(0,1);
     auto err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors
