@@ -1,5 +1,5 @@
 #include "ardwiino.h"
-
+#include <QSettings>
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
 Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId) {
