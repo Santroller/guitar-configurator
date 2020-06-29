@@ -20,6 +20,7 @@ bool Ardwiino::open() {
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         configuration = *(Configuration_t*)readData(COMMAND_READ_CONFIG).data();
     } else {
+        // TODO: handle errors (Atleast tell the user that some undetected device was found)
         qDebug() << "UNABLE TO OPEN";
     }
     return m_hiddev;
@@ -34,13 +35,10 @@ QByteArray Ardwiino::readData(int id, int rid) {
     data.remove(0,1);
     auto err = hid_error(m_hiddev);
     if (err) {
-        if (rid == 0) {
-            // On windows, you need to write data to the correct report id, and since the keyboard and mouse share an id, we need to explicitly use that id.
-            readData(id,1);
-        }
-        // TODO: handle errors
+        // TODO: handle errors (Tell the user that we could not communicate with the controller)
         qDebug() << QString::fromWCharArray(err);
     }
+    return data;
 }
 QByteArray Ardwiino::readData(int id) {
     return readData(id,0);
