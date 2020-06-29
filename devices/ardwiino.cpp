@@ -24,20 +24,26 @@ bool Ardwiino::open() {
     }
     return m_hiddev;
 }
-QByteArray Ardwiino::readData(int id) {
+QByteArray Ardwiino::readData(int id, int rid) {
     QByteArray data(sizeof(Configuration_t), '\0');
-    data[0] = 0;
+    data[0] = rid;
     data[1] = id;
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    data[0] = 0;
+    data[0] = rid;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     data.remove(0,1);
     auto err = hid_error(m_hiddev);
     if (err) {
+        if (rid == 0) {
+            // On windows, you need to write data to the correct report id, and since the keyboard and mouse share an id, we need to explicitly use that id.
+            readData(id,1);
+        }
         // TODO: handle errors
         qDebug() << QString::fromWCharArray(err);
     }
-    return data;
+}
+QByteArray Ardwiino::readData(int id) {
+    return readData(id,0);
 }
 QString Ardwiino::getDescription() {
     if (!isReady()) {

@@ -32,6 +32,7 @@ class Ardwiino : public Device {
     struct hid_device_info *m_usbId;
     hid_device* m_hiddev;
     QByteArray readData(int id);
+    QByteArray readData(int id, int rid);
     QString m_serialNum;
     Configuration_t configuration;
     inline virtual bool isEqual(const Device& other) const {
