@@ -45,6 +45,7 @@ auto Programmer::detectBoard() -> board_t {
     //     }
     // }
     // return {};
+    return {};
 }
 void Programmer::programDFU() {
     // board_t board = detectBoard();
