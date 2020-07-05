@@ -12,6 +12,11 @@
 #include "ledhandler.h"
 #ifdef Q_OS_WIN
 #include "serial/winserialhotplug.h"
+// Libusb needs this as the static libs from the libusb site arent compiled with a new enough version of vs
+FILE iob[] = { *stdin, *stdout, *stderr };
+extern "C" {
+    FILE * __cdecl _iob(void) { return iob; }
+}
 #else
 #include "serial/unixserialhotplug.h"
 #endif

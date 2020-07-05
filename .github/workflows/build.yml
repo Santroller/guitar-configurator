@@ -83,7 +83,7 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libusb-1.0-0-dev
+          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libudev-dev libusb-1.0-0-dev
           mkdir build
           cd build
           cmake ../ 
