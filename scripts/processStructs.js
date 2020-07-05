@@ -244,7 +244,13 @@ for (let path of paths) {
 out += (`
 private:
     Configuration_t m_config;
-    inline static QStringList pins = {${pins.toString()}};
+    const static QStringList pins;
 };`)
 
 fs.writeFileSync("../deviceconfiguration.h", out);
+
+out = `#include "deviceconfiguration.h"
+DeviceConfiguration::DeviceConfiguration(Configuration_t config, QObject* parent):QObject(parent),m_config(config) {
+};
+const QStringList DeviceConfiguration::pins = {${pins.toString()}};`
+fs.writeFileSync("../deviceconfiguration.cpp", out);

@@ -822,5 +822,5 @@ signals:
 
 private:
     Configuration_t m_config;
-    inline static QStringList pins = {"Up","Down","Left","Right","Start","Back","LeftStick","RightStick","LB","RB","Home","Capture","A","B","X","Y","Lt","Rt","LX","LY","RX","RY"};
+    const static QStringList pins;
 };

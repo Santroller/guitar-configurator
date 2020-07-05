@@ -1,32 +1,36 @@
 #ifndef PORTSCANNER_H
 #define PORTSCANNER_H
 
+#include <QImage>
+#include <QList>
 #include <QObject>
 #include <QSerialPortInfo>
-#include <QList>
-#include <QImage>
-#include <QTimer>
-#include "programmer.h"
 #include <QSettings>
+#include <QTimer>
+
 #include "devices/device.h"
 #include "devices/outdated_ardwiino.h"
+#include "programmer.h"
+#ifdef Q_OS_MACOS
+#include <libusb.h>
+#else
 #include <libusb-1.0/libusb.h>
+#endif
 
-class PortScanner : public QObject
-{
+class PortScanner : public QObject {
     Q_OBJECT
     Q_PROPERTY(QList<QObject*> model READ model NOTIFY modelChanged)
     Q_PROPERTY(Device* selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(bool isGraphical READ isGraphical NOTIFY graphicalChanged)
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
-public:
-    explicit PortScanner(Programmer* programmer, QObject *parent = nullptr);
-signals:
+   public:
+    explicit PortScanner(Programmer* programmer, QObject* parent = nullptr);
+   signals:
     void graphicalChanged();
     void modelChanged();
     void selectedChanged();
     void hasSelectedChanged();
-public slots:
+   public slots:
     bool isGraphical() const {
         return m_graphical;
     }
@@ -57,7 +61,8 @@ public slots:
 #endif
         return false;
     }
-private:
+
+   private:
     void scanDevices();
     static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev, libusb_hotplug_event event, void* user_data);
     void add(Device* device);
@@ -74,4 +79,4 @@ private:
     Device* m_emptyDevice;
 };
 
-#endif // PORTSCANNER_H
+#endif  // PORTSCANNER_H
