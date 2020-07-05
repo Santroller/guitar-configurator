@@ -21,16 +21,16 @@ ColumnLayout {
         // We need it to scale in the right direction, so we just create a version of the image that is never rendered, just to grab its aspect ratio
         Image {
             id: hiddenImg
-            source: Defines.getBoardImage(scanner.selected.type)
+            source: Defines.getBoardImage(scanner.selected.config.mainSubType)
             visible: false
             sourceSize.width: applicationWindow.width/2
         }
         Image {
             x: (applicationWindow.width-image.paintedWidth)/2
             y: (applicationWindow.height-image.paintedHeight)/2
-            property var base: Defines.getBoardBase(scanner.selected.type);
+            property var base: Defines.getBoardBase(scanner.selected.config.mainSubType);
             id: image
-            source: Defines.getBoardImage(scanner.selected.type)
+            source: Defines.getBoardImage(scanner.selected.config.mainSubType)
             Layout.maximumHeight: applicationWindow.height/2
             Layout.maximumWidth: applicationWindow.width/2
             // We want to use the bigger dimension as the dimension that we scale to. 0 means automatically work out size.

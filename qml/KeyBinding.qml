@@ -25,8 +25,8 @@ Dialog {
         scanner.selected.keys = keys;
     }
 
-    onRejected: currentValue = scanner.selected.keys[currentKey]
-    onOpened: currentValue = scanner.selected.keys[currentKey]
+    onRejected: currentValue = scanner.selected.config[`keys${currentKey}`]
+    onOpened: currentValue = scanner.selected.config[`keys${currentKey}`]
     ColumnLayout {
         Dialog {
                 id: keyOverrideDialog
@@ -70,7 +70,7 @@ Dialog {
                 onClicked: {
                     if (keyDialog.currentValue !== 0xFF) {
                         //We need to make sure we compare numbers, as we have qt enums here for keys, and those are not directly equivilant
-                        keyDialog.existingKey = Object.keys(scanner.selected.keys).find(m => Number(scanner.selected.keys[m]) === Number(keyDialog.currentValue));
+                        keyDialog.existingKey = Object.keys(scanner.selected.keys).find(m => Number(scanner.selected.config[`keys${m}`]) === Number(keyDialog.currentValue));
                         if (keyDialog.existingKey) {
                             keyOverrideDialog.open();
                             return;

@@ -20,6 +20,9 @@ Dialog {
     property var isAnalog;
     property bool waitingForAnalog;
     property bool waitingForDigital;
+    function getPins() {
+        return Object.keys(pinDialog.labels).map(pin=>scanner.selected.config[`pins${pin}`]);
+    }
     title: "Select a Pin for: "+labels[currentPin]
     x: (parent.width - width) / 2
     y: {
@@ -36,15 +39,9 @@ Dialog {
         return y;
     }
 
-    onOpened: {
-        currentValue = scanner.selected.pins[currentPin]
-    }
-    onRejected: currentValue = scanner.selected.pins[currentPin]
-    onAccepted: {
-        var pins = scanner.selected.pins;
-        pins[currentPin] = currentValue;
-        scanner.selected.pins = pins;
-    }
+    onOpened: currentValue = scanner.selected.config[`pins${currentPin}`]
+    onRejected: currentValue = scanner.selected.config[`pins${currentPin}`]
+    onAccepted: scanner.selected.config[`pins${currentPin}`] = currentValue
 
     modal: true
     ColumnLayout {
@@ -57,9 +54,7 @@ Dialog {
             y: (parent.height - height) / 2
             standardButtons: Dialog.Ok | Dialog.Cancel
             onAccepted: {
-                var pins = scanner.selected.pins;
-                pins[pinDialog.conflictingPin] = 0xFF;
-                scanner.selected.pins = pins;
+                scanner.selected.config[`pins${pinDialog.conflictingPin}`] = 0xFF
                 pinDialog.accept()
             }
             ColumnLayout {
@@ -124,15 +119,15 @@ Dialog {
                     y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY
                     radius: boardImage.r * 0.5
                     border.width: 1
-                    color: (pinDialog.currentValue === boardImage.pins[index].id || mouseArea.containsMouse) ? "green" : Object.values(scanner.selected.pins).includes(boardImage.pins[index].id)?"red":"yellow"
+                    color: (pinDialog.currentValue === boardImage.pins[index].id || mouseArea.containsMouse) ? "green" : pinDialog.getPins().includes(boardImage.pins[index].id)?"red":"yellow"
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: pinDialog.currentValue = boardImage.pins[index].id
                     }
-                    ToolTip.visible: mouseArea.containsMouse && Object.values(scanner.selected.pins).includes(boardImage.pins[index].id)
-                    ToolTip.text: pinDialog.labels[Object.keys(scanner.selected.pins)[Object.values(scanner.selected.pins).indexOf(boardImage.pins[index].id)]] || ""
+                    ToolTip.visible: mouseArea.containsMouse && pinDialog.getPins().includes(boardImage.pins[index].id)
+                    ToolTip.text: Object.values(pinDialog.labels)[pinDialog.getPins().indexOf(boardImage.pins[index].id)] || ""
                 }
             }
         }
@@ -178,9 +173,9 @@ Dialog {
             text: qsTr("Apply Changes")
             Layout.fillWidth: true
             onClicked: {
-                if (scanner.selected.pins[currentPin] !== currentValue && currentValue !== 0xFF) {
+                if (scanner.selected.config[`pins${currentPin}`] !== currentValue && currentValue !== 0xFF) {
                     //If there is a conflict, show override dialog
-                    conflictingPin = Object.keys(scanner.selected.pins).find(m => scanner.selected.pins[m] === currentValue);
+                    conflictingPin = Object.keys(pinDialog.labels)[pinDialog.getPins().indexOf(currentValue)];
                     if (conflictingPin) {
                         overrideDialog.open();
                         return;

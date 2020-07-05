@@ -15,7 +15,7 @@ RowLayout {
         return "#"+(scanner.selected.ghColours[modelData]).toString(16).padStart(6,"0");
     }
     id: root
-    visible: scanner.selected.hasAddressableLEDs
+    visible: scanner.selected.config.hasAddressableLEDs
     property bool checked;
     property int color;
     property string name;
@@ -39,7 +39,7 @@ RowLayout {
         height: colorBt3.height
     }
     Button {
-        visible: scanner.selected.hasAddressableLEDs
+        visible: scanner.selected.config.hasAddressableLEDs
         text: "Change colour"
         onClicked: {
             color.open()

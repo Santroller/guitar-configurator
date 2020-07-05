@@ -1,7 +1,4 @@
 #include "unixserialhotplug.h"
-#ifdef WIN32
-#include <windows.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <QThread>
@@ -29,6 +26,7 @@ UnixSerialHotplug::UnixSerialHotplug(PortScanner *scanner, QObject *parent) : QO
         scanner->serialDeviceDetected(a);
     }
     // Techncially, instead of a loop we could use QFileSystemWatcher to watch the /dev directory
+    // We also now have the ability to just merge this into the libusb watcher
 }
 
 auto comp(const QSerialPortInfo &a, const QSerialPortInfo &b) -> bool

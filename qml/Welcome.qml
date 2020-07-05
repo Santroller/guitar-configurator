@@ -137,7 +137,7 @@ Page {
             onClicked: {
                 scanner.selected = devices.model[devices.currentIndex];
                 programmer.setRestoring(false);
-                if (scanner.selected.isArdwiino && !scanner.selected.isOutdated) {
+                if (scanner.selected.configurable) {
                     mainStack.replace("Configure.qml");
                 } else {
                     mainStack.replace("Programmer.qml");

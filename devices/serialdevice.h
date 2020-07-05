@@ -11,6 +11,9 @@ class SerialDevice : public Device {
    public:
     explicit SerialDevice(const QSerialPortInfo& serialInfo, QObject* parent = nullptr);
     virtual void close();
+    inline virtual bool isConfigurable() {
+        return false;
+    }
    protected:
     QSerialPort* m_serialPort;
     QByteArray readWrite(QByteArray data);

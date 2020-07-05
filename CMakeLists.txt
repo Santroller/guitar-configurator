@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.2 )
 project("guitar-configurator")
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_AUTOMOC ON )
 set( THREADS_PREFER_PTHREAD_FLAG ON )
@@ -15,12 +15,14 @@ math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
 if (UNIX) 
 	find_package(PkgConfig)
 	pkg_search_module(HIDAPI REQUIRED hidapi-libusb hidapi)
+	pkg_search_module(LIBUSB1 REQUIRED libusb-1.0)
 elseif (WIN32)
 	set(WIN_LINK_LIBRARIES -lpsapi)
-	set(HIDAPI_LINK_LIBRARIES ${CMAKE_SOURCE_DIR}/libraries/hidapi-win/x${BITS}/hidapi.lib)
+	set(HIDAPI_STATIC_LDFLAGS ${CMAKE_SOURCE_DIR}/libraries/hidapi-win/x${BITS}/hidapi.lib)
 	set(HIDAPI_LINK_DLL ${CMAKE_SOURCE_DIR}/libraries/hidapi-win/x${BITS}/hidapi.dll)
 	set(HIDAPI_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/hidapi/hidapi)
-	set(HIDAPI_LIBRARIES hidapi)
+	set(LIBUSB1_STATIC_LDFLAGS ${CMAKE_SOURCE_DIR}/libraries/libusb-win/MS${BITS}/static/libusb-1.0.lib)
+	set(LIBUSB1_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/libraries/libusb-win/include)
 endif()
 execute_process(
              COMMAND
@@ -50,7 +52,6 @@ set ( guitar-configurator_SRCS
 		ardwiinolookup.cpp
 		ledhandler.cpp
 		main.cpp
-		port.cpp
 		portscanner.cpp
 		programmer.cpp
 		updatehandler.cpp
@@ -63,6 +64,7 @@ set ( guitar-configurator_SRCS
 		devices/null_device.cpp
 		devices/ardwiino.cpp
 		devices/arduino.cpp
+		deviceconfiguration.cpp
 	)
 
 set ( guitar-configurator_RSCS
@@ -74,7 +76,6 @@ set ( guitar-configurator_MOCS
 		ardwiino_defines.h
 		ardwiinolookup.h
 		ledhandler.h
-		port.h
 		portscanner.h
 		programmer.h
 		updatehandler.h
@@ -85,6 +86,7 @@ set ( guitar-configurator_MOCS
         devices/serialdevice.h
 		devices/null_device.h
 		devices/arduino.h
+		deviceconfiguration.h
 	)
 QT5_WRAP_CPP(MOCS ${guitar-configurator_MOCS})
 file(COPY firmware DESTINATION .)
@@ -118,5 +120,5 @@ endif()
 
 file(COPY ${BINARIES} DESTINATION binaries)
 add_executable ( ${PROJECT_NAME} ${OS_BUNDLE} ${guitar-configurator_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} ${RESOURCE_FILES})
-target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads ${HIDAPI_LINK_LIBRARIES} ${WIN_LINK_LIBRARIES} )
-include_directories(${HIDAPI_INCLUDE_DIRS})
+target_link_libraries ( ${PROJECT_NAME}  Qt5::Core Qt5::SerialPort Qt5::Network Qt5::QuickControls2 Qt5::Svg Threads::Threads ${LIBUSB1_STATIC_LDFLAGS} ${HIDAPI_STATIC_LDFLAGS} ${WIN_LINK_LIBRARIES}  )
+include_directories(${HIDAPI_INCLUDE_DIRS} ${LIBUSB1_INCLUDE_DIRS})

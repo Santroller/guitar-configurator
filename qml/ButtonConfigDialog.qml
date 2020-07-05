@@ -15,7 +15,7 @@ Dialog {
     property var buttons: [];
     property var pins: PinInfo.getBindings(scanner.selected.boardImage);
     //We don't want the wii specific labels, as they are only needed for the list controller
-    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, false, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
+    property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, false, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
     property var isAnalog: false;
     property var hasPosNeg: false;
     function loadButton(button,cursorX,cursorY) {
@@ -23,27 +23,27 @@ Dialog {
         hasPosNeg = false;
         if (button === "strum") {
             title = "Strum";
-            buttons = ["up","down"];
+            buttons = ["Up","Down"];
             isAnalog = false;
         } else if (button === "ljoy") {
             title = "Left Joystick";
-            buttons = ["l_x", "l_y"];
+            buttons = ["LX", "LY"];
             isAnalog = true;
         } else if (button === "rjoy") {
             title = "Right Joystick";
-            buttons = ["r_x", "r_y"];
+            buttons = ["RX", "RY"];
             isAnalog = true;
         } else if (button === "scroll") {
             title = "Mouse Scroll";
-            buttons = ["r_x","r_y"];
+            buttons = ["RX","RY"];
             isAnalog = true;
         } else if (button === "mouse") {
             title = "Mouse Movement";
-            buttons = ["l_x","l_y"];
+            buttons = ["LX","LY"];
             isAnalog = true;
         }else {
             title = labels[button];
-            isAnalog = scanner.selected.pin_inverts.hasOwnProperty(button);
+            isAnalog = scanner.selected.config.hasOwnProperty(`pins${button}Inverted`);
         }
         hasPosNeg = isAnalog && button !== "lt" && button !== "rt";
         x = cursorX-buttonDialog.width/2;
@@ -60,8 +60,8 @@ Dialog {
                     currentPin: modelData
                 }
                 Button {
-                    visible: scanner.selected.inputType === ArdwiinoDefinesValues.DIRECT
-                    text: qsTr("Change Pin Binding for "+buttonDialog.labels[modelData]+" (Currently: "+buttonDialog.pins(scanner.selected.pins[modelData])+")")
+                    visible: scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT
+                    text: qsTr("Change Pin Binding for "+buttonDialog.labels[modelData]+" (Currently: "+buttonDialog.pins(scanner.selected.config[`pins${modelData}`])+")")
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: pinBinding.open()
                 }
@@ -78,31 +78,27 @@ Dialog {
                     }
                     Switch {
                         enabled: buttonDialog.isAnalog
-                        checked: !!scanner.selected.pin_inverts[modelData]
-                        onCheckedChanged: {
-                            var pin_inverts = scanner.selected.pin_inverts;
-                            pin_inverts[modelData] = checked;
-                            scanner.selected.pin_inverts = pin_inverts;
-                        }
+                        checked: !!scanner.selected.config[`pins${modelData}Inverted`]
+                        onCheckedChanged: scanner.selected.config[`pins${modelData}Inverted`] = checked
                     }
                 }
                 Repeater {
-                    model: hasPosNeg?[modelData+"_lt",modelData+"_gt"]:[modelData]
+                    model: hasPosNeg?[modelData+"Pos",modelData+"Neg"]:[modelData]
                     RowLayout {
                         KeyBinding {
                             id: keyBinding
                             currentKey: modelData
                         }
                         Button {
-                            visible: scanner.selected.isKeyboard
-                            text: qsTr("Change Key Binding for "+KeyInfo.labels[modelData]+" (Currently: "+KeyInfo.getKeyName(scanner.selected.keys[modelData])+")")
+                            visible: scanner.selected.config.isKeyboard
+                            text: qsTr("Change Key Binding for "+KeyInfo.labels[modelData]+" (Currently: "+KeyInfo.getKeyName(scanner.selected.config[`keys${modelData}`])+")")
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                             onClicked: keyBinding.open()
                         }
                     }
                 }
                 RowLayout {
-                    visible: scanner.selected.hasAddressableLEDs
+                    visible: scanner.selected.config.hasAddressableLEDs
                     Label {
                         text: qsTr("Enable LEDs for "+buttonDialog.labels[modelData])
                         fontSizeMode: Text.FixedSize
@@ -114,26 +110,19 @@ Dialog {
                     }
                     Switch {
                         id:sw
-                        checked: scanner.selected.leds.includes(modelData)
+                        checked: scanner.selected.config.leds.includes(modelData)
                         onCheckedChanged: {
-                            var leds = scanner.selected.leds;
-                            var colours = scanner.selected.colours;
                             if (!checked) {
-                                leds.splice(leds.indexOf(modelData),1);
-                            } else if (!leds.includes(modelData)){
-                                leds.push(modelData);
-                                if (!colours[modelData]) {
-                                    colours[modelData] = 0;
-                                }
+                                scanner.selected.config.clearLED(modelData);
+                            } else if (!scanner.selected.config.leds.includes(modelData)) {
+                                scanner.selected.config.setLED(modelData);
                             }
-                            scanner.selected.leds = leds;
-                            scanner.selected.colours = colours;
                         }
                     }
                 }
 
                 RowLayout {
-                    visible: scanner.selected.hasAddressableLEDs && scanner.selected.leds.includes(modelData)
+                    visible: scanner.selected.config.hasAddressableLEDs && scanner.selected.config.leds.includes(modelData)
                     Button {
                         text: "Set LED colour"
                         onClicked: color.open()
@@ -141,24 +130,20 @@ Dialog {
                     }
                     ColorPickerDialog {
                         id: color
-                        colorVal: scanner.selected.colours[modelData] || 0
+                        colorVal: scanner.selected.config.ledColours[modelData]
                         buttons: [modelData]
-                        onColorChanged: {
-                            var colours = scanner.selected.colours;
-                            colours[modelData] = colorVal;
-                            scanner.selected.colours = colours;
-                        }
+                        onColorChanged: scanner.selected.config.setLED(modelData,colorVal)
                     }
                     Rectangle {
                         id: colorRect
-                        color: "#"+(scanner.selected.colours[modelData] || 0).toString(16).padStart(6,"0")
+                        color: "#"+(scanner.selected.config.ledColours[modelData]).toString(16).padStart(6,"0")
                         width: colorBt.height
                         height: colorBt.height
                     }
                 }
 
                 RowLayout {
-                    visible: scanner.selected.isMIDI
+                    visible: scanner.selected.config.isMIDI
                     Label {
                         text: qsTr("MIDI Type")
                         fontSizeMode: Text.FixedSize
@@ -173,17 +158,13 @@ Dialog {
                         textRole: "key"
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         model: Defines.fillCombobox("MidiType")
-                        currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.midi_type[modelData]))
-                        onActivated: {
-                            var midi_type = scanner.selected.midi_type;
-                            midi_type[modelData] = model[currentIndex].value;
-                            scanner.selected.midi_type = midi_type;
-                        }
+                        currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiTypeMap[modelData]))
+                        onActivated: scanner.selected.config.setMidiType(modelData,model[currentIndex].value)
                     }
                 }
 
                 RowLayout {
-                    visible: scanner.selected.isMIDI
+                    visible: scanner.selected.config.isMIDI
                     Label {
                         text: qsTr("MIDI Note")
                         fontSizeMode: Text.FixedSize
@@ -198,12 +179,8 @@ Dialog {
                         id: noteBox
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        value: scanner.selected.midi_note[modelData] || 0
-                        onValueChanged: {
-                            var midi_note = scanner.selected.midi_note;
-                            midi_note[modelData] = value
-                            scanner.selected.midi_note = midi_note;
-                        }
+                        value: scanner.selected.config.midiNoteMap[modelData] || 0
+                        onValueChanged: scanner.selected.config.setMidiNoteValue(modelData,value)
 
                         editable: true
                         inputMethodHints: Qt.ImhNone
@@ -221,7 +198,7 @@ Dialog {
                 }
 
                 RowLayout {
-                    visible: scanner.selected.isMIDI
+                    visible: scanner.selected.config.isMIDI
                     Label {
                         text: qsTr("MIDI Channel")
                         fontSizeMode: Text.FixedSize
@@ -235,12 +212,8 @@ Dialog {
                         id: chanBox
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        value: scanner.selected.midi_channel[modelData] || 0
-                        onValueChanged: {
-                            var midi_channel = scanner.selected.midi_channel;
-                            midi_channel[modelData] = value;
-                            scanner.selected.midi_channel = midi_channel;
-                        }
+                        value: scanner.selected.config.midiChannelMap[modelData] || 0
+                        onValueChanged: scanner.selected.config.setMidiChannelValue(modelData,value)
 
                         from: 1
                         to: 10
@@ -251,7 +224,7 @@ Dialog {
 
         }
         RowLayout {
-            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.isGuitar || scanner.selected.isDrum)
+            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
             Label {
                 text: qsTr("Map Left Joystick to D-pad")
                 fontSizeMode: Text.FixedSize
@@ -262,14 +235,14 @@ Dialog {
                 wrapMode: Text.WordWrap
             }
             Switch {
-                Component.onCompleted: checked = scanner.selected.mapJoystick
+                Component.onCompleted: checked = scanner.selected.config.mainMapLeftJoystickToDPad
                 onCheckedChanged: {
-                    scanner.selected.mapJoystick = checked
+                    scanner.selected.config.mainMapLeftJoystickToDPad = checked
                 }
             }
         }
         RowLayout {
-            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.isGuitar || scanner.selected.isDrum)
+            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
             Label {
                 text: "Joystick Mapping Threshold"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -280,9 +253,9 @@ Dialog {
                 to: 128
                 from: 0
                 live: false
-                enabled: scanner.selected.mapJoystick
-                Component.onCompleted: value = scanner.selected.joyThreshold
-                onValueChanged: scanner.selected.joyThreshold = slider2.value
+                enabled: scanner.selected.config.mainMapLeftJoystickToDPad
+                Component.onCompleted: value = scanner.selected.config.axisJoyThreshold
+                onValueChanged: scanner.selected.config.axisJoyThreshold = slider2.value
                 background: Rectangle {
                     y: 15
                     implicitWidth: 200
@@ -294,7 +267,7 @@ Dialog {
             }
         }
         RowLayout {
-            visible: buttonDialog.isAnalog && (scanner.selected.isKeyboard || scanner.selected.hasAddressableLEDs)
+            visible: buttonDialog.isAnalog && (scanner.selected.config.isKeyboard || scanner.selected.config.hasAddressableLEDs)
             Label {
                 text: "Key Axis Threshold / LED Axis Threshold"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -305,8 +278,8 @@ Dialog {
                 to: 128
                 from: 0
                 live: false
-                Component.onCompleted: value = scanner.selected.triggerThreshold
-                onValueChanged: scanner.selected.triggerThreshold = slider.value
+                Component.onCompleted: value = scanner.selected.config.axisTriggerThreshold
+                onValueChanged: scanner.selected.config.axisTriggerThreshold = slider.value
                 background: Rectangle {
                     y: 15
                     implicitWidth: 200
@@ -331,8 +304,8 @@ Dialog {
                 wrapMode: Text.WordWrap
             }
             Switch {
-                Component.onCompleted: checked = scanner.selected.mapStartSelectHome
-                onCheckedChanged: scanner.selected.mapStartSelectHome = checked
+                Component.onCompleted: checked = scanner.selected.config.mainMapStartSelectToHome
+                onCheckedChanged: scanner.selected.config.mainMapStartSelectToHome = checked
             }
         }
     }

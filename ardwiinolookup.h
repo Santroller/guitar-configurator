@@ -43,6 +43,7 @@ class ArdwiinoLookup : public QObject {
     static bool isArdwiino(struct hid_device_info *usbDeviceId);
     static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
+    static bool isOutdatedArdwiino(const unsigned short releaseID);
 
     inline QString getTypeName(uint8_t type) {
         return ArdwiinoDefines::getName(ArdwiinoDefines::SubType(type));

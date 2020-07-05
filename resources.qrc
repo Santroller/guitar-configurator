@@ -17,555 +17,555 @@
         <file>qml/InteractiveController.qml</file>
         <file>qml/KeyBinding.qml</file>
         <file>qml/KeySelect.qml</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/ga.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gb.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gback.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gdown.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gA.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gB.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gBack.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gDown.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gHome.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/components/gLB.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gLeft.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/components/gljoy.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/components/gRB.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gright.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gstart.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gup.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gx.svg</file>
-        <file>images/Keyboard/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gRight.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gStart.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gUp.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gX.svg</file>
+        <file>images/Keyboard/GuitarHeroDrums/components/gY.svg</file>
         <file>images/Keyboard/GuitarHeroDrums/Base.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/ga.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gb.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gback.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gdown.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/ghome.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gA.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gB.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gBack.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gDown.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gHome.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gLB.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gleft.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gljoy.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gr_x.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gright.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gstart.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gRight.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gstrum.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gup.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gx.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gy.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gUp.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gX.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gY.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/Base.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/ga.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gb.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gA.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gB.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gcapture.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gdown.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/ghome.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gDown.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gHome.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gLB.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gleft.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gljoy.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gr_x.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gRB.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gright.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gRight.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gselect.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gstart.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gStart.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gstrum.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gup.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gx.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gy.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gUp.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gX.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gY.svg</file>
         <file>images/Keyboard/LiveGuitar/Base.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/ga.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gb.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gback.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gA.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gB.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gBack.svg</file>
         <file>images/Keyboard/RockBandDrums/components/gbc.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gdown.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gDown.svg</file>
         <file>images/Keyboard/RockBandDrums/components/ggc.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/ghome.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gleft.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gHome.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gLeft.svg</file>
         <file>images/Keyboard/RockBandDrums/components/gljoy.svg</file>
         <file>images/Keyboard/RockBandDrums/components/gRB.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gright.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gstart.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gup.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gx.svg</file>
-        <file>images/Keyboard/RockBandDrums/components/gy.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gRight.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gStart.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gUp.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gX.svg</file>
+        <file>images/Keyboard/RockBandDrums/components/gY.svg</file>
         <file>images/Keyboard/RockBandDrums/components/gyc.svg</file>
         <file>images/Keyboard/RockBandDrums/Base.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/ga.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gb.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gback.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gdown.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/ghome.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gA.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gB.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gBack.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gDown.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gHome.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gLB.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gleft.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gljoy.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/glt.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gLt.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gr_x.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gright.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gstart.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gRight.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gStart.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gstrum.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gup.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gx.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gy.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gUp.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gX.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gY.svg</file>
         <file>images/Keyboard/RockBandGuitar/Base.svg</file>
         <file>images/Keyboard/WorldTour/components/g949.svg</file>
-        <file>images/Keyboard/WorldTour/components/ga.svg</file>
-        <file>images/Keyboard/WorldTour/components/gb.svg</file>
-        <file>images/Keyboard/WorldTour/components/gback.svg</file>
-        <file>images/Keyboard/WorldTour/components/gdown.svg</file>
-        <file>images/Keyboard/WorldTour/components/ghome.svg</file>
+        <file>images/Keyboard/WorldTour/components/gA.svg</file>
+        <file>images/Keyboard/WorldTour/components/gB.svg</file>
+        <file>images/Keyboard/WorldTour/components/gBack.svg</file>
+        <file>images/Keyboard/WorldTour/components/gDown.svg</file>
+        <file>images/Keyboard/WorldTour/components/gHome.svg</file>
         <file>images/Keyboard/WorldTour/components/gLB.svg</file>
-        <file>images/Keyboard/WorldTour/components/gleft.svg</file>
+        <file>images/Keyboard/WorldTour/components/gLeft.svg</file>
         <file>images/Keyboard/WorldTour/components/gljoy.svg</file>
         <file>images/Keyboard/WorldTour/components/gr_x.svg</file>
-        <file>images/Keyboard/WorldTour/components/gright.svg</file>
+        <file>images/Keyboard/WorldTour/components/gRight.svg</file>
         <file>images/Keyboard/WorldTour/components/gstrum.svg</file>
-        <file>images/Keyboard/WorldTour/components/gup.svg</file>
-        <file>images/Keyboard/WorldTour/components/gx.svg</file>
-        <file>images/Keyboard/WorldTour/components/gy.svg</file>
+        <file>images/Keyboard/WorldTour/components/gUp.svg</file>
+        <file>images/Keyboard/WorldTour/components/gX.svg</file>
+        <file>images/Keyboard/WorldTour/components/gY.svg</file>
         <file>images/Keyboard/WorldTour/Base.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/ga.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gb.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gback.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gdown.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gA.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gB.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gBack.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gDown.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gHome.svg</file>
         <file>images/MIDI/GuitarHeroDrums/components/gLB.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gLeft.svg</file>
         <file>images/MIDI/GuitarHeroDrums/components/gljoy.svg</file>
         <file>images/MIDI/GuitarHeroDrums/components/gRB.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gright.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gstart.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gup.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gx.svg</file>
-        <file>images/MIDI/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gRight.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gStart.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gUp.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gX.svg</file>
+        <file>images/MIDI/GuitarHeroDrums/components/gY.svg</file>
         <file>images/MIDI/GuitarHeroDrums/Base.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/ga.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gb.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gback.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gdown.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/ghome.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gA.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gB.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gBack.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gDown.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gHome.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gLB.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gleft.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gljoy.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gr_x.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gright.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gstart.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gRight.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gstrum.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gup.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gx.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gy.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gUp.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gX.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gY.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/Base.svg</file>
-        <file>images/MIDI/LiveGuitar/components/ga.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gb.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gA.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gB.svg</file>
         <file>images/MIDI/LiveGuitar/components/gcapture.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gdown.svg</file>
-        <file>images/MIDI/LiveGuitar/components/ghome.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gDown.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gHome.svg</file>
         <file>images/MIDI/LiveGuitar/components/gLB.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gleft.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gLeft.svg</file>
         <file>images/MIDI/LiveGuitar/components/gljoy.svg</file>
         <file>images/MIDI/LiveGuitar/components/gr_x.svg</file>
         <file>images/MIDI/LiveGuitar/components/gRB.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gright.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gRight.svg</file>
         <file>images/MIDI/LiveGuitar/components/gselect.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gstart.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gStart.svg</file>
         <file>images/MIDI/LiveGuitar/components/gstrum.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gup.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gx.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gy.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gUp.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gX.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gY.svg</file>
         <file>images/MIDI/LiveGuitar/Base.svg</file>
-        <file>images/MIDI/RockBandDrums/components/ga.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gb.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gback.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gA.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gB.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gBack.svg</file>
         <file>images/MIDI/RockBandDrums/components/gbc.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gdown.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gDown.svg</file>
         <file>images/MIDI/RockBandDrums/components/ggc.svg</file>
-        <file>images/MIDI/RockBandDrums/components/ghome.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gleft.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gHome.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gLeft.svg</file>
         <file>images/MIDI/RockBandDrums/components/gljoy.svg</file>
         <file>images/MIDI/RockBandDrums/components/gRB.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gright.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gstart.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gup.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gx.svg</file>
-        <file>images/MIDI/RockBandDrums/components/gy.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gRight.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gStart.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gUp.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gX.svg</file>
+        <file>images/MIDI/RockBandDrums/components/gY.svg</file>
         <file>images/MIDI/RockBandDrums/components/gyc.svg</file>
         <file>images/MIDI/RockBandDrums/Base.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/ga.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gb.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gback.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gdown.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/ghome.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gA.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gB.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gBack.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gDown.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gHome.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gLB.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gleft.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gLeft.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gljoy.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/glt.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gLt.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gr_x.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gright.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gstart.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gRight.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gStart.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gstrum.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gup.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gx.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gy.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gUp.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gX.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gY.svg</file>
         <file>images/MIDI/RockBandGuitar/Base.svg</file>
         <file>images/MIDI/WorldTour/components/g949.svg</file>
-        <file>images/MIDI/WorldTour/components/ga.svg</file>
-        <file>images/MIDI/WorldTour/components/gb.svg</file>
-        <file>images/MIDI/WorldTour/components/gback.svg</file>
-        <file>images/MIDI/WorldTour/components/gdown.svg</file>
-        <file>images/MIDI/WorldTour/components/ghome.svg</file>
+        <file>images/MIDI/WorldTour/components/gA.svg</file>
+        <file>images/MIDI/WorldTour/components/gB.svg</file>
+        <file>images/MIDI/WorldTour/components/gBack.svg</file>
+        <file>images/MIDI/WorldTour/components/gDown.svg</file>
+        <file>images/MIDI/WorldTour/components/gHome.svg</file>
         <file>images/MIDI/WorldTour/components/gLB.svg</file>
-        <file>images/MIDI/WorldTour/components/gleft.svg</file>
+        <file>images/MIDI/WorldTour/components/gLeft.svg</file>
         <file>images/MIDI/WorldTour/components/gljoy.svg</file>
         <file>images/MIDI/WorldTour/components/gr_x.svg</file>
-        <file>images/MIDI/WorldTour/components/gright.svg</file>
+        <file>images/MIDI/WorldTour/components/gRight.svg</file>
         <file>images/MIDI/WorldTour/components/gstrum.svg</file>
-        <file>images/MIDI/WorldTour/components/gup.svg</file>
-        <file>images/MIDI/WorldTour/components/gx.svg</file>
-        <file>images/MIDI/WorldTour/components/gy.svg</file>
+        <file>images/MIDI/WorldTour/components/gUp.svg</file>
+        <file>images/MIDI/WorldTour/components/gX.svg</file>
+        <file>images/MIDI/WorldTour/components/gY.svg</file>
         <file>images/MIDI/WorldTour/Base.svg</file>
-        <file>images/PS3/Gamepad/components/ga.svg</file>
-        <file>images/PS3/Gamepad/components/gb.svg</file>
-        <file>images/PS3/Gamepad/components/gback.svg</file>
-        <file>images/PS3/Gamepad/components/gdown.svg</file>
-        <file>images/PS3/Gamepad/components/ghome.svg</file>
+        <file>images/PS3/Gamepad/components/gA.svg</file>
+        <file>images/PS3/Gamepad/components/gB.svg</file>
+        <file>images/PS3/Gamepad/components/gBack.svg</file>
+        <file>images/PS3/Gamepad/components/gDown.svg</file>
+        <file>images/PS3/Gamepad/components/gHome.svg</file>
         <file>images/PS3/Gamepad/components/gLB.svg</file>
-        <file>images/PS3/Gamepad/components/gleft.svg</file>
+        <file>images/PS3/Gamepad/components/gLeft.svg</file>
         <file>images/PS3/Gamepad/components/gljoy.svg</file>
-        <file>images/PS3/Gamepad/components/glt.svg</file>
+        <file>images/PS3/Gamepad/components/gLt.svg</file>
         <file>images/PS3/Gamepad/components/gRB.svg</file>
-        <file>images/PS3/Gamepad/components/gright.svg</file>
+        <file>images/PS3/Gamepad/components/gRight.svg</file>
         <file>images/PS3/Gamepad/components/grjoy.svg</file>
-        <file>images/PS3/Gamepad/components/grt.svg</file>
-        <file>images/PS3/Gamepad/components/gstart.svg</file>
-        <file>images/PS3/Gamepad/components/gup.svg</file>
-        <file>images/PS3/Gamepad/components/gx.svg</file>
-        <file>images/PS3/Gamepad/components/gy.svg</file>
+        <file>images/PS3/Gamepad/components/gRt.svg</file>
+        <file>images/PS3/Gamepad/components/gStart.svg</file>
+        <file>images/PS3/Gamepad/components/gUp.svg</file>
+        <file>images/PS3/Gamepad/components/gX.svg</file>
+        <file>images/PS3/Gamepad/components/gY.svg</file>
         <file>images/PS3/Gamepad/Base.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/ga.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gb.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gback.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gdown.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gA.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gB.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gBack.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gDown.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gHome.svg</file>
         <file>images/PS3/GuitarHeroDrums/components/gLB.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gLeft.svg</file>
         <file>images/PS3/GuitarHeroDrums/components/gljoy.svg</file>
         <file>images/PS3/GuitarHeroDrums/components/gRB.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gright.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gstart.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gup.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gx.svg</file>
-        <file>images/PS3/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gRight.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gStart.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gUp.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gX.svg</file>
+        <file>images/PS3/GuitarHeroDrums/components/gY.svg</file>
         <file>images/PS3/GuitarHeroDrums/Base.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/ga.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gb.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gback.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gdown.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/ghome.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gA.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gB.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gBack.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gDown.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gHome.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gLB.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gleft.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gljoy.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gr_x.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gright.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gstart.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gRight.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gstrum.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gup.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gx.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gy.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gUp.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gX.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gY.svg</file>
         <file>images/PS3/GuitarHeroGuitar/Base.svg</file>
-        <file>images/PS3/LiveGuitar/components/ga.svg</file>
-        <file>images/PS3/LiveGuitar/components/gb.svg</file>
+        <file>images/PS3/LiveGuitar/components/gA.svg</file>
+        <file>images/PS3/LiveGuitar/components/gB.svg</file>
         <file>images/PS3/LiveGuitar/components/gcapture.svg</file>
-        <file>images/PS3/LiveGuitar/components/gdown.svg</file>
-        <file>images/PS3/LiveGuitar/components/ghome.svg</file>
+        <file>images/PS3/LiveGuitar/components/gDown.svg</file>
+        <file>images/PS3/LiveGuitar/components/gHome.svg</file>
         <file>images/PS3/LiveGuitar/components/gLB.svg</file>
-        <file>images/PS3/LiveGuitar/components/gleft.svg</file>
+        <file>images/PS3/LiveGuitar/components/gLeft.svg</file>
         <file>images/PS3/LiveGuitar/components/gljoy.svg</file>
         <file>images/PS3/LiveGuitar/components/gr_x.svg</file>
         <file>images/PS3/LiveGuitar/components/gRB.svg</file>
-        <file>images/PS3/LiveGuitar/components/gright.svg</file>
+        <file>images/PS3/LiveGuitar/components/gRight.svg</file>
         <file>images/PS3/LiveGuitar/components/gselect.svg</file>
-        <file>images/PS3/LiveGuitar/components/gstart.svg</file>
+        <file>images/PS3/LiveGuitar/components/gStart.svg</file>
         <file>images/PS3/LiveGuitar/components/gstrum.svg</file>
-        <file>images/PS3/LiveGuitar/components/gup.svg</file>
-        <file>images/PS3/LiveGuitar/components/gx.svg</file>
-        <file>images/PS3/LiveGuitar/components/gy.svg</file>
+        <file>images/PS3/LiveGuitar/components/gUp.svg</file>
+        <file>images/PS3/LiveGuitar/components/gX.svg</file>
+        <file>images/PS3/LiveGuitar/components/gY.svg</file>
         <file>images/PS3/LiveGuitar/Base.svg</file>
-        <file>images/PS3/RockBandDrums/components/ga.svg</file>
-        <file>images/PS3/RockBandDrums/components/gb.svg</file>
-        <file>images/PS3/RockBandDrums/components/gback.svg</file>
+        <file>images/PS3/RockBandDrums/components/gA.svg</file>
+        <file>images/PS3/RockBandDrums/components/gB.svg</file>
+        <file>images/PS3/RockBandDrums/components/gBack.svg</file>
         <file>images/PS3/RockBandDrums/components/gbc.svg</file>
-        <file>images/PS3/RockBandDrums/components/gdown.svg</file>
+        <file>images/PS3/RockBandDrums/components/gDown.svg</file>
         <file>images/PS3/RockBandDrums/components/ggc.svg</file>
-        <file>images/PS3/RockBandDrums/components/ghome.svg</file>
-        <file>images/PS3/RockBandDrums/components/gleft.svg</file>
+        <file>images/PS3/RockBandDrums/components/gHome.svg</file>
+        <file>images/PS3/RockBandDrums/components/gLeft.svg</file>
         <file>images/PS3/RockBandDrums/components/gljoy.svg</file>
         <file>images/PS3/RockBandDrums/components/gRB.svg</file>
-        <file>images/PS3/RockBandDrums/components/gright.svg</file>
-        <file>images/PS3/RockBandDrums/components/gstart.svg</file>
-        <file>images/PS3/RockBandDrums/components/gup.svg</file>
-        <file>images/PS3/RockBandDrums/components/gx.svg</file>
-        <file>images/PS3/RockBandDrums/components/gy.svg</file>
+        <file>images/PS3/RockBandDrums/components/gRight.svg</file>
+        <file>images/PS3/RockBandDrums/components/gStart.svg</file>
+        <file>images/PS3/RockBandDrums/components/gUp.svg</file>
+        <file>images/PS3/RockBandDrums/components/gX.svg</file>
+        <file>images/PS3/RockBandDrums/components/gY.svg</file>
         <file>images/PS3/RockBandDrums/components/gyc.svg</file>
         <file>images/PS3/RockBandDrums/Base.svg</file>
-        <file>images/PS3/RockBandGuitar/components/ga.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gb.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gback.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gdown.svg</file>
-        <file>images/PS3/RockBandGuitar/components/ghome.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gA.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gB.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gBack.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gDown.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gHome.svg</file>
         <file>images/PS3/RockBandGuitar/components/gLB.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gleft.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gLeft.svg</file>
         <file>images/PS3/RockBandGuitar/components/gljoy.svg</file>
-        <file>images/PS3/RockBandGuitar/components/glt.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gLt.svg</file>
         <file>images/PS3/RockBandGuitar/components/gr_x.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gright.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gstart.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gRight.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gStart.svg</file>
         <file>images/PS3/RockBandGuitar/components/gstrum.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gup.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gx.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gy.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gUp.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gX.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gY.svg</file>
         <file>images/PS3/RockBandGuitar/Base.svg</file>
         <file>images/PS3/WorldTour/components/g949.svg</file>
-        <file>images/PS3/WorldTour/components/ga.svg</file>
-        <file>images/PS3/WorldTour/components/gb.svg</file>
-        <file>images/PS3/WorldTour/components/gback.svg</file>
-        <file>images/PS3/WorldTour/components/gdown.svg</file>
-        <file>images/PS3/WorldTour/components/ghome.svg</file>
+        <file>images/PS3/WorldTour/components/gA.svg</file>
+        <file>images/PS3/WorldTour/components/gB.svg</file>
+        <file>images/PS3/WorldTour/components/gBack.svg</file>
+        <file>images/PS3/WorldTour/components/gDown.svg</file>
+        <file>images/PS3/WorldTour/components/gHome.svg</file>
         <file>images/PS3/WorldTour/components/gLB.svg</file>
-        <file>images/PS3/WorldTour/components/gleft.svg</file>
+        <file>images/PS3/WorldTour/components/gLeft.svg</file>
         <file>images/PS3/WorldTour/components/gljoy.svg</file>
         <file>images/PS3/WorldTour/components/gr_x.svg</file>
-        <file>images/PS3/WorldTour/components/gright.svg</file>
+        <file>images/PS3/WorldTour/components/gRight.svg</file>
         <file>images/PS3/WorldTour/components/gstrum.svg</file>
-        <file>images/PS3/WorldTour/components/gup.svg</file>
-        <file>images/PS3/WorldTour/components/gx.svg</file>
-        <file>images/PS3/WorldTour/components/gy.svg</file>
+        <file>images/PS3/WorldTour/components/gUp.svg</file>
+        <file>images/PS3/WorldTour/components/gX.svg</file>
+        <file>images/PS3/WorldTour/components/gY.svg</file>
         <file>images/PS3/WorldTour/Base.svg</file>
         <file>images/RockBandLogos/Drum.svg</file>
         <file>images/RockBandLogos/Guitar.svg</file>
-        <file>images/Switch/Gamepad/components/ga.svg</file>
-        <file>images/Switch/Gamepad/components/gb.svg</file>
-        <file>images/Switch/Gamepad/components/gback.svg</file>
+        <file>images/Switch/Gamepad/components/gA.svg</file>
+        <file>images/Switch/Gamepad/components/gB.svg</file>
+        <file>images/Switch/Gamepad/components/gBack.svg</file>
         <file>images/Switch/Gamepad/components/gcapture.svg</file>
-        <file>images/Switch/Gamepad/components/gdown.svg</file>
-        <file>images/Switch/Gamepad/components/ghome.svg</file>
+        <file>images/Switch/Gamepad/components/gDown.svg</file>
+        <file>images/Switch/Gamepad/components/gHome.svg</file>
         <file>images/Switch/Gamepad/components/gLB.svg</file>
-        <file>images/Switch/Gamepad/components/gleft.svg</file>
+        <file>images/Switch/Gamepad/components/gLeft.svg</file>
         <file>images/Switch/Gamepad/components/gljoy.svg</file>
-        <file>images/Switch/Gamepad/components/glt.svg</file>
+        <file>images/Switch/Gamepad/components/gLt.svg</file>
         <file>images/Switch/Gamepad/components/gRB.svg</file>
-        <file>images/Switch/Gamepad/components/gright.svg</file>
+        <file>images/Switch/Gamepad/components/gRight.svg</file>
         <file>images/Switch/Gamepad/components/grjoy.svg</file>
-        <file>images/Switch/Gamepad/components/grt.svg</file>
-        <file>images/Switch/Gamepad/components/gstart.svg</file>
-        <file>images/Switch/Gamepad/components/gup.svg</file>
-        <file>images/Switch/Gamepad/components/gx.svg</file>
-        <file>images/Switch/Gamepad/components/gy.svg</file>
+        <file>images/Switch/Gamepad/components/gRt.svg</file>
+        <file>images/Switch/Gamepad/components/gStart.svg</file>
+        <file>images/Switch/Gamepad/components/gUp.svg</file>
+        <file>images/Switch/Gamepad/components/gX.svg</file>
+        <file>images/Switch/Gamepad/components/gY.svg</file>
         <file>images/Switch/Gamepad/Base.svg</file>
-        <file>images/Wii/RockBandDrums/components/ga.svg</file>
-        <file>images/Wii/RockBandDrums/components/gb.svg</file>
-        <file>images/Wii/RockBandDrums/components/gback.svg</file>
+        <file>images/Wii/RockBandDrums/components/gA.svg</file>
+        <file>images/Wii/RockBandDrums/components/gB.svg</file>
+        <file>images/Wii/RockBandDrums/components/gBack.svg</file>
         <file>images/Wii/RockBandDrums/components/gbc.svg</file>
-        <file>images/Wii/RockBandDrums/components/gdown.svg</file>
+        <file>images/Wii/RockBandDrums/components/gDown.svg</file>
         <file>images/Wii/RockBandDrums/components/ggc.svg</file>
-        <file>images/Wii/RockBandDrums/components/ghome.svg</file>
-        <file>images/Wii/RockBandDrums/components/gleft.svg</file>
+        <file>images/Wii/RockBandDrums/components/gHome.svg</file>
+        <file>images/Wii/RockBandDrums/components/gLeft.svg</file>
         <file>images/Wii/RockBandDrums/components/gljoy.svg</file>
         <file>images/Wii/RockBandDrums/components/gRB.svg</file>
-        <file>images/Wii/RockBandDrums/components/gright.svg</file>
-        <file>images/Wii/RockBandDrums/components/gstart.svg</file>
-        <file>images/Wii/RockBandDrums/components/gup.svg</file>
-        <file>images/Wii/RockBandDrums/components/gx.svg</file>
-        <file>images/Wii/RockBandDrums/components/gy.svg</file>
+        <file>images/Wii/RockBandDrums/components/gRight.svg</file>
+        <file>images/Wii/RockBandDrums/components/gStart.svg</file>
+        <file>images/Wii/RockBandDrums/components/gUp.svg</file>
+        <file>images/Wii/RockBandDrums/components/gX.svg</file>
+        <file>images/Wii/RockBandDrums/components/gY.svg</file>
         <file>images/Wii/RockBandDrums/components/gyc.svg</file>
         <file>images/Wii/RockBandDrums/Base.svg</file>
-        <file>images/Wii/RockBandGuitar/components/ga.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gb.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gback.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gdown.svg</file>
-        <file>images/Wii/RockBandGuitar/components/ghome.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gA.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gB.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gBack.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gDown.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gHome.svg</file>
         <file>images/Wii/RockBandGuitar/components/gLB.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gleft.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gLeft.svg</file>
         <file>images/Wii/RockBandGuitar/components/gljoy.svg</file>
-        <file>images/Wii/RockBandGuitar/components/glt.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gLt.svg</file>
         <file>images/Wii/RockBandGuitar/components/gr_x.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gright.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gstart.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gRight.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gStart.svg</file>
         <file>images/Wii/RockBandGuitar/components/gstrum.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gup.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gx.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gy.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gUp.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gX.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gY.svg</file>
         <file>images/Wii/RockBandGuitar/Base.svg</file>
-        <file>images/XInput/ArcadePad/components/ga.svg</file>
-        <file>images/XInput/ArcadePad/components/gb.svg</file>
-        <file>images/XInput/ArcadePad/components/gdown.svg</file>
+        <file>images/XInput/ArcadePad/components/gA.svg</file>
+        <file>images/XInput/ArcadePad/components/gB.svg</file>
+        <file>images/XInput/ArcadePad/components/gDown.svg</file>
         <file>images/XInput/ArcadePad/components/gLB.svg</file>
-        <file>images/XInput/ArcadePad/components/gleft.svg</file>
-        <file>images/XInput/ArcadePad/components/gleft_stick.svg</file>
-        <file>images/XInput/ArcadePad/components/glt.svg</file>
+        <file>images/XInput/ArcadePad/components/gLeft.svg</file>
+        <file>images/XInput/ArcadePad/components/gLeftStick.svg</file>
+        <file>images/XInput/ArcadePad/components/gLt.svg</file>
         <file>images/XInput/ArcadePad/components/gRB.svg</file>
-        <file>images/XInput/ArcadePad/components/gright.svg</file>
-        <file>images/XInput/ArcadePad/components/gright_stick.svg</file>
-        <file>images/XInput/ArcadePad/components/grt.svg</file>
-        <file>images/XInput/ArcadePad/components/gup.svg</file>
-        <file>images/XInput/ArcadePad/components/gx.svg</file>
-        <file>images/XInput/ArcadePad/components/gy.svg</file>
+        <file>images/XInput/ArcadePad/components/gRight.svg</file>
+        <file>images/XInput/ArcadePad/components/gRightStick.svg</file>
+        <file>images/XInput/ArcadePad/components/gRt.svg</file>
+        <file>images/XInput/ArcadePad/components/gUp.svg</file>
+        <file>images/XInput/ArcadePad/components/gX.svg</file>
+        <file>images/XInput/ArcadePad/components/gY.svg</file>
         <file>images/XInput/ArcadePad/Base.svg</file>
-        <file>images/XInput/ArcadeStick/components/ga.svg</file>
-        <file>images/XInput/ArcadeStick/components/gb.svg</file>
+        <file>images/XInput/ArcadeStick/components/gA.svg</file>
+        <file>images/XInput/ArcadeStick/components/gB.svg</file>
         <file>images/XInput/ArcadeStick/components/gdpad.svg</file>
-        <file>images/XInput/ArcadeStick/components/ghome.svg</file>
+        <file>images/XInput/ArcadeStick/components/gHome.svg</file>
         <file>images/XInput/ArcadeStick/components/gLB.svg</file>
-        <file>images/XInput/ArcadeStick/components/glt.svg</file>
+        <file>images/XInput/ArcadeStick/components/gLt.svg</file>
         <file>images/XInput/ArcadeStick/components/gRB.svg</file>
-        <file>images/XInput/ArcadeStick/components/grt.svg</file>
-        <file>images/XInput/ArcadeStick/components/gx.svg</file>
-        <file>images/XInput/ArcadeStick/components/gy.svg</file>
+        <file>images/XInput/ArcadeStick/components/gRt.svg</file>
+        <file>images/XInput/ArcadeStick/components/gX.svg</file>
+        <file>images/XInput/ArcadeStick/components/gY.svg</file>
         <file>images/XInput/ArcadeStick/Base.svg</file>
-        <file>images/XInput/DancePad/components/ga.svg</file>
-        <file>images/XInput/DancePad/components/gb.svg</file>
-        <file>images/XInput/DancePad/components/gback.svg</file>
-        <file>images/XInput/DancePad/components/gdown.svg</file>
-        <file>images/XInput/DancePad/components/gleft.svg</file>
-        <file>images/XInput/DancePad/components/gright.svg</file>
-        <file>images/XInput/DancePad/components/gstart.svg</file>
-        <file>images/XInput/DancePad/components/gup.svg</file>
-        <file>images/XInput/DancePad/components/gx.svg</file>
-        <file>images/XInput/DancePad/components/gy.svg</file>
+        <file>images/XInput/DancePad/components/gA.svg</file>
+        <file>images/XInput/DancePad/components/gB.svg</file>
+        <file>images/XInput/DancePad/components/gBack.svg</file>
+        <file>images/XInput/DancePad/components/gDown.svg</file>
+        <file>images/XInput/DancePad/components/gLeft.svg</file>
+        <file>images/XInput/DancePad/components/gRight.svg</file>
+        <file>images/XInput/DancePad/components/gStart.svg</file>
+        <file>images/XInput/DancePad/components/gUp.svg</file>
+        <file>images/XInput/DancePad/components/gX.svg</file>
+        <file>images/XInput/DancePad/components/gY.svg</file>
         <file>images/XInput/DancePad/Base.svg</file>
-        <file>images/XInput/FlightStick/components/ga.svg</file>
-        <file>images/XInput/FlightStick/components/gb.svg</file>
-        <file>images/XInput/FlightStick/components/gback.svg</file>
-        <file>images/XInput/FlightStick/components/gdown.svg</file>
+        <file>images/XInput/FlightStick/components/gA.svg</file>
+        <file>images/XInput/FlightStick/components/gB.svg</file>
+        <file>images/XInput/FlightStick/components/gBack.svg</file>
+        <file>images/XInput/FlightStick/components/gDown.svg</file>
         <file>images/XInput/FlightStick/components/gLB.svg</file>
-        <file>images/XInput/FlightStick/components/gleft.svg</file>
-        <file>images/XInput/FlightStick/components/gright.svg</file>
-        <file>images/XInput/FlightStick/components/gup.svg</file>
-        <file>images/XInput/FlightStick/components/gx.svg</file>
-        <file>images/XInput/FlightStick/components/gy.svg</file>
+        <file>images/XInput/FlightStick/components/gLeft.svg</file>
+        <file>images/XInput/FlightStick/components/gRight.svg</file>
+        <file>images/XInput/FlightStick/components/gUp.svg</file>
+        <file>images/XInput/FlightStick/components/gX.svg</file>
+        <file>images/XInput/FlightStick/components/gY.svg</file>
         <file>images/XInput/FlightStick/Base.svg</file>
-        <file>images/XInput/Gamepad/components/ga.svg</file>
-        <file>images/XInput/Gamepad/components/gb.svg</file>
-        <file>images/XInput/Gamepad/components/gback.svg</file>
-        <file>images/XInput/Gamepad/components/gdown.svg</file>
-        <file>images/XInput/Gamepad/components/ghome.svg</file>
+        <file>images/XInput/Gamepad/components/gA.svg</file>
+        <file>images/XInput/Gamepad/components/gB.svg</file>
+        <file>images/XInput/Gamepad/components/gBack.svg</file>
+        <file>images/XInput/Gamepad/components/gDown.svg</file>
+        <file>images/XInput/Gamepad/components/gHome.svg</file>
         <file>images/XInput/Gamepad/components/gLB.svg</file>
-        <file>images/XInput/Gamepad/components/gleft.svg</file>
+        <file>images/XInput/Gamepad/components/gLeft.svg</file>
         <file>images/XInput/Gamepad/components/gljoy.svg</file>
-        <file>images/XInput/Gamepad/components/glt.svg</file>
+        <file>images/XInput/Gamepad/components/gLt.svg</file>
         <file>images/XInput/Gamepad/components/gRB.svg</file>
-        <file>images/XInput/Gamepad/components/gright.svg</file>
+        <file>images/XInput/Gamepad/components/gRight.svg</file>
         <file>images/XInput/Gamepad/components/grjoy.svg</file>
-        <file>images/XInput/Gamepad/components/grt.svg</file>
-        <file>images/XInput/Gamepad/components/gstart.svg</file>
-        <file>images/XInput/Gamepad/components/gup.svg</file>
-        <file>images/XInput/Gamepad/components/gx.svg</file>
-        <file>images/XInput/Gamepad/components/gy.svg</file>
+        <file>images/XInput/Gamepad/components/gRt.svg</file>
+        <file>images/XInput/Gamepad/components/gStart.svg</file>
+        <file>images/XInput/Gamepad/components/gUp.svg</file>
+        <file>images/XInput/Gamepad/components/gX.svg</file>
+        <file>images/XInput/Gamepad/components/gY.svg</file>
         <file>images/XInput/Gamepad/Base.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/ga.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gb.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gback.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gdown.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/ghome.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gA.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gB.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gBack.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gDown.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gHome.svg</file>
         <file>images/XInput/GuitarHeroDrums/components/gLB.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gleft.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gLeft.svg</file>
         <file>images/XInput/GuitarHeroDrums/components/gljoy.svg</file>
         <file>images/XInput/GuitarHeroDrums/components/gRB.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gright.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gstart.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gup.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gx.svg</file>
-        <file>images/XInput/GuitarHeroDrums/components/gy.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gRight.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gStart.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gUp.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gX.svg</file>
+        <file>images/XInput/GuitarHeroDrums/components/gY.svg</file>
         <file>images/XInput/GuitarHeroDrums/Base.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/ga.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gb.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gback.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gdown.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/ghome.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gA.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gB.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gBack.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gDown.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gHome.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gLB.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gleft.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gljoy.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gr_x.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gright.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gstart.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gRight.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gstrum.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gup.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gx.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gy.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gUp.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gX.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gY.svg</file>
         <file>images/XInput/GuitarHeroGuitar/Base.svg</file>
-        <file>images/XInput/LiveGuitar/components/ga.svg</file>
-        <file>images/XInput/LiveGuitar/components/gb.svg</file>
+        <file>images/XInput/LiveGuitar/components/gA.svg</file>
+        <file>images/XInput/LiveGuitar/components/gB.svg</file>
         <file>images/XInput/LiveGuitar/components/gcapture.svg</file>
-        <file>images/XInput/LiveGuitar/components/gdown.svg</file>
-        <file>images/XInput/LiveGuitar/components/ghome.svg</file>
+        <file>images/XInput/LiveGuitar/components/gDown.svg</file>
+        <file>images/XInput/LiveGuitar/components/gHome.svg</file>
         <file>images/XInput/LiveGuitar/components/gLB.svg</file>
-        <file>images/XInput/LiveGuitar/components/gleft.svg</file>
+        <file>images/XInput/LiveGuitar/components/gLeft.svg</file>
         <file>images/XInput/LiveGuitar/components/gljoy.svg</file>
         <file>images/XInput/LiveGuitar/components/gr_x.svg</file>
         <file>images/XInput/LiveGuitar/components/gRB.svg</file>
-        <file>images/XInput/LiveGuitar/components/gright.svg</file>
+        <file>images/XInput/LiveGuitar/components/gRight.svg</file>
         <file>images/XInput/LiveGuitar/components/gselect.svg</file>
-        <file>images/XInput/LiveGuitar/components/gstart.svg</file>
+        <file>images/XInput/LiveGuitar/components/gStart.svg</file>
         <file>images/XInput/LiveGuitar/components/gstrum.svg</file>
-        <file>images/XInput/LiveGuitar/components/gup.svg</file>
-        <file>images/XInput/LiveGuitar/components/gx.svg</file>
-        <file>images/XInput/LiveGuitar/components/gy.svg</file>
+        <file>images/XInput/LiveGuitar/components/gUp.svg</file>
+        <file>images/XInput/LiveGuitar/components/gX.svg</file>
+        <file>images/XInput/LiveGuitar/components/gY.svg</file>
         <file>images/XInput/LiveGuitar/Base.svg</file>
-        <file>images/XInput/RockBandDrums/components/ga.svg</file>
-        <file>images/XInput/RockBandDrums/components/gb.svg</file>
-        <file>images/XInput/RockBandDrums/components/gback.svg</file>
+        <file>images/XInput/RockBandDrums/components/gA.svg</file>
+        <file>images/XInput/RockBandDrums/components/gB.svg</file>
+        <file>images/XInput/RockBandDrums/components/gBack.svg</file>
         <file>images/XInput/RockBandDrums/components/gbc.svg</file>
-        <file>images/XInput/RockBandDrums/components/gdown.svg</file>
+        <file>images/XInput/RockBandDrums/components/gDown.svg</file>
         <file>images/XInput/RockBandDrums/components/ggc.svg</file>
-        <file>images/XInput/RockBandDrums/components/ghome.svg</file>
-        <file>images/XInput/RockBandDrums/components/gleft.svg</file>
+        <file>images/XInput/RockBandDrums/components/gHome.svg</file>
+        <file>images/XInput/RockBandDrums/components/gLeft.svg</file>
         <file>images/XInput/RockBandDrums/components/gljoy.svg</file>
         <file>images/XInput/RockBandDrums/components/gRB.svg</file>
-        <file>images/XInput/RockBandDrums/components/gright.svg</file>
-        <file>images/XInput/RockBandDrums/components/gstart.svg</file>
-        <file>images/XInput/RockBandDrums/components/gup.svg</file>
-        <file>images/XInput/RockBandDrums/components/gx.svg</file>
-        <file>images/XInput/RockBandDrums/components/gy.svg</file>
+        <file>images/XInput/RockBandDrums/components/gRight.svg</file>
+        <file>images/XInput/RockBandDrums/components/gStart.svg</file>
+        <file>images/XInput/RockBandDrums/components/gUp.svg</file>
+        <file>images/XInput/RockBandDrums/components/gX.svg</file>
+        <file>images/XInput/RockBandDrums/components/gY.svg</file>
         <file>images/XInput/RockBandDrums/components/gyc.svg</file>
         <file>images/XInput/RockBandDrums/Base.svg</file>
-        <file>images/XInput/RockBandGuitar/components/ga.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gb.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gback.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gdown.svg</file>
-        <file>images/XInput/RockBandGuitar/components/ghome.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gA.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gB.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gBack.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gDown.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gHome.svg</file>
         <file>images/XInput/RockBandGuitar/components/gLB.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gleft.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gLeft.svg</file>
         <file>images/XInput/RockBandGuitar/components/gljoy.svg</file>
-        <file>images/XInput/RockBandGuitar/components/glt.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gLt.svg</file>
         <file>images/XInput/RockBandGuitar/components/gr_x.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gright.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gstart.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gRight.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gStart.svg</file>
         <file>images/XInput/RockBandGuitar/components/gstrum.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gup.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gx.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gy.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gUp.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gX.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gY.svg</file>
         <file>images/XInput/RockBandGuitar/Base.svg</file>
-        <file>images/XInput/Wheel/components/ga.svg</file>
-        <file>images/XInput/Wheel/components/gb.svg</file>
-        <file>images/XInput/Wheel/components/gback.svg</file>
-        <file>images/XInput/Wheel/components/gdown.svg</file>
-        <file>images/XInput/Wheel/components/ghome.svg</file>
+        <file>images/XInput/Wheel/components/gA.svg</file>
+        <file>images/XInput/Wheel/components/gB.svg</file>
+        <file>images/XInput/Wheel/components/gBack.svg</file>
+        <file>images/XInput/Wheel/components/gDown.svg</file>
+        <file>images/XInput/Wheel/components/gHome.svg</file>
         <file>images/XInput/Wheel/components/gl_x.svg</file>
-        <file>images/XInput/Wheel/components/gleft.svg</file>
-        <file>images/XInput/Wheel/components/glt.svg</file>
-        <file>images/XInput/Wheel/components/gright.svg</file>
-        <file>images/XInput/Wheel/components/grt.svg</file>
-        <file>images/XInput/Wheel/components/gstart.svg</file>
-        <file>images/XInput/Wheel/components/gup.svg</file>
-        <file>images/XInput/Wheel/components/gx.svg</file>
-        <file>images/XInput/Wheel/components/gy.svg</file>
+        <file>images/XInput/Wheel/components/gLeft.svg</file>
+        <file>images/XInput/Wheel/components/gLt.svg</file>
+        <file>images/XInput/Wheel/components/gRight.svg</file>
+        <file>images/XInput/Wheel/components/gRt.svg</file>
+        <file>images/XInput/Wheel/components/gStart.svg</file>
+        <file>images/XInput/Wheel/components/gUp.svg</file>
+        <file>images/XInput/Wheel/components/gX.svg</file>
+        <file>images/XInput/Wheel/components/gY.svg</file>
         <file>images/XInput/Wheel/Base.svg</file>
         <file>images/XInput/WorldTour/components/g949.svg</file>
-        <file>images/XInput/WorldTour/components/ga.svg</file>
-        <file>images/XInput/WorldTour/components/gb.svg</file>
-        <file>images/XInput/WorldTour/components/gback.svg</file>
-        <file>images/XInput/WorldTour/components/gdown.svg</file>
-        <file>images/XInput/WorldTour/components/ghome.svg</file>
+        <file>images/XInput/WorldTour/components/gA.svg</file>
+        <file>images/XInput/WorldTour/components/gB.svg</file>
+        <file>images/XInput/WorldTour/components/gBack.svg</file>
+        <file>images/XInput/WorldTour/components/gDown.svg</file>
+        <file>images/XInput/WorldTour/components/gHome.svg</file>
         <file>images/XInput/WorldTour/components/gLB.svg</file>
-        <file>images/XInput/WorldTour/components/gleft.svg</file>
+        <file>images/XInput/WorldTour/components/gLeft.svg</file>
         <file>images/XInput/WorldTour/components/gljoy.svg</file>
         <file>images/XInput/WorldTour/components/gr_x.svg</file>
-        <file>images/XInput/WorldTour/components/gright.svg</file>
+        <file>images/XInput/WorldTour/components/gRight.svg</file>
         <file>images/XInput/WorldTour/components/gstrum.svg</file>
-        <file>images/XInput/WorldTour/components/gup.svg</file>
-        <file>images/XInput/WorldTour/components/gx.svg</file>
-        <file>images/XInput/WorldTour/components/gy.svg</file>
+        <file>images/XInput/WorldTour/components/gUp.svg</file>
+        <file>images/XInput/WorldTour/components/gX.svg</file>
+        <file>images/XInput/WorldTour/components/gY.svg</file>
         <file>images/XInput/WorldTour/Base.svg</file>
         <file>images/ArduinoLeonardo.svg</file>
         <file>images/ArduinoProMicro.svg</file>
@@ -575,44 +575,44 @@
         <file>images/list.svg</file>
         <file>images/NoController.svg</file>
         <file>images/Upload.svg</file>
-        <file>images/Keyboard/Gamepad/components/ga.svg</file>
-        <file>images/Keyboard/Gamepad/components/gb.svg</file>
-        <file>images/Keyboard/Gamepad/components/gback.svg</file>
-        <file>images/Keyboard/Gamepad/components/gdown.svg</file>
-        <file>images/Keyboard/Gamepad/components/ghome.svg</file>
+        <file>images/Keyboard/Gamepad/components/gA.svg</file>
+        <file>images/Keyboard/Gamepad/components/gB.svg</file>
+        <file>images/Keyboard/Gamepad/components/gBack.svg</file>
+        <file>images/Keyboard/Gamepad/components/gDown.svg</file>
+        <file>images/Keyboard/Gamepad/components/gHome.svg</file>
         <file>images/Keyboard/Gamepad/components/gLB.svg</file>
-        <file>images/Keyboard/Gamepad/components/gleft.svg</file>
+        <file>images/Keyboard/Gamepad/components/gLeft.svg</file>
         <file>images/Keyboard/Gamepad/components/gljoy.svg</file>
-        <file>images/Keyboard/Gamepad/components/glt.svg</file>
+        <file>images/Keyboard/Gamepad/components/gLt.svg</file>
         <file>images/Keyboard/Gamepad/components/gRB.svg</file>
-        <file>images/Keyboard/Gamepad/components/gright.svg</file>
+        <file>images/Keyboard/Gamepad/components/gRight.svg</file>
         <file>images/Keyboard/Gamepad/components/grjoy.svg</file>
-        <file>images/Keyboard/Gamepad/components/grt.svg</file>
-        <file>images/Keyboard/Gamepad/components/gstart.svg</file>
-        <file>images/Keyboard/Gamepad/components/gup.svg</file>
-        <file>images/Keyboard/Gamepad/components/gx.svg</file>
-        <file>images/Keyboard/Gamepad/components/gy.svg</file>
+        <file>images/Keyboard/Gamepad/components/gRt.svg</file>
+        <file>images/Keyboard/Gamepad/components/gStart.svg</file>
+        <file>images/Keyboard/Gamepad/components/gUp.svg</file>
+        <file>images/Keyboard/Gamepad/components/gX.svg</file>
+        <file>images/Keyboard/Gamepad/components/gY.svg</file>
         <file>images/Keyboard/Gamepad/Base.svg</file>
-        <file>images/MIDI/Gamepad/components/ga.svg</file>
-        <file>images/MIDI/Gamepad/components/gb.svg</file>
-        <file>images/MIDI/Gamepad/components/gback.svg</file>
-        <file>images/MIDI/Gamepad/components/gdown.svg</file>
-        <file>images/MIDI/Gamepad/components/ghome.svg</file>
+        <file>images/MIDI/Gamepad/components/gA.svg</file>
+        <file>images/MIDI/Gamepad/components/gB.svg</file>
+        <file>images/MIDI/Gamepad/components/gBack.svg</file>
+        <file>images/MIDI/Gamepad/components/gDown.svg</file>
+        <file>images/MIDI/Gamepad/components/gHome.svg</file>
         <file>images/MIDI/Gamepad/components/gLB.svg</file>
-        <file>images/MIDI/Gamepad/components/gleft.svg</file>
+        <file>images/MIDI/Gamepad/components/gLeft.svg</file>
         <file>images/MIDI/Gamepad/components/gljoy.svg</file>
-        <file>images/MIDI/Gamepad/components/glt.svg</file>
+        <file>images/MIDI/Gamepad/components/gLt.svg</file>
         <file>images/MIDI/Gamepad/components/gRB.svg</file>
-        <file>images/MIDI/Gamepad/components/gright.svg</file>
+        <file>images/MIDI/Gamepad/components/gRight.svg</file>
         <file>images/MIDI/Gamepad/components/grjoy.svg</file>
-        <file>images/MIDI/Gamepad/components/grt.svg</file>
-        <file>images/MIDI/Gamepad/components/gstart.svg</file>
-        <file>images/MIDI/Gamepad/components/gup.svg</file>
-        <file>images/MIDI/Gamepad/components/gx.svg</file>
-        <file>images/MIDI/Gamepad/components/gy.svg</file>
+        <file>images/MIDI/Gamepad/components/gRt.svg</file>
+        <file>images/MIDI/Gamepad/components/gStart.svg</file>
+        <file>images/MIDI/Gamepad/components/gUp.svg</file>
+        <file>images/MIDI/Gamepad/components/gX.svg</file>
+        <file>images/MIDI/Gamepad/components/gY.svg</file>
         <file>images/MIDI/Gamepad/Base.svg</file>
-        <file>images/Mouse/components/ga.svg</file>
-        <file>images/Mouse/components/gb.svg</file>
+        <file>images/Mouse/components/gA.svg</file>
+        <file>images/Mouse/components/gB.svg</file>
         <file>images/Mouse/components/gmouse.svg</file>
         <file>images/Mouse/components/gscroll.svg</file>
         <file>images/Mouse/Base.svg</file>

@@ -73,9 +73,9 @@ ColumnLayout {
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("InputType")
-                Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.inputType) }
+                Binding { target: inputBox; property: "currentIndex"; value: inputBox.model.findIndex(s => s.value === scanner.selected.config.mainInputType) }
 
-                onCurrentIndexChanged: scanner.selected.inputType = inputBox.model[inputBox.currentIndex].value
+                onCurrentIndexChanged: scanner.selected.config.mainInputType = inputBox.model[inputBox.currentIndex].value
             }
 
             Label {
@@ -94,13 +94,13 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Object.keys(Defines.getTypeCombobox())
-                Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.indexOf(Defines.findTypeDevice(scanner.selected.type)[0])}
+                Binding { target: comboBox; property: "currentIndex"; value: comboBox.model.indexOf(Defines.findTypeDevice(scanner.selected.config.mainSubType)[0])}
                 onActivated: {
-                    scanner.selected.type = comboBox2.model[0].value
+                    scanner.selected.config.mainSubType = comboBox2.model[0].value
                     comboBox2.currentIndex = 0;
                     //When the controller type is changed, we need to disable any pins that are not used by that controller.
-                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
-                        scanner.selected.pins[pin] = 0xFF;
+                    for (let pin of PinInfo.getUnused(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB)) {
+                        scanner.selected.config[`pins${pin}`] = 0xFF;
                     }
                 }
             }
@@ -112,13 +112,13 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 visible: Defines.getTypeCombobox()[comboBox.model[comboBox.currentIndex]][0].key.length
                 model: Defines.getTypeCombobox()[comboBox.model[comboBox.currentIndex]]
-                Binding { target: comboBox2; property: "currentIndex"; value: comboBox2.model.findIndex(s => s.value === scanner.selected.type)}
+                Binding { target: comboBox2; property: "currentIndex"; value: comboBox2.model.findIndex(s => s.value === scanner.selected.config.mainSubType)}
 
                 onActivated: {
-                    scanner.selected.type = comboBox2.model[comboBox2.currentIndex].value
+                    scanner.selected.config.mainSubType = comboBox2.model[comboBox2.currentIndex].value
                     //When the controller type is changed, we need to disable any pins that are not used by that controller.
-                    for (let pin of PinInfo.getUnused(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB)) {
-                        scanner.selected.pins[pin] = 0xFF;
+                    for (let pin of PinInfo.getUnused(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB)) {
+                        scanner.selected.config[`pins${pin}`] = 0xFF;
                     }
                 }
             }
@@ -133,16 +133,9 @@ ColumnLayout {
             onClicked: {type.visible = true;}
         }
         Button {
-            id: updateBt
-            text: qsTr("Update Device")
-            visible: scanner.selected.isOutdated
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: {scanner.selected.prepareUpdate(); mainStack.replace("Programmer.qml")}
-        }
-        Button {
             id: tilt
             text: qsTr("Configure Tilt")
-            visible: scanner.selected.isGuitar
+            visible: scanner.selected.config.isGuitar
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: tiltConfig.visible = true;
         }
@@ -164,7 +157,7 @@ ColumnLayout {
         }
         Button {
             id: startClone
-            visible: scanner.selected.isGuitar || scanner.selected.isDrum
+            visible: scanner.selected.config.isGuitar || scanner.selected.config.isDrum
             text: qsTr("Link to Clone Hero")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             enabled: true
@@ -208,15 +201,12 @@ ColumnLayout {
     }
     Dialog {
         title: "Controller Disconnected"
-        visible: scanner.selected.disconnected
+        visible: !scanner.hasSelected
         modal: true
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         closePolicy: Popup.NoAutoClose
         standardButtons: Dialog.Ok
-        onVisibleChanged: {
-            scanner.hasSelected = false;
-        }
 
         onAccepted:  {
             mainStack.replace("Welcome.qml");
@@ -254,12 +244,12 @@ ColumnLayout {
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("FretLedMode")
-                Binding { target: fretBox; property: "currentIndex"; value: fretBox.model.findIndex(s => s.value === scanner.selected.ledType) }
+                Binding { target: fretBox; property: "currentIndex"; value: fretBox.model.findIndex(s => s.value === scanner.selected.config.mainFretLEDMode) }
 
-                onCurrentIndexChanged: scanner.selected.ledType = fretBox.model[fretBox.currentIndex].value
+                onCurrentIndexChanged: scanner.selected.config.mainFretLEDMode = fretBox.model[fretBox.currentIndex].value
             }
             Label {
-                visible: scanner.selected.hasAddressableLEDs
+                visible: scanner.selected.config.hasAddressableLEDs
                 text: qsTr("LED Order (drag to change)")
                 fontSizeMode: Text.FixedSize
                 verticalAlignment: Text.AlignVCenter
@@ -269,24 +259,24 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
             }
             ListView {
-                property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
-                visible: scanner.selected.hasAddressableLEDs
+                property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
+                visible: scanner.selected.config.hasAddressableLEDs
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 id: listView
-                model: scanner.selected.leds
+                model: scanner.selected.config.leds
                 orientation: ListView.Horizontal
                 delegate: DraggableItem {
                     label: listView.labels[modelData] || ""
                     Rectangle {
                         height: {
-                            var a = listView.width / scanner.selected.leds.length;
+                            var a = listView.width / scanner.selected.config.leds.length;
                             if (a > listView.height) return listView.height;
                             return a;
                         }
 
                         width: height
-                        color: "#"+(scanner.selected.colours[modelData]).toString(16).padStart(6,"0");
+                        color: "#"+(scanner.selected.config.ledColours[modelData]).toString(16).padStart(6,"0");
 
                         // Bottom line border
                         Rectangle {
@@ -303,7 +293,7 @@ ColumnLayout {
                     draggedItemParent: mainContent
 
                     onMoveItemRequested: {
-                        scanner.selected.moveLED(from, to);
+                        scanner.selected.config.moveLED(from, to);
                     }
                 }
             }
@@ -319,7 +309,7 @@ ColumnLayout {
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         property var pins: PinInfo.getBindings(scanner.selected.boardImage);
-        property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
+        property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
         ColumnLayout {
             Label {
                 text: qsTr("Tilt Sensor Type: ")
@@ -336,14 +326,14 @@ ColumnLayout {
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("TiltType")
-                Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.tiltType) }
+                Binding { target: tiltBox; property: "currentIndex"; value: tiltBox.model.findIndex(s => s.value === scanner.selected.config.mainTiltType) }
 
-                onCurrentIndexChanged: scanner.selected.tiltType = tiltBox.model[tiltBox.currentIndex].value
+                onCurrentIndexChanged: scanner.selected.config.mainTiltType = tiltBox.model[tiltBox.currentIndex].value
             }
 
             Label {
                 id: orientation
-                visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
+                visible: scanner.selected.config.mainTiltType === ArdwiinoDefinesValues.MPU_6050;
                 text: qsTr("Tilt Sensor Orientation: ")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
@@ -354,14 +344,14 @@ ColumnLayout {
             }
             ComboBox {
                 id: orientationBox
-                visible: scanner.selected.tiltType === ArdwiinoDefinesValues.MPU_6050;
+                visible: scanner.selected.config.mainTiltType === ArdwiinoDefinesValues.MPU_6050;
                 Layout.fillWidth: true
                 textRole: "key"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 model: Defines.fillCombobox("GyroOrientation")
-                Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.orientation) }
+                Binding { target: orientationBox; property: "currentIndex"; value: orientationBox.model.findIndex(s => s.value === scanner.selected.config.axisMpu6050Orientation) }
 
-                onCurrentIndexChanged: scanner.selected.orientation = orientationBox.model[orientationBox.currentIndex].value
+                onCurrentIndexChanged: scanner.selected.config.axisMpu6050Orientation = orientationBox.model[orientationBox.currentIndex].value
             }
 
             Label {
@@ -379,8 +369,8 @@ ColumnLayout {
                 Layout.fillWidth: true
                 to: 32767
                 from: -32767
-                Component.onCompleted: value = scanner.selected.sensitivity
-                onValueChanged: scanner.selected.sensitivity = sliderTilt.value
+                Component.onCompleted: value = scanner.selected.config.axisTiltSensitivity
+                onValueChanged: scanner.selected.config.axisTiltSensitivity = sliderTilt.value
                 background: Rectangle {
                     y: 15
                     implicitWidth: 200
@@ -399,27 +389,26 @@ ColumnLayout {
             RowLayout {
                 PinBinding {
                     id: pinBinding
-                    currentPin: "r_y"
+                    currentPin: "RY"
                 }
                 Button {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    text: tiltConfig.pins(scanner.selected.pins["r_y"])
+                    text: tiltConfig.pins(scanner.selected.config[`pins${"RY"}`])
                     onClicked: pinBinding.open()
-
                     ToolTip.visible: hovered
-                    ToolTip.text: tiltConfig.labels["r_y"]
+                    ToolTip.text: tiltConfig.labels["RY"]
                 }
             }
             Label {
-                visible: scanner.selected.isKeyboard
+                visible: scanner.selected.config.isKeyboard
                 text: "Key Binding"
                 font.pointSize: 15
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
             }
             RowLayout {
-                visible: scanner.selected.isKeyboard
+                visible: scanner.selected.config.isKeyboard
                 id:rl
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -428,9 +417,9 @@ ColumnLayout {
                     property var buttonCount:0
                     property var label:""
                     model: {
-                        label = tiltConfig.labels["r_y"]
+                        label = tiltConfig.labels["RY"]
                         buttonCount = 2;
-                        return ["r_y_lt","r_y_gt"];
+                        return ["RYPos","RYNeg"];
                     }
                     RowLayout {
                         KeyBinding {
@@ -442,14 +431,14 @@ ColumnLayout {
                             id: keyButton
                             Layout.preferredWidth: (tiltConfig.pWidth/tiltConfig.columns/r.buttonCount) - 6
                             Layout.fillHeight: true
-                            visible: scanner.selected.isKeyboard
-                            text: KeyInfo.getKeyName(scanner.selected.keys[modelData])
+                            visible: scanner.selected.config.isKeyboard
+                            text: KeyInfo.getKeyName(scanner.selected.config[`keys${modelData}`])
                             onClicked: keyBinding.open()
                             ToolTip.visible: hovered
                             ToolTip.text: {
-                                if (modelData.endsWith("_lt")) {
+                                if (modelData.endsWith("Neg")) {
                                     return r.label + " -"
-                                } else if (modelData.endsWith("_gt")) {
+                                } else if (modelData.endsWith("Pos")) {
                                     return r.label +" +";
                                 } else {
                                     return r.label;
@@ -469,66 +458,51 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: enabled
-                checked: !!scanner.selected.pin_inverts["r_y"]
-                onCheckedChanged: {
-                    var pins = scanner.selected.pin_inverts;
-                    pins["r_y"] = checked;
-                    scanner.selected.pin_inverts = pins;
-                }
+                checked: !!scanner.selected.config[`pins${"RY"}Inverted`]
+                onCheckedChanged: canner.selected.config[`pins${"RY"}Inverted`] = checked
             }
             Label {
-                visible: scanner.selected.hasAddressableLEDs
+                visible: scanner.selected.config.hasAddressableLEDs
                 text: "LEDs"
                 font.pointSize: 15
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
             }
             RowLayout {
-                visible: scanner.selected.hasAddressableLEDs
+                visible: scanner.selected.config.hasAddressableLEDs
                 Layout.fillWidth: true
                 Switch {
-                    Component.onCompleted: checked = scanner.selected.leds.includes("r_y")
+                    Component.onCompleted: checked = scanner.selected.config.leds.includes("RY")
                     onCheckedChanged: {
-                        var leds = scanner.selected.leds;
-                        var colours = scanner.selected.colours;
                         if (!checked) {
-                            leds.splice(leds.indexOf("r_y"),1);
-                        } else if (!leds.includes("r_y")){
-                            leds.push("r_y");
-                            if (!colours["r_y"]) {
-                                colours["r_y"] = 0;
-                            }
+                            scanner.selected.config.clearLED("RY");
+                        } else if (!scanner.selected.config.leds.includes("RY")){
+                            scanner.selected.config.setLED("RY",0);
                         }
-                        scanner.selected.leds = leds;
-                        scanner.selected.colours = colours;
                     }
                 }
                 Rectangle {
                     radius: colorBt2.height
-                    visible: scanner.selected.leds.includes("r_y") && scanner.selected.hasAddressableLEDs
-                    color: "#"+(scanner.selected.colours["r_y"] || 0).toString(16).padStart(6,"0")
+                    visible: scanner.selected.config.leds.includes("RY") && scanner.selected.config.hasAddressableLEDs
+                    color: "#"+(scanner.selected.config.ledColours["RY"]).toString(16).padStart(6,"0")
                     width: colorBt2.height
                     height: colorBt2.height
                 }
                 ColorPickerDialog {
                     id: color
-                    buttons: ["r_y"]
-                    colorVal: scanner.selected.colours["r_y"]
-                    onColorChanged: {
-                        var colours = scanner.selected.colours;
-                        colours["r_y"] = colorVal;
-                        scanner.selected.colours = colours;
-                    }
+                    buttons: ["RY"]
+                    colorVal: scanner.selected.config.ledColours["RY"]
+                    onColorChanged: scanner.selected.config.setLED("RY",colorVal)
                 }
                 Button {
-                    visible: scanner.selected.leds.includes("r_y") && scanner.selected.hasAddressableLEDs
+                    visible: scanner.selected.config.ledColours["RY"] && scanner.selected.config.hasAddressableLEDs
                     text: "Change colour"
                     onClicked: color.open()
                     id: colorBt2
                 }
             }
             RowLayout {
-                visible: scanner.selected.isMIDI
+                visible: scanner.selected.config.isMIDI
                 Label {
                     text: qsTr("MIDI Type")
                     fontSizeMode: Text.FixedSize
@@ -543,17 +517,13 @@ ColumnLayout {
                     textRole: "key"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     model: Defines.fillCombobox("MidiType")
-                    currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.midi_type["r_y"]))
-                    onActivated: {
-                        var midi_type = scanner.selected.midi_type;
-                        midi_type["r_y"] = model[currentIndex].value;
-                        scanner.selected.midi_type = midi_type;
-                    }
+                    currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiTypeMap["RY"]))
+                    onActivated: scanner.selected.config.setMidiType("RY",model[currentIndex].value)
                 }
             }
 
             RowLayout {
-                visible: scanner.selected.isMIDI
+                visible: scanner.selected.config.isMIDI
                 Label {
                     text: qsTr("MIDI Note")
                     fontSizeMode: Text.FixedSize
@@ -568,12 +538,8 @@ ColumnLayout {
                     id: noteBox
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    value: scanner.selected.midi_note["r_y"] || 0
-                    onValueChanged: {
-                        var midi_note = scanner.selected.midi_note;
-                        midi_note["r_y"] = value
-                        scanner.selected.midi_note = midi_note;
-                    }
+                    value: scanner.selected.config.midiNoteMap["RY"] || 0
+                    onValueChanged: scanner.selected.config.setMidiNoteValue("RY",value)
 
                     editable: true
                     inputMethodHints: Qt.ImhNone
@@ -591,7 +557,7 @@ ColumnLayout {
             }
 
             RowLayout {
-                visible: scanner.selected.isMIDI
+                visible: scanner.selected.config.isMIDI
                 Label {
                     text: qsTr("MIDI Channel")
                     fontSizeMode: Text.FixedSize
@@ -605,13 +571,8 @@ ColumnLayout {
                     id: chanBox
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    value: scanner.selected.midi_channel["r_y"] || 0
-                    onValueChanged: {
-                        var midi_channel = scanner.selected.midi_channel;
-                        midi_channel["r_y"] = value;
-                        scanner.selected.midi_channel = midi_channel;
-                    }
-
+                    value: scanner.selected.config.midiChannelMap["RY"] || 0
+                    onValueChanged: scanner.selected.config.setMidiChannelValue("RY",value)
                     from: 1
                     to: 10
                 }

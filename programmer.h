@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QProcess>
 #include <QDebug>
-#include "port.h"
 #include "status.h"
 #include "devices/ardwiino.h"
 #include "devices/dfu_arduino.h"
@@ -27,7 +26,7 @@ signals:
     void statusChanged(Status::Value newValue);
     void statusVChanged(QString newValue);
 public slots:
-    bool program(Port* port);
+    bool program(Device* port);
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
@@ -68,7 +67,7 @@ private:
     QString m_process_out;
     double m_process_percent{};
     Status::Value m_status;
-    Port* m_port;
+    Device* m_port;
     bool m_restore;
     board_t detectBoard();
 };

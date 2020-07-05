@@ -1,29 +1,36 @@
 #pragma once
-#include <QObject>
-#include <QMetaEnum>
 #include <QDebug>
-#define JS_ENUM(v) Q_ENUM(v) Q_INVOKABLE QVariantMap get_##v##_entries() {return getEntries(QMetaEnum::fromType<v>());}
-#define JS_ENUM_NO_FIX(v) Q_ENUM(v) Q_INVOKABLE QVariantMap get_##v##_entries() {return getEntriesNoFix(QMetaEnum::fromType<v>());}
-class ArdwiinoDefines: public QObject {
+#include <QMetaEnum>
+#include <QObject>
+
+#include "submodules/Ardwiino/src/shared/config/config.h"
+#define JS_ENUM(v) \
+    Q_ENUM(v)      \
+    Q_INVOKABLE QVariantMap get_##v##_entries() { return getEntries(QMetaEnum::fromType<v>()); }
+#define JS_ENUM_NO_FIX(v) \
+    Q_ENUM(v)             \
+    Q_INVOKABLE QVariantMap get_##v##_entries() { return getEntriesNoFix(QMetaEnum::fromType<v>()); }
+
+class ArdwiinoDefines : public QObject {
     Q_OBJECT
-public:
+   public:
 #include "submodules/Ardwiino/src/shared/config/defines.h"
-#include "submodules/Ardwiino/src/shared/input/inputs/wii_ext.h"
 #include "submodules/Ardwiino/src/shared/input/inputs/ps2_cnt.h"
+#include "submodules/Ardwiino/src/shared/input/inputs/wii_ext.h"
     static ArdwiinoDefines* getInstance();
     static QString fixKey(QString string) {
-          auto sentence = string.toLower().split("_");
-          for(auto i = 0; i< sentence.size(); i++){
-             sentence[i] = sentence[i][0].toUpper() + sentence[i].right(sentence[i].size()-1);
-          }
-          return sentence.join(" ")
-                  .replace("Ps2","PS2")
-                  .replace("Ps3","PS3")
-                  .replace("Apa102", "APA102")
-                  .replace("Midi","MIDI")
-                  .replace("Dualshock","DualShock")
-                  .replace("Udraw","uDraw")
-                  .replace("Xinput","XInput");
+        auto sentence = string.toLower().split("_");
+        for (auto i = 0; i < sentence.size(); i++) {
+            sentence[i] = sentence[i][0].toUpper() + sentence[i].right(sentence[i].size() - 1);
+        }
+        return sentence.join(" ")
+            .replace("Psx", "PlayStation")
+            .replace("Ps3", "PS3")
+            .replace("Apa102", "APA102")
+            .replace("Midi", "MIDI")
+            .replace("Dualshock", "DualShock")
+            .replace("Udraw", "uDraw")
+            .replace("Xinput", "XInput");
     }
     static QVariantMap getEntries(QMetaEnum e) {
         QVariantMap map;
@@ -49,7 +56,28 @@ public:
     JS_ENUM(WiiExtType)
     JS_ENUM(PsxControllerType)
     enum buttons {
-        up,down,left,right,start,back,left_stick,right_stick,LB,RB,home,capture,a,b,x,y,lt,rt,l_x,l_y,r_x,r_y
+        up,
+        down,
+        left,
+        right,
+        start,
+        back,
+        left_stick,
+        right_stick,
+        LB,
+        RB,
+        home,
+        capture,
+        a,
+        b,
+        x,
+        y,
+        lt,
+        rt,
+        l_x,
+        l_y,
+        r_x,
+        r_y
     };
     JS_ENUM_NO_FIX(buttons)
     template <class T>
@@ -58,7 +86,7 @@ public:
         if (QString(id).isEmpty()) return "Unknown";
         return fixKey(id);
     }
-private:
-    static ArdwiinoDefines* instance;
 
+   private:
+    static ArdwiinoDefines* instance;
 };

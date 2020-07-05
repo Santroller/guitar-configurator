@@ -94,13 +94,13 @@ void readList(QJsonArray arr, QList<qint64>* list) {
 }
 void LEDHandler::setLEDs(QMap<QString,uint32_t> leds) {
     auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
-    // QByteArray a = QByteArray(1,COMMAND_SET_LED_COLOUR);
-    // for (auto a2: scanner->selectedPort()->getLEDs()) {
+    // QByteArray a;
+    // for (auto a2: scanner->getSelected()-> {
     //     uint32_t c = leds.value(a2.toString(),0);
     //     a.append((char*)&c,4);
     // }
-    // if (scanner->selectedPort() && scanner->selectedPort()->isReady()) {
-    //     scanner->selectedPort()->write(a);
+    // if (scanner->getSelected() && scanner->getSelected()->isReady()) {
+    //     scanner->getSelected()->write(a);
     // }
 }
 int LEDHandler::gammaCorrect(int color) {

@@ -1,8 +1,10 @@
 #include "ardwiino.h"
+
 #include <QSettings>
+
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
-Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId) {
+Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId), m_configurable(false) {
     m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
 }
 bool Ardwiino::open() {
@@ -18,21 +20,25 @@ bool Ardwiino::open() {
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
-        configuration = *(Configuration_t*)readData(COMMAND_READ_CONFIG).data();
+        m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
+        m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
+        emit configurationChanged();
+        emit configurableChanged();
+        emit boardImageChanged();
     } else {
         // TODO: handle errors (Atleast tell the user that some undetected device was found)
         qDebug() << "UNABLE TO OPEN";
     }
     return m_hiddev;
 }
-QByteArray Ardwiino::readData(int id, int rid) {
+QByteArray Ardwiino::readData(int id) {
     QByteArray data(sizeof(Configuration_t), '\0');
-    data[0] = rid;
+    data[0] = 0;
     data[1] = id;
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    data[0] = rid;
+    data[0] = 0;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    data.remove(0,1);
+    data.remove(0, 1);
     auto err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
@@ -40,27 +46,47 @@ QByteArray Ardwiino::readData(int id, int rid) {
     }
     return data;
 }
-QByteArray Ardwiino::readData(int id) {
-    return readData(id,0);
+void Ardwiino::writeConfig() {
+    auto config = m_configuration->getConfig();
+    QByteArray data;
+    data.push_back('\0');
+    data.push_back(COMMAND_WRITE_CONFIG);
+    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config),sizeof(Configuration_t)));
+    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    data.remove(0, 1);
+    auto err = hid_error(m_hiddev);
+    if (err) {
+        // TODO: handle errors (Tell the user that we could not communicate with the controller)
+        qDebug() << QString::fromWCharArray(err);
+    }
+    data.clear();
+    data.push_back('\0');
+    data.push_back(COMMAND_REBOOT);
+    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+    err = hid_error(m_hiddev);
+    if (err) {
+        // TODO: handle errors (Tell the user that we could not communicate with the controller)
+        qDebug() << QString::fromWCharArray(err);
+    }
 }
-QString Ardwiino::getDescription() {
+QString Ardwiino::getDescription() { 
     if (!isReady()) {
         return "Ardwiino - Unable to communicate";
     }
-    QString desc = "Ardwiino - " + m_board.name + " - " + ArdwiinoDefines::getName((ArdwiinoDefines::SubType)configuration.main.subType);
-    if (configuration.main.inputType == ArdwiinoDefines::WII) {
+    QString desc = "Ardwiino - " + m_board.name + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
+    if (m_configuration->getMainInputType() == ArdwiinoDefines::WII) {
         uint16_t ext = *(uint16_t*)readData(COMMAND_GET_EXTENSION).data();
         auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)ext);
         if (extName == "Unknown") {
             extName = "Wii Unknown Extension";
         }
         desc += " - " + extName;
-    } else if (configuration.main.inputType == ArdwiinoDefines::WII) {
+    } else if (m_configuration->getMainInputType() == ArdwiinoDefines::PS2) {
         uint8_t ext = *readData(COMMAND_GET_EXTENSION).data();
         auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
         desc += " - " + extName;
     } else {
-        desc += " - " + ArdwiinoDefines::getName((ArdwiinoDefines::InputType)configuration.main.inputType);
+        desc += " - " + ArdwiinoDefines::getName(m_configuration->getMainInputType());
     }
     // On windows, we can actually write the description to registry in a way that applications will pick it up.
 #ifdef Q_OS_WIN
@@ -79,5 +105,5 @@ void Ardwiino::close() {
     }
 }
 void Ardwiino::bootloader() {
-    // QString cmd = 
+    // QString cmd =
 }

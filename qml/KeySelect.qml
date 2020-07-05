@@ -10,7 +10,7 @@ Page {
     ColumnLayout {
         id: column
         anchors.fill: parent
-        property var current: scanner.selected.pins[scanner.selected.currentPin]
+        property var current: scanner.selected.config[`pins${scanner.selected.currentPin}`]
         Image {
             function g(count, x, y, width, id) {
                 var ret = [];

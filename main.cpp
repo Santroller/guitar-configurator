@@ -28,6 +28,7 @@ auto main(int argc, char *argv[]) -> int
     qmlRegisterUncreatableType<Status>("net.tangentmc", 1, 0, "Status",
                                        "Not creatable as it is an enum type.");
     qRegisterMetaType<Status::Value>("Status::Value");
+    ArdwiinoLookup::getInstance();
     qmlRegisterSingletonType("net.tangentmc", 1, 0, "ArdwiinoLookup", [](QQmlEngine*, QJSEngine *scriptEngine) -> QJSValue {
         return scriptEngine->newQObject(ArdwiinoLookup::getInstance());
     });

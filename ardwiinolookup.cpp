@@ -16,7 +16,12 @@ ArdwiinoLookup::ArdwiinoLookup(QObject *parent) : QObject(parent) {
     auto match2 = versionRegex.match(f.readAll());
     currentVersion = QVersionNumber::fromString(match2.captured(1));
 }
-
+auto ArdwiinoLookup::isOutdatedArdwiino(const unsigned short releaseID) -> bool {
+    uint8_t major = (releaseID >> 8)  & 0xff;
+    uint8_t minor = (releaseID >> 4) & 0xf;
+    uint8_t revision = (releaseID) & 0xf;
+    return QVersionNumber(major,minor, revision) < currentVersion;
+}
 auto ArdwiinoLookup::isOldAPIArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
     return isArdwiino(serialPortInfo) && serialPortInfo.serialNumber() == "1.2";
 }

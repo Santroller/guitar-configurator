@@ -23,6 +23,9 @@ class Arduino : public SerialDevice {
     virtual void close();
     virtual bool open();
     virtual void bootloader();
+    inline virtual bool isConfigurable() {
+        return false;
+    }
     inline virtual bool isEqual(const Device& other) const {
         return m_serialPort->portName() == static_cast<const Arduino&>(other).m_serialPort->portName();
     }

@@ -5,12 +5,12 @@
 #include <QSerialPortInfo>
 #include <QList>
 #include <QImage>
-#include "port.h"
 #include <QTimer>
 #include "programmer.h"
 #include <QSettings>
 #include "devices/device.h"
 #include "devices/outdated_ardwiino.h"
+#include <libusb-1.0/libusb.h>
 
 class PortScanner : public QObject
 {
@@ -59,6 +59,8 @@ public slots:
         return false;
     }
 private:
+    void scanDevices();
+    static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev, libusb_hotplug_event event, void* user_data);
     void add(Device* device);
     void remove(Device* device);
     bool m_hasSelected;

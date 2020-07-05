@@ -18,12 +18,14 @@ class DfuArduino : public Device {
     virtual void close();
     virtual bool open();
     virtual void bootloader();
+    inline virtual bool isConfigurable() {
+        return false;
+    }
    signals:
     void descriptionChanged();
     void readyChanged();
 
    protected:
-    board_t m_board;
     QString m_processor;
 
    private:

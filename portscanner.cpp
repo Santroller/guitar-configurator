@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QIcon>
 #include <QProcess>
+#include <QThread>
 #include <algorithm>
 
 #include "devices/dfu_arduino.h"
@@ -28,6 +29,19 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         m_graphical = true;
     }
     setSelected(nullptr);
+    scanDevices();
+    libusb_hotplug_callback_handle callback_handle;
+    int rc;
+
+    libusb_init(NULL);
+
+    rc = libusb_hotplug_register_callback(NULL, (libusb_hotplug_event)(LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED | LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT), (libusb_hotplug_flag)0, LIBUSB_HOTPLUG_MATCH_ANY, LIBUSB_HOTPLUG_MATCH_ANY,
+                                          LIBUSB_HOTPLUG_MATCH_ANY, hotplug_callback, this,
+                                          &callback_handle);
+    if (LIBUSB_SUCCESS != rc) {
+        printf("Error creating a hotplug callback\n");
+        libusb_exit(NULL);
+    }
     timer = new QTimer(this);
     // setup signal and slot
     connect(timer, &QTimer::timeout, this, &PortScanner::tick);
@@ -51,7 +65,7 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         proc->start(dir.filePath("dfu-programmer"), {processor, "get"});
     }
 }
-void PortScanner::tick() {
+void PortScanner::scanDevices() {
     struct hid_device_info *devs, *cur_dev;
     devs = hid_enumerate(0x0, 0x0);
     cur_dev = devs;
@@ -73,57 +87,56 @@ void PortScanner::tick() {
         }
     }
 }
-// void PortScanner::usbDeviceDetected(const QUsbDevice::Id& id) {
-//     if (id.vid == VID_8U2 && id.pid == PID_8U2) {
-//         add(new DfuArduino("at90usb82", id));
-//     } else if (id.vid == VID_16U2 && id.pid == VID_16U2) {
-//         add(new DfuArduino("atmega16u2", id));
-//     } else if (ArdwiinoLookup::isArdwiino(id)) {
-//     }
-// }
-// void PortScanner::usbDeviceUnplugged(const QUsbDevice::Id& id) {
-//     if (id.vid == VID_8U2 && id.pid == PID_8U2) {
-//         remove(new DfuArduino("at90usb82", id));
-//     } else if (id.vid == VID_16U2 && id.pid == VID_16U2) {
-//         remove(new DfuArduino("atmega16u2", id));
-//     } else if (ArdwiinoLookup::isArdwiino(id)) {
-//         struct hid_device_info *devs, *cur_dev;
-//         devs = hid_enumerate(0x0, 0x0);
-//         cur_dev = devs;
-//         QList<Ardwiino*> serials;
-//         while (cur_dev) {
-//             if (cur_dev->vendor_id == id.vid && cur_dev->product_id == id.pid) {
-//                 serials.push_back(new Ardwiino(id, cur_dev->serial_number, cur_dev->release_number));
-//             }
-//             cur_dev = cur_dev->next;
-//         }
-//         hid_free_enumeration(devs);
-//         for (auto device : m_model) {
-//             auto ardwiino = dynamic_cast<Ardwiino*>(device);
-//             if (ardwiino) {
-//                 if (std::find_if(serials.begin(), serials.end(), [ardwiino](Ardwiino* f) { return *f == *ardwiino; }) == serials.end()) {
-//                     remove(ardwiino);
-//                 }
-//             }
-//         }
-//     }
-// }
+int PortScanner::hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev,
+                                  libusb_hotplug_event event, void* user_data) {
+    static libusb_device_handle* dev_handle = NULL;
+    struct libusb_device_descriptor desc;
+    int rc;
+    PortScanner* sc = (PortScanner*)user_data;
+    (void)libusb_get_device_descriptor(dev, &desc);
+    // We need a small delay as we want to wait for the device to initialise
+    QThread* thread = QThread::create([sc] {
+        QThread::msleep(100);
+        QMetaObject::invokeMethod(sc, [sc] {
+            sc->scanDevices();
+        });
+    });
+    thread->start();
+    return 0;
+}
+void PortScanner::tick() {
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    libusb_handle_events_timeout_completed(NULL, &tv, NULL);
+}
 void PortScanner::add(Device* device) {
     if (std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; }) != m_model.end()) {
         return;
     }
     if (device->open()) {
+        if (!m_hasSelected && m_selected) {
+            m_hasSelected = true;
+            m_selected = device;
+            selectedChanged();
+            hasSelectedChanged();
+        }
         m_model.append(device);
         update();
-    } 
+    }
 }
 void PortScanner::remove(Device* device) {
     auto found = std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; });
     if (found == m_model.end()) {
         return;
     }
-    auto foundEle = *found;
-    ((Device*)foundEle)->close();
+    auto foundEle = ((Device*)*found);
+    if (m_selected == foundEle) {
+        m_hasSelected = false;
+        selectedChanged();
+        hasSelectedChanged();
+    }
+    foundEle->close();
     m_model.removeAll(foundEle);
     update();
 }
@@ -138,26 +151,8 @@ void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
             add(new Arduino(serialPortInfo));
         }
     }
-    // if (programmer->getStatus() == Status::AVRDUDE) return;
-    // if (m_selected != nullptr && m_hasSelected) {
-    //     m_selected->handleConnection(serialPortInfo);
-    //     programmer->program(m_selected);
-    //     if (!programmer->getRestore()) {
-    //         m_selected->handleConnection(serialPortInfo);
-    //         return;
-    //     }
-    // }
-    // auto port = new Port(serialPortInfo);
-    // if (port->getPort() == nullptr) return;
-    // m_model.erase(std::remove_if(m_model.begin(), m_model.end(), [](QObject* object){return (dynamic_cast<Port*>(object))->getPort() == "searching";}),m_model.end());
-    // m_model.push_back(port);
-    // port->open(serialPortInfo);
-    // connect(port, &Port::typeChanged, this, &PortScanner::clearImages);
 }
 void PortScanner::serialDeviceUnplugged(const QSerialPortInfo& serialPortInfo) {
-    // if (m_selected != nullptr) {
-    //     m_selected->handleDisconnection(serialPortInfo);
-    // }
     if (ArdwiinoLookup::isArdwiino(serialPortInfo)) {
         Device* device = new OutdatedArdwiino(serialPortInfo);
         remove(device);

@@ -21,6 +21,9 @@ class OutdatedArdwiino : public SerialDevice {
     virtual bool open();
     virtual void close();
     virtual void bootloader();
+    inline virtual bool isConfigurable() {
+        return false;
+    }
     inline virtual bool isEqual(const Device& other) const {
         return m_serialPort->portName() == static_cast<const OutdatedArdwiino&>(other).m_serialPort->portName();
     }
