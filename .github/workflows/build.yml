@@ -20,6 +20,7 @@ jobs:
           npm i -g appdmg
           brew install pkgconfig
           brew install hidapi
+          brew install libusb
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -82,7 +83,7 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev
+          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libusb-1.0-0-dev
           mkdir build
           cd build
           cmake ../ 
