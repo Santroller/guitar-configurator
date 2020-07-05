@@ -27,7 +27,6 @@ signals:
     void selectedChanged();
     void hasSelectedChanged();
 public slots:
-    void tick();
     bool isGraphical() const {
         return m_graphical;
     }
@@ -73,7 +72,6 @@ private:
     QSettings settings;
     QList<QProcess*> m_processes;
     Device* m_emptyDevice;
-    QTimer *timer;
 };
 
 #endif // PORTSCANNER_H

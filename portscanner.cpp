@@ -42,28 +42,12 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         printf("Error creating a hotplug callback\n");
         libusb_exit(NULL);
     }
-    timer = new QTimer(this);
-    // setup signal and slot
-    connect(timer, &QTimer::timeout, this, &PortScanner::tick);
-    // msec
-    timer->start(10);
-    auto dir = QDir(QCoreApplication::applicationDirPath());
-    dir.cd("binaries");
-    for (auto processor : {"at90usb82", "atmega16u2"}) {
-        auto proc = new QProcess();
-        proc->setWorkingDirectory(dir.path());
-        connect(qApp, SIGNAL(aboutToQuit()), proc, SLOT(terminate()));
-        connect(proc, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
-                [this, processor, proc](int exitCode, QProcess::ExitStatus status) {
-                    if (exitCode == 0) {
-                        add(new DfuArduino(processor));
-                    } else {
-                        remove(new DfuArduino(processor));
-                    }
-                    proc->start(proc->program(), proc->arguments());
-                });
-        proc->start(dir.filePath("dfu-programmer"), {processor, "get"});
-    }
+    QThread* thread = QThread::create([this] {
+        while (!QCoreApplication::instance()->closingDown()) {
+            libusb_handle_events_completed(NULL, NULL);
+        }
+    });
+    thread->start();
 }
 void PortScanner::scanDevices() {
     struct hid_device_info *devs, *cur_dev;
@@ -95,20 +79,24 @@ int PortScanner::hotplug_callback(struct libusb_context* ctx, struct libusb_devi
     PortScanner* sc = (PortScanner*)user_data;
     (void)libusb_get_device_descriptor(dev, &desc);
     // We need a small delay as we want to wait for the device to initialise
-    QThread* thread = QThread::create([sc] {
-        QThread::msleep(100);
-        QMetaObject::invokeMethod(sc, [sc] {
-            sc->scanDevices();
-        });
+    QThread::msleep(100);
+    QMetaObject::invokeMethod(sc, [sc, desc, event] {
+        sc->scanDevices();
+        if (desc.idVendor == VID_8U2 && desc.idProduct == PID_8U2) {
+            if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
+                sc->add(new DfuArduino("at90usb82"));
+            } else {
+                sc->remove(new DfuArduino("at90usb82"));
+            }
+        } else if (desc.idVendor == VID_16U2 && desc.idProduct == PID_16U2) {
+            if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
+                sc->add(new DfuArduino("atmega16u2"));
+            } else {
+                sc->remove(new DfuArduino("atmega16u2"));
+            }
+        }
     });
-    thread->start();
     return 0;
-}
-void PortScanner::tick() {
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    libusb_handle_events_timeout_completed(NULL, &tv, NULL);
 }
 void PortScanner::add(Device* device) {
     if (std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; }) != m_model.end()) {
