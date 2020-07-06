@@ -1,5 +1,5 @@
 #include "null_device.h"
-NullDevice::NullDevice(QObject* parent): Device(parent) {
+NullDevice::NullDevice(QObject* parent): Device({}, parent) {
 
 }
 QString NullDevice::getDescription() {

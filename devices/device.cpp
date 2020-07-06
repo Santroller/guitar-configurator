@@ -1,5 +1,5 @@
 #include "device.h"
-Device::Device(QObject* parent): QObject(parent) {
+Device::Device(UsbDevice_t deviceID, QObject* parent): QObject(parent), m_deviceID(deviceID) {
 
 }
 void Device::setBoardType(QString board) {

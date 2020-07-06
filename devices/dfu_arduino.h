@@ -12,7 +12,7 @@
 class DfuArduino : public Device {
     Q_OBJECT
    public:
-    explicit DfuArduino(QString processor, QObject* parent = nullptr);
+    explicit DfuArduino(QString processor, UsbDevice_t devt, QObject* parent = nullptr);
     QString getDescription();
     bool isReady();
     virtual void close();
@@ -30,7 +30,6 @@ class DfuArduino : public Device {
 
    private:
     inline virtual bool isEqual(const Device& other) const {
-        auto& otherD = static_cast<const DfuArduino&>(other);
-        return m_processor == otherD.m_processor;
+        return true;
     }
 };

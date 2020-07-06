@@ -11,20 +11,6 @@
 #include "devices/device.h"
 #include "devices/outdated_ardwiino.h"
 #include "programmer.h"
-#ifdef Q_OS_MACOS
-#include <libusb.h>
-#else
-#include <libusb-1.0/libusb.h>
-#endif
-typedef struct UsbDevice_t {
-    int bus;
-    int port;
-    libusb_device *dev;
-    bool operator==(const UsbDevice_t& other)
-    {
-        return port == other.port && bus == other.bus;
-    }
-} UsbDevice_t;
 
 class PortScanner : public QObject {
     Q_OBJECT
@@ -34,13 +20,14 @@ class PortScanner : public QObject {
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
    public:
     explicit PortScanner(Programmer* programmer, QObject* parent = nullptr);
-    static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev, libusb_hotplug_event event, void* user_data);
+    int hotplug_callback(struct libusb_device* dev, libusb_hotplug_event event);
    signals:
     void graphicalChanged();
     void modelChanged();
     void selectedChanged();
     void hasSelectedChanged();
    public slots:
+    void tick();
     bool isGraphical() const {
         return m_graphical;
     }
@@ -87,6 +74,8 @@ class PortScanner : public QObject {
     QList<QProcess*> m_processes;
     Device* m_emptyDevice;
     QList<UsbDevice_t> existingDevices;
+    QTimer* timer;
+    bool m_hasHotplug;
 };
 
 #endif  // PORTSCANNER_H

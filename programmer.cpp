@@ -66,7 +66,7 @@ void Programmer::programDFU() {
     // m_process = new QProcess();
     // m_process->setWorkingDirectory(dir.path());
     // QStringList l = {
-    //     board.processor};
+    //     board.processor+":"+bus,addr};
     // switch (m_status) {
     //     case Status::DFU_CONNECT_MAIN:
     //     case Status::DFU_CONNECT_AVRDUDE:

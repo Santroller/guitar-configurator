@@ -9,6 +9,11 @@
 
 #include "ardwiino_defines.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
+#ifdef Q_OS_MACOS
+#include <libusb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
 #define ARDWIINO_VID 0x1209
 #define ARDWIINO_PID 0x2882
 #define SONY_VID 0x12ba
@@ -40,7 +45,7 @@ class ArdwiinoLookup : public QObject {
     static const board_t findByBoard(const QString& board);
    public slots:
     static bool isArdwiino(const QSerialPortInfo& info);
-    static bool isArdwiino(struct hid_device_info *usbDeviceId);
+    static bool isArdwiino(const struct libusb_device_descriptor& desc);
     static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
     static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
     static bool isOutdatedArdwiino(const unsigned short releaseID);

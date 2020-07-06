@@ -4,8 +4,10 @@
 
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
-Ardwiino::Ardwiino(struct hid_device_info* usbId, QObject* parent) : Device(parent), m_usbId(usbId), m_configurable(false) {
+Ardwiino::Ardwiino(struct hid_device_info* usbId, UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbId(usbId), m_configurable(false) {
     m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
+}
+Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_configurable(false) {
 }
 bool Ardwiino::open() {
 #ifdef Q_OS_WIN32
@@ -46,30 +48,33 @@ QByteArray Ardwiino::readData(int id) {
     }
     return data;
 }
-void Ardwiino::writeConfig() {
-    auto config = m_configuration->getConfig();
+void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
     QByteArray data;
-    data.push_back('\0');
-    data.push_back(COMMAND_WRITE_CONFIG);
-    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config),sizeof(Configuration_t)));
-    qDebug() << data;
+    data.push_back(cmd);
+    data.push_back(dataToSend);
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     auto err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
-        qDebug() << "t" << QString::fromWCharArray(err);
-    }
-    data.clear();
-    data.push_back('\0');
-    data.push_back(COMMAND_REBOOT);
-    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    err = hid_error(m_hiddev);
-    if (err) {
-        // TODO: handle errors (Tell the user that we could not communicate with the controller)
-        qDebug() << "t2" << QString::fromWCharArray(err);
+        qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
     }
 }
-QString Ardwiino::getDescription() { 
+#define PARTIAL_CONFIG_SIZE 128
+void Ardwiino::writeConfig() {
+    auto config = m_configuration->getConfig();
+    QByteArray data;
+    data.push_back('\0');
+    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config), PARTIAL_CONFIG_SIZE));
+    writeData(COMMAND_WRITE_CONFIG, data);
+    data.clear();
+    data.push_back(PARTIAL_CONFIG_SIZE);
+    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + PARTIAL_CONFIG_SIZE, sizeof(Configuration_t) - PARTIAL_CONFIG_SIZE));
+    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
+   
+    writeData(COMMAND_WRITE_CONFIG, data);
+    writeData(COMMAND_REBOOT);
+}
+QString Ardwiino::getDescription() {
     if (!isReady()) {
         return "Ardwiino - Unable to communicate";
     }

@@ -11,6 +11,19 @@
 #include "ardwiino_defines.h"
 #include "ardwiinolookup.h"
 #include "submodules/Ardwiino/src/shared/output/serial_commands.h"
+#ifdef Q_OS_MACOS
+#include <libusb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
+typedef struct UsbDevice_t {
+    int bus;
+    int port;
+    libusb_device* dev;
+    bool operator==(const UsbDevice_t& other) {
+        return port == other.port && bus == other.bus;
+    }
+} UsbDevice_t;
 class Device : public QObject {
     Q_PROPERTY(QString description READ getDescription NOTIFY descriptionChanged)
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
@@ -18,7 +31,7 @@ class Device : public QObject {
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
     Q_OBJECT
    public:
-    explicit Device(QObject* parent = nullptr);
+    explicit Device(UsbDevice_t m_deviceID, QObject* parent = nullptr);
     virtual QString getDescription() = 0;
     virtual bool isReady() = 0;
     virtual bool open() = 0;
@@ -27,7 +40,7 @@ class Device : public QObject {
     virtual bool isConfigurable() = 0;
     void setBoardType(QString board);
     inline bool operator==(const Device& other) {
-        return typeid(*this) == typeid(other) && isEqual(other);
+        return typeid(*this) == typeid(other) && m_deviceID == other.m_deviceID && isEqual(other);
     }
    public slots:
     inline QString getBoardImage() const {
@@ -44,6 +57,7 @@ class Device : public QObject {
 
    protected:
     board_t m_board;
+    UsbDevice_t m_deviceID;
 
    private:
     virtual bool isEqual(const Device& other) const = 0;
