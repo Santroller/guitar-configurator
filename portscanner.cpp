@@ -19,6 +19,9 @@
 #define VID_8U2 0x03eb
 #define PID_16U2 0x2FEF
 #define VID_16U2 0x03eb
+static int LIBUSB_CALL hotplug_callback_c(libusb_context *ctx, libusb_device *dev, libusb_hotplug_event event, void *user_data) {
+    return PortScanner::hotplug_callback(ctx,dev,event,user_data);
+}
 PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), programmer(programmer) {
     hid_init();
     m_emptyDevice = new NullDevice();
@@ -30,21 +33,58 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
     }
     setSelected(nullptr);
     scanDevices();
-    libusb_hotplug_callback_handle callback_handle;
-    int rc;
 
-    libusb_init(NULL);
-
-    rc = libusb_hotplug_register_callback(NULL, (libusb_hotplug_event)(LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED | LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT), (libusb_hotplug_flag)0, LIBUSB_HOTPLUG_MATCH_ANY, LIBUSB_HOTPLUG_MATCH_ANY,
-                                          LIBUSB_HOTPLUG_MATCH_ANY, hotplug_callback, this,
-                                          &callback_handle);
-    if (LIBUSB_SUCCESS != rc) {
-        printf("Error creating a hotplug callback\n");
-        libusb_exit(NULL);
-    }
     QThread* thread = QThread::create([this] {
-        while (!QCoreApplication::instance()->closingDown()) {
-            libusb_handle_events_completed(NULL, NULL);
+        libusb_hotplug_callback_handle callback_handle;
+        int rc;
+
+        libusb_init(NULL);
+        if (libusb_has_capability(LIBUSB_CAP_HAS_HOTPLUG)) {
+            rc = libusb_hotplug_register_callback(NULL,
+                                                  static_cast<libusb_hotplug_event>((LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED | LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT)),
+                                                  LIBUSB_HOTPLUG_NO_FLAGS,
+                                                  LIBUSB_HOTPLUG_MATCH_ANY,
+                                                  LIBUSB_HOTPLUG_MATCH_ANY,
+                                                  LIBUSB_HOTPLUG_MATCH_ANY,
+                                                  reinterpret_cast<libusb_hotplug_callback_fn>(hotplug_callback_c),
+                                                  reinterpret_cast<void *>(this),
+                                                  &callback_handle);
+            if (LIBUSB_SUCCESS != rc) {
+                qDebug() << ("Error creating a hotplug callback\n") << rc;
+                libusb_exit(NULL);
+                return;
+            }
+            while (!QCoreApplication::instance()->closingDown()) {
+                struct timeval tv;
+                tv.tv_sec = 0;
+                tv.tv_usec = 0;
+                libusb_handle_events_timeout_completed(NULL, &tv, NULL);
+            }
+        } else {
+            QList<UsbDevice_t> existingDevices;
+            while (!QCoreApplication::instance()->closingDown()) {
+                libusb_device **devs;
+                ssize_t cnt;
+                cnt = libusb_get_device_list(NULL, &devs);
+                QList<UsbDevice_t> devices;
+                for (int i = 0; i < cnt; i++) {
+                    libusb_device *dev = devs[i];
+                    UsbDevice_t devt = {libusb_get_bus_number(dev),libusb_get_port_number(dev),dev};
+                    if (!existingDevices.contains(devt)) {
+                        hotplug_callback(NULL, dev, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, this);
+                    }
+                    devices << devt;
+                }
+                for (auto& dev: existingDevices) {
+                    if (!devices.contains(dev)) {
+                        hotplug_callback(NULL, dev.dev, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT, this);
+                    }
+                }
+                existingDevices.clear();
+                existingDevices << devices;
+                libusb_free_device_list(devs, 1);
+            }
+
         }
     });
     thread->start();

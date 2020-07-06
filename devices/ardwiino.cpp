@@ -52,12 +52,12 @@ void Ardwiino::writeConfig() {
     data.push_back('\0');
     data.push_back(COMMAND_WRITE_CONFIG);
     data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config),sizeof(Configuration_t)));
+    qDebug() << data;
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    data.remove(0, 1);
     auto err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
-        qDebug() << QString::fromWCharArray(err);
+        qDebug() << "t" << QString::fromWCharArray(err);
     }
     data.clear();
     data.push_back('\0');
@@ -66,7 +66,7 @@ void Ardwiino::writeConfig() {
     err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
-        qDebug() << QString::fromWCharArray(err);
+        qDebug() << "t2" << QString::fromWCharArray(err);
     }
 }
 QString Ardwiino::getDescription() { 

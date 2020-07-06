@@ -16,6 +16,15 @@
 #else
 #include <libusb-1.0/libusb.h>
 #endif
+typedef struct UsbDevice_t {
+    int bus;
+    int port;
+    libusb_device *dev;
+    bool operator==(const UsbDevice_t& other)
+    {
+        return port == other.port && bus == other.bus;
+    }
+} UsbDevice_t;
 
 class PortScanner : public QObject {
     Q_OBJECT
@@ -25,6 +34,7 @@ class PortScanner : public QObject {
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
    public:
     explicit PortScanner(Programmer* programmer, QObject* parent = nullptr);
+    static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev, libusb_hotplug_event event, void* user_data);
    signals:
     void graphicalChanged();
     void modelChanged();
@@ -64,7 +74,6 @@ class PortScanner : public QObject {
 
    private:
     void scanDevices();
-    static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev, libusb_hotplug_event event, void* user_data);
     void add(Device* device);
     void remove(Device* device);
     bool m_hasSelected;
@@ -77,6 +86,7 @@ class PortScanner : public QObject {
     QSettings settings;
     QList<QProcess*> m_processes;
     Device* m_emptyDevice;
+    QList<UsbDevice_t> existingDevices;
 };
 
 #endif  // PORTSCANNER_H
