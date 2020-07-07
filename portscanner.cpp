@@ -19,13 +19,32 @@
 #define VID_8U2 0x03eb
 #define PID_16U2 0x2FEF
 #define VID_16U2 0x03eb
+// This is horrific. However, since we have a static version of libusb, it shouldn't break unless we decide to update libusb one day.
+// It just happpens that the path exists here. commit f346ea5 has the actual headers copied in if this needs to be changed ever.
+struct libusb_winusb_path {
+    uint8_t unused[100];
+    char* path;
+};
+static void getDevSerial(libusb_device* dev, UsbDevice_t* devt) {
+#ifdef Q_OS_WIN
+    devt->serial = QString::fromUtf8(((libusb_winusb_path*)dev)->path).split("\\")[2];
+#else
+    libusb_device_handle* handle;
+    char data[200];
+    libusb_open(dev, &handle);
+    libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, reinterpret_cast<unsigned char*>(data), sizeof(data));
+    libusb_close(handle);
+    devt.serial = QString::fromUtf8(data);
+#endif
+}
 static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* dev, libusb_hotplug_event event, void* user_data) {
     (void)ctx;
     PortScanner* sc = (PortScanner*)user_data;
     QMetaObject::invokeMethod(sc, [sc, dev,event] {
         struct libusb_device_descriptor desc;
         (void)libusb_get_device_descriptor(dev, &desc);
-        UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct};
+        UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct,""};
+        getDevSerial(dev, &devt);
         sc->hotplug_callback(devt, event);
     });
     return 0;
@@ -69,63 +88,6 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         }
     }
 }
-typedef CRITICAL_SECTION usbi_mutex_t;
-struct list_head {
-    struct list_head *prev, *next;
-};
-#define PTR_ALIGN(v) \
-    (((v) + (sizeof(void *) - 1)) & ~(sizeof(void *) - 1))
-struct libusb_device {
-    /* lock protects refcnt, everything else is finalized at initialization
-     * time */
-    usbi_mutex_t lock;
-    int refcnt;
-
-    struct libusb_context *ctx;
-
-    uint8_t bus_number;
-    uint8_t port_number;
-    struct libusb_device* parent_dev;
-    uint8_t device_address;
-    uint8_t num_configurations;
-    enum libusb_speed speed;
-
-    struct list_head list;
-    unsigned long session_data;
-
-    struct libusb_device_descriptor device_descriptor;
-    int attached;
-};
-struct winusb_device_priv {
-    bool initialized;
-    bool root_hub;
-    uint8_t active_config;
-    uint8_t depth; // distance to HCD
-    const struct windows_usb_api_backend *apib;
-    char *dev_id;
-    char *path;  // device interface path
-    int sub_api; // for WinUSB-like APIs
-    struct {
-        char *path; // each interface needs a device interface path,
-        const struct windows_usb_api_backend *apib; // an API backend (multiple drivers support),
-        int sub_api;
-        int8_t nb_endpoints; // and a set of endpoint addresses (USB_MAXENDPOINTS)
-        uint8_t *endpoint;
-        int current_altsetting;
-        bool restricted_functionality;  // indicates if the interface functionality is restricted
-                        // by Windows (eg. HID keyboards or mice cannot do R/W)
-    } usb_interface[32];
-    struct hid_device_priv *hid;
-};
-struct libusb_winusb_path {
-    uint8_t unused[100];
-    char* path;
-};
-
-static inline void *usbi_get_device_priv(struct libusb_device *dev)
-{
-    return (unsigned char *)dev + PTR_ALIGN(sizeof(*dev));
-}
 void PortScanner::tick() {
     if (m_hasHotplug) {
         struct timeval tv;
@@ -140,29 +102,16 @@ void PortScanner::tick() {
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0,""};
 
             if (!existingDevices.contains(devt)) {
                 (void)libusb_get_device_descriptor(dev, &desc);
                 devt.vid = desc.idVendor;
                 devt.pid = desc.idProduct;
-#ifdef Q_OS_WIN
-                struct winusb_device_priv* priv = (winusb_device_priv*)usbi_get_device_priv(dev);
-                uint8_t* devAddr = (uint8_t*)dev;
-                uint8_t* pathAddr = (uint8_t*)&priv->usb_interface[0].path;
-                qDebug() <<  QString::fromUtf8(((libusb_winusb_path*)dev)->path).split("\\")[2];
-                devt.serial = QString::fromUtf8(priv->usb_interface[0].path).split("#")[2];
-#else
-                libusb_device_handle* handle;
-                char data[200];
-                libusb_open(dev, &handle);
-                libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, reinterpret_cast<unsigned char*>(data), sizeof(data));
-                libusb_close(handle);
-                devt.serial = QString::fromUtf8(data);
-#endif
-//                hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
+                getDevSerial(dev, &devt);
+                hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
             }
-            devices << devt;
+            devices.push_back(devt);
         }
         for (auto& dev : existingDevices) {
             if (!devices.contains(dev)) {
@@ -187,15 +136,16 @@ int PortScanner::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) 
                 devs = hid_enumerate(devt.vid, devt.pid);
                 cur_dev = devs;
                 while (cur_dev) {
-                    qDebug() << cur_dev->path;
-                    add(new Ardwiino(cur_dev, devt));
+                    if (QString::fromWCharArray(cur_dev->serial_number) == devt.serial) {
+                        add(new Ardwiino(cur_dev, devt));
+                    }
                     cur_dev = cur_dev->next;
                 }
                 hid_free_enumeration(devs);
             } else  if (devt.vid == VID_8U2 && devt.pid == PID_8U2) {
-                    add(new DfuArduino("at90usb82", devt));
+                add(new DfuArduino("at90usb82", devt));
             } else if (devt.vid == VID_16U2 && devt.pid == PID_16U2) {
-                    add(new DfuArduino("atmega16u2", devt));
+                add(new DfuArduino("atmega16u2", devt));
             }
         } else if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT) {
             remove(new Ardwiino(devt));
