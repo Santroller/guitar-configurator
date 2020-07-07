@@ -25,27 +25,35 @@ struct libusb_winusb_path {
     uint8_t unused[100];
     char* path;
 };
-static void getDevSerial(libusb_device* dev, UsbDevice_t* devt) {
+static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
 #ifdef Q_OS_WIN
     devt->serial = QString::fromUtf8(((libusb_winusb_path*)dev)->path).split("\\")[2];
 #else
     libusb_device_handle* handle;
     char data[200];
-    libusb_open(dev, &handle);
-    libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, reinterpret_cast<unsigned char*>(data), sizeof(data));
-    libusb_close(handle);
-    devt.serial = QString::fromUtf8(data);
+    if (libusb_open(dev, &handle) == LIBUSB_SUCCESS) {
+        libusb_get_string_descriptor_ascii(handle, index, reinterpret_cast<unsigned char*>(data), sizeof(data));
+        libusb_close(handle);
+    } else {
+        qDebug() << "Error retrieving serial";
+    }
+    devt->serial = QString::fromUtf8(data);
 #endif
 }
 static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* dev, libusb_hotplug_event event, void* user_data) {
     (void)ctx;
     PortScanner* sc = (PortScanner*)user_data;
-    QMetaObject::invokeMethod(sc, [sc, dev,event] {
-        struct libusb_device_descriptor desc;
-        (void)libusb_get_device_descriptor(dev, &desc);
-        UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct,""};
-        getDevSerial(dev, &devt);
-        sc->hotplug_callback(devt, event);
+    QMetaObject::invokeMethod(sc, [sc, dev, event] {
+        // We need a small delay as we want to wait for the device to initialise
+        QTimer::singleShot(100, [event, sc, dev]() {
+            struct libusb_device_descriptor desc;
+            (void)libusb_get_device_descriptor(dev, &desc);
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct, ""};
+            if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
+                getDevSerial(dev, desc.iSerialNumber, &devt);
+            }
+            sc->hotplug_callback(devt, event);
+        });
     });
     return 0;
 }
@@ -102,13 +110,15 @@ void PortScanner::tick() {
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0,""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0, ""};
 
             if (!existingDevices.contains(devt)) {
                 (void)libusb_get_device_descriptor(dev, &desc);
                 devt.vid = desc.idVendor;
                 devt.pid = desc.idProduct;
-                getDevSerial(dev, &devt);
+                if (ArdwiinoLookup::isArdwiino(devt)) {
+                    getDevSerial(dev, desc.iSerialNumber, &devt);
+                }
                 hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
             }
             devices.push_back(devt);
@@ -142,7 +152,7 @@ int PortScanner::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) 
                     cur_dev = cur_dev->next;
                 }
                 hid_free_enumeration(devs);
-            } else  if (devt.vid == VID_8U2 && devt.pid == PID_8U2) {
+            } else if (devt.vid == VID_8U2 && devt.pid == PID_8U2) {
                 add(new DfuArduino("at90usb82", devt));
             } else if (devt.vid == VID_16U2 && devt.pid == PID_16U2) {
                 add(new DfuArduino("atmega16u2", devt));
