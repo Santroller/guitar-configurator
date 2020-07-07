@@ -59,7 +59,7 @@ void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
         qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
     }
 }
-#define PARTIAL_CONFIG_SIZE 128
+#define PARTIAL_CONFIG_SIZE 127
 void Ardwiino::writeConfig() {
     auto config = m_configuration->getConfig();
     QByteArray data;

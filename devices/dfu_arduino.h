@@ -13,6 +13,7 @@ class DfuArduino : public Device {
     Q_OBJECT
    public:
     explicit DfuArduino(QString processor, UsbDevice_t devt, QObject* parent = nullptr);
+    explicit DfuArduino(UsbDevice_t devt, QObject* parent = nullptr);
     QString getDescription();
     bool isReady();
     virtual void close();

@@ -1,4 +1,5 @@
 #include "device.h"
+#include "ardwiinolookup.h"
 Device::Device(UsbDevice_t deviceID, QObject* parent): QObject(parent), m_deviceID(deviceID) {
 
 }

@@ -42,9 +42,10 @@ set ( guitar-configurator_HDRS
 		submodules/Ardwiino/src/shared/config/defaults.h
 		submodules/Ardwiino/src/shared/config/defines.h
 		submodules/Ardwiino/src/shared/controller/controller.h
-        serial/winserialhotplug.h
+                serial/winserialhotplug.h
 		devices/dfu_arduino.h
 		devices/ardwiino.h
+                board.h
 	)
 
 set ( guitar-configurator_SRCS

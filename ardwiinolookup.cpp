@@ -34,8 +34,8 @@ auto ArdwiinoLookup::isOldAPIArdwiino(const QSerialPortInfo &serialPortInfo) -> 
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
     return serialPortInfo.vendorIdentifier() == HARMONIX_VID || serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
-auto ArdwiinoLookup::isArdwiino(const struct libusb_device_descriptor& usbDeviceId) -> bool {
-    return usbDeviceId.idVendor == HARMONIX_VID || usbDeviceId.idVendor == SONY_VID || usbDeviceId.idVendor == SWITCH_VID || (usbDeviceId.idVendor == ARDWIINO_VID && usbDeviceId.idProduct == ARDWIINO_PID);
+auto ArdwiinoLookup::isArdwiino(const UsbDevice_t& usbDeviceId) -> bool {
+    return usbDeviceId.vid == HARMONIX_VID || usbDeviceId.vid == SONY_VID || usbDeviceId.vid == SWITCH_VID || (usbDeviceId.vid == ARDWIINO_VID && usbDeviceId.pid == ARDWIINO_PID);
 }
 auto ArdwiinoLookup::isAreadyDFU(const QSerialPortInfo &serialPortInfo) -> bool {
     return serialPortInfo.productIdentifier() == 0x0036 || serialPortInfo.productIdentifier() == 0x9207;

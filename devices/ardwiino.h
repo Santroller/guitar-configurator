@@ -11,6 +11,7 @@
 #include "submodules/Ardwiino/src/shared/config/config.h"
 
 #include "device.h"
+#include "ardwiinolookup.h"
 #include "deviceconfiguration.h"
 class Ardwiino : public Device {
     Q_OBJECT

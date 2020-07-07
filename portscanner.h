@@ -20,7 +20,7 @@ class PortScanner : public QObject {
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
    public:
     explicit PortScanner(Programmer* programmer, QObject* parent = nullptr);
-    int hotplug_callback(struct libusb_device* dev, libusb_hotplug_event event);
+    int hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event);
    signals:
     void graphicalChanged();
     void modelChanged();
@@ -75,6 +75,8 @@ class PortScanner : public QObject {
     Device* m_emptyDevice;
     QList<UsbDevice_t> existingDevices;
     QTimer* timer;
+    libusb_context* ctx = NULL;
+    libusb_context* ctx_scan = NULL;
     bool m_hasHotplug;
 };
 

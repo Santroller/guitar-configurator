@@ -9,7 +9,7 @@
 #include <QSerialPortInfo>
 
 #include "ardwiino_defines.h"
-#include "ardwiinolookup.h"
+#include "board.h"
 #include "submodules/Ardwiino/src/shared/output/serial_commands.h"
 #ifdef Q_OS_MACOS
 #include <libusb.h>
@@ -19,7 +19,9 @@
 typedef struct UsbDevice_t {
     int bus;
     int port;
-    libusb_device* dev;
+    int vid;
+    int pid;
+    QString serial;
     bool operator==(const UsbDevice_t& other) {
         return port == other.port && bus == other.bus;
     }
