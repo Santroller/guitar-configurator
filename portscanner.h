@@ -75,8 +75,6 @@ class PortScanner : public QObject {
     Device* m_emptyDevice;
     QList<UsbDevice_t> existingDevices;
     QTimer* timer;
-    libusb_context* ctx = NULL;
-    libusb_context* ctx_scan = NULL;
     bool m_hasHotplug;
 };
 

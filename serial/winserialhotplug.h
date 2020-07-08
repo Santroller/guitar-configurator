@@ -3,8 +3,6 @@
 #ifndef WINEVENTFILTER_H
 #define WINEVENTFILTER_H
 #include <QWindow>
-#include <Windows.h>
-#include <Dbt.h>
 #include <QList>
 #include <QAbstractNativeEventFilter>
 #include "portscanner.h"

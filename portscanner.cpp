@@ -48,7 +48,7 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
         QTimer::singleShot(100, [event, sc, dev]() {
             struct libusb_device_descriptor desc;
             (void)libusb_get_device_descriptor(dev, &desc);
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct, ""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct, NULL, ""};
             if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
                 getDevSerial(dev, desc.iSerialNumber, &devt);
             }
@@ -68,19 +68,14 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
     }
     setSelected(nullptr);
     scanDevices();
-    timer = new QTimer(this);
-    // setup signal and slot
-    connect(timer, &QTimer::timeout, this, &PortScanner::tick);
-    // msec
-    timer->start(10);
+
     libusb_hotplug_callback_handle callback_handle;
-    libusb_init(&ctx_scan);
+    libusb_init(NULL);
     int rc;
-    libusb_init(&ctx);
     tick();
     m_hasHotplug = libusb_has_capability(LIBUSB_CAP_HAS_HOTPLUG);
     if (m_hasHotplug) {
-        rc = libusb_hotplug_register_callback(ctx_scan,
+        rc = libusb_hotplug_register_callback(NULL,
                                               static_cast<libusb_hotplug_event>((LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED | LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT)),
                                               LIBUSB_HOTPLUG_NO_FLAGS,
                                               LIBUSB_HOTPLUG_MATCH_ANY,
@@ -91,48 +86,37 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
                                               &callback_handle);
         if (LIBUSB_SUCCESS != rc) {
             qDebug() << ("Error creating a hotplug callback\n") << rc;
-            libusb_exit(ctx);
+            libusb_exit(NULL);
             return;
         }
-    }
-}
-void PortScanner::tick() {
-    if (m_hasHotplug) {
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        libusb_handle_events_timeout_completed(ctx_scan, &tv, NULL);
-    } else {
+        timer = new QTimer(this);
+        // setup signal and slot
+        connect(timer, &QTimer::timeout, this, &PortScanner::tick);
+        // msec
+        timer->start(10);
+
         libusb_device** devs;
         ssize_t cnt;
-        cnt = libusb_get_device_list(ctx_scan, &devs);
-        QList<UsbDevice_t> devices;
+        cnt = libusb_get_device_list(NULL, &devs);
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0, ""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0, NULL, ""};
 
-            if (!existingDevices.contains(devt)) {
-                (void)libusb_get_device_descriptor(dev, &desc);
-                devt.vid = desc.idVendor;
-                devt.pid = desc.idProduct;
-                if (ArdwiinoLookup::isArdwiino(devt)) {
-                    getDevSerial(dev, desc.iSerialNumber, &devt);
-                }
-                hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
-            }
-            devices.push_back(devt);
+            (void)libusb_get_device_descriptor(dev, &desc);
+            devt.vid = desc.idVendor;
+            devt.pid = desc.idProduct;
+            hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
         }
-        for (auto& dev : existingDevices) {
-            if (!devices.contains(dev)) {
-                hotplug_callback(dev, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT);
-                existingDevices.removeAll(dev);
-            }
-        }
-        existingDevices.clear();
-        existingDevices << devices;
         libusb_free_device_list(devs, 1);
     }
+
+}
+void PortScanner::tick() {
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    libusb_handle_events_timeout_completed(NULL, &tv, NULL);
 }
 void PortScanner::scanDevices() {
 }
@@ -146,7 +130,7 @@ int PortScanner::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) 
                 devs = hid_enumerate(devt.vid, devt.pid);
                 cur_dev = devs;
                 while (cur_dev) {
-                    if (QString::fromWCharArray(cur_dev->serial_number) == devt.serial) {
+                    if (QString::fromWCharArray(cur_dev->serial_number) == devt.serial || QString::fromUtf8(cur_dev->path).toLower() == devt.hidPath.toLower()) {
                         add(new Ardwiino(cur_dev, devt));
                     }
                     cur_dev = cur_dev->next;
