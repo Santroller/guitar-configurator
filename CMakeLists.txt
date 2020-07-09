@@ -44,7 +44,8 @@ set ( guitar-configurator_HDRS
 		submodules/Ardwiino/src/shared/controller/controller.h
 		devices/dfu_arduino.h
 		devices/ardwiino.h
-                board.h
+		hotplug/winhotplug.h
+		board.h
 	)
 
 set ( guitar-configurator_SRCS
@@ -86,7 +87,6 @@ set ( guitar-configurator_MOCS
 		devices/null_device.h
 		devices/arduino.h
 		deviceconfiguration.h
-		hotplug/winhotplug.h
 		hotplug/unixhotplug.h
 	)
 QT5_WRAP_CPP(MOCS ${guitar-configurator_MOCS})
