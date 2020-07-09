@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Visual C++ Redistributable Runtime</DisplayName>
+    <Description>Libraries required for checking for updates</Description>
+    <Version>1.1.1</Version>
+    <ReleaseDate>2015-2019</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <RequiresAdminRights>true</RequiresAdminRights>
+</Package>
