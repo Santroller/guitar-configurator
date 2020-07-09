@@ -11,14 +11,14 @@
 #include "ardwiino_defines.h"
 #include "ledhandler.h"
 #ifdef Q_OS_WIN
-#include "serial/winserialhotplug.h"
+#include "hotplug/winhotplug.h"
 // Libusb needs this as the static libs from the libusb site arent compiled with a new enough version of vs
 FILE iob[] = { *stdin, *stdout, *stderr };
 extern "C" {
     FILE * __cdecl _iob(void) { return iob; }
 }
 #else
-#include "serial/unixserialhotplug.h"
+#include "hotplug/unixhotplug.h"
 #endif
 
 auto main(int argc, char *argv[]) -> int
@@ -45,10 +45,10 @@ auto main(int argc, char *argv[]) -> int
     auto* scanner = new PortScanner(programmer);
     auto* updates = new UpdateHandler();
 #ifdef Q_OS_WIN
-    WinSerialHotplug* filter = new WinSerialHotplug(scanner);
+    WinHotplug* filter = new WinHotplug(scanner);
     app.installNativeEventFilter(filter);
 #else
-    new UnixSerialHotplug(scanner);
+    new UnixHotplug(scanner);
 #endif
     auto* ledhandler = new LEDHandler(&app, scanner);
     engine.rootContext()->setContextProperty("updateHandler", updates);

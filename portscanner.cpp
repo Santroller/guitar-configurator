@@ -19,45 +19,8 @@
 #define VID_8U2 0x03eb
 #define PID_16U2 0x2FEF
 #define VID_16U2 0x03eb
-// This is horrific. However, since we have a static version of libusb, it shouldn't break unless we decide to update libusb one day.
-// It just happpens that the path exists here. commit f346ea5 has the actual headers copied in if this needs to be changed ever.
-struct libusb_winusb_path {
-    uint8_t unused[100];
-    char* path;
-};
-static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
-#ifdef Q_OS_WIN
-    devt->serial = QString::fromUtf8(((libusb_winusb_path*)dev)->path).split("\\")[2];
-#else
-    libusb_device_handle* handle;
-    char data[200];
-    if (libusb_open(dev, &handle) == LIBUSB_SUCCESS) {
-        libusb_get_string_descriptor_ascii(handle, index, reinterpret_cast<unsigned char*>(data), sizeof(data));
-        libusb_close(handle);
-    } else {
-        qDebug() << "Error retrieving serial";
-    }
-    devt->serial = QString::fromUtf8(data);
-#endif
-}
-static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* dev, libusb_hotplug_event event, void* user_data) {
-    (void)ctx;
-    PortScanner* sc = (PortScanner*)user_data;
-    QMetaObject::invokeMethod(sc, [sc, dev, event] {
-        // We need a small delay as we want to wait for the device to initialise
-        QTimer::singleShot(100, [event, sc, dev]() {
-            struct libusb_device_descriptor desc;
-            (void)libusb_get_device_descriptor(dev, &desc);
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), desc.idVendor, desc.idProduct, NULL, ""};
-            if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
-                getDevSerial(dev, desc.iSerialNumber, &devt);
-            }
-            sc->hotplug_callback(devt, event);
-        });
-    });
-    return 0;
-}
-PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), m_hasHotplug(false), programmer(programmer) {
+
+PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), programmer(programmer) {
     hid_init();
     m_emptyDevice = new NullDevice();
     m_model.push_back(m_emptyDevice);
@@ -67,87 +30,7 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         m_graphical = true;
     }
     setSelected(nullptr);
-    scanDevices();
 
-    libusb_hotplug_callback_handle callback_handle;
-    libusb_init(NULL);
-    int rc;
-    tick();
-    m_hasHotplug = libusb_has_capability(LIBUSB_CAP_HAS_HOTPLUG);
-    if (m_hasHotplug) {
-        rc = libusb_hotplug_register_callback(NULL,
-                                              static_cast<libusb_hotplug_event>((LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED | LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT)),
-                                              LIBUSB_HOTPLUG_NO_FLAGS,
-                                              LIBUSB_HOTPLUG_MATCH_ANY,
-                                              LIBUSB_HOTPLUG_MATCH_ANY,
-                                              LIBUSB_HOTPLUG_MATCH_ANY,
-                                              reinterpret_cast<libusb_hotplug_callback_fn>(hotplug_callback_c),
-                                              reinterpret_cast<void*>(this),
-                                              &callback_handle);
-        if (LIBUSB_SUCCESS != rc) {
-            qDebug() << ("Error creating a hotplug callback\n") << rc;
-            libusb_exit(NULL);
-            return;
-        }
-        timer = new QTimer(this);
-        // setup signal and slot
-        connect(timer, &QTimer::timeout, this, &PortScanner::tick);
-        // msec
-        timer->start(10);
-
-        libusb_device** devs;
-        ssize_t cnt;
-        cnt = libusb_get_device_list(NULL, &devs);
-        for (int i = 0; i < cnt; i++) {
-            libusb_device* dev = devs[i];
-            struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_port_number(dev), 0, 0, NULL, ""};
-
-            (void)libusb_get_device_descriptor(dev, &desc);
-            devt.vid = desc.idVendor;
-            devt.pid = desc.idProduct;
-            hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
-        }
-        libusb_free_device_list(devs, 1);
-    }
-
-}
-void PortScanner::tick() {
-    struct timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    libusb_handle_events_timeout_completed(NULL, &tv, NULL);
-}
-void PortScanner::scanDevices() {
-}
-int PortScanner::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) {
-    QString serial;
-    // We need a small delay as we want to wait for the device to initialise
-    QTimer::singleShot(100, [event, this, devt, serial]() {
-        if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
-            if (ArdwiinoLookup::isArdwiino(devt)) {
-                struct hid_device_info *devs, *cur_dev;
-                devs = hid_enumerate(devt.vid, devt.pid);
-                cur_dev = devs;
-                while (cur_dev) {
-                    if (QString::fromWCharArray(cur_dev->serial_number) == devt.serial || QString::fromUtf8(cur_dev->path).toLower() == devt.hidPath.toLower()) {
-                        add(new Ardwiino(cur_dev, devt));
-                    }
-                    cur_dev = cur_dev->next;
-                }
-                hid_free_enumeration(devs);
-            } else if (devt.vid == VID_8U2 && devt.pid == PID_8U2) {
-                add(new DfuArduino("at90usb82", devt));
-            } else if (devt.vid == VID_16U2 && devt.pid == PID_16U2) {
-                add(new DfuArduino("atmega16u2", devt));
-            }
-        } else if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT) {
-            remove(new Ardwiino(devt));
-            remove(new DfuArduino(devt));
-        }
-    });
-
-    return 0;
 }
 void PortScanner::add(Device* device) {
     if (std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; }) != m_model.end()) {
@@ -160,6 +43,7 @@ void PortScanner::add(Device* device) {
             selectedChanged();
             hasSelectedChanged();
         }
+        connect(device, &Device::descriptionChanged, this, &PortScanner::update);
         m_model.append(device);
         update();
     }
@@ -179,11 +63,36 @@ void PortScanner::remove(Device* device) {
     m_model.removeAll(foundEle);
     update();
 }
+void PortScanner::add(UsbDevice_t device) {
+    if (ArdwiinoLookup::isArdwiino(device)) {
+        struct hid_device_info *devs, *cur_dev;
+        devs = hid_enumerate(device.vid, device.pid);
+        cur_dev = devs;
+        while (cur_dev) {
+            if (QString::fromWCharArray(cur_dev->serial_number) == device.serial || QString::fromUtf8(cur_dev->path).toLower() == device.hidPath.toLower()) {
+                add(new Ardwiino(cur_dev, device));
+            }
+            cur_dev = cur_dev->next;
+        }
+        hid_free_enumeration(devs);
+    } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
+        add(new DfuArduino("at90usb82", device));
+    } else if (device.vid == VID_16U2 && device.pid == PID_16U2) {
+        add(new DfuArduino("atmega16u2", device));
+    }
+}
+void PortScanner::remove(UsbDevice_t device) {
+    if (ArdwiinoLookup::isArdwiino(device)) {
+        remove(new Ardwiino(device));
+    } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
+        remove(new DfuArduino("at90usb82", device));
+    } else if (device.vid == VID_16U2 && device.pid == PID_16U2) {
+        remove(new DfuArduino("atmega16u2", device));
+    }
+}
 void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
     if (ArdwiinoLookup::isArdwiino(serialPortInfo)) {
-        Device* device = new OutdatedArdwiino(serialPortInfo);
-        connect(device, &Device::descriptionChanged, this, &PortScanner::update);
-        add(device);
+        add(new OutdatedArdwiino(serialPortInfo));
     } else {
         auto board = ArdwiinoLookup::detectBoard(serialPortInfo);
         if (board.name != "") {
@@ -193,8 +102,7 @@ void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
 }
 void PortScanner::serialDeviceUnplugged(const QSerialPortInfo& serialPortInfo) {
     if (ArdwiinoLookup::isArdwiino(serialPortInfo)) {
-        Device* device = new OutdatedArdwiino(serialPortInfo);
-        remove(device);
+        remove(new OutdatedArdwiino(serialPortInfo));
     } else {
         auto board = ArdwiinoLookup::detectBoard(serialPortInfo);
         if (board.name != "") {

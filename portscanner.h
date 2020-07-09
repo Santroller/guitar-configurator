@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QSerialPortInfo>
 #include <QSettings>
-#include <QTimer>
 
 #include "devices/device.h"
 #include "devices/outdated_ardwiino.h"
@@ -20,14 +19,14 @@ class PortScanner : public QObject {
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
    public:
     explicit PortScanner(Programmer* programmer, QObject* parent = nullptr);
-    int hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event);
+    void add(UsbDevice_t device);
+    void remove(UsbDevice_t device);
    signals:
     void graphicalChanged();
     void modelChanged();
     void selectedChanged();
     void hasSelectedChanged();
    public slots:
-    void tick();
     bool isGraphical() const {
         return m_graphical;
     }
@@ -73,9 +72,6 @@ class PortScanner : public QObject {
     QSettings settings;
     QList<QProcess*> m_processes;
     Device* m_emptyDevice;
-    QList<UsbDevice_t> existingDevices;
-    QTimer* timer;
-    bool m_hasHotplug;
 };
 
 #endif  // PORTSCANNER_H

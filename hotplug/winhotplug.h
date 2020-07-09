@@ -7,10 +7,10 @@
 #include <QAbstractNativeEventFilter>
 #include "portscanner.h"
 #include "programmer.h"
-class WinSerialHotplug : public QAbstractNativeEventFilter
+class WinHotplug : public QAbstractNativeEventFilter
 {
 public:
-    explicit WinSerialHotplug(PortScanner* scanner);
+    explicit WinHotplug(PortScanner* scanner);
     void init(WId wid);
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
     PortScanner* scanner;

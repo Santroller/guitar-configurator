@@ -11,11 +11,6 @@
 #include "ardwiino_defines.h"
 #include "board.h"
 #include "submodules/Ardwiino/src/shared/output/serial_commands.h"
-#ifdef Q_OS_MACOS
-#include <libusb.h>
-#else
-#include <libusb-1.0/libusb.h>
-#endif
 typedef struct UsbDevice_t {
     int bus;
     int port;

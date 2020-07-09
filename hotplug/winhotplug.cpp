@@ -1,4 +1,4 @@
-#include "winserialhotplug.h"
+#include "winhotplug.h"
 #ifdef Q_OS_WIN
 
 #include <QDebug>
@@ -98,7 +98,7 @@ void lookupUSBInfo(bool isHID, wchar_t* dbcc_name, HWND hwnd, UsbDevice_t* devic
     }
     SetupDiDestroyDeviceInfoList(handle);
 }
-WinSerialHotplug::WinSerialHotplug(PortScanner* scanner):scanner(scanner) {
+WinHotplug::WinHotplug(PortScanner* scanner):scanner(scanner) {
     for (auto a:QSerialPortInfo::availablePorts()) {
         m_port_list.push_back(a);
         scanner->serialDeviceDetected(a);
@@ -109,9 +109,9 @@ WinSerialHotplug::WinSerialHotplug(PortScanner* scanner):scanner(scanner) {
     SP_DEVINFO_DATA infoData;
     DWORD size;
     data.cbSize = sizeof(data);
-    infoData.cbSize = sizeof(infoData);
-
     infoData.cbSize = sizeof(SP_DEVINFO_DATA);
+    //First, we need to loop trough all usb host controllers and assign them an id in order, as this is how libusb gets its bus number
+    //Doing this allows us to support detecting multiple unos in dfu mode at once.
     for (;;) {
         if (!SetupDiEnumDeviceInfo(handle,_index, &infoData)) {
             if (GetLastError() != ERROR_NO_MORE_ITEMS) {
@@ -170,7 +170,7 @@ WinSerialHotplug::WinSerialHotplug(PortScanner* scanner):scanner(scanner) {
             lookupUSBInfo(data.InterfaceClassGuid == GUID_DEVINTERFACE_HID, dev_interface_details->DevicePath, NULL, &dev);
             free(dev_interface_details);
             SetupDiDeleteDeviceInterfaceData(handle, &data);
-            scanner->hotplug_callback(dev, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
+            scanner->add(dev);
         }
 
         // Device does not have an interface matching this GUID, skip
@@ -178,7 +178,7 @@ WinSerialHotplug::WinSerialHotplug(PortScanner* scanner):scanner(scanner) {
     SetupDiDestroyDeviceInfoList(handle);
 
 }
-bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
     if (eventType == "windows_generic_MSG") {
         MSG* msg = reinterpret_cast<MSG*>(message);
@@ -205,7 +205,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     bool isHID = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
                     UsbDevice_t dev = {};
                     lookupUSBInfo(isHID, lpdbv->dbcc_name, msg->hwnd, &dev);
-                    scanner->hotplug_callback(dev, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
+                    scanner->add(dev);
                     //lpdbv->dbcc_name
 
                 }
@@ -226,7 +226,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
                     bool isHID = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
                     UsbDevice_t dev = {};
                     lookupUSBInfo(isHID, lpdbv->dbcc_name, msg->hwnd, &dev);
-                    scanner->hotplug_callback(dev, LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT);
+                    scanner->remove(dev);
                 }
 
             }
@@ -234,8 +234,7 @@ bool WinSerialHotplug::nativeEventFilter(const QByteArray &eventType, void *mess
     }
     return false;
 }
-void WinSerialHotplug::init(WId wid) {
-    //On windows, it isn't enough to rely on the port list changing, so we have to use the windows API to work out if a device is hotplugged.
+void WinHotplug::init(WId wid) {
     DEV_BROADCAST_DEVICEINTERFACE NotificationFilter;
     ZeroMemory( &NotificationFilter, sizeof(NotificationFilter) );
     NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);

@@ -42,7 +42,6 @@ set ( guitar-configurator_HDRS
 		submodules/Ardwiino/src/shared/config/defaults.h
 		submodules/Ardwiino/src/shared/config/defines.h
 		submodules/Ardwiino/src/shared/controller/controller.h
-                serial/winserialhotplug.h
 		devices/dfu_arduino.h
 		devices/ardwiino.h
                 board.h
@@ -57,8 +56,8 @@ set ( guitar-configurator_SRCS
 		programmer.cpp
 		updatehandler.cpp
 		devices/outdated_ardwiino.cpp
-		serial/winserialhotplug.cpp
-		serial/unixserialhotplug.cpp
+		hotplug/winhotplug.cpp
+		hotplug/unixhotplug.cpp
 		devices/device.cpp
 		devices/serialdevice.cpp
 		devices/dfu_arduino.cpp
@@ -82,12 +81,13 @@ set ( guitar-configurator_MOCS
 		updatehandler.h
 		status.h
 		devices/outdated_ardwiino.h
-		serial/unixserialhotplug.h
 		devices/device.h
         devices/serialdevice.h
 		devices/null_device.h
 		devices/arduino.h
 		deviceconfiguration.h
+		hotplug/winhotplug.h
+		hotplug/unixhotplug.h
 	)
 QT5_WRAP_CPP(MOCS ${guitar-configurator_MOCS})
 file(COPY firmware DESTINATION .)

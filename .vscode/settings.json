@@ -72,7 +72,11 @@
         "*.def": "cpp",
         "qdebug": "cpp",
         "qserialportinfo": "cpp",
-        "qobject": "cpp"
+        "qobject": "cpp",
+        "qfilesystemwatcher": "cpp",
+        "qfile": "cpp",
+        "qtimer": "cpp",
+        "qlist": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
