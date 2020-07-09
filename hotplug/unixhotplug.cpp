@@ -87,6 +87,9 @@ UnixHotplug::UnixHotplug(PortScanner *scanner, QObject *parent) : QObject(parent
             (void)libusb_get_device_descriptor(dev, &desc);
             devt.vid = desc.idVendor;
             devt.pid = desc.idProduct;
+            if (ArdwiinoLookup::isArdwiino(devt)) {
+                getDevSerial(dev, desc.iSerialNumber, &devt);
+            }
             hotplug_callback(devt, LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED);
         }
         libusb_free_device_list(devs, 1);

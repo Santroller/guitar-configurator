@@ -201,12 +201,10 @@ bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, l
                     }
                 } else if(lpdb -> dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
                     PDEV_BROADCAST_DEVICEINTERFACE_W lpdbv = reinterpret_cast<PDEV_BROADCAST_DEVICEINTERFACE_W>(lpdb);
-                    auto dbcc = QString::fromWCharArray(lpdbv->dbcc_name);
                     bool isHID = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
                     UsbDevice_t dev = {};
                     lookupUSBInfo(isHID, lpdbv->dbcc_name, msg->hwnd, &dev);
                     scanner->add(dev);
-                    //lpdbv->dbcc_name
 
                 }
                 break;
