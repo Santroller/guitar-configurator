@@ -9,8 +9,8 @@
 #pragma comment(lib, "Cfgmgr32.lib")
 #pragma comment(lib, "OneCoreUAP.lib")
 
-#include <Cfgmgr32.h>
 #include <Windows.h>
+#include <Cfgmgr32.h>
 #include <Dbt.h>
 #include <setupapi.h>
 
