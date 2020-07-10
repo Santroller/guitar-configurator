@@ -34,10 +34,8 @@ bool Ardwiino::open() {
     return m_hiddev;
 }
 QByteArray Ardwiino::readData(int id) {
+    writeData(id,{});
     QByteArray data(sizeof(Configuration_t), '\0');
-    data[0] = 0;
-    data[1] = id;
-    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     data[0] = 0;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     data.remove(0, 1);
@@ -50,6 +48,7 @@ QByteArray Ardwiino::readData(int id) {
 }
 void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
     QByteArray data;
+    data.push_back('\0');
     data.push_back(cmd);
     data.push_back(dataToSend);
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
@@ -68,9 +67,7 @@ void Ardwiino::writeConfig() {
     writeData(COMMAND_WRITE_CONFIG, data);
     data.clear();
     data.push_back(PARTIAL_CONFIG_SIZE);
-    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + PARTIAL_CONFIG_SIZE, sizeof(Configuration_t) - PARTIAL_CONFIG_SIZE));
-    hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-   
+    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + PARTIAL_CONFIG_SIZE, sizeof(Configuration_t) - PARTIAL_CONFIG_SIZE));   
     writeData(COMMAND_WRITE_CONFIG, data);
     writeData(COMMAND_REBOOT);
 }

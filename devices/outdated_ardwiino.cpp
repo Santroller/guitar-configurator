@@ -26,6 +26,7 @@ bool OutdatedArdwiino::open() {
                 }
                 descriptionChanged();
                 readyChanged();
+                close();
             });
         });
         thread->start();
@@ -46,6 +47,7 @@ QString OutdatedArdwiino::getDescription() {
     return "Outdated Ardwiino - " + m_board.name;
 }
 void OutdatedArdwiino::bootloader() {
+    m_serialPort->open(QIODevice::ReadWrite);
     QString cmd;
     if (m_board.protocol == "avr109") {
         cmd = "e";

@@ -459,7 +459,7 @@ ColumnLayout {
                 Layout.fillHeight: true
                 visible: enabled
                 checked: !!scanner.selected.config[`pins${"RY"}Inverted`]
-                onCheckedChanged: canner.selected.config[`pins${"RY"}Inverted`] = checked
+                onCheckedChanged: scanner.selected.config[`pins${"RY"}Inverted`] = checked
             }
             Label {
                 visible: scanner.selected.config.hasAddressableLEDs
