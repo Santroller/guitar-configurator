@@ -1,6 +1,7 @@
 #include "ardwiino.h"
 
 #include <QSettings>
+#include <QThread>
 
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
@@ -58,7 +59,7 @@ void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
         qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
     }
 }
-#define PARTIAL_CONFIG_SIZE 127
+#define PARTIAL_CONFIG_SIZE sizeof(Configuration_t)/2
 void Ardwiino::writeConfig() {
     auto config = m_configuration->getConfig();
     QByteArray data;
@@ -66,9 +67,13 @@ void Ardwiino::writeConfig() {
     data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config), PARTIAL_CONFIG_SIZE));
     writeData(COMMAND_WRITE_CONFIG, data);
     data.clear();
+    // Since we are writing big chunks to EEPROM, we need a delay before processing the next command.
+    QThread::currentThread()->msleep(50);
     data.push_back(PARTIAL_CONFIG_SIZE);
     data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + PARTIAL_CONFIG_SIZE, sizeof(Configuration_t) - PARTIAL_CONFIG_SIZE));   
     writeData(COMMAND_WRITE_CONFIG, data);
+    // Since we are writing big chunks to EEPROM, we need a delay before processing the next command.
+    QThread::currentThread()->msleep(50);
     writeData(COMMAND_REBOOT);
 }
 QString Ardwiino::getDescription() {
