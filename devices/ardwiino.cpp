@@ -24,6 +24,7 @@ bool Ardwiino::open() {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
+        qDebug() << m_configuration->getConfig().main.subType;
         m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
         emit configurationChanged();
         emit configurableChanged();
@@ -40,6 +41,7 @@ QByteArray Ardwiino::readData(int id) {
     data[0] = 0;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     data.remove(0, 1);
+    qDebug() << data;
     auto err = hid_error(m_hiddev);
     if (err) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
@@ -52,6 +54,8 @@ void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
     data.push_back('\0');
     data.push_back(cmd);
     data.push_back(dataToSend);
+    data.resize(64);
+    qDebug() << data.length();
     hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
     auto err = hid_error(m_hiddev);
     if (err) {
@@ -59,21 +63,21 @@ void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
         qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
     }
 }
-#define PARTIAL_CONFIG_SIZE sizeof(Configuration_t)/2
+#define PARTIAL_CONFIG_SIZE 30
 void Ardwiino::writeConfig() {
     auto config = m_configuration->getConfig();
+    uint offset = 0;
     QByteArray data;
-    data.push_back('\0');
-    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config), PARTIAL_CONFIG_SIZE));
-    writeData(COMMAND_WRITE_CONFIG, data);
-    data.clear();
-    // Since we are writing big chunks to EEPROM, we need a delay before processing the next command.
-    QThread::currentThread()->msleep(50);
-    data.push_back(PARTIAL_CONFIG_SIZE);
-    data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + PARTIAL_CONFIG_SIZE, sizeof(Configuration_t) - PARTIAL_CONFIG_SIZE));   
-    writeData(COMMAND_WRITE_CONFIG, data);
-    // Since we are writing big chunks to EEPROM, we need a delay before processing the next command.
-    QThread::currentThread()->msleep(50);
+    while (offset < sizeof(Configuration_t)) {
+        data.clear();
+        data.push_back(offset);
+        data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + offset, PARTIAL_CONFIG_SIZE));
+        writeData(COMMAND_WRITE_CONFIG, data);
+        offset += PARTIAL_CONFIG_SIZE;
+        // Since we are writing big chunks to EEPROM, we need a delay before processing the next command.
+//        QThread::currentThread()->msleep(100);
+    }
+    writeData(COMMAND_WRITE_SUBTYPE,QByteArray(1,config.main.subType));
     writeData(COMMAND_REBOOT);
 }
 QString Ardwiino::getDescription() {
