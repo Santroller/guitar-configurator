@@ -61,6 +61,7 @@ class Ardwiino : public Device {
     struct hid_device_info *m_usbId;
     hid_device* m_hiddev;
     QByteArray readData(int id);
+    QByteArray readConfig();
     void writeData(int cmd, QByteArray data = QByteArray());
     QString m_serialNum;
     DeviceConfiguration* m_configuration;

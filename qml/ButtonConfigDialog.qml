@@ -158,7 +158,7 @@ Dialog {
                         textRole: "key"
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         model: Defines.fillCombobox("MidiType")
-                        currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiTypeMap[modelData]))
+                        currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiType[modelData]))
                         onActivated: scanner.selected.config.setMidiType(modelData,model[currentIndex].value)
                     }
                 }
@@ -179,7 +179,7 @@ Dialog {
                         id: noteBox
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        value: scanner.selected.config.midiNoteMap[modelData] || 0
+                        value: scanner.selected.config.midiNote[modelData] || 0
                         onValueChanged: scanner.selected.config.setMidiNoteValue(modelData,value)
 
                         editable: true
@@ -212,7 +212,7 @@ Dialog {
                         id: chanBox
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        value: scanner.selected.config.midiChannelMap[modelData] || 0
+                        value: scanner.selected.config.midiChannel[modelData] || 0
                         onValueChanged: scanner.selected.config.setMidiChannelValue(modelData,value)
 
                         from: 1

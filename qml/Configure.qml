@@ -517,7 +517,7 @@ ColumnLayout {
                     textRole: "key"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     model: Defines.fillCombobox("MidiType")
-                    currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiTypeMap["RY"]))
+                    currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiType["RY"]))
                     onActivated: scanner.selected.config.setMidiType("RY",model[currentIndex].value)
                 }
             }
@@ -538,7 +538,7 @@ ColumnLayout {
                     id: noteBox
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    value: scanner.selected.config.midiNoteMap["RY"] || 0
+                    value: scanner.selected.config.midiNote["RY"] || 0
                     onValueChanged: scanner.selected.config.setMidiNoteValue("RY",value)
 
                     editable: true
@@ -571,7 +571,7 @@ ColumnLayout {
                     id: chanBox
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    value: scanner.selected.config.midiChannelMap["RY"] || 0
+                    value: scanner.selected.config.midiChannel["RY"] || 0
                     onValueChanged: scanner.selected.config.setMidiChannelValue("RY",value)
                     from: 1
                     to: 10

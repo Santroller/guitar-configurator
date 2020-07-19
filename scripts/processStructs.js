@@ -102,8 +102,9 @@ class DeviceConfiguration : public QObject {
 `)
 for (let path of paths) {
     if (path.isArray) {
-        out += (`    Q_PROPERTY(QVariantList ${lowFirst(path.func)}List READ get${path.func}List NOTIFY ${lowFirst(path.func)}Updated)
-    Q_PROPERTY(QVariantMap ${lowFirst(path.func)}Map READ get${path.func}Map NOTIFY ${lowFirst(path.func)}Updated)
+        // Leds are not stored in pin order, so this type of mapping does not make sense, as a result leds is defined above and has its own getter
+        if (path.func == "Leds") continue;
+        out += (`    Q_PROPERTY(QVariantMap ${lowFirst(path.func)} READ get${path.func} NOTIFY ${lowFirst(path.func)}Updated)
 `);
     } else {
         out += (`    Q_PROPERTY(${path.type} ${lowFirst(path.func)} READ get${path.func} WRITE set${path.func} NOTIFY ${lowFirst(path.func)}Updated)
@@ -147,13 +148,10 @@ public slots:
 `)
 for (let path of paths) {
     if (path.isArray) {
+        // Leds are not stored in pin order, so this type of mapping does not make sense, as a result LED methods are defined manually below.
+        if (path.func == "Leds") continue;
         out += (`
-    QVariantList get${path.func}List() const {
-        QVariantList l;
-        l << ${path.cast2}${path.path};
-        return l;
-    }
-    QVariantMap get${path.func}Map() const {
+    QVariantMap get${path.func}() const {
         QVariantMap l;
         for (auto pin: pins) {
             l[pin] = ${path.cast2}${path.path};

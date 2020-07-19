@@ -87,14 +87,9 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(int keysRYNeg READ getKeysRYNeg WRITE setKeysRYNeg NOTIFY keysRYNegUpdated)
     Q_PROPERTY(int keysRYPos READ getKeysRYPos WRITE setKeysRYPos NOTIFY keysRYPosUpdated)
     Q_PROPERTY(int drumThreshold READ getDrumThreshold WRITE setDrumThreshold NOTIFY drumThresholdUpdated)
-    Q_PROPERTY(QVariantList ledsList READ getLedsList NOTIFY ledsUpdated)
-    Q_PROPERTY(QVariantMap ledsMap READ getLedsMap NOTIFY ledsUpdated)
-    Q_PROPERTY(QVariantList midiTypeList READ getMidiTypeList NOTIFY midiTypeUpdated)
-    Q_PROPERTY(QVariantMap midiTypeMap READ getMidiTypeMap NOTIFY midiTypeUpdated)
-    Q_PROPERTY(QVariantList midiNoteList READ getMidiNoteList NOTIFY midiNoteUpdated)
-    Q_PROPERTY(QVariantMap midiNoteMap READ getMidiNoteMap NOTIFY midiNoteUpdated)
-    Q_PROPERTY(QVariantList midiChannelList READ getMidiChannelList NOTIFY midiChannelUpdated)
-    Q_PROPERTY(QVariantMap midiChannelMap READ getMidiChannelMap NOTIFY midiChannelUpdated)
+    Q_PROPERTY(QVariantMap midiType READ getMidiType NOTIFY midiTypeUpdated)
+    Q_PROPERTY(QVariantMap midiNote READ getMidiNote NOTIFY midiNoteUpdated)
+    Q_PROPERTY(QVariantMap midiChannel READ getMidiChannel NOTIFY midiChannelUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -613,32 +608,7 @@ public slots:
         m_config.drumThreshold = (uint8_t)val;
         emit drumThresholdUpdated();
     }
-    QVariantList getLedsList() const {
-        QVariantList l;
-        l << *(uint32_t*)&m_config.leds;
-        return l;
-    }
-    QVariantMap getLedsMap() const {
-        QVariantMap l;
-        for (auto pin: pins) {
-            l[pin] = *(uint32_t*)&m_config.leds;
-        }
-        return l;
-    }
-    void setLedsValueAt(int i, int val) {
-        m_config.leds[i] = *(Led_t*)&val;
-        emit ledsUpdated();
-    }
-    void setLedsValue(QString key, int val) {
-        m_config.leds[pins.indexOf(key)] = *(Led_t*)&val;
-        emit ledsUpdated();
-    }
-    QVariantList getMidiTypeList() const {
-        QVariantList l;
-        l << m_config.midi.type;
-        return l;
-    }
-    QVariantMap getMidiTypeMap() const {
+    QVariantMap getMidiType() const {
         QVariantMap l;
         for (auto pin: pins) {
             l[pin] = m_config.midi.type;
@@ -653,12 +623,7 @@ public slots:
         m_config.midi.type[pins.indexOf(key)] = (uint8_t)val;
         emit midiTypeUpdated();
     }
-    QVariantList getMidiNoteList() const {
-        QVariantList l;
-        l << m_config.midi.note;
-        return l;
-    }
-    QVariantMap getMidiNoteMap() const {
+    QVariantMap getMidiNote() const {
         QVariantMap l;
         for (auto pin: pins) {
             l[pin] = m_config.midi.note;
@@ -673,12 +638,7 @@ public slots:
         m_config.midi.note[pins.indexOf(key)] = (uint8_t)val;
         emit midiNoteUpdated();
     }
-    QVariantList getMidiChannelList() const {
-        QVariantList l;
-        l << m_config.midi.channel;
-        return l;
-    }
-    QVariantMap getMidiChannelMap() const {
+    QVariantMap getMidiChannel() const {
         QVariantMap l;
         for (auto pin: pins) {
             l[pin] = m_config.midi.channel;
