@@ -9,6 +9,7 @@ class Status : public QObject {
         WAIT,
         WAIT_AVRDUDE,
         AVRDUDE,
+        DISCONNECT_AVRDUDE,
         DFU_CONNECT_AVRDUDE,
         DFU_ERASE_AVRDUDE,
         DFU_FLASH_AVRDUDE,

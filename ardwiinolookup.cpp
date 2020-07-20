@@ -37,28 +37,31 @@ auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
 auto ArdwiinoLookup::isArdwiino(const UsbDevice_t& usbDeviceId) -> bool {
     return usbDeviceId.vid == HARMONIX_VID || usbDeviceId.vid == SONY_VID || usbDeviceId.vid == SWITCH_VID || (usbDeviceId.vid == ARDWIINO_VID && usbDeviceId.pid == ARDWIINO_PID);
 }
-auto ArdwiinoLookup::isAreadyDFU(const QSerialPortInfo &serialPortInfo) -> bool {
-    return serialPortInfo.productIdentifier() == 0x0036 || serialPortInfo.productIdentifier() == 0x9207;
-}
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false};
-const board_t ArdwiinoLookup::boards[11] = {
-    {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true},
-    {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true},
-    {"uno", "uno-main", "Arduino Uno", 115200, {0x0043, 0x7523, 0x0001, 0xea60, 0x0243}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", true},
-    {"micro", "micro", "Arduino Pro Micro", 57600, {0x9203, 0x9204, 0x9205, 0x9206, 0x9207, 0x9208}, "avr109", "atmega32u4", 8000000, "/images/ArduinoProMicro.svg", false},
-    {"leonardo", "leonardo", "Arduino Leonardo", 57600, {0x0036, 0x8036, 0x800c}, "avr109", "atmega32u4", 16000000, "/images/ArduinoLeonardo.svg", false},
-    {"mega2560-atmega16u2", "mega2560-usb", "Arduino Mega 2560", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMega.svg", true},
-    {"mega2560-at90usb82", "mega2560-usb", "Arduino Mega 2560", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMega.svg", true},
-    {"mega2560", "mega2560-main", "Arduino Mega 2560", 115200, {0x0010, 0x0042}, "arduino", "atmega328p", 16000000, "/images/ArduinoMega.svg", true},
-    {"megaadk-atmega16u2", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMegaADK.svg", true},
-    {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true},
-    {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "arduino", "atmega328p", 16000000, "/images/ArduinoMegaADK.svg", true},
+const board_t ArdwiinoLookup::boards[17] = {
+    {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
+    {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
+    {"uno", "uno-main", "Arduino Uno", 115200, {0x0043, 0x7523, 0x0001, 0xea60, 0x0243}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", true, false},
+    {"a-micro", "a-micro", "Arduino Micro in DFU Mode", 57600, {0x0037}, "avr109", "atmega32u4", 8000000, "/images/ArduinoProMicro.svg", false, true},
+    {"a-micro", "a-micro", "Arduino Micro", 57600, {0x8037}, "avr109", "atmega32u4", 8000000, "/images/ArduinoProMicro.svg", false, false},
+    {"micro", "micro", "Arduino Pro Micro", 57600, {0x9204}, "avr109", "atmega32u4", 8000000, "/images/ArduinoProMicro.svg", false, false},
+    {"micro", "micro", "Arduino Pro Micro", 57600, {0x9206}, "avr109", "atmega32u4", 16000000, "/images/ArduinoProMicro.svg", false, false},
+    {"leonardo", "leonardo", "Arduino Leonardo", 57600, {0x8036, 0x800c}, "avr109", "atmega32u4", 16000000, "/images/ArduinoLeonardo.svg", false, false},
+    {"leonardo", "leonardo", "Arduino Pro Micro / Leonardo in DFU Mode", 57600, {0x0036}, "avr109", "atmega32u4", 16000000, "/images/ArduinoLeonardo.svg", false, true},
+    {"micro", "micro", "Arduino Pro Micro in DFU Mode", 57600, {0x9205}, "avr109", "atmega32u4", 8000000, "/images/ArduinoLeonardo.svg", false, true},
+    {"micro", "micro", "Arduino Pro Micro in DFU Mode", 57600, {0x9203}, "avr109", "atmega32u4", 16000000, "/images/ArduinoLeonardo.svg", false, true},
+    {"mega2560-atmega16u2", "mega2560-usb", "Arduino Mega 2560", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMega.svg", true, false},
+    {"mega2560-at90usb82", "mega2560-usb", "Arduino Mega 2560", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMega.svg", true, false},
+    {"mega2560", "mega2560-main", "Arduino Mega 2560", 115200, {0x0010, 0x0042}, "arduino", "atmega328p", 16000000, "/images/ArduinoMega.svg", true, false},
+    {"megaadk-atmega16u2", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMegaADK.svg", true, false},
+    {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
+    {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "arduino", "atmega328p", 16000000, "/images/ArduinoMegaADK.svg", true, false},
 };
 
-auto ArdwiinoLookup::findByBoard(const QString &board_name) -> const board_t {
+auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
     for (const auto &board : boards) {
-        if (board.shortName == board_name) {
+        if (board.shortName == board_name && board.inBootloader == inBootloader) {
             return board;
         }
     }

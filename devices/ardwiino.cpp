@@ -21,7 +21,7 @@ bool Ardwiino::open() {
 #endif
     m_hiddev = hid_open_path(m_usbId->path);
     if (m_hiddev) {
-        m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)));
+        m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
         m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
@@ -116,5 +116,5 @@ void Ardwiino::close() {
     }
 }
 void Ardwiino::bootloader() {
-    // QString cmd =
+    writeData(COMMAND_JUMP_BOOTLOADER, {});
 }

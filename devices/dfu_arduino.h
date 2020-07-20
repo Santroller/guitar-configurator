@@ -19,6 +19,9 @@ class DfuArduino : public Device {
     virtual void close();
     virtual bool open();
     virtual void bootloader();
+    QString getProcessor() const {
+        return m_processor;
+    }
     inline virtual bool isConfigurable() {
         return false;
     }

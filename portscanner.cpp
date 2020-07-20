@@ -20,7 +20,7 @@
 #define PID_16U2 0x2FEF
 #define VID_16U2 0x03eb
 
-PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), programmer(programmer) {
+PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), m_programmer(programmer) {
     hid_init();
     m_emptyDevice = new NullDevice();
     m_model.push_back(m_emptyDevice);
@@ -30,11 +30,10 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         m_graphical = true;
     }
     setSelected(nullptr);
-
 }
-void PortScanner::add(Device* device) {
+bool PortScanner::add(Device* device) {
     if (std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; }) != m_model.end()) {
-        return;
+        return false;
     }
     if (device->open()) {
         if (!m_hasSelected && m_selected) {
@@ -46,12 +45,14 @@ void PortScanner::add(Device* device) {
         connect(device, &Device::descriptionChanged, this, &PortScanner::update);
         m_model.append(device);
         update();
+        return true;
     }
+    return false;
 }
-void PortScanner::remove(Device* device) {
+bool PortScanner::remove(Device* device) {
     auto found = std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; });
     if (found == m_model.end()) {
-        return;
+        return false;
     }
     auto foundEle = ((Device*)*found);
     if (m_selected == foundEle) {
@@ -62,23 +63,31 @@ void PortScanner::remove(Device* device) {
     foundEle->close();
     m_model.removeAll(foundEle);
     update();
+    return true;
 }
 void PortScanner::add(UsbDevice_t device) {
+    DfuArduino* dev = NULL;
     if (ArdwiinoLookup::isArdwiino(device)) {
         struct hid_device_info *devs, *cur_dev;
         devs = hid_enumerate(device.vid, device.pid);
         cur_dev = devs;
         while (cur_dev) {
             if (QString::fromWCharArray(cur_dev->serial_number) == device.serial || QString::fromUtf8(cur_dev->path).toLower() == device.hidPath.toLower()) {
-                add(new Ardwiino(cur_dev, device));
+                Ardwiino* adev = new Ardwiino(cur_dev, device);
+                if (add(adev)) {
+                    m_programmer->deviceAdded(adev);
+                }
             }
             cur_dev = cur_dev->next;
         }
         hid_free_enumeration(devs);
     } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
-        add(new DfuArduino("at90usb82", device));
+        dev = new DfuArduino("at90usb82", device);
     } else if (device.vid == VID_16U2 && device.pid == PID_16U2) {
-        add(new DfuArduino("atmega16u2", device));
+        dev = new DfuArduino("atmega16u2", device);
+    }
+    if (dev && add(dev)) {
+        m_programmer->deviceAdded(dev);
     }
 }
 void PortScanner::remove(UsbDevice_t device) {
@@ -96,7 +105,10 @@ void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
     } else {
         auto board = ArdwiinoLookup::detectBoard(serialPortInfo);
         if (board.name != "") {
-            add(new Arduino(serialPortInfo));
+            Arduino* dev = new Arduino(serialPortInfo);
+            if (add(dev)) {
+                m_programmer->deviceAdded(dev);
+            }
         }
     }
 }

@@ -18,14 +18,16 @@ bool OutdatedArdwiino::open() {
                     readCmd = "i\x06";
                 }
                 do {
-                    m_board = ArdwiinoLookup::findByBoard(readWrite(readCmd.toUtf8()).trimmed().split('-')[0]);
+                    m_board = ArdwiinoLookup::findByBoard(readWrite(readCmd.toUtf8()).trimmed().split('-')[0], false);
                 } while (m_board.name.isEmpty() && m_serialPort->isOpen());
                 if (!m_isOldAPI && m_serialPort->isOpen()) {
                     QString readFreq = "i\x04";
                     m_board.cpuFrequency = readWrite(readFreq.toUtf8()).trimmed().replace("UL", "").toInt();
                 }
-                descriptionChanged();
-                readyChanged();
+                emit descriptionChanged();
+                emit boardImageChanged();
+                emit boardNameChanged();
+                emit readyChanged();
                 close();
             });
         });

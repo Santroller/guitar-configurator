@@ -37,12 +37,6 @@ class Ardwiino : public Device {
     QString boardName() const {
         return m_board.name;
     }
-    void setBoard(QString boardName, uint freq) {
-        m_board = ArdwiinoLookup::getInstance()->findByBoard(boardName);
-        if (freq != 0) {
-            m_board.cpuFrequency = freq;
-        }
-    }
     bool isOutdated() const {
         return m_isOutdated;
     }

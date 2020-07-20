@@ -60,13 +60,13 @@ class PortScanner : public QObject {
 
    private:
     void scanDevices();
-    void add(Device* device);
-    void remove(Device* device);
+    bool add(Device* device);
+    bool remove(Device* device);
     bool m_hasSelected;
     void clearImages();
     QList<QObject*> m_model;
     Device* m_selected;
-    Programmer* programmer;
+    Programmer* m_programmer;
     QStringList images;
     bool m_graphical;
     QSettings settings;

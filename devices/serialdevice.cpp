@@ -1,6 +1,6 @@
 #include "serialdevice.h"
 
-SerialDevice::SerialDevice(const QSerialPortInfo& serialInfo, QObject* parent) : Device({}, parent) {
+SerialDevice::SerialDevice(const QSerialPortInfo& serialInfo, QObject* parent) : Device({}, parent), m_location(serialInfo.systemLocation()) {
     m_serialPort = new QSerialPort(serialInfo);
 }
 void SerialDevice::close() {

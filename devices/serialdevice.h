@@ -14,8 +14,13 @@ class SerialDevice : public Device {
     inline virtual bool isConfigurable() {
         return false;
     }
+    QString getLocation() const {
+        return m_location;
+    }
+    
    protected:
     QSerialPort* m_serialPort;
+    QString m_location;
     QByteArray readWrite(QByteArray data);
    private:
     inline virtual bool isEqual(const Device& other) const {

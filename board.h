@@ -10,4 +10,5 @@ typedef struct {
     uint cpuFrequency;
     QString image;
     bool hasDFU;
+    bool inBootloader;
 } board_t;

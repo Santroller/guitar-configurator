@@ -27,6 +27,8 @@ class Device : public QObject {
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(bool configurable READ isConfigurable NOTIFY configurableChanged)
     Q_PROPERTY(QString boardImage READ getBoardImage NOTIFY boardImageChanged)
+    Q_PROPERTY(QString boardName READ getBoardName NOTIFY boardNameChanged)
+    Q_PROPERTY(int boardFreq READ getBoardFreq NOTIFY boardFreqChanged)
     Q_OBJECT
    public:
     explicit Device(UsbDevice_t m_deviceID, QObject* parent = nullptr);
@@ -36,7 +38,12 @@ class Device : public QObject {
     virtual void close() = 0;
     virtual void bootloader() = 0;
     virtual bool isConfigurable() = 0;
-    void setBoardType(QString board);
+    board_t getBoard() const {
+        return m_board;
+    }
+    UsbDevice_t getUSBDevice() const {
+        return m_deviceID;
+    }
     inline bool operator==(const Device& other) {
         return typeid(*this) == typeid(other) && m_deviceID == other.m_deviceID && isEqual(other);
     }
@@ -44,6 +51,14 @@ class Device : public QObject {
     inline QString getBoardImage() const {
         return m_board.image;
     }
+    inline QString getBoardName() const {
+        return m_board.shortName;
+    }
+    inline int getBoardFreq() const {
+        return m_board.cpuFrequency;
+    }
+    void setBoardType(QString board);
+    void setBoardType(QString board, uint freq);
     inline void readDescription() {
         emit descriptionChanged();
     }
@@ -52,6 +67,8 @@ class Device : public QObject {
     void readyChanged();
     void configurableChanged();
     void boardImageChanged();
+    void boardNameChanged();
+    void boardFreqChanged();
 
    protected:
     board_t m_board;

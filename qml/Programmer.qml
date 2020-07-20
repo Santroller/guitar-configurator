@@ -36,27 +36,22 @@ ColumnLayout {
     ColumnLayout {
         id: column1
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
         Layout.fillWidth: true
         ColumnLayout {
-            visible: (scanner.selected.boardShortName() === "micro" || scanner.selected.boardShortName() === "leonardo") && (!scanner.selected.isArdwiino || !scanner.selected.ready) && programmer.status === Status.NOT_PROGRAMMING
-            id: micro
+            visible: (scanner.selected.boardName === "micro" || scanner.selected.boardName === "leonardo") && (!scanner.selected.isArdwiino || !scanner.selected.ready) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
-                id: label
                 text: qsTr("An Arduino Pro Micro or Leonardo was detected.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
 
             Label {
-                id: label1
                 text: qsTr("Please select the board that you are using")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
 
             Rectangle {
-                id: rectangle
                 color: "#00000000"
                 border.color: "#00000000"
             }
@@ -64,27 +59,64 @@ ColumnLayout {
             ComboBox {
                 Layout.fillWidth: true
                 textRole: "key"
-                id: comboBox
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Component.onCompleted: {
+                    for (let i =0; i < model.count; ++i) {
+                        let element = model.get(i);
+                        if (element.board == scanner.selected.boardName && element.freq == scanner.selected.boardFreq) {
+                            currentIndex = i;
+                            return;
+                        }
+                    }
+                }
                 model: ListModel {
                     id: model
-                    ListElement { key: "Arduino Pro Micro 3.3V"; board: "micro"; freq: "8000000" }
-                    ListElement { key: "Arduino Pro Micro 5V"; board: "micro"; freq: "16000000" }
-                    ListElement { key: "Arduino Leonardo 3.3V"; board: "leonardo"; freq: "8000000" }
-                    ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: "16000000" }
+                    ListElement { key: "Arduino Pro Micro 3.3V"; board: "micro"; freq: 8000000 }
+                    ListElement { key: "Arduino Pro Micro 5V"; board: "micro"; freq: 16000000 }
+                    ListElement { key: "Arduino Leonardo 3.3V"; board: "leonardo"; freq: 8000000 }
+                    ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: 16000000 }
                 }
                 onActivated: {
-                    scanner.selected.setBoard(model.get(currentIndex).board, model.get(currentIndex).freq);
+                    scanner.selected.setBoardType(model.get(currentIndex).board, model.get(currentIndex).freq);
                 }
             }
-
-
-
-
-
         }
         ColumnLayout {
-            visible: programmer.status === Status.DFU_CONNECT && scanner.selected.boardShortName() === "uno"
+            visible: (scanner.selected.boardName.includes("at90usb82") || scanner.selected.boardName.includes("atmega16u2")) && programmer.status === Status.NOT_PROGRAMMING
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Label {
+                text: qsTr("An Arduino Mega or Uno was detected in DFU mode.")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Label {
+                text: qsTr("Please select the board that you are using")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Rectangle {
+                color: "#00000000"
+                border.color: "#00000000"
+            }
+
+            ComboBox {
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: ListModel {
+                    id: modelUno
+                    ListElement { key: "Arduino Uno"; board: "uno"; freq: "16000000" }
+                    ListElement { key: "Arduino Mega 2560"; board: "mega2560"; freq: "16000000" }
+                    ListElement { key: "Arduino Mega ADK"; board: "megaadk"; freq: "16000000" }
+                }
+                onActivated: {
+                    scanner.selected.setBoard(modelUno.get(currentIndex).board, modelUno.get(currentIndex).freq);
+                }
+            }
+        }
+        ColumnLayout {
+            visible: programmer.status === Status.DFU_CONNECT_AVRDUDE
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             id: dfu
             Label {
@@ -102,7 +134,7 @@ ColumnLayout {
             }
         }
         Label {
-            visible: programmer.status === Status.DFU_DISCONNECT && scanner.selected.boardShortName() === "uno"
+            visible: programmer.status === Status.DFU_DISCONNECT_AVRDUDE
             id: label7
             text: qsTr("Please disconnect and reconnect your device.")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

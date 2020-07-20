@@ -20,17 +20,16 @@ class ArdwiinoLookup : public QObject {
     Q_OBJECT
    public:
     static ArdwiinoLookup* getInstance();
-    static const board_t boards[11];
+    static const board_t boards[17];
     static const board_t detectBoard(struct hid_device_info *usbDeviceId);
     static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject* parent = nullptr);
-    static const board_t findByBoard(const QString& board);
+    static const board_t findByBoard(const QString& board, bool inBootloader);
    public slots:
     static bool isArdwiino(const QSerialPortInfo& info);
     static bool isArdwiino(const UsbDevice_t& desc);
     static bool isOldAPIArdwiino(const QSerialPortInfo& QSerialPort);
-    static bool isAreadyDFU(const QSerialPortInfo& QSerialPort);
     static bool isOutdatedArdwiino(const unsigned short releaseID);
 
     inline QString getTypeName(uint8_t type) {
