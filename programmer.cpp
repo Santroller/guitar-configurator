@@ -45,7 +45,7 @@ void Programmer::deviceAdded(Ardwiino* device) {
 }
 void Programmer::deviceAdded(Arduino* device) {
     if (m_device && !m_device->getBoard().hasDFU) {
-        device->setBoardType(m_device->getBoard().shortName);
+        device->setBoardType(m_device->getBoard().shortName, m_device->getBoard().cpuFrequency);
     }
     m_device = device;
     if (m_status == Status::DFU_DISCONNECT_AVRDUDE || m_status == Status::WAIT_AVRDUDE) {
