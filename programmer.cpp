@@ -17,7 +17,7 @@ void Programmer::deviceAdded(DfuArduino* device) {
     if (m_status != Status::NOT_PROGRAMMING) {
         QString board = m_device->getBoard().shortName;
         if (!board.contains("-")) {
-            board += "-"+device->getProcessor();
+            board += "-" + device->getProcessor();
         }
         device->setBoardType(board);
     }
@@ -49,15 +49,18 @@ void Programmer::deviceAdded(Arduino* device) {
     }
     m_device = device;
     if (m_status == Status::DFU_DISCONNECT_AVRDUDE || m_status == Status::WAIT_AVRDUDE) {
-        if (m_restore) {
+        if (m_restore && m_device->getBoard().hasDFU) {
             m_status = Status::COMPLETE;
         } else {
             m_status = Status::AVRDUDE;
             programAvrDude();
         }
-        emit statusChanged(m_status);
-        emit statusVChanged(getStatusDescription());
     }
+    if (m_restore && m_status == Status::DISCONNECT_AVRDUDE && !m_device->getBoard().hasDFU) {
+        m_status = Status::COMPLETE;
+    }
+    emit statusChanged(m_status);
+    emit statusVChanged(getStatusDescription());
 }
 void Programmer::programDFU() {
     board_t board = m_device->getBoard();
@@ -113,7 +116,7 @@ void Programmer::programAvrDude() {
     m_status = Status::AVRDUDE;
     statusChanged(m_status);
     board_t board = m_device->getBoard();
-    QString hexFile = "ardwiino-" + board.hexFile + "-" + board.processor + "-" + QString::number(board.cpuFrequency) + ".hex";
+    QString hexFile = "ardwiino-" + board.hexFile + "-" + board.processor + "-" + QString::number(board.cpuFrequency) + (m_restore ? "-restore" : "") + ".hex";
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
     m_process_out.clear();
@@ -214,6 +217,7 @@ void Programmer::onReady() {
     m_process_out += out2;
     m_process_out += out;
     if (m_restore) {
+        m_process_percent += out2.count('#') * ((100.0 / 50.0) / 300.0);
         m_process_percent += out2.count('>') * ((100.0 / 32.0) / 200.0);
     } else {
         bool hasDfu = m_device->getBoard().hasDFU;
