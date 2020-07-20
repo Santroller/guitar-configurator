@@ -1,5 +1,7 @@
 #include "dfu_arduino.h"
+#include "ardwiinolookup.h"
 DfuArduino::DfuArduino(QString processor, UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_processor(processor) {
+    m_board = ArdwiinoLookup::empty;
     setBoardType("uno-"+processor);
 }
 DfuArduino::DfuArduino(UsbDevice_t devt, QObject* parent) : Device(devt, parent) {

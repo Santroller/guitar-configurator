@@ -80,7 +80,6 @@ void Programmer::programDFU() {
 #else
     QStringList l = {board.processor};
 #endif
-    qDebug() << l;
     switch (m_status) {
         case Status::DFU_ERASE_MAIN:
         case Status::DFU_ERASE_AVRDUDE:
