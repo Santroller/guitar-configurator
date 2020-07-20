@@ -73,8 +73,13 @@ void Programmer::programDFU() {
     m_process = new QProcess();
     m_process->setWorkingDirectory(dir.path());
     UsbDevice_t usb = m_device->getUSBDevice();
+    // Atmel devices use libusb-0.1 drivers, and these do not appear to expose a port number on windows.
+#ifndef Q_OS_WIN
     QStringList l = {
         board.processor + ":" + QVariant(usb.bus).toString() + "," + QVariant(usb.port).toString()};
+#else
+    QStringList l = {board.processor};
+#endif
     qDebug() << l;
     switch (m_status) {
         case Status::DFU_ERASE_MAIN:
