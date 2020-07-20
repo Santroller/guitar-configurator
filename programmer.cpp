@@ -15,7 +15,11 @@ Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_
 }
 void Programmer::deviceAdded(DfuArduino* device) {
     if (m_status != Status::NOT_PROGRAMMING) {
-        device->setBoardType(m_device->getBoard().shortName + "-" + device->getProcessor());
+        QString board = m_device->getBoard().shortName;
+        if (!board.contains("-")) {
+            board += "-"+device->getProcessor();
+        }
+        device->setBoardType(board);
     }
     m_device = device;
     switch (m_status) {
@@ -40,7 +44,7 @@ void Programmer::deviceAdded(Ardwiino* device) {
     }
 }
 void Programmer::deviceAdded(Arduino* device) {
-    if (m_status != Status::NOT_PROGRAMMING && !m_device->getBoard().hasDFU) {
+    if (m_device && !m_device->getBoard().hasDFU) {
         device->setBoardType(m_device->getBoard().shortName);
     }
     m_device = device;
@@ -134,7 +138,6 @@ void Programmer::programAvrDude() {
         "-U",
         "flash:w:" + file + ":a",
     };
-    qDebug() << l;
     QObject::connect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);

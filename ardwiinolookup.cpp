@@ -38,7 +38,7 @@ auto ArdwiinoLookup::isArdwiino(const UsbDevice_t& usbDeviceId) -> bool {
     return usbDeviceId.vid == HARMONIX_VID || usbDeviceId.vid == SONY_VID || usbDeviceId.vid == SWITCH_VID || (usbDeviceId.vid == ARDWIINO_VID && usbDeviceId.pid == ARDWIINO_PID);
 }
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
-const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false};
+const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false, false};
 const board_t ArdwiinoLookup::boards[17] = {
     {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
