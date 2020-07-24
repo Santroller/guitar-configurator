@@ -10,8 +10,8 @@
 #include <proc/version.h>
 #endif
 #if defined Q_OS_WIN
-#include <Psapi.h>
 #include <Windows.h>
+#include <Psapi.h>
 #endif
 LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner) {
 #ifdef Q_OS_WIN64
