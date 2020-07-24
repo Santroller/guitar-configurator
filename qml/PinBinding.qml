@@ -134,30 +134,30 @@ Dialog {
     }
     footer: RowLayout {
         id: test
-        function received(i) {
-            pinDialog.currentValue = i;
-            pinDialog.waitingForAnalog = false;
-            pinDialog.waitingForDigital = false;
-        }
 
         Button {
             text: qsTr("Automatically Find Pin Binding")
             Layout.fillWidth: true
+            function received(i) {
+                pinDialog.currentValue = i;
+                pinDialog.waitingForAnalog = false;
+                pinDialog.waitingForDigital = false;
+            }
             onClicked: {
-                var isAnalog = scanner.selected.pin_inverts.hasOwnProperty(pinDialog.currentPin);
+                var isAnalog = scanner.selected.config.hasOwnProperty(`pins${pinDialog.currentPin}Inverted`);
                 //The tilt pin is weird, as it is sometimes analog and sometimes digital..
                 if (pinDialog.labels[pinDialog.currentPin] === "Tilt Axis") {
                     isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
                 }
                 if (isAnalog) {
-                    scanner.selected.findAnalog(test.received)
+                    scanner.selected.findAnalog(received)
                     pinDialog.waitingForAnalog = true;
                 } else {
-                    scanner.selected.findDigital(test.received)
+                    scanner.selected.findDigital(received)
                     pinDialog.waitingForDigital = true;
                 }
             }
-            ToolTip.visible: hovered && scanner.selected.boardShortName() === "uno"
+            ToolTip.visible: hovered && scanner.selected.boardName === "uno"
             ToolTip.text: "Note that automatic pin detection does not work with pin 13"
         }
 

@@ -224,7 +224,7 @@ Dialog {
 
         }
         RowLayout {
-            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
+            visible: buttonDialog.buttons[0] === "LX" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
             Label {
                 text: qsTr("Map Left Joystick to D-pad")
                 fontSizeMode: Text.FixedSize
@@ -242,7 +242,7 @@ Dialog {
             }
         }
         RowLayout {
-            visible: buttonDialog.buttons[0] === "l_x" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
+            visible: buttonDialog.buttons[0] === "LX" && (scanner.selected.config.isGuitar || scanner.selected.config.isDrum)
             Label {
                 text: "Joystick Mapping Threshold"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

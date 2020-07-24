@@ -79,6 +79,16 @@ ColumnLayout {
             }
 
             Label {
+                visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
+                text: qsTr("Note: You can not combine Playstation input and APA102 LEDs, due to them both using imcompatible connections.")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.FixedSize
+            }
+            Label {
                 id: inputLb1
                 text: qsTr("Controller Output Type")
                 fontSizeMode: Text.FixedSize
@@ -247,6 +257,16 @@ ColumnLayout {
                 Binding { target: fretBox; property: "currentIndex"; value: fretBox.model.findIndex(s => s.value === scanner.selected.config.mainFretLEDMode) }
 
                 onCurrentIndexChanged: scanner.selected.config.mainFretLEDMode = fretBox.model[fretBox.currentIndex].value
+            }
+            Label {
+                visible: scanner.selected.config.mainInputType == ArdwiinoDefinesValues.PS2
+                text: qsTr("Note: You can not combine Playstation input and APA102 LEDs, due to them both using imcompatible connections.")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.FixedSize
             }
             Label {
                 visible: scanner.selected.config.hasAddressableLEDs

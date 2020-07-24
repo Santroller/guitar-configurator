@@ -1,19 +1,19 @@
 #include "ledhandler.h"
-#include <QFile>
-#include <QProcess>
-#include <QGuiApplication>
+
 #include <QDir>
+#include <QFile>
+#include <QGuiApplication>
+#include <QProcess>
 #include <QThread>
 #if defined Q_OS_LINUX
 #include <proc/readproc.h>
 #include <proc/version.h>
 #endif
 #if defined Q_OS_WIN
-#include <Windows.h>
 #include <Psapi.h>
+#include <Windows.h>
 #endif
-LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent) : QObject(parent), scanner(scanner)
-{
+LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner) {
 #ifdef Q_OS_WIN64
     platform = "win64";
 #elif defined Q_OS_WIN32
@@ -26,21 +26,21 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     auto dir = QDir(QCoreApplication::applicationDirPath());
     QFile prod(dir.filePath("ch-index.json"));
     QFile test(dir.filePath("ch-index-test.json"));
-    QFile* indices[] = {&prod,&test};
+    QFile *indices[] = {&prod, &test};
     for (auto &a : indices) {
-        a->open(QFile::ReadOnly| QIODevice::Text);
+        a->open(QFile::ReadOnly | QIODevice::Text);
         QJsonDocument doc = QJsonDocument::fromJson(a->readAll());
         QJsonArray arr = doc.array();
         if (hashedFiles.empty()) {
-            for (auto hashObj: arr[0].toObject()["hash"].toArray()) {
+            for (auto hashObj : arr[0].toObject()["hash"].toArray()) {
                 hashedFiles.push_back(hashObj.toArray()[0].toString());
             }
-            binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0,1);
+            binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0, 1);
         }
-        for (auto v: arr) {
+        for (auto v : arr) {
             auto o = v.toObject();
             QString hash;
-            for (auto hashObj: o["hash"].toArray()) {
+            for (auto hashObj : o["hash"].toArray()) {
                 hash += hashObj.toArray()[1].toString();
             }
             hashes[hash] = o["version"].toString();
@@ -51,57 +51,46 @@ LEDHandler::LEDHandler(QGuiApplication* application, PortScanner* scanner, QObje
     if (settings.contains("cloneHeroDir")) {
         m_gameFolder = settings.value("cloneHeroDir").toString();
     }
-    m_star_power = settings.value("led_star_power_color",QVariant(0x00BFFF)).toUInt();
-    m_open = settings.value("led_open_color",QVariant(0xFF00FF)).toUInt();
+    m_star_power = settings.value("led_star_power_color", QVariant(0x00BFFF)).toUInt();
+    m_open = settings.value("led_open_color", QVariant(0xFF00FF)).toUInt();
     m_openEnabled = settings.contains("led_open") && settings.value("led_open").toBool();
     m_starPowerEnabled = settings.contains("led_star_power") && settings.value("led_star_power").toBool();
     findVersion();
 }
 void LEDHandler::setOpenColor(int color) {
     m_open = color;
-    settings.setValue("led_open_color",color);
+    settings.setValue("led_open_color", color);
     openColorChanged();
 }
 void LEDHandler::setStarPowerColor(int color) {
     m_star_power = color;
-    settings.setValue("led_star_power_color",color);
+    settings.setValue("led_star_power_color", color);
     starPowerColorChanged();
 }
 void LEDHandler::setOpenEnabled(bool open) {
     m_openEnabled = open;
-    settings.setValue("led_open",open);
+    settings.setValue("led_open", open);
     openEnabledChanged();
 }
 void LEDHandler::setStarPowerEnabled(bool hit) {
     m_starPowerEnabled = hit;
-    settings.setValue("led_star_power",hit);
+    settings.setValue("led_star_power", hit);
     starPowerEnabledChanged();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
-    gameFolder = gameFolder.replace("file://","");
+    gameFolder = gameFolder.replace("file://", "");
 #ifdef Q_OS_WIN
-    gameFolder = gameFolder.replace("file:///","");
+    gameFolder = gameFolder.replace("file:///", "");
 #endif
     m_gameFolder = gameFolder;
-    settings.setValue("cloneHeroDir",gameFolder);
+    settings.setValue("cloneHeroDir", gameFolder);
     findVersion();
     gameFolderChanged();
 }
-void readList(QJsonArray arr, QList<qint64>* list) {
-    for (auto a: arr) {
+void readList(QJsonArray arr, QList<qint64> *list) {
+    for (auto a : arr) {
         list->push_back(a.toVariant().toLongLong());
     }
-}
-void LEDHandler::setLEDs(QMap<QString,uint32_t> leds) {
-    auto buttons = ArdwiinoDefines::getInstance()->get_buttons_entries();
-    // QByteArray a;
-    // for (auto a2: scanner->getSelected()-> {
-    //     uint32_t c = leds.value(a2.toString(),0);
-    //     a.append((char*)&c,4);
-    // }
-    // if (scanner->getSelected() && scanner->getSelected()->isReady()) {
-    //     scanner->getSelected()->write(a);
-    // }
 }
 int LEDHandler::gammaCorrect(int color) {
     uint32_t ucolor = color;
@@ -112,26 +101,43 @@ int LEDHandler::gammaCorrect(int color) {
     r = (pow(r / 255.0, 2.8) * 255 + 0.5);
     g = (pow(g / 255.0, 2.8) * 255 + 0.5);
     b = (pow(b / 255.0, 2.8) * 255 + 0.5);
-    return r<<16|g<<8|b;
+    return r << 16 | g << 8 | b;
 }
 void LEDHandler::setColor(int color, QString button) {
     setColors(color, QStringList(button));
 }
 void LEDHandler::setColors(int color, QStringList buttons) {
-    QMap<QString,uint32_t> leds;
-    for (auto button: buttons) {
-        leds[button] = color;
+    QByteArray data;
+    Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
+    auto mappings = dev->getConfig()->getMappings();
+    auto leds = dev->getConfig()->getLEDs();
+    for (auto led : leds) {
+        if (buttons.contains(led.toString())) {
+            uint8_t r = color >> 16 & 0xff;
+            uint8_t g = color >> 8 & 0xff;
+            uint8_t b = color & 0xff;
+            data.push_back(mappings[led.toString()]);
+            data.push_back(r);
+            data.push_back(g);
+            data.push_back(b);
+        } else {
+            data.push_back(mappings[led.toString()]);
+            data.push_back('\0');
+            data.push_back('\0');
+            data.push_back('\0');
+        }
     }
-    setLEDs(leds);
+    data.push_back('\0');
+    dev->writeData(COMMAND_SET_LEDS, data);
 }
 void LEDHandler::findVersion() {
     QString hash;
-    for (QString file: hashedFiles) {
+    for (QString file : hashedFiles) {
         QString filePath = m_gameFolder + file;
         QFile f(filePath);
         if (f.exists()) {
             f.open(QFile::ReadOnly);
-            hash += QString(QCryptographicHash::hash(f.readAll(),QCryptographicHash::Md5).toHex());
+            hash += QString(QCryptographicHash::hash(f.readAll(), QCryptographicHash::Md5).toHex());
             f.close();
         } else {
             m_version = "Unable to locate game executable";
@@ -145,7 +151,7 @@ void LEDHandler::findVersion() {
     }
     auto dir = QDir(QCoreApplication::applicationDirPath());
     QFile memLoc(dir.filePath("memory-locations.json"));
-    memLoc.open(QFile::ReadOnly| QIODevice::Text);
+    memLoc.open(QFile::ReadOnly | QIODevice::Text);
     QJsonDocument doc = QJsonDocument::fromJson(memLoc.readAll());
     QJsonObject obj = doc.object();
     if (obj.contains(m_version)) {
@@ -161,7 +167,7 @@ void LEDHandler::findVersion() {
         offsetCurrentNote = obj["offsetCurrentNote"].toInt();
         m_ready = true;
     } else {
-        m_version = "Unsupported Version: "+m_version;
+        m_version = "Unsupported Version: " + m_version;
         m_ready = false;
     }
     memLoc.close();
@@ -219,7 +225,7 @@ void LEDHandler::startGame() {
     QProcess vmem;
     vmem.start("vmmap", {QString::number(pid)});
     vmem.waitForFinished();
-    for (QString line :vmem.readAllStandardOutput().split('\n')) {
+    for (QString line : vmem.readAllStandardOutput().split('\n')) {
         if (line.indexOf(lib) != -1) {
             bool okay = true;
             base = line.split(QRegExp("\\s+"))[1].split('-')[0].toLong(&okay, 16);
@@ -239,13 +245,12 @@ void LEDHandler::startGame() {
     timer = new QTimer(this);
 
     // setup signal and slot
-    connect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
+    connect(timer, &QTimer::timeout, this, &LEDHandler::tick);
 
     // msec
     timer->start(1);
 }
-size_t _word_align(size_t size)
-{
+size_t _word_align(size_t size) {
     size_t rsize = 0;
 
     rsize = ((size % sizeof(long)) > 0) ? (sizeof(long) - (size % sizeof(long))) : 0;
@@ -253,12 +258,10 @@ size_t _word_align(size_t size)
 
     return rsize;
 }
-qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
-{
-
+qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf) {
 #if defined Q_OS_LINUX
     inputFile->seek((long)addr);
-    return inputFile->read((char*)buf, size);
+    return inputFile->read((char *)buf, size);
 #endif
 
 #if defined Q_OS_WIN
@@ -280,15 +283,12 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf)
 qint64 LEDHandler::readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf) {
     qint64 addr;
     qint64 ret;
-    if ((ret = readFromProc(sizeof(qint64), base + path[0], buf)) < 0)
-    {
+    if ((ret = readFromProc(sizeof(qint64), base + path[0], buf)) < 0) {
         return ret;
     }
-    for (int i = 1; i < pathCount; i++)
-    {
+    for (int i = 1; i < pathCount; i++) {
         addr = buf[0] + path[i];
-        if ((ret = readFromProc(sizeof(qint64), addr, buf)) < 0)
-        {
+        if ((ret = readFromProc(sizeof(qint64), addr, buf)) < 0) {
             return ret;
         }
     }
@@ -300,33 +300,33 @@ void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
     qint64 addr = readData(base, pointerPathBasePlayer, pointerPathBasePlayer.length(), buf);
-    int score = *(size_t*)(cbuf+offsetScore);
-    bool noteIsStarPower = *(cbuf+offsetIsStarPower);
-    bool starPowerActivated = *(cbuf+offsetStarPowerActivated);
-    uint8_t buttons = *(uint8_t*)(cbuf+offsetButtonsPressed);
+    int score = *(size_t *)(cbuf + offsetScore);
+    bool noteIsStarPower = *(cbuf + offsetIsStarPower);
+    bool starPowerActivated = *(cbuf + offsetStarPowerActivated);
+    uint8_t buttons = *(uint8_t *)(cbuf + offsetButtonsPressed);
     if (addr > 0) {
         addr = readData(addr, pointerPathCurrentNote, pointerPathCurrentNote.length(), buf);
     }
-    uint8_t lastNote = *(uint8_t*)(cbuf+offsetCurrentNote);
-    if (score > lastScore && lastNote & 1<<6) {
+    uint8_t lastNote = *(uint8_t *)(cbuf + offsetCurrentNote);
+    if (score > lastScore && lastNote & 1 << 6) {
         shownNote = lastNote;
         countdown = 2;
     }
-    QMap<QString,uint32_t> data;
-    QStringList names = {"a","b","y","x","LB"};
-    for (int i =0; i < 5; i++) {
+    QMap<QString, uint32_t> data;
+    QStringList names = {"a", "b", "y", "x", "LB"};
+    for (int i = 0; i < 5; i++) {
         if (addr > 0) {
-            if (countdown > 0 && shownNote & 1<<6) {
-                data[names[i]] = (noteIsStarPower || starPowerActivated)?m_star_power:m_open;
-            } else if (buttons & 1<<i) {
-                if (score > lastScore && lastNote & 1<<i) {
+            if (countdown > 0 && shownNote & 1 << 6) {
+                data[names[i]] = (noteIsStarPower || starPowerActivated) ? m_star_power : m_open;
+            } else if (buttons & 1 << i) {
+                if (score > lastScore && lastNote & 1 << i) {
                     shownNote = lastNote;
                     countdown = 0;
                 }
-                if (shownNote & 1<<i) {
+                if (shownNote & 1 << i) {
                     // data[names[i]] = (noteIsStarPower && !starPowerActivated)?m_star_power:scanner->getSelected()->getColours()[names[i]].toUInt();
                 }
-            } else if (starPowerActivated){
+            } else if (starPowerActivated) {
                 data[names[i]] = m_star_power;
             }
         }
@@ -338,14 +338,10 @@ void LEDHandler::tick() {
         inputFile->close();
         inputFile = nullptr;
 #endif
-        disconnect(timer, &QTimer::timeout,  this, &LEDHandler::tick);
+        disconnect(timer, &QTimer::timeout, this, &LEDHandler::tick);
     }
     // if (scanner->selectedPort() && scanner->getSelected()->isReady() && data != lastData) {
     //     setLEDs(data);
     //     lastData = data;
     // }
-
 }
-
-
-

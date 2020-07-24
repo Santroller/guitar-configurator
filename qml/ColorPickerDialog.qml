@@ -30,7 +30,7 @@ Item {
         }
         onCurrentColorChanged: {
             var result = /^#?([a-f\d]{2}[a-f\d]{2}[a-f\d]{2})$/i.exec(currentColor);
-            colorVal = parseInt(result[1],16);
+            colorVal = ledhandler.gammaCorrect(parseInt(result[1],16));
             ledhandler.setColors(colorVal,buttons);
         }
         onAccepted: {

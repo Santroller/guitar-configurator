@@ -233,6 +233,19 @@ out += (`
             std::rotate(b + to, b + from, b + from + 1);
         emit ledsUpdated();
     }
+
+    QMap<QString, uint> getMappings() {
+        QMap<QString, uint> map;
+        PinsCombined_t* combined = reinterpret_cast<PinsCombined_t*>(&m_config.pins);
+        for (uint8_t i = 0; i < pins.size(); i++) {
+            if (i < XBOX_BTN_COUNT) {
+                map[pins[i]] = combined->buttons[i];
+            } else {
+                map[pins[i]] = combined->axis[i-XBOX_BTN_COUNT].pin;
+            }
+        }
+        return map;
+    }
 signals:
 `)
 for (let path of paths) {

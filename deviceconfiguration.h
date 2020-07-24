@@ -2,8 +2,8 @@
 #include <QDebug>
 #include <QMetaEnum>
 #include <QObject>
-#include "ardwiino_defines.h"
 
+#include "ardwiino_defines.h"
 #include "submodules/Ardwiino/src/shared/config/config.h"
 class DeviceConfiguration : public QObject {
     Q_OBJECT
@@ -91,9 +91,9 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(QVariantMap midiNote READ getMidiNote NOTIFY midiNoteUpdated)
     Q_PROPERTY(QVariantMap midiChannel READ getMidiChannel NOTIFY midiChannelUpdated)
 
-public:
+   public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
-public slots:
+   public slots:
     bool isGuitar() {
         return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("guitar");
     }
@@ -610,7 +610,7 @@ public slots:
     }
     QVariantMap getMidiType() const {
         QVariantMap l;
-        for (auto pin: pins) {
+        for (auto pin : pins) {
             l[pin] = m_config.midi.type;
         }
         return l;
@@ -625,7 +625,7 @@ public slots:
     }
     QVariantMap getMidiNote() const {
         QVariantMap l;
-        for (auto pin: pins) {
+        for (auto pin : pins) {
             l[pin] = m_config.midi.note;
         }
         return l;
@@ -640,7 +640,7 @@ public slots:
     }
     QVariantMap getMidiChannel() const {
         QVariantMap l;
-        for (auto pin: pins) {
+        for (auto pin : pins) {
             l[pin] = m_config.midi.channel;
         }
         return l;
@@ -655,14 +655,14 @@ public slots:
     }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
-        auto pin = pins.indexOf(key)+1;
+        auto pin = pins.indexOf(key) + 1;
         for (auto& led : m_config.leds) {
             // Either update the colour of the led if it is already in the map, or set the first unused led.
             if (led.pin == pin || led.pin == 0) {
                 led.pin = pin;
-                led.red = ucolor >> 16 & 0xff;
-                led.green = ucolor >> 8 & 0xff;
-                led.blue = ucolor & 0xff;
+                led.red = (ucolor >> 16) & 0xff;
+                led.green = (ucolor >> 8) & 0xff;
+                led.blue = (ucolor) & 0xff;
                 emit ledsUpdated();
                 return;
             }
@@ -672,10 +672,10 @@ public slots:
         QVariantMap l;
         for (auto led : m_config.leds) {
             if (led.pin == 0) break;
-            l[pins[led.pin-1]] = led.red << 16 | led.green << 8 | led.blue;
+            l[pins[led.pin - 1]] = led.red << 16 | led.green << 8 | led.blue;
         }
-        for (auto pin: pins) {
-            l[pin] = l.value(pin,0);
+        for (auto pin : pins) {
+            l[pin] = l.value(pin, 0);
         }
         return l;
     }
@@ -683,14 +683,14 @@ public slots:
         QVariantList l;
         for (auto led : m_config.leds) {
             if (led.pin == 0) break;
-            l << pins[led.pin-1];
+            l << pins[led.pin - 1];
         }
         return l;
     }
     void clearLED(QString key) {
-        auto pin = pins.indexOf(key)+1;
+        auto pin = pins.indexOf(key) + 1;
         auto a = std::remove_if(std::begin(m_config.leds), std::end(m_config.leds), [pin](Led_t x) { return x.pin == pin; });
-        Led_t empty = {0,0,0};
+        Led_t empty = {0, 0, 0};
         std::fill(a, std::end(m_config.leds), empty);
         std::copy(std::begin(m_config.leds), std::end(m_config.leds), std::begin(m_config.leds));
         emit ledsUpdated();
@@ -705,7 +705,19 @@ public slots:
             std::rotate(b + to, b + from, b + from + 1);
         emit ledsUpdated();
     }
-signals:
+    QMap<QString, uint> getMappings() {
+        QMap<QString, uint> map;
+        PinsCombined_t* combined = reinterpret_cast<PinsCombined_t*>(&m_config.pins);
+        for (uint8_t i = 0; i < pins.size(); i++) {
+            if (i < XBOX_BTN_COUNT) {
+                map[pins[i]] = combined->buttons[i];
+            } else {
+                map[pins[i]] = combined->axis[i-XBOX_BTN_COUNT].pin;
+            }
+        }
+        return map;
+    }
+   signals:
     void mainInputTypeUpdated();
     void mainSubTypeUpdated();
     void mainTiltTypeUpdated();
@@ -780,7 +792,7 @@ signals:
     void midiNoteUpdated();
     void midiChannelUpdated();
 
-private:
+   private:
     Configuration_t m_config;
     const static QStringList pins;
 };

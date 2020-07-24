@@ -123,7 +123,6 @@ private:
  mach_port_t task;
 #endif
 
- void setLEDs(QMap<QString, uint32_t> leds);
 };
 
 #endif // CLONEHEROINFO_H

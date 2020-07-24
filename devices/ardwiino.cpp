@@ -24,7 +24,8 @@ bool Ardwiino::open() {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
-        m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
+        // m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
+        m_configurable = true;
         emit configurationChanged();
         emit configurableChanged();
         emit boardImageChanged();
@@ -36,7 +37,9 @@ bool Ardwiino::open() {
 }
 QByteArray Ardwiino::readData(int id) {
     writeData(id, {});
+    QThread::currentThread()->msleep(100);
     writeData(id, {});
+    QThread::currentThread()->msleep(100);
     QByteArray data(sizeof(Configuration_t) + 1, '\0');
     data[0] = 0;
     hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
@@ -50,7 +53,7 @@ QByteArray Ardwiino::readData(int id) {
 }
 #define PACKET_SIZE 64
 void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
-    QByteArray data(64, '\0');
+    QByteArray data(PACKET_SIZE, '\0');
     data[0] = 0;
     data[1] = cmd;
     for (int i = 0; i < dataToSend.length(); i++) {
@@ -62,23 +65,52 @@ void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
         // TODO: handle errors (Tell the user that we could not communicate with the controller)
         qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
     }
-    QThread::currentThread()->msleep(100);
 }
 // Reserve space for the report id, command and the offset.
-#define PARTIAL_CONFIG_SIZE PACKET_SIZE-3
+#define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
 void Ardwiino::writeConfig() {
     auto config = m_configuration->getConfig();
+    auto configCh = reinterpret_cast<char*>(&config);
     uint offset = 0;
     QByteArray data;
     while (offset < sizeof(Configuration_t)) {
         data.clear();
         data.push_back(offset);
-        data.push_back(QByteArray::fromRawData(reinterpret_cast<char*>(&config) + offset, PARTIAL_CONFIG_SIZE));
+        data.push_back(QByteArray::fromRawData(configCh + offset, PARTIAL_CONFIG_SIZE));
         writeData(COMMAND_WRITE_CONFIG, data);
         offset += PARTIAL_CONFIG_SIZE;
+        QThread::currentThread()->msleep(100);
     }
     writeData(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
+    QThread::currentThread()->msleep(100);
     writeData(COMMAND_REBOOT);
+}
+void Ardwiino::findDigital(QJSValue callback) {
+    m_pinDetectionCallback = callback;
+    QTimer::singleShot(100, [&]() {
+        uint8_t pin = readData(COMMAND_FIND_DIGITAL).data()[0];
+        if (pin == 0xFF) {
+            findDigital(m_pinDetectionCallback);
+        } else {
+            QJSValueList args;
+            args << QJSValue(pin);
+            m_pinDetectionCallback.call(args);
+            qDebug() << pin;
+        }
+    });
+}
+void Ardwiino::findAnalog(QJSValue callback) {
+    m_pinDetectionCallback = callback;
+    QTimer::singleShot(100, [&]() {
+        uint8_t pin = readData(COMMAND_FIND_ANALOG).data()[0];
+        if (pin == 0xFF) {
+            findAnalog(m_pinDetectionCallback);
+        } else {
+            QJSValueList args;
+            args << QJSValue(pin);
+            m_pinDetectionCallback.call(args);
+        }
+    });
 }
 QString Ardwiino::getDescription() {
     if (!isReady()) {
@@ -93,7 +125,8 @@ QString Ardwiino::getDescription() {
         }
         desc += " - " + extName;
     } else if (m_configuration->getMainInputType() == ArdwiinoDefines::PS2) {
-        uint8_t ext = *readData(COMMAND_GET_EXTENSION).data();
+        uint8_t ext = readData(COMMAND_GET_EXTENSION).data()[0];
+        qDebug() << ext;
         auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)ext);
         desc += " - " + extName;
     } else {

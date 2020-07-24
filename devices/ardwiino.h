@@ -40,8 +40,14 @@ class Ardwiino : public Device {
     bool isOutdated() const {
         return m_isOutdated;
     }
+    DeviceConfiguration* getConfig() const {
+        return m_configuration;
+    }
    public slots:
     void writeConfig();
+    void findDigital(QJSValue callback);
+    void findAnalog(QJSValue callback);
+    void writeData(int cmd, QByteArray data = QByteArray());
    signals:
     void readyChanged();
     void ledsChanged();
@@ -56,7 +62,6 @@ class Ardwiino : public Device {
     hid_device* m_hiddev;
     QByteArray readData(int id);
     QByteArray readConfig();
-    void writeData(int cmd, QByteArray data = QByteArray());
     QString m_serialNum;
     DeviceConfiguration* m_configuration;
     bool m_isOutdated;
