@@ -15,6 +15,7 @@
 #include <QFile>
 #include <QSettings>
 #include <QSet>
+#include <QMap>
 #include "portscanner.h"
 
 #if defined Q_OS_MAC
@@ -68,7 +69,7 @@ public slots:
     int gammaCorrect(int color);
     void startGame();
     void setColor(int rgb, QString button);
-    void setColors(int rgb, QStringList button);
+    void setColors(QMap<QString, uint32_t> colours);
 private slots:
  void tick();
  void setGameFolder(QString string);

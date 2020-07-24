@@ -104,15 +104,18 @@ int LEDHandler::gammaCorrect(int color) {
     return r << 16 | g << 8 | b;
 }
 void LEDHandler::setColor(int color, QString button) {
-    setColors(color, QStringList(button));
+    auto m = QMap<QString, uint32_t>();
+    m[button] = color;
+    setColors(m);
 }
-void LEDHandler::setColors(int color, QStringList buttons) {
+void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
     QByteArray data;
     Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
     auto mappings = dev->getConfig()->getMappings();
     auto leds = dev->getConfig()->getLEDs();
     for (auto led : leds) {
         if (buttons.contains(led.toString())) {
+            auto color = buttons[led.toString()];
             uint8_t r = color >> 16 & 0xff;
             uint8_t g = color >> 8 & 0xff;
             uint8_t b = color & 0xff;
@@ -314,6 +317,7 @@ void LEDHandler::tick() {
     }
     QMap<QString, uint32_t> data;
     QStringList names = {"a", "b", "y", "x", "LB"};
+    Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
     for (int i = 0; i < 5; i++) {
         if (addr > 0) {
             if (countdown > 0 && shownNote & 1 << 6) {
@@ -324,7 +328,7 @@ void LEDHandler::tick() {
                     countdown = 0;
                 }
                 if (shownNote & 1 << i) {
-                    // data[names[i]] = (noteIsStarPower && !starPowerActivated)?m_star_power:scanner->getSelected()->getColours()[names[i]].toUInt();
+                    data[names[i]] = (noteIsStarPower && !starPowerActivated) ? m_star_power : dev->getConfig()->getLEDColours()[names[i]].toUInt();
                 }
             } else if (starPowerActivated) {
                 data[names[i]] = m_star_power;
@@ -340,8 +344,6 @@ void LEDHandler::tick() {
 #endif
         disconnect(timer, &QTimer::timeout, this, &LEDHandler::tick);
     }
-    // if (scanner->selectedPort() && scanner->getSelected()->isReady() && data != lastData) {
-    //     setLEDs(data);
-    //     lastData = data;
-    // }
+    setColors(data);
+    lastData = data;
 }
