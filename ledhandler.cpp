@@ -108,6 +108,13 @@ void LEDHandler::setColor(int color, QString button) {
     m[button] = color;
     setColors(m);
 }
+void LEDHandler::setColors(int color, QStringList buttons) {
+    auto m = QMap<QString, uint32_t>();
+    for (auto button : buttons) {
+        m[button] = color;
+    }
+    setColors(m);
+}
 void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
     QByteArray data;
     Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
@@ -179,6 +186,7 @@ void LEDHandler::findVersion() {
 }
 
 void LEDHandler::startGame() {
+    qDebug() << "starting";
     if (process.pid() != 0) {
         return;
     }
@@ -316,7 +324,7 @@ void LEDHandler::tick() {
         countdown = 2;
     }
     QMap<QString, uint32_t> data;
-    QStringList names = {"a", "b", "y", "x", "LB"};
+    QStringList names = {"A", "B", "Y", "X", "LB"};
     Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
     for (int i = 0; i < 5; i++) {
         if (addr > 0) {
@@ -344,6 +352,8 @@ void LEDHandler::tick() {
 #endif
         disconnect(timer, &QTimer::timeout, this, &LEDHandler::tick);
     }
-    setColors(data);
+    if (lastData.values() != data.values()) {
+        setColors(data);
+    }
     lastData = data;
 }

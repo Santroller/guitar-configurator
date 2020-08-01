@@ -68,6 +68,7 @@ signals:
 public slots:
     int gammaCorrect(int color);
     void startGame();
+    void setColors(int color, QStringList buttons);
     void setColor(int rgb, QString button);
     void setColors(QMap<QString, uint32_t> colours);
 private slots:
