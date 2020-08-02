@@ -24,8 +24,8 @@ bool Ardwiino::open() {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
-        // m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
-        m_configurable = true;
+        m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
+        // m_configurable = true;
         emit configurationChanged();
         emit configurableChanged();
         emit boardImageChanged();
