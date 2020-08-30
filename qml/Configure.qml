@@ -375,6 +375,7 @@ ColumnLayout {
             }
 
             Label {
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 text: qsTr("Tilt Sensor Sensitivity: ")
                 fontSizeMode: Text.FixedSize
                 verticalAlignment: Text.AlignVCenter
@@ -385,6 +386,7 @@ ColumnLayout {
             }
 
             Slider {
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 id: sliderTilt
                 Layout.fillWidth: true
                 to: 32767
@@ -402,11 +404,13 @@ ColumnLayout {
             }
             Label {
                 text: "Pin Binding"
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.MPU_6050 && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 font.pointSize: 15
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
             }
             RowLayout {
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.MPU_6050 && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 PinBinding {
                     id: pinBinding
                     currentPin: "RY"
@@ -469,6 +473,7 @@ ColumnLayout {
                 }
             }
             Label {
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 text: "Invert Tilt Axis"
                 font.pointSize: 15
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -477,7 +482,7 @@ ColumnLayout {
             Switch {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: enabled
+                visible: enabled && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT
                 checked: !!scanner.selected.config[`pins${"RY"}Inverted`]
                 onCheckedChanged: scanner.selected.config[`pins${"RY"}Inverted`] = checked
             }

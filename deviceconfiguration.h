@@ -2,8 +2,8 @@
 #include <QDebug>
 #include <QMetaEnum>
 #include <QObject>
-
 #include "ardwiino_defines.h"
+
 #include "submodules/Ardwiino/src/shared/config/config.h"
 class DeviceConfiguration : public QObject {
     Q_OBJECT
@@ -58,6 +58,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool pinsRYInverted READ getPinsRYInverted WRITE setPinsRYInverted NOTIFY pinsRYInvertedUpdated)
     Q_PROPERTY(int axisTriggerThreshold READ getAxisTriggerThreshold WRITE setAxisTriggerThreshold NOTIFY axisTriggerThresholdUpdated)
     Q_PROPERTY(int axisJoyThreshold READ getAxisJoyThreshold WRITE setAxisJoyThreshold NOTIFY axisJoyThresholdUpdated)
+    Q_PROPERTY(int axisDrumThreshold READ getAxisDrumThreshold WRITE setAxisDrumThreshold NOTIFY axisDrumThresholdUpdated)
     Q_PROPERTY(ArdwiinoDefines::GyroOrientation axisMpu6050Orientation READ getAxisMpu6050Orientation WRITE setAxisMpu6050Orientation NOTIFY axisMpu6050OrientationUpdated)
     Q_PROPERTY(int axisTiltSensitivity READ getAxisTiltSensitivity WRITE setAxisTiltSensitivity NOTIFY axisTiltSensitivityUpdated)
     Q_PROPERTY(int keysUp READ getKeysUp WRITE setKeysUp NOTIFY keysUpUpdated)
@@ -86,14 +87,13 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(int keysRXPos READ getKeysRXPos WRITE setKeysRXPos NOTIFY keysRXPosUpdated)
     Q_PROPERTY(int keysRYNeg READ getKeysRYNeg WRITE setKeysRYNeg NOTIFY keysRYNegUpdated)
     Q_PROPERTY(int keysRYPos READ getKeysRYPos WRITE setKeysRYPos NOTIFY keysRYPosUpdated)
-    Q_PROPERTY(int drumThreshold READ getDrumThreshold WRITE setDrumThreshold NOTIFY drumThresholdUpdated)
     Q_PROPERTY(QVariantMap midiType READ getMidiType NOTIFY midiTypeUpdated)
     Q_PROPERTY(QVariantMap midiNote READ getMidiNote NOTIFY midiNoteUpdated)
     Q_PROPERTY(QVariantMap midiChannel READ getMidiChannel NOTIFY midiChannelUpdated)
 
-   public:
+public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
-   public slots:
+public slots:
     bool isGuitar() {
         return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("guitar");
     }
@@ -405,6 +405,13 @@ class DeviceConfiguration : public QObject {
         m_config.axis.joyThreshold = (uint8_t)val;
         emit axisJoyThresholdUpdated();
     }
+    int getAxisDrumThreshold() const {
+        return (uint8_t)m_config.axis.drumThreshold;
+    }
+    void setAxisDrumThreshold(int val) {
+        m_config.axis.drumThreshold = (uint8_t)val;
+        emit axisDrumThresholdUpdated();
+    }
     ArdwiinoDefines::GyroOrientation getAxisMpu6050Orientation() const {
         return (ArdwiinoDefines::GyroOrientation)m_config.axis.mpu6050Orientation;
     }
@@ -601,16 +608,9 @@ class DeviceConfiguration : public QObject {
         m_config.keys.r_y.pos = (uint8_t)val;
         emit keysRYPosUpdated();
     }
-    int getDrumThreshold() const {
-        return (uint8_t)m_config.drumThreshold;
-    }
-    void setDrumThreshold(int val) {
-        m_config.drumThreshold = (uint8_t)val;
-        emit drumThresholdUpdated();
-    }
     QVariantMap getMidiType() const {
         QVariantMap l;
-        for (auto pin : pins) {
+        for (auto pin: pins) {
             l[pin] = m_config.midi.type;
         }
         return l;
@@ -625,7 +625,7 @@ class DeviceConfiguration : public QObject {
     }
     QVariantMap getMidiNote() const {
         QVariantMap l;
-        for (auto pin : pins) {
+        for (auto pin: pins) {
             l[pin] = m_config.midi.note;
         }
         return l;
@@ -640,7 +640,7 @@ class DeviceConfiguration : public QObject {
     }
     QVariantMap getMidiChannel() const {
         QVariantMap l;
-        for (auto pin : pins) {
+        for (auto pin: pins) {
             l[pin] = m_config.midi.channel;
         }
         return l;
@@ -655,14 +655,14 @@ class DeviceConfiguration : public QObject {
     }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
-        auto pin = pins.indexOf(key) + 1;
+        auto pin = pins.indexOf(key)+1;
         for (auto& led : m_config.leds) {
             // Either update the colour of the led if it is already in the map, or set the first unused led.
             if (led.pin == pin || led.pin == 0) {
                 led.pin = pin;
-                led.red = (ucolor >> 16) & 0xff;
-                led.green = (ucolor >> 8) & 0xff;
-                led.blue = (ucolor) & 0xff;
+                led.red = ucolor >> 16 & 0xff;
+                led.green = ucolor >> 8 & 0xff;
+                led.blue = ucolor & 0xff;
                 emit ledsUpdated();
                 return;
             }
@@ -672,10 +672,10 @@ class DeviceConfiguration : public QObject {
         QVariantMap l;
         for (auto led : m_config.leds) {
             if (led.pin == 0) break;
-            l[pins[led.pin - 1]] = led.red << 16 | led.green << 8 | led.blue;
+            l[pins[led.pin-1]] = led.red << 16 | led.green << 8 | led.blue;
         }
-        for (auto pin : pins) {
-            l[pin] = l.value(pin, 0);
+        for (auto pin: pins) {
+            l[pin] = l.value(pin,0);
         }
         return l;
     }
@@ -683,14 +683,14 @@ class DeviceConfiguration : public QObject {
         QVariantList l;
         for (auto led : m_config.leds) {
             if (led.pin == 0) break;
-            l << pins[led.pin - 1];
+            l << pins[led.pin-1];
         }
         return l;
     }
     void clearLED(QString key) {
-        auto pin = pins.indexOf(key) + 1;
+        auto pin = pins.indexOf(key)+1;
         auto a = std::remove_if(std::begin(m_config.leds), std::end(m_config.leds), [pin](Led_t x) { return x.pin == pin; });
-        Led_t empty = {0, 0, 0};
+        Led_t empty = {0,0,0};
         std::fill(a, std::end(m_config.leds), empty);
         std::copy(std::begin(m_config.leds), std::end(m_config.leds), std::begin(m_config.leds));
         emit ledsUpdated();
@@ -705,6 +705,7 @@ class DeviceConfiguration : public QObject {
             std::rotate(b + to, b + from, b + from + 1);
         emit ledsUpdated();
     }
+
     QMap<QString, uint> getMappings() {
         QMap<QString, uint> map;
         PinsCombined_t* combined = reinterpret_cast<PinsCombined_t*>(&m_config.pins);
@@ -717,7 +718,7 @@ class DeviceConfiguration : public QObject {
         }
         return map;
     }
-   signals:
+signals:
     void mainInputTypeUpdated();
     void mainSubTypeUpdated();
     void mainTiltTypeUpdated();
@@ -758,6 +759,7 @@ class DeviceConfiguration : public QObject {
     void pinsRYInvertedUpdated();
     void axisTriggerThresholdUpdated();
     void axisJoyThresholdUpdated();
+    void axisDrumThresholdUpdated();
     void axisMpu6050OrientationUpdated();
     void axisTiltSensitivityUpdated();
     void keysUpUpdated();
@@ -786,13 +788,12 @@ class DeviceConfiguration : public QObject {
     void keysRXPosUpdated();
     void keysRYNegUpdated();
     void keysRYPosUpdated();
-    void drumThresholdUpdated();
     void ledsUpdated();
     void midiTypeUpdated();
     void midiNoteUpdated();
     void midiChannelUpdated();
 
-   private:
+private:
     Configuration_t m_config;
     const static QStringList pins;
 };
