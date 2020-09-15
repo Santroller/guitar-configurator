@@ -84,6 +84,7 @@ void lookupUSBInfo(bool isHID, wchar_t* dbcc_name, HWND hwnd, UsbDevice_t* devic
                 device->pid = match.captured(2).toInt(NULL,16);
                 device->port = port_nr;
                 CM_Get_Device_IDW(infoData.DevInst, szDeviceInstanceID, MAX_DEVICE_ID_LEN, 0);
+                qDebug() << QString::fromWCharArray(szDeviceInstanceID);
                 device->serial = QString::fromWCharArray(szDeviceInstanceID).split("\\")[2];
                 while(infoData.DevInst) {
                     CM_Get_Parent(&infoData.DevInst,infoData.DevInst,NULL);

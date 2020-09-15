@@ -9,17 +9,26 @@
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_configurable(false) {
 }
 bool Ardwiino::open() {
-#ifdef Q_OS_WIN32
-    //For whatever reason the interface number is only 0 for the gamepad
-    if (m_usbId->interface_number != 0) return false;
-#endif
-#ifdef Q_OS_MACOS
-    //The gamepad usage specifically contains our feature requests, so only that one should be opened!
-    if (m_usbId->usage != USAGE_GAMEPAD) return false;
-#endif
-    wchar_t * array = new wchar_t[m_deviceID.serial.length()+1];
-    m_deviceID.serial.toWCharArray(array);
-    m_hiddev = hid_open(m_deviceID.vid,m_deviceID.pid,array);
+    struct hid_device_info *devs, *cur_dev;
+    devs = hid_enumerate(m_deviceID.vid, m_deviceID.pid);
+    cur_dev = devs;
+    while (cur_dev) {
+        if (QString::fromWCharArray(cur_dev->serial_number) == m_deviceID.serial) {
+    #ifdef Q_OS_WIN32
+        //For whatever reason the interface number is only 0 for the gamepad
+        if (cur_dev->interface_number == 0) break;
+    #endif
+    #ifdef Q_OS_MACOS
+        //The gamepad usage specifically contains our feature requests, so only that one should be opened!
+        if (cur_dev->usage != USAGE_GAMEPAD) break;
+    #endif
+        }
+        cur_dev = cur_dev->next;
+    }
+    if (cur_dev) {
+        m_hiddev = hid_open_path(cur_dev->path);
+    }
+    hid_free_enumeration(devs);
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
