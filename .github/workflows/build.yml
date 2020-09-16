@@ -202,3 +202,41 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: windows 
+
+
+  pre-release:
+    name: Release Preview Build
+    runs-on: ubuntu-latest
+    needs: [build-linux, build-mac, build-windows]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: windows
+      - name: Download macOS Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: mac  
+      - name: Download Linux Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: linux  
+      - name: Append version to release
+        run: |
+          mv ./windows/*.exe ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
+          mv ./mac/*.dmg ./mac/guitar-configurator-mac-${GITHUB_REF##*/}.dmg
+          mv ./linux/*.AppImage ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        prerelease: true
+        with:
+          files: |
+            ./windows/*.exe
+            ./mac/*.dmg
+            ./linux/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
