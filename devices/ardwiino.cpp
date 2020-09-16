@@ -14,19 +14,21 @@ bool Ardwiino::open() {
     cur_dev = devs;
     while (cur_dev) {
         if (QString::fromWCharArray(cur_dev->serial_number) == m_deviceID.serial) {
-    #ifdef Q_OS_WIN32
-        //For whatever reason the interface number is only 0 for the gamepad
-        if (cur_dev->interface_number == 0) break;
-    #endif
-    #ifdef Q_OS_MACOS
-        //The gamepad usage specifically contains our feature requests, so only that one should be opened!
-        if (cur_dev->usage != USAGE_GAMEPAD) break;
-    #endif
+#ifdef Q_OS_WIN32
+            //For whatever reason the interface number is only 0 for the gamepad
+            if (cur_dev->interface_number == 0) break;
+#elif Q_OS_MACOS
+            //The gamepad usage specifically contains our feature requests, so only that one should be opened!
+            if (cur_dev->usage != USAGE_GAMEPAD) break;
+#else
+            break;
+#endif
         }
         cur_dev = cur_dev->next;
     }
     if (cur_dev) {
         m_hiddev = hid_open_path(cur_dev->path);
+        m_deviceID.releaseNumber = cur_dev->release_number;
     }
     hid_free_enumeration(devs);
     if (m_hiddev) {
