@@ -5,9 +5,7 @@
 
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
-Ardwiino::Ardwiino(struct hid_device_info* usbId, UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbId(usbId), m_configurable(false) {
-    m_serialNum = QString::fromWCharArray(m_usbId->serial_number);
-}
+
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_configurable(false) {
 }
 bool Ardwiino::open() {
@@ -19,12 +17,14 @@ bool Ardwiino::open() {
     //The gamepad usage specifically contains our feature requests, so only that one should be opened!
     if (m_usbId->usage != USAGE_GAMEPAD) return false;
 #endif
-    m_hiddev = hid_open_path(m_usbId->path);
+    wchar_t * array = new wchar_t[m_deviceID.serial.length()+1];
+    m_deviceID.serial.toWCharArray(array);
+    m_hiddev = hid_open(m_deviceID.vid,m_deviceID.pid,array);
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
         m_configuration = new DeviceConfiguration(*(Configuration_t*)readData(COMMAND_READ_CONFIG).data());
-        m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_usbId->release_number);
+        m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
         // m_configurable = true;
         emit configurationChanged();
         emit configurableChanged();

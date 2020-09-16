@@ -23,7 +23,7 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
         QTimer::singleShot(100, [event, sc, dev]() {
             struct libusb_device_descriptor desc;
             (void)libusb_get_device_descriptor(dev, &desc);
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), desc.idVendor, desc.idProduct, NULL, ""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), desc.idVendor, desc.idProduct, desc.bcdDevice, NULL, ""};
             if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
                 getDevSerial(dev, desc.iSerialNumber, &devt);
             }
@@ -82,11 +82,12 @@ UnixHotplug::UnixHotplug(PortScanner *scanner, QObject *parent) : QObject(parent
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, NULL, ""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, 0,  NULL, ""};
 
             (void)libusb_get_device_descriptor(dev, &desc);
             devt.vid = desc.idVendor;
             devt.pid = desc.idProduct;
+            devt.releaseNumber = desc.bcdDevice;
             if (ArdwiinoLookup::isArdwiino(devt)) {
                 getDevSerial(dev, desc.iSerialNumber, &devt);
             }

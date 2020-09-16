@@ -16,6 +16,7 @@ typedef struct UsbDevice_t {
     int port;
     int vid;
     int pid;
+    short releaseNumber;
     QString hidPath;
     QString serial;
     bool operator==(const UsbDevice_t& other) {

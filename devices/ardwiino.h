@@ -18,7 +18,6 @@ class Ardwiino : public Device {
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(DeviceConfiguration* config MEMBER m_configuration NOTIFY configurationChanged)
    public:
-    explicit Ardwiino(struct hid_device_info *usbDeviceId, UsbDevice_t devt, QObject* parent = nullptr);
     explicit Ardwiino(UsbDevice_t devt, QObject* parent = nullptr);
     QString getDescription();
     bool isReady();
@@ -58,17 +57,15 @@ class Ardwiino : public Device {
     QString m_processor;
 
    private:
-    struct hid_device_info *m_usbId;
     hid_device* m_hiddev;
     QByteArray readData(int id);
     QByteArray readConfig();
-    QString m_serialNum;
     DeviceConfiguration* m_configuration;
     bool m_isOutdated;
     bool m_hasPinDetectionCallback;
     bool m_configurable;
     QJSValue m_pinDetectionCallback;
     inline virtual bool isEqual(const Device& other) const {
-        return true;
+         return m_deviceID.serial == other.getUSBDevice().serial;
     }
 };
