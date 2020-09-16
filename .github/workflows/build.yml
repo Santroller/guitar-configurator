@@ -237,7 +237,7 @@ jobs:
         with:
           upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
           release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: ./windows/*.exe # path to archive to upload
+          asset_path: ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe # path to archive to upload
           asset_name: windows.exe # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/x-executable # required by GitHub API
           max_releases: 1
@@ -248,7 +248,7 @@ jobs:
         with:
           upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
           release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: ./mac/*.dmg # path to archive to upload
+          asset_path: ./mac/guitar-configurator-mac-${GITHUB_REF##*/}.dmg # path to archive to upload
           asset_name: mac.dmg # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/x-executable # required by GitHub API
           max_releases: 1
@@ -259,7 +259,7 @@ jobs:
         with:
           upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
           release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: /linux/*.AppImage # path to archive to upload
+          asset_path: ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage # path to archive to upload
           asset_name: linux.AppImage # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: application/x-executable # required by GitHub API
           max_releases: 1
