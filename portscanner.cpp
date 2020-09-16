@@ -72,7 +72,7 @@ void PortScanner::add(UsbDevice_t device) {
         devs = hid_enumerate(device.vid, device.pid);
         cur_dev = devs;
         while (cur_dev) {
-            if (QString::fromWCharArray(cur_dev->serial_number) == device.serial || QString::fromUtf8(cur_dev->path).toLower() == device.hidPath.toLower()) {
+            if (QString::fromWCharArray(cur_dev->serial_number) == device.serial) {
                 Ardwiino* adev = new Ardwiino(cur_dev, device);
                 if (add(adev)) {
                     m_programmer->deviceAdded(adev);
