@@ -17,7 +17,7 @@ bool Ardwiino::open() {
 #ifdef Q_OS_WIN32
             //For whatever reason the interface number is only 0 for the gamepad
             if (cur_dev->interface_number == 0) break;
-#elif Q_OS_MACOS
+#elif defined(Q_OS_MACOS)
             //The gamepad usage specifically contains our feature requests, so only that one should be opened!
             if (cur_dev->usage != USAGE_GAMEPAD) break;
 #else
