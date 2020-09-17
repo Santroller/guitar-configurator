@@ -9,6 +9,7 @@
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_configurable(false) {
 }
 bool Ardwiino::open() {
+    if (m_deviceID.serial.isEmpty()) return false;
     struct hid_device_info *devs, *cur_dev;
     devs = hid_enumerate(m_deviceID.vid, m_deviceID.pid);
     cur_dev = devs;
