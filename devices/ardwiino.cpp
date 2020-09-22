@@ -10,6 +10,14 @@ Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_
 }
 bool Ardwiino::open() {
     if (m_deviceID.serial.isEmpty()) return false;
+#ifdef Q_OS_LINUX
+// On linux, there is a single device that contains all interfaces.
+    wchar_t ser[m_deviceID.serial.size()+1];
+    m_deviceID.serial.toWCharArray(ser);
+    ser[m_deviceID.serial.size()] = '\0';
+    m_hiddev = hid_open(m_deviceID.vid, m_deviceID.pid, ser);
+#else 
+// On mac and windows however each hid interface gets its own device, so we need to select the correct one.
     struct hid_device_info *devs, *cur_dev;
     devs = hid_enumerate(m_deviceID.vid, m_deviceID.pid);
     cur_dev = devs;
@@ -20,9 +28,7 @@ bool Ardwiino::open() {
             if (cur_dev->interface_number == 0) break;
 #elif defined(Q_OS_MACOS)
             //The gamepad usage specifically contains our feature requests, so only that one should be opened!
-            if (cur_dev->usage != USAGE_GAMEPAD) break;
-#else
-            break;
+            if (cur_dev->usage == USAGE_GAMEPAD) break;
 #endif
         }
         cur_dev = cur_dev->next;
@@ -32,6 +38,7 @@ bool Ardwiino::open() {
         m_deviceID.releaseNumber = cur_dev->release_number;
     }
     hid_free_enumeration(devs);
+#endif
     if (m_hiddev) {
         m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(readData(COMMAND_GET_BOARD)), false);
         m_board.cpuFrequency = QString::fromUtf8(readData(COMMAND_GET_CPU_FREQ)).trimmed().replace("UL", "").toInt();
@@ -96,6 +103,7 @@ void Ardwiino::writeConfig() {
     writeData(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
     QThread::currentThread()->msleep(100);
     writeData(COMMAND_REBOOT);
+    m_hiddev = NULL;
 }
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;

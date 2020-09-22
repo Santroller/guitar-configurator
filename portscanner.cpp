@@ -36,7 +36,7 @@ bool PortScanner::add(Device* device) {
         return false;
     }
     if (device->open()) {
-        if (!m_hasSelected && m_selected) {
+        if (m_selected && (!m_hasSelected || !m_selected->isReady())) {
             m_hasSelected = true;
             m_selected = device;
             selectedChanged();
@@ -56,7 +56,7 @@ bool PortScanner::remove(Device* device) {
     }
     auto foundEle = ((Device*)*found);
     if (m_selected == foundEle) {
-        m_hasSelected = false;
+        m_hasSelected = !m_selected->isReady();
         selectedChanged();
         hasSelectedChanged();
     }
@@ -68,19 +68,10 @@ bool PortScanner::remove(Device* device) {
 void PortScanner::add(UsbDevice_t device) {
     DfuArduino* dev = NULL;
     if (ArdwiinoLookup::isArdwiino(device)) {
-        // struct hid_device_info *devs, *cur_dev;
-        // devs = hid_enumerate(device.vid, device.pid);
-        // cur_dev = devs;
-        // while (cur_dev) {
-            // if (QString::fromWCharArray(cur_dev->serial_number) == device.serial) {
-                Ardwiino* adev = new Ardwiino(device);
-                if (add(adev)) {
-                    m_programmer->deviceAdded(adev);
-                }
-            // }
-            // cur_dev = cur_dev->next;
-        // }
-        // hid_free_enumeration(devs);
+        Ardwiino* adev = new Ardwiino(device);
+        if (add(adev)) {
+            m_programmer->deviceAdded(adev);
+        }
     } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
         dev = new DfuArduino("at90usb82", device);
     } else if (device.vid == VID_16U2 && device.pid == PID_16U2) {

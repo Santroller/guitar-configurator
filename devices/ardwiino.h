@@ -57,15 +57,15 @@ class Ardwiino : public Device {
     QString m_processor;
 
    private:
-    hid_device* m_hiddev;
     QByteArray readData(int id);
     QByteArray readConfig();
+    hid_device* m_hiddev;
     DeviceConfiguration* m_configuration;
     bool m_isOutdated;
     bool m_hasPinDetectionCallback;
     bool m_configurable;
     QJSValue m_pinDetectionCallback;
     inline virtual bool isEqual(const Device& other) const {
-         return m_deviceID.serial == other.getUSBDevice().serial;
+         return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }
 };
