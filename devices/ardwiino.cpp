@@ -6,7 +6,7 @@
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #define USAGE_GAMEPAD 0x05
 
-Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_configurable(false) {
+Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_hiddev(nullptr), m_configurable(false) {
 }
 bool Ardwiino::open() {
     if (m_deviceID.serial.isEmpty()) return false;
