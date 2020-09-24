@@ -1,8 +1,10 @@
 #include "unixhotplug.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <QThread>
+
 #include <QFile>
+#include <QThread>
 #include <QTimer>
 static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
     libusb_device_handle* handle;
@@ -33,17 +35,14 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
     });
     return 0;
 }
-UnixHotplug::UnixHotplug(PortScanner *scanner, QObject *parent) : QObject(parent), m_hasHotplug(false), scanner(scanner)
-{
+UnixHotplug::UnixHotplug(PortScanner* scanner, QObject* parent) : QObject(parent), m_hasHotplug(false), scanner(scanner) {
     watcher = new QFileSystemWatcher(this);
     watcher->addPath("/dev");
     // setup signal and slot
     connect(watcher, &QFileSystemWatcher::directoryChanged, this, &UnixHotplug::deviceChanged);
     // // msec
     // timer->start(10);
-    for (const auto &a : QSerialPortInfo::availablePorts())
-    {
-
+    for (const auto& a : QSerialPortInfo::availablePorts()) {
 #if defined Q_OS_MAC
         if (a.portName().startsWith("cu"))
             continue;
@@ -83,7 +82,7 @@ UnixHotplug::UnixHotplug(PortScanner *scanner, QObject *parent) : QObject(parent
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, 0,  NULL, ""};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, 0, NULL, ""};
 
             (void)libusb_get_device_descriptor(dev, &desc);
             devt.vid = desc.idVendor;
@@ -110,7 +109,7 @@ int UnixHotplug::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) 
     QTimer::singleShot(100, [event, this, devt, serial]() {
         if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
             scanner->add(devt);
-            
+
         } else if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT) {
             scanner->remove(devt);
         }
@@ -118,26 +117,21 @@ int UnixHotplug::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) 
 
     return 0;
 }
-auto comp(const QSerialPortInfo &a, const QSerialPortInfo &b) -> bool
-{
+auto comp(const QSerialPortInfo& a, const QSerialPortInfo& b) -> bool {
     return a.portName() < b.portName();
 }
-void UnixHotplug::deviceChanged(const QString &path) {
+void UnixHotplug::deviceChanged(const QString& path) {
     auto newSp = QSerialPortInfo::availablePorts();
     std::vector<QSerialPortInfo> diff;
     std::sort(m_port_list.begin(), m_port_list.end(), comp);
     std::sort(newSp.begin(), newSp.end(), comp);
     //Ports in new list that aren't in old (connected ports)
     std::set_difference(newSp.begin(), newSp.end(), m_port_list.begin(), m_port_list.end(), std::inserter(diff, diff.begin()), comp);
-    for (const auto &p : diff)
-    {
-        if (p.vendorIdentifier() == 0)
-        {
+    for (const auto& p : diff) {
+        if (p.vendorIdentifier() == 0) {
             //Skip ports that have not fully loaded yet.
-            newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](const QSerialPortInfo &object) { return object.systemLocation() == p.systemLocation(); }), newSp.end());
-        }
-        else
-        {
+            newSp.erase(std::remove_if(newSp.begin(), newSp.end(), [p](const QSerialPortInfo& object) { return object.systemLocation() == p.systemLocation(); }), newSp.end());
+        } else {
 #if defined Q_OS_MAC
             if (p.portName().startsWith("cu"))
                 continue;
@@ -148,8 +142,7 @@ void UnixHotplug::deviceChanged(const QString &path) {
     diff.clear();
     //Ports in old list that aren't in new (disconnected ports)
     std::set_difference(m_port_list.begin(), m_port_list.end(), newSp.begin(), newSp.end(), std::inserter(diff, diff.begin()), comp);
-    for (const auto &p : diff)
-    {
+    for (const auto& p : diff) {
         scanner->serialDeviceUnplugged(p);
     }
     m_port_list = newSp;
