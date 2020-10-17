@@ -12,6 +12,12 @@
 #include "ledhandler.h"
 #ifdef Q_OS_WIN
 #include "hotplug/winhotplug.h"
+
+#ifdef Q_OS_MACOS
+#include <libusb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
 // Libusb needs this as the static libs from the libusb site arent compiled with a new enough version of vs
 FILE iob[] = { *stdin, *stdout, *stderr };
 extern "C" {

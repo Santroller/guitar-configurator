@@ -18,6 +18,8 @@
 #define DEFINE_GUID(name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
     static const GUID name = { l,w1,w2,{ b1,b2,b3,b4,b5,b6,b7,b8 } }
 DEFINE_GUID( GUID_DEVINTERFACE_HID, 0x4D1E55B2L, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
+DEFINE_GUID(GUID_DEVINTERFACE_ARDWIINO,
+    0xdf59037d,0x7c92,0x4155,0xac,0x12,0x7d,0x70,0x0a,0x31,0x3d,0x78);
 #include <Usbiodef.h>
 #include <Usbioctl.h>
 #include <QRegularExpression>
@@ -151,17 +153,13 @@ WinHotplug::WinHotplug(PortScanner* scanner):scanner(scanner) {
             break;
         }
         (_index)++;
-
-        if (SetupDiEnumDeviceInterfaces(handle, &infoData, &GUID_DEVINTERFACE_HID, 0, &data) || SetupDiEnumDeviceInterfaces(handle, &infoData, &GUID_DEVINTERFACE_USB_DEVICE, 0, &data)) {
+        if (SetupDiEnumDeviceInterfaces(handle, &infoData, &GUID_DEVINTERFACE_ARDWIINO, 0, &data) || SetupDiEnumDeviceInterfaces(handle, &infoData, &GUID_DEVINTERFACE_USB_DEVICE, 0, &data)) {
             if (!SetupDiGetDeviceInterfaceDetailA(handle, &data, NULL, 0, &size, NULL)) {
                 // The dummy call should fail with ERROR_INSUFFICIENT_BUFFER
                 if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
                     qDebug() << "expected insuff";
                     continue;
                 }
-            } else {
-
-                qDebug() << "expected insuff";
             }
             size *= sizeof(wchar_t);
             PSP_DEVICE_INTERFACE_DETAIL_DATA_W dev_interface_details = (PSP_DEVICE_INTERFACE_DETAIL_DATA_W)malloc(size);
@@ -173,7 +171,7 @@ WinHotplug::WinHotplug(PortScanner* scanner):scanner(scanner) {
             }
             QString path = QString::fromWCharArray(dev_interface_details->DevicePath);
             UsbDevice_t dev = {};
-            lookupUSBInfo(data.InterfaceClassGuid == GUID_DEVINTERFACE_HID, dev_interface_details->DevicePath, NULL, &dev);
+            lookupUSBInfo(data.InterfaceClassGuid == GUID_DEVINTERFACE_ARDWIINO, dev_interface_details->DevicePath, NULL, &dev);
             free(dev_interface_details);
             SetupDiDeleteDeviceInterfaceData(handle, &data);
             scanner->add(dev);
