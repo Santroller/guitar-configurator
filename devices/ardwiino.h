@@ -8,7 +8,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <hidapi.h>
-#include "submodules/Ardwiino/src/shared/config/config.h"
+#include "submodules/Ardwiino/src/shared/output/serial_commands.h"
 
 #include "device.h"
 #include "ardwiinolookup.h"
@@ -57,7 +57,7 @@ class Ardwiino : public Device {
     QString m_processor;
 
    private:
-    QByteArray readData(int id);
+    data_t readData();
     QByteArray readConfig();
     hid_device* m_hiddev;
     DeviceConfiguration* m_configuration;
@@ -65,6 +65,7 @@ class Ardwiino : public Device {
     bool m_hasPinDetectionCallback;
     bool m_configurable;
     QJSValue m_pinDetectionCallback;
+    uint16_t m_extension;
     inline virtual bool isEqual(const Device& other) const {
          return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }

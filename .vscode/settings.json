@@ -76,7 +76,8 @@
         "qfilesystemwatcher": "cpp",
         "qfile": "cpp",
         "qtimer": "cpp",
-        "qlist": "cpp"
+        "qlist": "cpp",
+        "unordered_set": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
