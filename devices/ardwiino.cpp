@@ -11,11 +11,7 @@ bool Ardwiino::open() {
     qDebug() << m_usbDevice.read(0);
     auto d = m_usbDevice.read(0);
     data_t data = *((data_t*)d.data());
-    Configuration_t conf;
-//        while (data.offset != 0 || !data.board[0]) {
-//            data = readData();
-//        }
-    
+    Configuration_t conf;    
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8((char*)data.board), false);
     m_board.cpuFrequency = data.cpu_freq;
     m_extension = data.extension;
@@ -36,7 +32,7 @@ bool Ardwiino::open() {
     emit configurationChanged();
     emit configurableChanged();
     emit boardImageChanged();
-    return false;
+    return true;
 }
 data_t Ardwiino::readData() {
     QByteArray data(sizeof(data_t) + 1, '\0');

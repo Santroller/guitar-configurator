@@ -7,13 +7,15 @@ UsbDevice::UsbDevice(UsbDevice_t devt, QObject *parent) : QObject(parent), m_dev
 }
 bool UsbDevice::open() {
     // We need to claim the control interface in order to read and write from it.
-    if (libusb_open(m_devt.dev, &libusb_handle) != 0) {
+    if (libusb_open(m_devt.dev, &libusb_handle) != LIBUSB_SUCCESS) {
         return false;
     }
-    if (libusb_detach_kernel_driver(libusb_handle,0) != 0) {
+    auto detach = libusb_detach_kernel_driver(libusb_handle,0);
+    // We need this to either succeed, or for there not to be a kernel driver to detach, and in that case it will return not found.
+    if (detach != LIBUSB_SUCCESS && detach != LIBUSB_ERROR_NOT_FOUND) {
         return false;
     }
-    return libusb_claim_interface(libusb_handle,0) == 0;
+    return libusb_claim_interface(libusb_handle,0) == LIBUSB_SUCCESS;
 }
 
 void UsbDevice::close() {

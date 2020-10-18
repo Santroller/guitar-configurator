@@ -5,11 +5,10 @@
 #include <QGuiApplication>
 #include <QProcess>
 #include <QThread>
-#if defined Q_OS_LINUX
+#ifdef Q_OS_LINUX
 #include <proc/readproc.h>
 #include <proc/version.h>
-#endif
-#if defined Q_OS_WIN
+#elif defined(Q_OS_WIN)
 #include <Windows.h>
 #include <Psapi.h>
 #endif

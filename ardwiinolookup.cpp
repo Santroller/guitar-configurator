@@ -5,11 +5,6 @@
 #include <QRegularExpression>
 
 #include "QDebug"
-#ifdef Q_OS_MACOS
-#include <libusb.h>
-#else
-#include <libusb-1.0/libusb.h>
-#endif
 QVersionNumber ArdwiinoLookup::currentVersion = QVersionNumber(-1);
 const static auto versionRegex = QRegularExpression("^version-([\\d.]+)$");
 ArdwiinoLookup::ArdwiinoLookup(QObject *parent) : QObject(parent) {
