@@ -30,7 +30,6 @@ void UsbDevice::close() {
 
 int UsbDevice::write(int id, QByteArray data) {
     BOOL bResult = TRUE;
-    UCHAR* d = (UCHAR*)data.data();
     WINUSB_SETUP_PACKET SetupPacket;
     ZeroMemory(&SetupPacket, sizeof(WINUSB_SETUP_PACKET));
     ULONG cbSent = 0;
@@ -43,9 +42,9 @@ int UsbDevice::write(int id, QByteArray data) {
     SetupPacket.Request = REQ_HID_SET_REPORT;
     SetupPacket.Value = id;
     SetupPacket.Index = 0;
-    SetupPacket.Length = sizeof(d) * sizeof(UCHAR);
+    SetupPacket.Length = data.length();
 
-    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
+    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, (UCHAR*)data.data(), data.length(), &cbSent, 0);
     if (!bResult) {
         return -(int)GetLastError();
     }
