@@ -6,7 +6,7 @@ UsbDevice::UsbDevice(UsbDevice_t devt, QObject *parent) : QObject(parent), m_dev
     
 }
 bool UsbDevice::open() {
-    device_handle = CreateFile(m_deviceID.hidPath.toUtf8(),
+    device_handle = CreateFile(m_devt.hidPath.toUtf8(),
                                               GENERIC_WRITE | GENERIC_READ,
                                               FILE_SHARE_WRITE | FILE_SHARE_READ,
                                               NULL,
@@ -28,7 +28,7 @@ void UsbDevice::close() {
 
 int UsbDevice::write(int id, QByteArray data) {
     BOOL bResult = TRUE;
-    UCHAR* d = data.data();
+    UCHAR* d = (UCHAR*)data.data();
     WINUSB_SETUP_PACKET SetupPacket;
     ZeroMemory(&SetupPacket, sizeof(WINUSB_SETUP_PACKET));
     ULONG cbSent = 0;
@@ -43,7 +43,7 @@ int UsbDevice::write(int id, QByteArray data) {
     SetupPacket.Index = 0;
     SetupPacket.Length = sizeof(d) * sizeof(UCHAR);
 
-    bResult = WinUsb_ControlTransfer(WinusbHandle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
+    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
     if (!bResult) {
         return -GetLastError();
     }
@@ -68,12 +68,12 @@ QByteArray UsbDevice::read(int id) {
     SetupPacket.Index = 0;
     SetupPacket.Length = sizeof(d) * sizeof(UCHAR);
 
-    bResult = WinUsb_ControlTransfer(WinusbHandle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
+    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
     if (!bResult)
     {
        auto err = GetLastError();
     //    TODO: we should handle errors somehow, maybe we pass in the qbytearray and return the bytes sent?
     }
-    return QByteArray::fromRawData(d, cbSent);
+    return QByteArray::fromRawData((CHAR*)d, cbSent);
 }
 #endif
