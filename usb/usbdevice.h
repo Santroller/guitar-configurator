@@ -3,15 +3,18 @@
 #include <QObject>
 
 #include "devices/device.h"
+extern "C" {
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #include <fileapi.h>
 #include <winusb.h>
-#elif defined(Q_OS_MACOS)
+#endif
+#if defined(Q_OS_MACOS)
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
 #endif
+}
 
 
 #define REQ_HID_GET_REPORT 1

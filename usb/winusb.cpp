@@ -14,9 +14,11 @@ bool UsbDevice::open() {
                                               FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
                                               NULL);
     if(!WinUsb_Initialize(device_handle,  &winusb_handle)) {
-        qDebug() << "Winusb Failure!";
+        auto err = GetLastError();
+        qDebug() << err << "Winusb Failure!";
         return false;
     }
+    return true;
 }
 
 void UsbDevice::close() {
@@ -45,7 +47,7 @@ int UsbDevice::write(int id, QByteArray data) {
 
     bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
     if (!bResult) {
-        return -GetLastError();
+        return -(int)GetLastError();
     }
     return cbSent;
 }

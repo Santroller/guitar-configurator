@@ -220,7 +220,7 @@ void LEDHandler::startGame() {
     HMODULE handles[2048];
     DWORD needed;
     EnumProcessModules(pid->hProcess, handles, sizeof(handles), &needed);
-    for (int i = 0; i < needed / sizeof(handles[0]); i++) {
+    for (uint i = 0; i < needed / sizeof(handles[0]); i++) {
         MODULEINFO info;
         char name[1024];
         GetModuleBaseNameA(pid->hProcess, handles[i], name, sizeof(name));

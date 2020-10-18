@@ -21,7 +21,6 @@ DEFINE_GUID( GUID_DEVINTERFACE_HID, 0x4D1E55B2L, 0xF16F, 0x11CF, 0x88, 0xCB, 0x0
 DEFINE_GUID(GUID_DEVINTERFACE_ARDWIINO,
     0xdf59037d,0x7c92,0x4155,0xac,0x12,0x7d,0x70,0x0a,0x31,0x3d,0x78);
 #include <Usbiodef.h>
-#include <Usbioctl.h>
 #include <QRegularExpression>
 
 bool operator== (const QSerialPortInfo &lhs, const QSerialPortInfo &rhs)
@@ -31,7 +30,7 @@ bool operator== (const QSerialPortInfo &lhs, const QSerialPortInfo &rhs)
 }
 
 QList<QString> buses;
-void lookupUSBInfo(bool isHID, wchar_t* dbcc_name, HWND hwnd, UsbDevice_t* device) {
+void lookupUSBInfo(bool isArdwiino, wchar_t* dbcc_name, HWND hwnd, UsbDevice_t* device) {
     HDEVINFO handle = SetupDiCreateDeviceInfoList(NULL, hwnd);
     SP_DEVICE_INTERFACE_DATA data;
     SP_DEVINFO_DATA infoData;
@@ -42,7 +41,7 @@ void lookupUSBInfo(bool isHID, wchar_t* dbcc_name, HWND hwnd, UsbDevice_t* devic
         int memberIndex = 0;
         while(SetupDiEnumDeviceInfo(handle, memberIndex, &infoData)) {
             memberIndex++;
-            if (isHID) {
+            if (isArdwiino) {
                 device->hidPath = QString::fromWCharArray(dbcc_name);
                 wchar_t* ifaceList;
                 CONFIGRET cres;
@@ -205,9 +204,9 @@ bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, l
                     }
                 } else if(lpdb -> dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
                     PDEV_BROADCAST_DEVICEINTERFACE_W lpdbv = reinterpret_cast<PDEV_BROADCAST_DEVICEINTERFACE_W>(lpdb);
-                    bool isHID = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
+                    bool isArdwiino = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_ARDWIINO;
                     UsbDevice_t dev = {};
-                    lookupUSBInfo(isHID, lpdbv->dbcc_name, msg->hwnd, &dev);
+                    lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                     scanner->add(dev);
 
                 }
@@ -225,9 +224,9 @@ bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, l
                     }
                 } else if(lpdb -> dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
                     PDEV_BROADCAST_DEVICEINTERFACE_W lpdbv = reinterpret_cast<PDEV_BROADCAST_DEVICEINTERFACE_W>(lpdb);
-                    bool isHID = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
+                    bool isArdwiino = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
                     UsbDevice_t dev = {};
-                    lookupUSBInfo(isHID, lpdbv->dbcc_name, msg->hwnd, &dev);
+                    lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                     scanner->remove(dev);
                 }
 
@@ -247,7 +246,7 @@ void WinHotplug::init(WId wid) {
     ZeroMemory( &NotificationFilter2, sizeof(NotificationFilter) );
     NotificationFilter2.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
     NotificationFilter2.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
-    NotificationFilter2.dbcc_classguid = GUID_DEVINTERFACE_HID;
+    NotificationFilter2.dbcc_classguid = GUID_DEVINTERFACE_ARDWIINO;
 
 
     DEV_BROADCAST_DEVICEINTERFACE NotificationFilter3;
