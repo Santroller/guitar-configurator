@@ -17,7 +17,6 @@
 #undef DEFINE_GUID
 #define DEFINE_GUID(name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
     static const GUID name = { l,w1,w2,{ b1,b2,b3,b4,b5,b6,b7,b8 } }
-DEFINE_GUID( GUID_DEVINTERFACE_HID, 0x4D1E55B2L, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
 DEFINE_GUID(GUID_DEVINTERFACE_ARDWIINO,
     0xdf59037d,0x7c92,0x4155,0xac,0x12,0x7d,0x70,0x0a,0x31,0x3d,0x78);
 #include <Usbiodef.h>
@@ -224,7 +223,7 @@ bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, l
                     }
                 } else if(lpdb -> dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
                     PDEV_BROADCAST_DEVICEINTERFACE_W lpdbv = reinterpret_cast<PDEV_BROADCAST_DEVICEINTERFACE_W>(lpdb);
-                    bool isArdwiino = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_HID;
+                    bool isArdwiino = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_ARDWIINO;
                     UsbDevice_t dev = {};
                     lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                     scanner->remove(dev);
