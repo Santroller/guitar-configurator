@@ -1,4 +1,4 @@
-#if !defined(Q_OS_WIN)
+#ifndef _WIN32
 #include "usbdevice.h"
 
 UsbDevice::UsbDevice(UsbDevice_t devt, QObject *parent) : QObject(parent), m_devt(devt)
