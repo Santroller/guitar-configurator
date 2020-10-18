@@ -5,7 +5,6 @@
 #include <QRegularExpression>
 
 #include "QDebug"
-#include <hidapi.h>
 #ifdef Q_OS_MACOS
 #include <libusb.h>
 #else
@@ -72,16 +71,6 @@ auto ArdwiinoLookup::detectBoard(const QSerialPortInfo &serialPortInfo) -> const
     for (const auto &board : boards) {
         for (auto &pid : board.productIDs) {
             if (pid && pid == serialPortInfo.productIdentifier()) {
-                return board;
-            }
-        }
-    }
-    return empty;
-}
-auto ArdwiinoLookup::detectBoard(struct hid_device_info *usbDeviceId) -> const board_t {
-    for (const auto &board : boards) {
-        for (auto &pid : board.productIDs) {
-            if (pid && pid == usbDeviceId->product_id) {
                 return board;
             }
         }

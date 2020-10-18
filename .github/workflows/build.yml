@@ -19,7 +19,6 @@ jobs:
         run: |
           npm i -g appdmg
           brew install pkgconfig
-          brew install hidapi
           brew install libusb
       - name: Cache Qt
         id: cache-qt
@@ -83,7 +82,7 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          sudo apt-get install libprocps-dev libhidapi-hidraw0 libhidapi-dev libudev-dev libusb-1.0-0-dev
+          sudo apt-get install libprocps-dev libudev-dev libusb-1.0-0-dev
           mkdir build
           cd build
           cmake ../ 
@@ -139,7 +138,6 @@ jobs:
           robocopy ".\firmware" ".\deploy\firmware" /e /njh /njs /ndl /nc /ns /nfl
           robocopy ".\binaries\win" ".\deploy\binaries" /e /njh /njs /ndl /nc /ns /nfl
           copy release\*.json deploy
-          copy release\hidapi.dll deploy
           cp release\Release\guitar-configurator.exe deploy
           windeployqt deploy\guitar-configurator.exe -qmldir=.
           robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e /njh /njs /ndl /nc /ns /nfl

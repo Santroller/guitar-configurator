@@ -11,6 +11,11 @@
 #include "ardwiino_defines.h"
 #include "board.h"
 #include "submodules/Ardwiino/src/shared/output/serial_commands.h"
+#ifdef Q_OS_MACOS
+#include <libusb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
 typedef struct UsbDevice_t {
     int bus;
     int port;
@@ -19,6 +24,7 @@ typedef struct UsbDevice_t {
     uint16_t releaseNumber;
     QString hidPath;
     QString serial;
+    libusb_device* dev;
     bool operator==(const UsbDevice_t& other) {
         return port == other.port && bus == other.bus;
     }

@@ -8,10 +8,10 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <QStringList>
-
 #include "devices/serialdevice.h"
-
 Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false) {
+    
+
 }
 void Programmer::deviceAdded(DfuArduino* device) {
     if (m_status != Status::NOT_PROGRAMMING) {

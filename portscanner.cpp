@@ -1,7 +1,5 @@
 #include "portscanner.h"
 
-#include <hidapi.h>
-
 #include <QBitmap>
 #include <QCoreApplication>
 #include <QDebug>
@@ -21,7 +19,6 @@
 #define VID_16U2 0x03eb
 
 PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(parent), m_hasSelected(false), m_selected(nullptr), m_programmer(programmer) {
-    hid_init();
     m_emptyDevice = new NullDevice();
     m_model.push_back(m_emptyDevice);
     if (settings.contains("configMode")) {

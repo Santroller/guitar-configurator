@@ -7,9 +7,9 @@
 #include <QQueue>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <hidapi.h>
 #include "submodules/Ardwiino/src/shared/output/serial_commands.h"
 
+#include "usb/usbdevice.h"
 #include "device.h"
 #include "ardwiinolookup.h"
 #include "deviceconfiguration.h"
@@ -59,8 +59,9 @@ class Ardwiino : public Device {
    private:
     data_t readData();
     QByteArray readConfig();
-    hid_device* m_hiddev;
+    UsbDevice m_usbDevice;
     DeviceConfiguration* m_configuration;
+    bool m_isOpen;
     bool m_isOutdated;
     bool m_hasPinDetectionCallback;
     bool m_configurable;
