@@ -54,7 +54,7 @@ int UsbDevice::write(int id, QByteArray data) {
 
 QByteArray UsbDevice::read(int id) {
     BOOL bResult = TRUE;
-    UCHAR d[64];
+    QByteArray data(64, '\0');
     WINUSB_SETUP_PACKET SetupPacket;
     ZeroMemory(&SetupPacket, sizeof(WINUSB_SETUP_PACKET));
     ULONG cbSent = 0;
@@ -68,14 +68,14 @@ QByteArray UsbDevice::read(int id) {
     
     SetupPacket.Value = id;
     SetupPacket.Index = 0;
-    SetupPacket.Length = sizeof(d) * sizeof(UCHAR);
+    SetupPacket.Length = data.length();
 
-    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, d, sizeof(d) * sizeof(UCHAR), &cbSent, 0);
+    bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, (UCHAR*)data.data(), data.length(), &cbSent, 0);
     if (!bResult)
     {
        auto err = GetLastError();
     //    TODO: we should handle errors somehow, maybe we pass in the qbytearray and return the bytes sent?
     }
-    return QByteArray::fromRawData((CHAR*)d, cbSent);
+    return data;
 }
 #endif
