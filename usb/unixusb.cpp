@@ -20,6 +20,7 @@ bool UsbDevice::open() {
 
 void UsbDevice::close() {
     if (libusb_handle) {
+        libusb_attach_kernel_driver(libusb_handle, 0);
         libusb_close(libusb_handle);
     }
 }
@@ -35,6 +36,8 @@ QByteArray UsbDevice::read(int id) {
         qDebug() << QString::fromUtf8(libusb_error_name(len));
     }
     data.resize(len);
+    // All data being sent from the controller starts with a header byte that we can just remove.
+    data.remove(0,1);
     return data;
 }
 #endif
