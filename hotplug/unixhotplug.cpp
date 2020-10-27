@@ -11,8 +11,9 @@ static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
     char data[200];
     data[0] = '\0';
     if (libusb_open(dev, &handle) == LIBUSB_SUCCESS) {
-        libusb_get_string_descriptor_ascii(handle, index, reinterpret_cast<unsigned char*>(data), sizeof(data));
+        qDebug() << libusb_get_string_descriptor_ascii(handle, index, reinterpret_cast<unsigned char*>(data), sizeof(data));
         libusb_close(handle);
+        qDebug() << "got: " << QString::fromUtf8(data);
     } else {
         qDebug() << "Error retrieving serial";
     }

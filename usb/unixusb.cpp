@@ -30,8 +30,11 @@ int UsbDevice::write(int id, QByteArray data) {
 
 QByteArray UsbDevice::read(int id) {
     QByteArray data(64, '\0');
-    auto err = libusb_control_transfer(libusb_handle, LIBUSB_RECIPIENT_INTERFACE | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN, REQ_HID_GET_REPORT, id, 0, (unsigned char*)data.data(), data.length(), 0);
-    qDebug() << QString::fromUtf8(libusb_error_name(err));
+    auto len = libusb_control_transfer(libusb_handle, LIBUSB_RECIPIENT_INTERFACE | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN, REQ_HID_GET_REPORT, id, 0, (unsigned char*)data.data(), data.length(), 0);
+    if (len < 0) {
+        qDebug() << QString::fromUtf8(libusb_error_name(len));
+    }
+    data.resize(len);
     return data;
 }
 #endif

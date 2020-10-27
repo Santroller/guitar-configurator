@@ -75,6 +75,7 @@ QByteArray UsbDevice::read(int id) {
        auto err = GetLastError();
     //    TODO: we should handle errors somehow, maybe we pass in the qbytearray and return the bytes sent?
     }
+    data.resize(cbSent);
     return data;
 }
 #endif

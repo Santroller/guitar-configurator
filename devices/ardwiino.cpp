@@ -9,30 +9,31 @@ bool Ardwiino::open() {
     if (!m_usbDevice.open()) return false;
     m_isOpen = true;
     qDebug() << m_usbDevice.read(0);
-    auto d = m_usbDevice.read(0);
-    data_t data = *((data_t*)d.data());
-    Configuration_t conf;    
-    m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8((char*)data.board), false);
-    m_board.cpuFrequency = data.cpu_freq;
-    m_extension = data.extension;
-    qDebug() << m_board.name;
-    // while (true) {
-        //   if (data.board[0]) {
-            qDebug() << sizeof(Configuration_t) << data.offset << "->" << qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset);
-            memcpy(((uint8_t*)&conf) + data.offset, data.data, qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset));
-//                if (data.offset + sizeof(data.data) >= sizeof(conf)) {
-//                    break;
-//                }
-        /*
-        data = readData();
-    }*/
-    m_configuration = new DeviceConfiguration(conf);
-    m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
-    // m_configurable = true;
-    emit configurationChanged();
-    emit configurableChanged();
-    emit boardImageChanged();
-    return true;
+    qDebug() << m_usbDevice.read(COMMAND_GET_BOARD);
+//     auto d = m_usbDevice.read(0);
+//     data_t data = *((data_t*)d.data());
+//     Configuration_t conf;    
+    m_board = ArdwiinoLookup::findByBoard(QString(m_usbDevice.read(COMMAND_GET_BOARD)), false);
+//     m_board.cpuFrequency = data.cpu_freq;
+//     m_extension = data.extension;
+//     qDebug() << m_board.name;
+//     // while (true) {
+//         //   if (data.board[0]) {
+//             qDebug() << sizeof(Configuration_t) << data.offset << "->" << qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset);
+//             memcpy(((uint8_t*)&conf) + data.offset, data.data, qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset));
+// //                if (data.offset + sizeof(data.data) >= sizeof(conf)) {
+// //                    break;
+// //                }
+//         /*
+//         data = readData();
+//     }*/
+//     m_configuration = new DeviceConfiguration(conf);
+//     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
+//     // m_configurable = true;
+//     emit configurationChanged();
+//     emit configurableChanged();
+//     emit boardImageChanged();
+    return false;
 }
 data_t Ardwiino::readData() {
     QByteArray data(sizeof(data_t) + 1, '\0');
