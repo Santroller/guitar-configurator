@@ -57,7 +57,7 @@ class Ardwiino : public Device {
     QString m_processor;
 
    private:
-    data_t readData();
+    // data_t readData();
     QByteArray readConfig();
     UsbDevice m_usbDevice;
     DeviceConfiguration* m_configuration;

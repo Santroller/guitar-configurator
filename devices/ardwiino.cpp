@@ -9,58 +9,37 @@ bool Ardwiino::open() {
     if (!m_usbDevice.open()) return false;
     m_isOpen = true;
     qDebug() << m_usbDevice.read(0);
-    qDebug() << m_usbDevice.read(COMMAND_GET_BOARD);
-//     auto d = m_usbDevice.read(0);
-//     data_t data = *((data_t*)d.data());
-//     Configuration_t conf;    
-    m_board = ArdwiinoLookup::findByBoard(QString(m_usbDevice.read(COMMAND_GET_BOARD)), false);
-//     m_board.cpuFrequency = data.cpu_freq;
-//     m_extension = data.extension;
-//     qDebug() << m_board.name;
-//     // while (true) {
-//         //   if (data.board[0]) {
-//             qDebug() << sizeof(Configuration_t) << data.offset << "->" << qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset);
-//             memcpy(((uint8_t*)&conf) + data.offset, data.data, qMin(sizeof(data.data), sizeof(Configuration_t) - data.offset));
-// //                if (data.offset + sizeof(data.data) >= sizeof(conf)) {
-// //                    break;
-// //                }
-//         /*
-//         data = readData();
-//     }*/
-//     m_configuration = new DeviceConfiguration(conf);
-//     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
-//     // m_configurable = true;
-//     emit configurationChanged();
-//     emit configurableChanged();
-//     emit boardImageChanged();
-    return false;
-}
-data_t Ardwiino::readData() {
-    QByteArray data(sizeof(data_t) + 1, '\0');
-    data[0] = 0;
-    // hid_get_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    // data.remove(0, 1);
-    // auto err = hid_error(m_hiddev);
-    // if (err) {
-    //     // TODO: handle errors (Tell the user that we could not communicate with the controller)
-    //     qDebug() << QString::fromWCharArray(err);
-    // }
-    return *(data_t*)data.data();
+    // qDebug() << m_usbDevice.read(COMMAND_GET_BOARD);
+    cpu_info_t info;
+    memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
+
+    m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
+    m_board.cpuFrequency = info.cpu_freq;
+    Configuration_t conf;
+    int offset = 0;
+    int offsetId = 0;
+    while (offset < sizeof(Configuration_t)) {
+        auto data = m_usbDevice.read(COMMAND_READ_CONFIG+offsetId);
+        memcpy(((uint8_t*)&conf)+offset, data.data() + offset, data.length());
+        offset+=data.length();
+        offsetId++;
+    }
+    m_configuration = new DeviceConfiguration(conf);
+    m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
+    // m_configurable = true;
+    emit configurationChanged();
+    emit configurableChanged();
+    emit boardImageChanged();
+    return true;
 }
 #define PACKET_SIZE 64
 void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
-    QByteArray data(PACKET_SIZE, '\0');
-    data[0] = 0;
-    data[1] = cmd;
-    for (int i = 0; i < dataToSend.length(); i++) {
-        data[i + 2] = dataToSend[i];
-    }
-    // hid_send_feature_report(m_hiddev, reinterpret_cast<unsigned char*>(data.data()), data.size());
-    // auto err = hid_error(m_hiddev);
-    // if (err) {
-    //     // TODO: handle errors (Tell the user that we could not communicate with the controller)
-    //     qDebug() << "error writing" << cmd << QString::fromWCharArray(err);
+    // QByteArray data(PACKET_SIZE, '\0');
+    // data[0] = cmd;
+    // for (int i = 0; i < dataToSend.length(); i++) {
+    //     data[i + 1] = dataToSend[i];
     // }
+    m_usbDevice.write(cmd, dataToSend);
 }
 // Reserve space for the report id, command and the offset.
 #define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
@@ -91,28 +70,28 @@ void Ardwiino::writeConfig() {
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;
     QTimer::singleShot(100, [&]() {
-        uint8_t pin = readData().detectedPin;
-        if (pin == 0xFF) {
-            findDigital(m_pinDetectionCallback);
-        } else {
-            QJSValueList args;
-            args << QJSValue(pin);
-            m_pinDetectionCallback.call(args);
-            qDebug() << pin;
-        }
+        // uint8_t pin = readData().detectedPin;
+        // if (pin == 0xFF) {
+        //     findDigital(m_pinDetectionCallback);
+        // } else {
+        //     QJSValueList args;
+        //     args << QJSValue(pin);
+        //     m_pinDetectionCallback.call(args);
+        //     qDebug() << pin;
+        // }
     });
 }
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
     QTimer::singleShot(100, [&]() {
-        uint8_t pin = readData().detectedPin;
-        if (pin == 0xFF) {
-            findAnalog(m_pinDetectionCallback);
-        } else {
-            QJSValueList args;
-            args << QJSValue(pin);
-            m_pinDetectionCallback.call(args);
-        }
+        // uint8_t pin = readData().detectedPin;
+        // if (pin == 0xFF) {
+        //     findAnalog(m_pinDetectionCallback);
+        // } else {
+        //     QJSValueList args;
+        //     args << QJSValue(pin);
+        //     m_pinDetectionCallback.call(args);
+        // }
     });
 }
 QString Ardwiino::getDescription() {

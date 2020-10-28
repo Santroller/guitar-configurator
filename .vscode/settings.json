@@ -78,7 +78,8 @@
         "qtimer": "cpp",
         "qlist": "cpp",
         "unordered_set": "cpp",
-        "qstringlist": "cpp"
+        "qstringlist": "cpp",
+        "qqueue": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
