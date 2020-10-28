@@ -73,11 +73,15 @@ Dialog {
             modal: true
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
-            closePolicy: Popup.NoAutoClose
+            standardButtons: Dialog.Cancel
             ColumnLayout {
                 Label {
                     text: "Ground the pin you would like to assign to "+pinDialog.labels[pinDialog.currentPin]
                 }
+            }
+            onRejected: {
+                pinDialog.waitingForDigital = false;
+                scanner.selected.cancelFind();
             }
         }
 
@@ -88,11 +92,14 @@ Dialog {
             modal: true
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
-            closePolicy: Popup.NoAutoClose
             ColumnLayout {
                 Label {
                     text: "Move an axis to assign it to "+pinDialog.labels[pinDialog.currentPin]
                 }
+            }
+            onRejected: {
+                pinDialog.waitingForAnalog = false;
+                scanner.selected.cancelFind();
             }
         }
         Image {
@@ -149,6 +156,7 @@ Dialog {
                 if (pinDialog.labels[pinDialog.currentPin] === "Tilt Axis") {
                     isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
                 }
+                scanner.selected.startFind();
                 if (isAnalog) {
                     scanner.selected.findAnalog(received)
                     pinDialog.waitingForAnalog = true;

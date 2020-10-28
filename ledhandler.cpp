@@ -137,7 +137,7 @@ void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
         }
     }
     data.push_back('\0');
-    dev->writeData(COMMAND_SET_LEDS, data);
+    dev->write(COMMAND_SET_LEDS, data);
 }
 void LEDHandler::findVersion() {
     QString hash;

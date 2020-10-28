@@ -54,35 +54,46 @@ void Ardwiino::writeConfig() {
     }
     m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
     QThread::currentThread()->msleep(100);
-    m_usbDevice.write(COMMAND_REBOOT);
+    m_usbDevice.write(COMMAND_REBOOT, {});
     // m_hiddev = NULL;
 }
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;
+    m_usbDevice.write(COMMAND_FIND_DIGITAL,{});
     QTimer::singleShot(100, [&]() {
-        // uint8_t pin = readData().detectedPin;
-        // if (pin == 0xFF) {
-        //     findDigital(m_pinDetectionCallback);
-        // } else {
-        //     QJSValueList args;
-        //     args << QJSValue(pin);
-        //     m_pinDetectionCallback.call(args);
-        //     qDebug() << pin;
-        // }
+        uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
+        if (pin == 0xFF) {
+            if (m_hasPinDetectionCallback) {
+                findDigital(m_pinDetectionCallback);
+            }
+        } else {
+            QJSValueList args;
+            args << QJSValue(pin);
+            m_pinDetectionCallback.call(args);
+        }
     });
 }
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
+    m_usbDevice.write(COMMAND_FIND_ANALOG,{});
     QTimer::singleShot(100, [&]() {
-        // uint8_t pin = readData().detectedPin;
-        // if (pin == 0xFF) {
-        //     findAnalog(m_pinDetectionCallback);
-        // } else {
-        //     QJSValueList args;
-        //     args << QJSValue(pin);
-        //     m_pinDetectionCallback.call(args);
-        // }
+        uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
+        if (pin == 0xFF) {
+            if (m_hasPinDetectionCallback) {
+                findAnalog(m_pinDetectionCallback);
+            }
+        } else {
+            QJSValueList args;
+            args << QJSValue(pin);
+            m_pinDetectionCallback.call(args);
+        }
     });
+}
+void Ardwiino::startFind() {
+    m_hasPinDetectionCallback = true;
+}
+void Ardwiino::cancelFind() {
+    m_hasPinDetectionCallback = false;
 }
 QString Ardwiino::getDescription() {
     if (!isReady()) {

@@ -42,10 +42,15 @@ class Ardwiino : public Device {
     DeviceConfiguration* getConfig() const {
         return m_configuration;
     }
+    void write(int id, QByteArray data) {
+        m_usbDevice.write(id,data);
+    }
    public slots:
     void writeConfig();
     void findDigital(QJSValue callback);
     void findAnalog(QJSValue callback);
+    void cancelFind();
+    void startFind();
    signals:
     void readyChanged();
     void ledsChanged();
