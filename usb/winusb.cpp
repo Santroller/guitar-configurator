@@ -1,12 +1,12 @@
 #ifdef _WIN32
 #include "usbdevice.h"
 
-UsbDevice::UsbDevice(UsbDevice_t devt, QObject *parent) : QObject(parent), m_devt(devt)
+UsbDevice::UsbDevice(UsbDevice_t* devt, QObject *parent) : QObject(parent), m_devt(devt)
 {
     
 }
 bool UsbDevice::open() {
-    device_handle = CreateFile(m_devt.hidPath.toUtf8(),
+    device_handle = CreateFile(m_devt->hidPath.toUtf8(),
                                               GENERIC_WRITE | GENERIC_READ,
                                               FILE_SHARE_WRITE | FILE_SHARE_READ,
                                               NULL,
@@ -18,6 +18,12 @@ bool UsbDevice::open() {
         qDebug() << err << "Winusb Failure!";
         return false;
     }
+
+    ulong out;
+    uchar buffer[18];
+    WinUsb_GetDescriptor(winusb_handle, 0x01, 0, 0, buffer, sizeof(buffer), &out);
+    libusb_device_descriptor* desc = (libusb_device_descriptor*)buffer;
+    m_devt->releaseNumber = desc->bcdDevice;
     return true;
 }
 
@@ -76,6 +82,7 @@ QByteArray UsbDevice::read(int id) {
     //    TODO: we should handle errors somehow, maybe we pass in the qbytearray and return the bytes sent?
     }
     data.resize(cbSent);
+    data.remove(0,1);
     return data;
 }
 #endif

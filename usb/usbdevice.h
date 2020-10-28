@@ -22,7 +22,7 @@ extern "C" {
 class UsbDevice : public QObject {
     Q_OBJECT
    public:
-    explicit UsbDevice(UsbDevice_t devt, QObject *parent = nullptr);
+    explicit UsbDevice(UsbDevice_t* devt, QObject *parent = nullptr);
     bool open();
     void close();
     int write(int id, QByteArray data);
@@ -30,7 +30,7 @@ class UsbDevice : public QObject {
    signals:
 
    private:
-    UsbDevice_t m_devt;
+    UsbDevice_t* m_devt;
 #ifdef Q_OS_WIN
     WINUSB_INTERFACE_HANDLE winusb_handle;
     HANDLE device_handle;

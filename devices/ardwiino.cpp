@@ -2,28 +2,28 @@
 
 #include <QSettings>
 #include <QThread>
-Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(devt), m_configurable(false), m_isOpen(false) {
+Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(&m_deviceID), m_isOpen(false), m_configurable(false) {
 }
 bool Ardwiino::open() {
     if (m_deviceID.serial.isEmpty()) return false;
     if (!m_usbDevice.open()) return false;
     m_isOpen = true;
     qDebug() << m_usbDevice.read(0);
-    // qDebug() << m_usbDevice.read(COMMAND_GET_BOARD);
     cpu_info_t info;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
 
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
     Configuration_t conf;
-    int offset = 0;
-    int offsetId = 0;
+    uint offset = 0;
+    uint offsetId = 0;
     while (offset < sizeof(Configuration_t)) {
         auto data = m_usbDevice.read(COMMAND_READ_CONFIG+offsetId);
-        memcpy(((uint8_t*)&conf)+offset, data.data() + offset, data.length());
+        memcpy(((uint8_t*)&conf)+offset, data.data(), data.length());
         offset+=data.length();
         offsetId++;
     }
+    qDebug() << QByteArray::fromRawData((char*)&conf, sizeof(Configuration_t));
     m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
     // m_configurable = true;

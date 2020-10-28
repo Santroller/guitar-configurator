@@ -1,13 +1,13 @@
 #ifndef _WIN32
 #include "usbdevice.h"
 
-UsbDevice::UsbDevice(UsbDevice_t devt, QObject *parent) : QObject(parent), m_devt(devt)
+UsbDevice::UsbDevice(UsbDevice_t* devt, QObject *parent) : QObject(parent), m_devt(devt)
 {
     
 }
 bool UsbDevice::open() {
     // We need to claim the control interface in order to read and write from it.
-    if (libusb_open(m_devt.dev, &libusb_handle) != LIBUSB_SUCCESS) {
+    if (libusb_open(m_devt->dev, &libusb_handle) != LIBUSB_SUCCESS) {
         return false;
     }
     auto detach = libusb_detach_kernel_driver(libusb_handle,0);
