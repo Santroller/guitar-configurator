@@ -8,7 +8,6 @@ bool Ardwiino::open() {
     if (m_deviceID.serial.isEmpty()) return false;
     if (!m_usbDevice.open()) return false;
     m_isOpen = true;
-    qDebug() << m_usbDevice.read(0);
     cpu_info_t info;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
 
@@ -23,7 +22,6 @@ bool Ardwiino::open() {
         offset+=data.length();
         offsetId++;
     }
-    qDebug() << QByteArray::fromRawData((char*)&conf, sizeof(Configuration_t));
     m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
     // m_configurable = true;
@@ -33,14 +31,6 @@ bool Ardwiino::open() {
     return true;
 }
 #define PACKET_SIZE 64
-void Ardwiino::writeData(int cmd, QByteArray dataToSend) {
-    // QByteArray data(PACKET_SIZE, '\0');
-    // data[0] = cmd;
-    // for (int i = 0; i < dataToSend.length(); i++) {
-    //     data[i + 1] = dataToSend[i];
-    // }
-    m_usbDevice.write(cmd, dataToSend);
-}
 // Reserve space for the report id, command and the offset.
 #define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
 void Ardwiino::writeConfig() {
@@ -52,7 +42,7 @@ void Ardwiino::writeConfig() {
         data.clear();
         data.push_back(offset);
         data.push_back(QByteArray::fromRawData(configCh + offset, PARTIAL_CONFIG_SIZE));
-        writeData(COMMAND_WRITE_CONFIG, data);
+        m_usbDevice.write(COMMAND_WRITE_CONFIG, data);
         offset += PARTIAL_CONFIG_SIZE;
         QThread::currentThread()->msleep(100);
     }
@@ -62,9 +52,9 @@ void Ardwiino::writeConfig() {
     } else if (m_configuration->isGuitar()) {
         st = REAL_GUITAR_SUBTYPE;
     }
-    writeData(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
+    m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
     QThread::currentThread()->msleep(100);
-    writeData(COMMAND_REBOOT);
+    m_usbDevice.write(COMMAND_REBOOT);
     // m_hiddev = NULL;
 }
 void Ardwiino::findDigital(QJSValue callback) {
@@ -127,5 +117,5 @@ void Ardwiino::close() {
     }
 }
 void Ardwiino::bootloader() {
-    writeData(COMMAND_JUMP_BOOTLOADER, {});
+    m_usbDevice.write(COMMAND_JUMP_BOOTLOADER, {});
 }

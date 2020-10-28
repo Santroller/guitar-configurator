@@ -46,7 +46,6 @@ class Ardwiino : public Device {
     void writeConfig();
     void findDigital(QJSValue callback);
     void findAnalog(QJSValue callback);
-    void writeData(int cmd, QByteArray data = QByteArray());
    signals:
     void readyChanged();
     void ledsChanged();
