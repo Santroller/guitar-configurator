@@ -21,6 +21,7 @@ static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
     }
     devt->serial = QString::fromUtf8(data);
 }
+int c = 0;
 static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* dev, libusb_hotplug_event event, void* user_data) {
     (void)ctx;
     UnixHotplug* sc = (UnixHotplug*)user_data;
