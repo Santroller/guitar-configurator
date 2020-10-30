@@ -38,7 +38,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.fillWidth: true
         ColumnLayout {
-            visible: (scanner.selected.boardName === "micro" || scanner.selected.boardName === "leonardo") && (!scanner.selected.isArdwiino || !scanner.selected.ready) && programmer.status === Status.NOT_PROGRAMMING
+            visible: (scanner.selected.boardName === "a-micro" ||scanner.selected.boardName === "micro" || scanner.selected.boardName === "leonardo") && (!scanner.selected.isArdwiino || !scanner.selected.ready) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
@@ -73,6 +73,7 @@ ColumnLayout {
                     id: model
                     ListElement { key: "Arduino Pro Micro 3.3V"; board: "micro"; freq: 8000000 }
                     ListElement { key: "Arduino Pro Micro 5V"; board: "micro"; freq: 16000000 }
+                    ListElement { key: "Arduino Micro 5V"; board: "a-micro"; freq: 16000000 }
                     ListElement { key: "Arduino Leonardo 3.3V"; board: "leonardo"; freq: 8000000 }
                     ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: 16000000 }
                 }
