@@ -21,7 +21,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(ArdwiinoDefines::InputType mainInputType READ getMainInputType WRITE setMainInputType NOTIFY mainInputTypeUpdated)
     Q_PROPERTY(ArdwiinoDefines::SubType mainSubType READ getMainSubType WRITE setMainSubType NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(ArdwiinoDefines::TiltType mainTiltType READ getMainTiltType WRITE setMainTiltType NOTIFY mainTiltTypeUpdated)
-    Q_PROPERTY(int mainUnused READ getMainUnused WRITE setMainUnused NOTIFY mainUnusedUpdated)
+    Q_PROPERTY(int mainPollRate READ getMainPollRate WRITE setMainPollRate NOTIFY mainPollRateUpdated)
     Q_PROPERTY(ArdwiinoDefines::FretLedMode mainFretLEDMode READ getMainFretLEDMode WRITE setMainFretLEDMode NOTIFY mainFretLEDModeUpdated)
     Q_PROPERTY(bool mainMapLeftJoystickToDPad READ getMainMapLeftJoystickToDPad WRITE setMainMapLeftJoystickToDPad NOTIFY mainMapLeftJoystickToDPadUpdated)
     Q_PROPERTY(bool mainMapStartSelectToHome READ getMainMapStartSelectToHome WRITE setMainMapStartSelectToHome NOTIFY mainMapStartSelectToHomeUpdated)
@@ -146,12 +146,12 @@ public slots:
         m_config.main.tiltType = (ArdwiinoDefines::TiltType)val;
         emit mainTiltTypeUpdated();
     }
-    int getMainUnused() const {
-        return (uint8_t)m_config.main.unused;
+    int getMainPollRate() const {
+        return (uint8_t)m_config.main.pollRate;
     }
-    void setMainUnused(int val) {
-        m_config.main.unused = (uint8_t)val;
-        emit mainUnusedUpdated();
+    void setMainPollRate(int val) {
+        m_config.main.pollRate = (uint8_t)val;
+        emit mainPollRateUpdated();
     }
     ArdwiinoDefines::FretLedMode getMainFretLEDMode() const {
         return (ArdwiinoDefines::FretLedMode)m_config.main.fretLEDMode;
@@ -722,7 +722,7 @@ signals:
     void mainInputTypeUpdated();
     void mainSubTypeUpdated();
     void mainTiltTypeUpdated();
-    void mainUnusedUpdated();
+    void mainPollRateUpdated();
     void mainFretLEDModeUpdated();
     void mainMapLeftJoystickToDPadUpdated();
     void mainMapStartSelectToHomeUpdated();

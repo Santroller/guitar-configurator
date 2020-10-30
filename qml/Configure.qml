@@ -79,6 +79,26 @@ ColumnLayout {
             }
 
             Label {
+                text: qsTr("Controller Poll Rate (0 means as fast as possible)")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            SpinBox {
+                id: spinbox
+                Layout.fillWidth: true
+                value: scanner.selected.config.mainPollRate
+                from: 0
+                to: 10
+                onValueModified: {
+                    scanner.selected.config.mainPollRate = value
+                }
+            }
+
+            Label {
                 visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
                 text: qsTr("Note: You can not combine Playstation input and APA102 LEDs, due to them both using imcompatible connections.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
