@@ -211,6 +211,12 @@ ColumnLayout {
                 mainStack.replace("Programmer.qml");
             }
         }
+        Button {
+            id: reset
+            text: qsTr("Reset device config")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: scanner.selected.resetConfig();
+        }
     }
     Dialog {
         title: "Writing Data"

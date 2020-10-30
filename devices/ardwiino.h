@@ -47,6 +47,7 @@ class Ardwiino : public Device {
     }
    public slots:
     void writeConfig();
+    void resetConfig();
     void findDigital(QJSValue callback);
     void findAnalog(QJSValue callback);
     void cancelFind();

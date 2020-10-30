@@ -17,9 +17,9 @@ bool Ardwiino::open() {
     uint offset = 0;
     uint offsetId = 0;
     while (offset < sizeof(Configuration_t)) {
-        auto data = m_usbDevice.read(COMMAND_READ_CONFIG+offsetId);
-        memcpy(((uint8_t*)&conf)+offset, data.data(), data.length());
-        offset+=data.length();
+        auto data = m_usbDevice.read(COMMAND_READ_CONFIG + offsetId);
+        memcpy(((uint8_t*)&conf) + offset, data.data(), data.length());
+        offset += data.length();
         offsetId++;
     }
     m_configuration = new DeviceConfiguration(conf);
@@ -59,7 +59,7 @@ void Ardwiino::writeConfig() {
 }
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;
-    m_usbDevice.write(COMMAND_FIND_DIGITAL,{});
+    m_usbDevice.write(COMMAND_FIND_DIGITAL, {});
     QTimer::singleShot(100, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
@@ -75,7 +75,7 @@ void Ardwiino::findDigital(QJSValue callback) {
 }
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
-    m_usbDevice.write(COMMAND_FIND_ANALOG,{});
+    m_usbDevice.write(COMMAND_FIND_ANALOG, {});
     QTimer::singleShot(100, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
@@ -126,6 +126,13 @@ void Ardwiino::close() {
     if (m_isOpen) {
         m_usbDevice.close();
     }
+}
+void Ardwiino::resetConfig() {
+    m_usbDevice.write(COMMAND_RESET, {});
+    m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR));
+    QThread::currentThread()->msleep(500);
+    m_usbDevice.write(COMMAND_REBOOT, {});
+
 }
 void Ardwiino::bootloader() {
     m_usbDevice.write(COMMAND_JUMP_BOOTLOADER, {});
