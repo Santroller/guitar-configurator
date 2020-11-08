@@ -102,6 +102,28 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
         }
+        Label {
+            text: qsTr("If you like this project and want to contribute to its development, feel free to donate using the below links")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            fontSizeMode: Text.Fit
+            wrapMode: Text.WordWrap
+            font.bold: false
+            font.weight: Font.DemiBold
+            font.capitalization: Font.MixedCase
+        }
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Button {
+                text: qsTr("Sponser Project via GitHub Sponsers")
+                onClicked: Qt.openUrlExternally("https://github.com/sponsors/sanjay900")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+            Button {
+                text: qsTr("Donate via PayPal")
+                onClicked: Qt.openUrlExternally("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TFL9DSUEF7VN8&source=url")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+        }
 
 
 
