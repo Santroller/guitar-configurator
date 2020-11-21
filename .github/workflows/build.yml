@@ -27,7 +27,7 @@ jobs:
           path: ../Qt
           key: QtCache-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.6.3
+        uses: jurplel/install-qt-action@v2
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
@@ -73,7 +73,7 @@ jobs:
           path: ../Qt
           key: QtCache-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.6.3
+        uses: jurplel/install-qt-action@v2
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
@@ -112,7 +112,7 @@ jobs:
           path: ../Qt
           key: QtCacheTools-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.6.3
+        uses: jurplel/install-qt-action@v2
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 

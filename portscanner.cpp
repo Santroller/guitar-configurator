@@ -176,15 +176,15 @@ QString PortScanner::findElement(QString base, int w, int h, int mouseX, int mou
         for (auto image : imageList) {
             auto i = QIcon(":/" + base + "/components/" + image).pixmap(QSize(width, height)).toImage();
             i = i.convertToFormat(QImage::Format_Indexed8, colorMap, Qt::AutoColor);
-            auto s2 = i.height() * i.width();
-            auto s3 = data.data();
-            auto s = i.bits();
-            while (s2--) {
-                if (*s != 0) {
-                    *s3 = *s;
+            auto totalPixels = i.height() * i.width();
+            auto outputArray = data.data();
+            auto pixelData = i.bits();
+            while (totalPixels--) {
+                if (*pixelData != 0) {
+                    *outputArray = *pixelData;
                 }
-                s3++;
-                s++;
+                outputArray++;
+                pixelData++;
             }
             images.push_back(image);
             colorMap.push_front(qRgba(0, 0, 0, 0));
