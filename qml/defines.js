@@ -49,7 +49,6 @@ function getBoardComponents(type) {
 }
 
 function getBoardBase(type) {
-    return "/images/XInput/GuitarHeroGuitar";
     let a = findTypeDevice(type);
     //The controller type needs to be joined up as the images are not stored with spaces.
     a[1] = a[1].split(" ").join("");

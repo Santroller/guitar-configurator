@@ -99,6 +99,9 @@ QString Ardwiino::getDescription() {
     if (!isReady()) {
         return "Ardwiino - Unable to communicate";
     }
+    if (!m_configurable) {
+        return "Ardwiino - Outdated - Continue to update";
+    }
     QString desc = "Ardwiino - " + m_board.name + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
     auto ext = m_usbDevice.read(COMMAND_GET_EXTENSION);
     m_extension = ext[0] | ext[1] >> 8;

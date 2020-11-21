@@ -132,6 +132,7 @@ ColumnLayout {
                     for (let pin of PinInfo.getUnused(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB)) {
                         scanner.selected.config[`pins${pin}`] = 0xFF;
                     }
+                    scanner.clearImages();
                 }
             }
 
@@ -150,6 +151,7 @@ ColumnLayout {
                     for (let pin of PinInfo.getUnused(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB)) {
                         scanner.selected.config[`pins${pin}`] = 0xFF;
                     }
+                    scanner.clearImages();
                 }
             }
         }

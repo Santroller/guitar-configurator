@@ -39,6 +39,7 @@ class PortScanner : public QObject {
     void serialDeviceUnplugged(const QSerialPortInfo& port);
     void fixLinux();
     void toggleGraphics();
+    void clearImages();
     QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
     QList<QObject*> model() const {
         return m_model;
@@ -63,7 +64,6 @@ class PortScanner : public QObject {
     bool add(Device* device);
     bool remove(Device* device);
     bool m_hasSelected;
-    void clearImages();
     QList<QObject*> m_model;
     Device* m_selected;
     Programmer* m_programmer;

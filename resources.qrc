@@ -40,7 +40,7 @@
         <file>images/Keyboard/GuitarHeroGuitar/components/gLB.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gljoy.svg</file>
-        <file>images/Keyboard/GuitarHeroGuitar/components/gr_x.svg</file>
+        <file>images/Keyboard/GuitarHeroGuitar/components/gRX.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gRight.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/Keyboard/GuitarHeroGuitar/components/gstrum.svg</file>
@@ -56,7 +56,7 @@
         <file>images/Keyboard/LiveGuitar/components/gLB.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gljoy.svg</file>
-        <file>images/Keyboard/LiveGuitar/components/gr_x.svg</file>
+        <file>images/Keyboard/LiveGuitar/components/gRX.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gRB.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gRight.svg</file>
         <file>images/Keyboard/LiveGuitar/components/gselect.svg</file>
@@ -92,7 +92,7 @@
         <file>images/Keyboard/RockBandGuitar/components/gLeft.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gljoy.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gLt.svg</file>
-        <file>images/Keyboard/RockBandGuitar/components/gr_x.svg</file>
+        <file>images/Keyboard/RockBandGuitar/components/gRX.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gRight.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gStart.svg</file>
         <file>images/Keyboard/RockBandGuitar/components/gstrum.svg</file>
@@ -109,7 +109,7 @@
         <file>images/Keyboard/WorldTour/components/gLB.svg</file>
         <file>images/Keyboard/WorldTour/components/gLeft.svg</file>
         <file>images/Keyboard/WorldTour/components/gljoy.svg</file>
-        <file>images/Keyboard/WorldTour/components/gr_x.svg</file>
+        <file>images/Keyboard/WorldTour/components/gRX.svg</file>
         <file>images/Keyboard/WorldTour/components/gRight.svg</file>
         <file>images/Keyboard/WorldTour/components/gstrum.svg</file>
         <file>images/Keyboard/WorldTour/components/gUp.svg</file>
@@ -139,7 +139,7 @@
         <file>images/MIDI/GuitarHeroGuitar/components/gLB.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gljoy.svg</file>
-        <file>images/MIDI/GuitarHeroGuitar/components/gr_x.svg</file>
+        <file>images/MIDI/GuitarHeroGuitar/components/gRX.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gRight.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/MIDI/GuitarHeroGuitar/components/gstrum.svg</file>
@@ -155,7 +155,7 @@
         <file>images/MIDI/LiveGuitar/components/gLB.svg</file>
         <file>images/MIDI/LiveGuitar/components/gLeft.svg</file>
         <file>images/MIDI/LiveGuitar/components/gljoy.svg</file>
-        <file>images/MIDI/LiveGuitar/components/gr_x.svg</file>
+        <file>images/MIDI/LiveGuitar/components/gRX.svg</file>
         <file>images/MIDI/LiveGuitar/components/gRB.svg</file>
         <file>images/MIDI/LiveGuitar/components/gRight.svg</file>
         <file>images/MIDI/LiveGuitar/components/gselect.svg</file>
@@ -191,7 +191,7 @@
         <file>images/MIDI/RockBandGuitar/components/gLeft.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gljoy.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gLt.svg</file>
-        <file>images/MIDI/RockBandGuitar/components/gr_x.svg</file>
+        <file>images/MIDI/RockBandGuitar/components/gRX.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gRight.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gStart.svg</file>
         <file>images/MIDI/RockBandGuitar/components/gstrum.svg</file>
@@ -208,7 +208,7 @@
         <file>images/MIDI/WorldTour/components/gLB.svg</file>
         <file>images/MIDI/WorldTour/components/gLeft.svg</file>
         <file>images/MIDI/WorldTour/components/gljoy.svg</file>
-        <file>images/MIDI/WorldTour/components/gr_x.svg</file>
+        <file>images/MIDI/WorldTour/components/gRX.svg</file>
         <file>images/MIDI/WorldTour/components/gRight.svg</file>
         <file>images/MIDI/WorldTour/components/gstrum.svg</file>
         <file>images/MIDI/WorldTour/components/gUp.svg</file>
@@ -256,7 +256,7 @@
         <file>images/PS3/GuitarHeroGuitar/components/gLB.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gljoy.svg</file>
-        <file>images/PS3/GuitarHeroGuitar/components/gr_x.svg</file>
+        <file>images/PS3/GuitarHeroGuitar/components/gRX.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gRight.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/PS3/GuitarHeroGuitar/components/gstrum.svg</file>
@@ -272,7 +272,7 @@
         <file>images/PS3/LiveGuitar/components/gLB.svg</file>
         <file>images/PS3/LiveGuitar/components/gLeft.svg</file>
         <file>images/PS3/LiveGuitar/components/gljoy.svg</file>
-        <file>images/PS3/LiveGuitar/components/gr_x.svg</file>
+        <file>images/PS3/LiveGuitar/components/gRX.svg</file>
         <file>images/PS3/LiveGuitar/components/gRB.svg</file>
         <file>images/PS3/LiveGuitar/components/gRight.svg</file>
         <file>images/PS3/LiveGuitar/components/gselect.svg</file>
@@ -308,7 +308,7 @@
         <file>images/PS3/RockBandGuitar/components/gLeft.svg</file>
         <file>images/PS3/RockBandGuitar/components/gljoy.svg</file>
         <file>images/PS3/RockBandGuitar/components/gLt.svg</file>
-        <file>images/PS3/RockBandGuitar/components/gr_x.svg</file>
+        <file>images/PS3/RockBandGuitar/components/gRX.svg</file>
         <file>images/PS3/RockBandGuitar/components/gRight.svg</file>
         <file>images/PS3/RockBandGuitar/components/gStart.svg</file>
         <file>images/PS3/RockBandGuitar/components/gstrum.svg</file>
@@ -325,7 +325,7 @@
         <file>images/PS3/WorldTour/components/gLB.svg</file>
         <file>images/PS3/WorldTour/components/gLeft.svg</file>
         <file>images/PS3/WorldTour/components/gljoy.svg</file>
-        <file>images/PS3/WorldTour/components/gr_x.svg</file>
+        <file>images/PS3/WorldTour/components/gRX.svg</file>
         <file>images/PS3/WorldTour/components/gRight.svg</file>
         <file>images/PS3/WorldTour/components/gstrum.svg</file>
         <file>images/PS3/WorldTour/components/gUp.svg</file>
@@ -379,7 +379,7 @@
         <file>images/Wii/RockBandGuitar/components/gLeft.svg</file>
         <file>images/Wii/RockBandGuitar/components/gljoy.svg</file>
         <file>images/Wii/RockBandGuitar/components/gLt.svg</file>
-        <file>images/Wii/RockBandGuitar/components/gr_x.svg</file>
+        <file>images/Wii/RockBandGuitar/components/gRX.svg</file>
         <file>images/Wii/RockBandGuitar/components/gRight.svg</file>
         <file>images/Wii/RockBandGuitar/components/gStart.svg</file>
         <file>images/Wii/RockBandGuitar/components/gstrum.svg</file>
@@ -476,7 +476,7 @@
         <file>images/XInput/GuitarHeroGuitar/components/gLB.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gLeft.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gljoy.svg</file>
-        <file>images/XInput/GuitarHeroGuitar/components/gr_x.svg</file>
+        <file>images/XInput/GuitarHeroGuitar/components/gRX.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gRight.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gStart.svg</file>
         <file>images/XInput/GuitarHeroGuitar/components/gstrum.svg</file>
@@ -492,7 +492,7 @@
         <file>images/XInput/LiveGuitar/components/gLB.svg</file>
         <file>images/XInput/LiveGuitar/components/gLeft.svg</file>
         <file>images/XInput/LiveGuitar/components/gljoy.svg</file>
-        <file>images/XInput/LiveGuitar/components/gr_x.svg</file>
+        <file>images/XInput/LiveGuitar/components/gRX.svg</file>
         <file>images/XInput/LiveGuitar/components/gRB.svg</file>
         <file>images/XInput/LiveGuitar/components/gRight.svg</file>
         <file>images/XInput/LiveGuitar/components/gselect.svg</file>
@@ -528,7 +528,7 @@
         <file>images/XInput/RockBandGuitar/components/gLeft.svg</file>
         <file>images/XInput/RockBandGuitar/components/gljoy.svg</file>
         <file>images/XInput/RockBandGuitar/components/gLt.svg</file>
-        <file>images/XInput/RockBandGuitar/components/gr_x.svg</file>
+        <file>images/XInput/RockBandGuitar/components/gRX.svg</file>
         <file>images/XInput/RockBandGuitar/components/gRight.svg</file>
         <file>images/XInput/RockBandGuitar/components/gStart.svg</file>
         <file>images/XInput/RockBandGuitar/components/gstrum.svg</file>
@@ -541,7 +541,7 @@
         <file>images/XInput/Wheel/components/gBack.svg</file>
         <file>images/XInput/Wheel/components/gDown.svg</file>
         <file>images/XInput/Wheel/components/gHome.svg</file>
-        <file>images/XInput/Wheel/components/gl_x.svg</file>
+        <file>images/XInput/Wheel/components/gLX.svg</file>
         <file>images/XInput/Wheel/components/gLeft.svg</file>
         <file>images/XInput/Wheel/components/gLt.svg</file>
         <file>images/XInput/Wheel/components/gRight.svg</file>
@@ -560,7 +560,7 @@
         <file>images/XInput/WorldTour/components/gLB.svg</file>
         <file>images/XInput/WorldTour/components/gLeft.svg</file>
         <file>images/XInput/WorldTour/components/gljoy.svg</file>
-        <file>images/XInput/WorldTour/components/gr_x.svg</file>
+        <file>images/XInput/WorldTour/components/gRX.svg</file>
         <file>images/XInput/WorldTour/components/gRight.svg</file>
         <file>images/XInput/WorldTour/components/gstrum.svg</file>
         <file>images/XInput/WorldTour/components/gUp.svg</file>
