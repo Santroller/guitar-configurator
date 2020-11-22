@@ -206,7 +206,10 @@ bool WinHotplug::nativeEventFilter(const QByteArray &eventType, void *message, l
                     bool isArdwiino = lpdbv->dbcc_classguid == GUID_DEVINTERFACE_ARDWIINO;
                     UsbDevice_t dev = {};
                     lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
-                    scanner->add(dev);
+
+                    QTimer::singleShot(1000, [this, dev]() {
+                        scanner->add(dev);
+                    });
 
                 }
                 break;
