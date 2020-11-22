@@ -23,8 +23,6 @@ bool Ardwiino::open() {
     }
     m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
-    //TODO: THIS
-    m_configurable = true;
     emit configurationChanged();
     emit configurableChanged();
     emit boardImageChanged();
