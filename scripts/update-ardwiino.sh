@@ -12,6 +12,6 @@ rm -r src/micro/obj
 rm -r src/uno/usb/bin
 rm -r src/uno/main/bin
 rm -r src/micro/bin
-make build-all
+make build-all -j5
 cp -rf output/* ../../firmware/
 cd ../../
