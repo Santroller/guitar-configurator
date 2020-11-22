@@ -10,7 +10,6 @@ bool Ardwiino::open() {
     m_isOpen = true;
     cpu_info_t info;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
-
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
     Configuration_t conf;
@@ -24,13 +23,14 @@ bool Ardwiino::open() {
     }
     m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
-    // m_configurable = true;
+    //TODO: THIS
+    m_configurable = true;
     emit configurationChanged();
     emit configurableChanged();
     emit boardImageChanged();
     return true;
 }
-#define PACKET_SIZE 64
+#define PACKET_SIZE 32
 // Reserve space for the report id, command and the offset.
 #define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
 void Ardwiino::writeConfig() {

@@ -110,7 +110,7 @@ void UnixHotplug::tick() {
 int UnixHotplug::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) {
     QString serial;
     // We need a small delay as we want to wait for the device to initialise
-    QTimer::singleShot(100, [event, this, devt, serial]() {
+    QTimer::singleShot(1000, [event, this, devt, serial]() {
         if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
             scanner->add(devt);
 
