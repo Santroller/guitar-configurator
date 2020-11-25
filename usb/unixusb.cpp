@@ -36,8 +36,6 @@ QByteArray UsbDevice::read(int id) {
         qDebug() << QString::fromUtf8(libusb_error_name(len));
     }
     data.resize(len);
-    // All data being sent from the controller starts with a header byte that we can just remove.
-    data.remove(0,1);
     return data;
 }
 #endif
