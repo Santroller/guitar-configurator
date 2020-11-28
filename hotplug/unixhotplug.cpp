@@ -33,8 +33,12 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
             UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), desc.idVendor, desc.idProduct, desc.bcdDevice, NULL, "", dev};
             if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
                 getDevSerial(dev, desc.iSerialNumber, &devt);
+                QTimer::singleShot(1000, [event, devt, sc]() {
+                    sc->hotplug_callback(devt, event);
+                });
+            } else {
+                sc->hotplug_callback(devt, event);
             }
-            sc->hotplug_callback(devt, event);
         });
     });
     return 0;
@@ -109,8 +113,7 @@ void UnixHotplug::tick() {
 }
 int UnixHotplug::hotplug_callback(UsbDevice_t devt, libusb_hotplug_event event) {
     QString serial;
-    // We need a small delay as we want to wait for the device to initialise
-    QTimer::singleShot(1000, [event, this, devt, serial]() {
+    QTimer::singleShot(100, [event, this, devt, serial]() {
         if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
             scanner->add(devt);
 

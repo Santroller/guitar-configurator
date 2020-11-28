@@ -11,6 +11,9 @@ bool Ardwiino::open() {
     m_isOpen = true;
     cpu_info_t info;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
+    if (QString::fromUtf8(info.board).isEmpty()) {
+        memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data()+1, sizeof(info));
+    }
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
     Configuration_t conf;
@@ -138,7 +141,6 @@ void Ardwiino::resetConfig() {
     m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, ArdwiinoDefines::XINPUT_GUITAR_HERO_GUITAR));
     QThread::currentThread()->msleep(500);
     m_usbDevice.write(COMMAND_REBOOT, {});
-
 }
 void Ardwiino::bootloader() {
     m_usbDevice.write(COMMAND_JUMP_BOOTLOADER, {});
