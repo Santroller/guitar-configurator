@@ -154,13 +154,45 @@ ColumnLayout {
                     scanner.clearImages();
                 }
             }
+
+            Label {
+                text: qsTr("Map Left Joystick to DPad")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.mainMapLeftJoystickToDPad
+                onCheckedChanged: scanner.selected.config.mainMapLeftJoystickToDPad = checked
+            }
+
+            Label {
+                text: qsTr("Map Start + Select to Home")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.mainMapStartSelectToHome
+                onCheckedChanged: scanner.selected.config.mainMapStartSelectToHome = checked
+            }
         }
     }
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Button {
             id: change
-            text: qsTr("Change Device Type")
+            text: qsTr("Change Device Settings")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {type.visible = true;}
         }
