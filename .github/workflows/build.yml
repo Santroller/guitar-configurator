@@ -82,7 +82,7 @@ jobs:
           submodules: recursive
       - name: Build
         run: |
-          sudo apt-get install libprocps-dev libudev-dev libusb-1.0-0-dev
+          sudo apt-get install libprocps-dev libudev-dev libusb-1.0-0-dev libxcb-randr0-dev libxcb-xtest0-dev libxcb-xinerama0-dev libxcb-shape0-dev libxcb-xkb-dev
           mkdir build
           cd build
           cmake ../ 
