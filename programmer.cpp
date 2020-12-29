@@ -111,7 +111,19 @@ void Programmer::programDFU() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("dfu-programmer"), l);
 }
-
+void Programmer::programRF(Ardwiino* parent, Device* ports) {
+    QString original = ":047B0000EFBEADDE49";
+    QString replacement = QString(original).replace("EFBEADDE", QString::number(parent->getRFID(), 16)).chopped(2);
+    uint16_t checksum = 0;
+    for (int i = 1; i < replacement.length(); i+=2) {
+        checksum += replacement.mid(i,2).toInt(NULL, 16);
+    }
+    checksum = ((~checksum)& 0xff)+1;
+    replacement += QString::number(checksum, 16).toUpper();
+    // TODO: all we should need to do is load the rf hex file, replace original with replacement and then program it
+    // For calling this, we will just have to give users the ability to pick a device, but skip over the current device when we do so.
+    // The good thing is that once its programmed, we don't have to do anything with it, it can be configured over rf
+}
 void Programmer::programAvrDude() {
     m_status = Status::AVRDUDE;
     statusChanged(m_status);
