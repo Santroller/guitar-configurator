@@ -45,6 +45,9 @@ class Ardwiino : public Device {
     void write(int id, QByteArray data) {
         m_usbDevice.write(id,data);
     }
+    int getRFID() const {
+        return m_rfID;
+    }
    public slots:
     void writeConfig();
     void resetConfig();
@@ -72,6 +75,7 @@ class Ardwiino : public Device {
     bool m_configurable;
     QJSValue m_pinDetectionCallback;
     uint16_t m_extension;
+    uint32_t m_rfID;
     inline virtual bool isEqual(const Device& other) const {
          return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }

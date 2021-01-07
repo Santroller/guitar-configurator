@@ -16,6 +16,8 @@ bool Ardwiino::open() {
     }
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
+    m_rfID = info.rfID;
+    qDebug() << hex << m_rfID;
     Configuration_t conf;
     uint offset = 0;
     uint offsetId = 0;

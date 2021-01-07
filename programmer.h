@@ -28,6 +28,7 @@ class Programmer : public QObject {
     void statusVChanged(QString newValue);
    public slots:
     bool program(Device* port);
+    void programRF(Ardwiino* parent, Device* port);
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
