@@ -36,7 +36,7 @@ bool Ardwiino::open() {
     emit boardImageChanged();
     return true;
 }
-#define PACKET_SIZE 64
+#define PACKET_SIZE 50
 // Reserve space for the report id, command and the offset.
 #define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
 void Ardwiino::writeConfig() {
