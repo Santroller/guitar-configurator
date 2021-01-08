@@ -219,36 +219,21 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: linux
-      - name: Release
-        uses: WebFreak001/deploy-nightly@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+      - uses: dev-drprasad/delete-tag-and-release@v0.1.2
         with:
-          upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-          release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: ./windows/guitar-configurator-win.exe # path to archive to upload
-          asset_name: guitar-configurator-win.exe # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
-          asset_content_type: application/x-executable # required by GitHub API
-          max_releases: 1
-      - name: Release
-        uses: WebFreak001/deploy-nightly@v1.1.0
+          delete_release: true # default: false
+          tag_name: v0.0.0-alpha # tag name to delete
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
-        with:
-          upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-          release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: ./mac/guitar-configurator-macOS.dmg # path to archive to upload
-          asset_name: guitar-configurator-macOS.dmg # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
-          asset_content_type: application/x-executable # required by GitHub API
-          max_releases: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
-        uses: WebFreak001/deploy-nightly@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: https://uploads.github.com/repos/sanjay900/guitar-configurator/releases/31386997/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-          release_id: 31386997 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: ./linux/guitar-configurator-linux.AppImage # path to archive to upload
-          asset_name: guitar-configurator-linux.AppImage # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
-          asset_content_type: application/x-executable # required by GitHub API
-          max_releases: 1
+          tag_name: unstable
+          prerelease: true
+          name: "Nightly Build"
+          files: |
+            ./windows/*.exe
+            ./mac/*.dmg
+            ./linux/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
