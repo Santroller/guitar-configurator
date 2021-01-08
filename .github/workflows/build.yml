@@ -222,15 +222,15 @@ jobs:
       - uses: dev-drprasad/delete-tag-and-release@v0.1.2
         with:
           delete_release: true
-          tag_name: unstable
+          tag_name: preview
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: unstable
+          tag_name: preview
           prerelease: true
-          name: "Nightly Build"
+          name: "Preview Build"
           files: |
             ./windows/*.exe
             ./mac/*.dmg
