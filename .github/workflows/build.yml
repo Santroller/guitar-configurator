@@ -221,8 +221,8 @@ jobs:
           name: linux
       - uses: dev-drprasad/delete-tag-and-release@v0.1.2
         with:
-          delete_release: true # default: false
-          tag_name: v0.0.0-alpha # tag name to delete
+          delete_release: true
+          tag_name: unstable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
