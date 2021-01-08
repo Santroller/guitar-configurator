@@ -186,14 +186,14 @@ void LEDHandler::findVersion() {
 
 void LEDHandler::startGame() {
     qDebug() << "starting";
-    if (process.processId() != 0) {
+    if (process.pid() != 0) {
         return;
     }
     QString binaryPath = QDir(m_gameFolder).filePath(binary);
     process.start(binaryPath, {"--launcher-build"});
     process.waitForStarted();
     QThread::msleep(500);
-    pid = process.processId();
+    pid = process.pid();
 #if defined Q_OS_LINUX
     inputFile = new QFile(QStringLiteral("/proc/%1/maps").arg(pid));
     inputFile->open(QIODevice::ReadOnly);
