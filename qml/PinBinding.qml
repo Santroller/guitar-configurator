@@ -12,7 +12,7 @@ import "keys.js" as KeyInfo
 
 Dialog {
     id: pinDialog
-    property var pins: PinInfo.getBindings(scanner.selected.boardImage);
+    property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
     property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
     property var currentPin: "";
     property var conflictingPin: "";
@@ -104,7 +104,7 @@ Dialog {
         }
         Image {
             sourceSize.width: applicationWindow.width/3
-            property var selected: PinInfo.pinLocations[scanner.selected.boardImage];
+            property var selected: PinInfo.pinLocations[scanner.selected.getDirectBoardImage()];
             property var scaleX: 1 / selected.width * paintedWidth
             property var scaleY: 1 / selected.height * paintedHeight
             property var startX: (width - paintedWidth) / 2
@@ -113,14 +113,14 @@ Dialog {
             property var pins: selected.pins
             id: boardImage
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.boardImage
+            source: scanner.selected.getDirectBoardImage()
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3
             Repeater {
                 model: boardImage.pins.length
                 Rectangle {
-                    visible: !pinDialog.isAnalog || PinInfo.checkValid(boardImage.pins[index].id, scanner.selected.boardImage)
+                    visible: !pinDialog.isAnalog || PinInfo.checkValid(boardImage.pins[index].id, scanner.selected.getDirectBoardImage())
                     width: boardImage.r; height: boardImage.r
                     x: boardImage.startX + boardImage.pins[index].x * boardImage.scaleX
                     y: boardImage.startY + boardImage.pins[index].y * boardImage.scaleY

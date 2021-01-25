@@ -18,17 +18,20 @@ class Programmer : public QObject {
     Q_PROPERTY(Status::Value status MEMBER m_status NOTIFY statusChanged)
     Q_PROPERTY(QString statusDescription READ getStatusDescription NOTIFY statusVChanged)
     Q_PROPERTY(bool restore MEMBER m_restore NOTIFY restoreChanged)
+    Q_PROPERTY(bool rf MEMBER m_rf NOTIFY rfChanged)
    public:
     explicit Programmer(QObject* parent = nullptr);
    signals:
     void processOutChanged(QString newValue);
     void processPercentChanged(double newValue);
     void restoreChanged(bool newValue);
+    void rfChanged(bool newValue);
     void statusChanged(Status::Value newValue);
     void statusVChanged(QString newValue);
    public slots:
     bool program(Device* port);
     void programRF(Ardwiino* parent, Device* port);
+    void prepareRF(Ardwiino* parent);
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
@@ -71,5 +74,7 @@ class Programmer : public QObject {
     Status::Value m_status;
     Device* m_device;
     bool m_restore;
+    bool m_rf;
+    Ardwiino* m_parent_device;
 };
 #endif  // PROGRAMMER_H

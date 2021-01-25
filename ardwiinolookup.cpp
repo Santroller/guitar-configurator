@@ -33,10 +33,11 @@ auto ArdwiinoLookup::isArdwiino(const UsbDevice_t& usbDeviceId) -> bool {
 }
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false, false};
-const board_t ArdwiinoLookup::boards[17] = {
+const board_t ArdwiinoLookup::boards[19] = {
     {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno", "uno-main", "Arduino Uno", 115200, {0x0043, 0x7523, 0x0001, 0xea60, 0x0243}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", true, false},
+    {"mini", "mini-main", "Arduino Pro Mini", 57600, {}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", false, true},
     {"a-micro", "a-micro", "Arduino Micro in DFU Mode", 57600, {0x0037}, "avr109", "atmega32u4", 16000000, "/images/ArduinoMicro.svg", false, true},
     {"a-micro", "a-micro", "Arduino Micro", 57600, {0x8037}, "avr109", "atmega32u4", 16000000, "/images/ArduinoMicro.svg", false, false},
     {"micro", "micro", "Arduino Pro Micro", 57600, {0x9204}, "avr109", "atmega32u4", 8000000, "/images/ArduinoProMicro.svg", false, false},
@@ -51,9 +52,12 @@ const board_t ArdwiinoLookup::boards[17] = {
     {"megaadk-atmega16u2", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "arduino", "atmega328p", 16000000, "/images/ArduinoMegaADK.svg", true, false},
+    {"generic", "generic", "Generic Serial Device", 57600, {0x2FEF}, "arduino", "atmega16u2", 16000000, "/images/ArduinoUno.svg", false, false},
 };
 
 auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
+    // the mini is always in bootloader mode
+    if (board_name == "mini") inBootloader = true;
     for (const auto &board : boards) {
         if (board.shortName == board_name && board.inBootloader == inBootloader) {
             return board;
@@ -70,7 +74,7 @@ auto ArdwiinoLookup::detectBoard(const QSerialPortInfo &serialPortInfo) -> const
             }
         }
     }
-    return empty;
+    return board_t(boards[18]);
 }
 auto ArdwiinoLookup::getInstance() -> ArdwiinoLookup * {
     if (!ArdwiinoLookup::instance) {

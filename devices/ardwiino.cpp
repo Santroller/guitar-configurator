@@ -12,10 +12,16 @@ bool Ardwiino::open() {
     cpu_info_t info;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data(), sizeof(info));
     if (QString::fromUtf8(info.board).isEmpty()) {
-        memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data()+1, sizeof(info));
+        memcpy(&info, m_usbDevice.read(COMMAND_GET_CPU_INFO).data() + 1, sizeof(info));
     }
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
+    memcpy(&info, m_usbDevice.read(COMMAND_GET_RF_CPU_INFO).data(), sizeof(info));
+    if (QString::fromUtf8(info.board).isEmpty()) {
+        memcpy(&info, m_usbDevice.read(COMMAND_GET_RF_CPU_INFO).data() + 1, sizeof(info));
+    }
+    m_board_rf = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
+    m_board_rf.cpuFrequency = info.cpu_freq;
     m_rfID = info.rfID;
     qDebug() << hex << m_rfID;
     Configuration_t conf;
@@ -29,29 +35,38 @@ bool Ardwiino::open() {
     }
     m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
-    //TODO: This!
-    // m_configurable = true;
     emit configurationChanged();
     emit configurableChanged();
     emit boardImageChanged();
     return true;
 }
 #define PACKET_SIZE 50
-// Reserve space for the report id, command and the offset.
-#define PARTIAL_CONFIG_SIZE PACKET_SIZE - 3
-void Ardwiino::writeConfig() {
-    auto config = m_configuration->getConfig();
-    auto configCh = reinterpret_cast<char*>(&config);
+void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
+    auto packet_size = PACKET_SIZE;
+    if (m_configuration->getRfRfInEnabled()) {
+        // Send smaller config packets so that they can fit within a single rf packet
+        // 30 byte packet, one byte for offset
+        packet_size = 29;
+    } else {
+        // set aside space for ids (is this needed?)
+        packet_size -= 3;
+    }
     uint offset = 0;
     QByteArray data;
     while (offset < sizeof(Configuration_t)) {
         data.clear();
         data.push_back(offset);
-        data.push_back(QByteArray::fromRawData(configCh + offset, PARTIAL_CONFIG_SIZE));
+        data.push_back(dataToWrite.mid(offset, packet_size));
         m_usbDevice.write(COMMAND_WRITE_CONFIG, data);
-        offset += PARTIAL_CONFIG_SIZE;
+        offset += packet_size;
         QThread::currentThread()->msleep(100);
     }
+}
+void Ardwiino::writeConfig() {
+    auto config = m_configuration->getConfig();
+    auto configCh = reinterpret_cast<char*>(&config);
+    writeChunked(COMMAND_WRITE_CONFIG, QByteArray::fromRawData(configCh, sizeof(Configuration_t)));
+
     uint8_t st = config.main.subType;
     if (m_configuration->isDrum()) {
         st = REAL_DRUM_SUBTYPE;
@@ -59,7 +74,7 @@ void Ardwiino::writeConfig() {
         st = REAL_GUITAR_SUBTYPE;
     }
     m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
-    QThread::currentThread()->msleep(100);
+    QThread::currentThread()->msleep(150);
     m_usbDevice.write(COMMAND_REBOOT, {});
     // m_hiddev = NULL;
 }
@@ -122,6 +137,11 @@ QString Ardwiino::getDescription() {
         desc += " - " + extName;
     } else {
         desc += " - " + ArdwiinoDefines::getName(m_configuration->getMainInputType());
+    }
+    if (m_configuration->getRfRfInEnabled()) {
+        desc += " - RF (";
+        desc += m_board_rf.name;
+        desc += ")";
     }
     // On windows, we can actually write the description to registry in a way that applications will pick it up.
 #ifdef Q_OS_WIN

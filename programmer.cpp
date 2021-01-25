@@ -9,9 +9,13 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include "devices/serialdevice.h"
-Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false) {
+Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
     
 
+}
+void Programmer::prepareRF(Ardwiino* device) {
+    m_rf = true;
+    m_parent_device = device;
 }
 void Programmer::deviceAdded(DfuArduino* device) {
     if (m_status != Status::NOT_PROGRAMMING) {
@@ -128,7 +132,7 @@ void Programmer::programAvrDude() {
     m_status = Status::AVRDUDE;
     statusChanged(m_status);
     board_t board = m_device->getBoard();
-    QString hexFile = "ardwiino-" + board.hexFile + "-" + board.processor + "-" + QString::number(board.cpuFrequency) + (m_restore ? "-restore" : "") + ".hex";
+    QString hexFile = "ardwiino-" + board.hexFile + "-" + board.processor + "-" + QString::number(board.cpuFrequency) + (m_restore ? "-restore" : "") + (m_rf ? "-rf" : "") + ".hex";
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
     m_process_out.clear();
@@ -148,11 +152,14 @@ void Programmer::programAvrDude() {
         board.protocol,
         "-p",
         board.processor,
+        "-b",
+        QString::number(board.baudRate),
         "-P",
         static_cast<SerialDevice*>(m_device)->getLocation(),
         "-U",
         "flash:w:" + file + ":a",
     };
+    qDebug() << l;
     QObject::connect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
@@ -161,6 +168,8 @@ void Programmer::programAvrDude() {
 }
 auto Programmer::program(Device* port) -> bool {
     m_device = port;
+    qDebug() << port->getBoard().inBootloader;
+    qDebug() << port->getBoard().name;
     if (m_status == Status::WAIT) {
         if (m_device->getBoard().hasDFU) {
             DfuArduino* dfu = dynamic_cast<DfuArduino*>(m_device);
@@ -210,8 +219,12 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
             programDFU();
             break;
         case Status::AVRDUDE:
+        qDebug() << m_device->getBoard().shortName;
             if (m_device->getBoard().hasDFU) {
                 m_status = Status::DFU_CONNECT_MAIN;
+            } else if (m_device->getBoard().shortName == "mini") {
+                // Minis dont't ever need to get reconnected.
+                m_status = Status::COMPLETE;
             } else {
                 m_status = Status::DISCONNECT_AVRDUDE;
             }

@@ -14,6 +14,7 @@
 class PortScanner : public QObject {
     Q_OBJECT
     Q_PROPERTY(QList<QObject*> model READ model NOTIFY modelChanged)
+    Q_PROPERTY(QList<QObject*> modelRF READ modelRF NOTIFY modelChanged)
     Q_PROPERTY(Device* selected READ getSelected WRITE setSelected NOTIFY selectedChanged)
     Q_PROPERTY(bool isGraphical READ isGraphical NOTIFY graphicalChanged)
     Q_PROPERTY(bool hasSelected MEMBER m_hasSelected NOTIFY hasSelectedChanged)
@@ -43,6 +44,11 @@ class PortScanner : public QObject {
     QString findElement(QString base, int width, int heither, int mouseX, int mouseY);
     QList<QObject*> model() const {
         return m_model;
+    }
+    QList<QObject*> modelRF() const {
+        QList<QObject*> list(m_model);
+        list.removeAll(m_selected);
+        return list;
     }
 
     inline QString getOSString() {

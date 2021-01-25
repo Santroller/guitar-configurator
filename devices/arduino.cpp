@@ -14,7 +14,7 @@ bool Arduino::open() {
     return true;
 }
 QString Arduino::getDescription() {
-    return m_board.name;
+    return m_board.name + " (" + m_location + ")";
 }
 void Arduino::bootloader() {
     close();

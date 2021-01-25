@@ -8,6 +8,7 @@ import net.tangentmc 1.0
 
 ColumnLayout {
     id: column
+    property var selected: programmer.rf ? devices.model[devices.currentIndex] : scanner.selected
     Label {
         text:""
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -32,13 +33,87 @@ ColumnLayout {
         sourceSize.width: applicationWindow.width/10
     }
 
+    ColumnLayout {
+        visible: programmer.rf
+        Label {
+            id: label
+            y: 0
+            text: qsTr("Found Devices: ")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            fontSizeMode: Text.Fit
+            font.weight: Font.DemiBold
+        }
+
+        ComboBox {
+            id: devices
+            Layout.columnSpan: 1
+            Layout.rowSpan: 1
+            Layout.fillWidth: true
+            focusPolicy: Qt.TabFocus
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            textRole: "description"
+            model: scanner.modelRF
+        }
+    }
+
 
     ColumnLayout {
-        id: column1
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.fillWidth: true
         ColumnLayout {
-            visible: (scanner.selected.boardName === "a-micro" ||scanner.selected.boardName === "micro" || scanner.selected.boardName === "leonardo") && (!scanner.selected.isArdwiino || !scanner.selected.ready) && programmer.status === Status.NOT_PROGRAMMING
+            visible: selected.boardName === "generic" && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Label {
+                text: qsTr("An unknown device was selected.")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Label {
+                text: qsTr("Please select the board that you are using")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Rectangle {
+                color: "#00000000"
+                border.color: "#00000000"
+            }
+
+            ComboBox {
+                Layout.fillWidth: true
+                textRole: "key"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Component.onCompleted: {
+                    for (let i =0; i < model3.count; ++i) {
+                        let element = model3.get(i);
+                        if (element.board == selected.boardName && element.freq == selected.boardFreq) {
+                            currentIndex = i;
+                            return;
+                        }
+                    }
+                    if (programmer.rf) {
+                        model3.append({ key: "Arduino Pro Mini 5V", board: "mini", freq: 16000000 })
+                        model3.append({ key: "Arduino Pro Mini 3.3V", board: "mini", freq: 8000000 })
+                    }
+                }
+                model: ListModel {
+                    id: model3
+                    ListElement { key: "Arduino Pro Micro 3.3V"; board: "micro"; freq: 8000000 }
+                    ListElement { key: "Arduino Pro Micro 5V"; board: "micro"; freq: 16000000 }
+                    ListElement { key: "Arduino Micro 5V"; board: "a-micro"; freq: 16000000 }
+                    ListElement { key: "Arduino Leonardo 3.3V"; board: "leonardo"; freq: 8000000 }
+                    ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: 16000000 }
+                    ListElement { key: "Arduino Uno"; board: "uno"; freq: 16000000 }
+                    ListElement { key: "Arduino Mega 2560"; board: "mega2560"; freq: 16000000 }
+                    ListElement { key: "Arduino Mega ADK"; board: "megaadk"; freq: 16000000 }
+                }
+                onActivated: {
+                    selected.setBoardType(model3.get(currentIndex).board, model3.get(currentIndex).freq);
+                }
+            }
+        }
+        ColumnLayout {
+            visible: (selected.boardName === "a-micro" ||selected.boardName === "micro" || selected.boardName === "leonardo") && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
@@ -63,7 +138,7 @@ ColumnLayout {
                 Component.onCompleted: {
                     for (let i =0; i < model.count; ++i) {
                         let element = model.get(i);
-                        if (element.board == scanner.selected.boardName && element.freq == scanner.selected.boardFreq) {
+                        if (element.board == selected.boardName && element.freq == selected.boardFreq) {
                             currentIndex = i;
                             return;
                         }
@@ -78,12 +153,12 @@ ColumnLayout {
                     ListElement { key: "Arduino Leonardo 5V"; board: "leonardo"; freq: 16000000 }
                 }
                 onActivated: {
-                    scanner.selected.setBoardType(model.get(currentIndex).board, model.get(currentIndex).freq);
+                    selected.setBoardType(model.get(currentIndex).board, model.get(currentIndex).freq);
                 }
             }
         }
         ColumnLayout {
-            visible: (scanner.selected.boardName.includes("at90usb82") || scanner.selected.boardName.includes("atmega16u2")) && programmer.status === Status.NOT_PROGRAMMING
+            visible: (selected.boardName.includes("at90usb82") || selected.boardName.includes("atmega16u2")) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
@@ -112,7 +187,7 @@ ColumnLayout {
                     ListElement { key: "Arduino Mega ADK"; board: "megaadk"; freq: "16000000" }
                 }
                 onActivated: {
-                    scanner.selected.setBoard(modelUno.get(currentIndex).board, modelUno.get(currentIndex).freq);
+                    selected.setBoard(modelUno.get(currentIndex).board, modelUno.get(currentIndex).freq);
                 }
             }
         }
@@ -147,7 +222,7 @@ ColumnLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: {
                 programmer.startProgramming();
-                programmer.program(scanner.selected);
+                programmer.program(selected);
             }
             visible: programmer.status === Status.NOT_PROGRAMMING
         }

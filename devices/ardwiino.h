@@ -42,12 +42,10 @@ class Ardwiino : public Device {
     DeviceConfiguration* getConfig() const {
         return m_configuration;
     }
-    void write(int id, QByteArray data) {
-        m_usbDevice.write(id,data);
-    }
     int getRFID() const {
         return m_rfID;
     }
+    void writeChunked(uint8_t id, QByteArray data);
    public slots:
     void writeConfig();
     void resetConfig();
@@ -55,6 +53,13 @@ class Ardwiino : public Device {
     void findAnalog(QJSValue callback);
     void cancelFind();
     void startFind();
+    // When using rf, we need a way to get the board for the rf transmitter, not the receiver
+    inline QString getDirectBoardImage() const {
+        if (m_configuration->getRfRfInEnabled()) {
+            return m_board_rf.image;
+        }
+        return m_board.image;
+    }
    signals:
     void readyChanged();
     void ledsChanged();
@@ -76,6 +81,7 @@ class Ardwiino : public Device {
     QJSValue m_pinDetectionCallback;
     uint16_t m_extension;
     uint32_t m_rfID;
+    board_t m_board_rf;
     inline virtual bool isEqual(const Device& other) const {
          return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }

@@ -90,6 +90,8 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(QVariantMap midiType READ getMidiType NOTIFY midiTypeUpdated)
     Q_PROPERTY(QVariantMap midiNote READ getMidiNote NOTIFY midiNoteUpdated)
     Q_PROPERTY(QVariantMap midiChannel READ getMidiChannel NOTIFY midiChannelUpdated)
+    Q_PROPERTY(bool rfRfInEnabled READ getRfRfInEnabled WRITE setRfRfInEnabled NOTIFY rfRfInEnabledUpdated)
+    Q_PROPERTY(int rfId READ getRfId WRITE setRfId NOTIFY rfIdUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -653,6 +655,20 @@ public slots:
         m_config.midi.channel[pins.indexOf(key)] = (uint8_t)val;
         emit midiChannelUpdated();
     }
+    bool getRfRfInEnabled() const {
+        return m_config.rf.rfInEnabled;
+    }
+    void setRfRfInEnabled(bool val) {
+        m_config.rf.rfInEnabled = val;
+        emit rfRfInEnabledUpdated();
+    }
+    int getRfId() const {
+        return (uint32_t)m_config.rf.id;
+    }
+    void setRfId(int val) {
+        m_config.rf.id = (uint32_t)val;
+        emit rfIdUpdated();
+    }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
         auto pin = pins.indexOf(key)+1;
@@ -792,6 +808,8 @@ signals:
     void midiTypeUpdated();
     void midiNoteUpdated();
     void midiChannelUpdated();
+    void rfRfInEnabledUpdated();
+    void rfIdUpdated();
 
 private:
     Configuration_t m_config;

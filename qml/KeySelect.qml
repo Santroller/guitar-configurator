@@ -36,12 +36,12 @@ Page {
             property var scaleY: 1 / sourceSize.height * paintedHeight
             property var startX: (width - paintedWidth) / 2
             property var startY: (height - paintedHeight) / 2
-            property var selected: locations[scanner.selected.boardImage];
+            property var selected: locations[scanner.selected.getDirectBoardImage()];
             property var r: selected.r * scaleX
             property var pins: selected.pins
             id: image
             Layout.alignment: Qt.AlignHCenter
-            source: scanner.selected.boardImage
+            source: scanner.selected.getDirectBoardImage()
             fillMode: Image.PreserveAspectFit
             Layout.maximumHeight: applicationWindow.height/3
             Layout.maximumWidth: applicationWindow.width/3

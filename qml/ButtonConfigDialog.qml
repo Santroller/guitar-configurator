@@ -13,7 +13,7 @@ import "keys.js" as KeyInfo
 Dialog {
     id: buttonDialog
     property var buttons: [];
-    property var pins: PinInfo.getBindings(scanner.selected.boardImage);
+    property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
     //We don't want the wii specific labels, as they are only needed for the list controller
     property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, false, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
     property var isAnalog: false;
