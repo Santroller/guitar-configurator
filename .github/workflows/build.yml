@@ -188,12 +188,12 @@ jobs:
       - name: Cleanup windows directory for pages
         run: |
           rm ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
-      - uses: JamesIves/github-pages-deploy-action@releases/v3
+      - uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           SINGLE_COMMIT: true
           CLEAN: true
           CLEAN_EXCLUDE: '["_includes","_layouts","_sass","assets","screenshots",".env",".gitignore","*.html","*.md","Gemfile","Gemfile.lock","_config.yml","adaptor.jpg"]'
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: windows 
 
