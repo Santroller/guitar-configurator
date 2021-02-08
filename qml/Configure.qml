@@ -227,16 +227,16 @@ ColumnLayout {
             enabled: true
             onClicked: cloneDialog.open()
         }
-        Button {
-            id: startRF
-            text: qsTr("Configure RF")
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            enabled: true
-            onClicked: {
-                programmer.prepareRF(scanner.selected)
-                mainStack.replace("Programmer.qml")
-            }
-        }
+        // Button {
+        //     id: startRF
+        //     text: qsTr("Configure RF")
+        //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        //     enabled: true
+        //     onClicked: {
+        //         programmer.prepareRF(scanner.selected)
+        //         mainStack.replace("Programmer.qml")
+        //     }
+        // }
     }
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
