@@ -217,7 +217,7 @@ ColumnLayout {
 
             Button {
                 id: startRFProg
-                text: qsTr("Configure RF")
+                text: qsTr("Program RF Transmitter")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 enabled: scanner.selected.config.rfRfInEnabled
                 onClicked: {
