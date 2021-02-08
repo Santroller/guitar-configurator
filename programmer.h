@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QProcess>
+#include <QTemporaryFile>
 
 #include "devices/arduino.h"
 #include "devices/ardwiino.h"
@@ -30,7 +31,7 @@ class Programmer : public QObject {
     void statusVChanged(QString newValue);
    public slots:
     bool program(Device* port);
-    void programRF(Ardwiino* parent, Device* port);
+    QString programRF(QString hexFile);
     void prepareRF(Ardwiino* parent);
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
@@ -75,6 +76,8 @@ class Programmer : public QObject {
     Device* m_device;
     bool m_restore;
     bool m_rf;
+    bool m_isGeneric;
     Ardwiino* m_parent_device;
+    QTemporaryFile* m_tmp_hex;
 };
 #endif  // PROGRAMMER_H

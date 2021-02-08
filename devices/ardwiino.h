@@ -46,6 +46,7 @@ class Ardwiino : public Device {
         return m_rfID;
     }
     void writeChunked(uint8_t id, QByteArray data);
+    qint32 generateClientRFID();
    public slots:
     void writeConfig();
     void resetConfig();

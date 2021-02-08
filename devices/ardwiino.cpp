@@ -2,6 +2,7 @@
 
 #include <QSettings>
 #include <QThread>
+#include <QRandomGenerator>
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(&m_deviceID), m_isOpen(false), m_configurable(false) {
 }
 bool Ardwiino::open() {
@@ -77,6 +78,12 @@ void Ardwiino::writeConfig() {
     QThread::currentThread()->msleep(150);
     m_usbDevice.write(COMMAND_REBOOT, {});
     // m_hiddev = NULL;
+}
+
+qint32 Ardwiino::generateClientRFID() {
+    qint32 id = QRandomGenerator::global()->generate();
+    m_configuration->setRfId(QRandomGenerator::global()->generate());
+    return id;
 }
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;

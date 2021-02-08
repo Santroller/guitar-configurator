@@ -188,6 +188,45 @@ ColumnLayout {
             }
         }
     }
+    Dialog {
+        id: rfDiag
+        modal: true
+        standardButtons: Dialog.Close
+
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        ColumnLayout {
+            Label {
+                id: enableRF
+                text: qsTr("Enable RF")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+
+            
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.rfRfInEnabled
+                onCheckedChanged: scanner.selected.config.rfRfInEnabled = checked
+            }
+
+            Button {
+                id: startRFProg
+                text: qsTr("Configure RF")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                enabled: scanner.selected.config.rfRfInEnabled
+                onClicked: {
+                    programmer.prepareRF(scanner.selected)
+                    mainStack.replace("Programmer.qml")
+                }
+        }
+        }
+    }
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Button {
@@ -227,16 +266,13 @@ ColumnLayout {
             enabled: true
             onClicked: cloneDialog.open()
         }
-        // Button {
-        //     id: startRF
-        //     text: qsTr("Configure RF")
-        //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        //     enabled: true
-        //     onClicked: {
-        //         programmer.prepareRF(scanner.selected)
-        //         mainStack.replace("Programmer.qml")
-        //     }
-        // }
+        Button {
+            id: showRFDialog
+            text: qsTr("Configure RF")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            enabled: true
+            onClicked: rfDiag.open()
+        }
     }
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

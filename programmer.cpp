@@ -8,10 +8,10 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <QStringList>
+#include <QtEndian>
+
 #include "devices/serialdevice.h"
 Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
-    
-
 }
 void Programmer::prepareRF(Ardwiino* device) {
     m_rf = true;
@@ -43,6 +43,12 @@ void Programmer::deviceAdded(Ardwiino* device) {
     m_device = device;
     if (m_status == Status::DFU_DISCONNECT_MAIN || m_status == Status::DISCONNECT_AVRDUDE) {
         m_status = Status::COMPLETE;
+        if (m_rf) {
+            m_rf = false;
+            m_device = m_parent_device;
+            m_parent_device->writeConfig();
+            m_parent_device = NULL;
+        }
         emit statusChanged(m_status);
         emit statusVChanged(getStatusDescription());
     }
@@ -115,18 +121,40 @@ void Programmer::programDFU() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("dfu-programmer"), l);
 }
-void Programmer::programRF(Ardwiino* parent, Device* ports) {
-    QString original = ":047B0000EFBEADDE49";
-    QString replacement = QString(original).replace("EFBEADDE", QString::number(parent->getRFID(), 16)).chopped(2);
-    uint16_t checksum = 0;
-    for (int i = 1; i < replacement.length(); i+=2) {
-        checksum += replacement.mid(i,2).toInt(NULL, 16);
+QString Programmer::programRF(QString hexFile) {
+    QFile inputFile(hexFile);
+    m_tmp_hex = new QTemporaryFile(QDir::temp().filePath("XXXXXX.hex"));
+    if (m_tmp_hex->open()) {
+        QTextStream out(m_tmp_hex);
+        if (inputFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&inputFile);
+            while (!in.atEnd()) {
+                QString line = in.readLine();
+                // DEADBEEF is a placeholder for each rx id, and the there is a checksum of 0D by default. Replace both, strip the checksum then generate a new checksum
+                // Also, flip the endianness, as QString::number is printing big endian
+                if (line.contains("EFBEADDEEFBEADDE")) {
+                    uint32_t tx = m_parent_device->getRFID();
+                    uint32_t rx = m_parent_device->generateClientRFID();
+                    QString txStr = QString::number(qToBigEndian(tx), 16);
+                    QString rxStr = QString::number(qToBigEndian(rx), 16);
+                    // Zero pad to the right, because endianness
+                    rxStr += QString("0").repeated(8 - rxStr.length());
+                    txStr += QString("0").repeated(8 - txStr.length());
+                    line = line.replace("EFBEADDEEFBEADDE", txStr + rxStr).toUpper().chopped(2);
+                    uint16_t checksum = 0;
+                    for (int i = 1; i < line.length(); i += 2) {
+                        checksum += line.mid(i, 2).toInt(NULL, 16);
+                    }
+                    checksum = ((~checksum) & 0xff) + 1;
+                    line += QString::number(checksum, 16).toUpper();
+                }
+                out << line << Qt::endl;
+            }
+            inputFile.close();
+        }
+        m_tmp_hex->close();
     }
-    checksum = ((~checksum)& 0xff)+1;
-    replacement += QString::number(checksum, 16).toUpper();
-    // TODO: all we should need to do is load the rf hex file, replace original with replacement and then program it
-    // For calling this, we will just have to give users the ability to pick a device, but skip over the current device when we do so.
-    // The good thing is that once its programmed, we don't have to do anything with it, it can be configured over rf
+    return m_tmp_hex->fileName();
 }
 void Programmer::programAvrDude() {
     m_status = Status::AVRDUDE;
@@ -137,6 +165,9 @@ void Programmer::programAvrDude() {
     dir.cd("firmware");
     m_process_out.clear();
     QString file = dir.filePath(hexFile);
+    if (m_rf) {
+        file = programRF(file);
+    }
     dir.cdUp();
     dir.cd("binaries");
     dir.cd("avrdude");
@@ -168,8 +199,6 @@ void Programmer::programAvrDude() {
 }
 auto Programmer::program(Device* port) -> bool {
     m_device = port;
-    qDebug() << port->getBoard().inBootloader;
-    qDebug() << port->getBoard().name;
     if (m_status == Status::WAIT) {
         if (m_device->getBoard().hasDFU) {
             DfuArduino* dfu = dynamic_cast<DfuArduino*>(m_device);
@@ -219,17 +248,26 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
             programDFU();
             break;
         case Status::AVRDUDE:
-        qDebug() << m_device->getBoard().shortName;
             if (m_device->getBoard().hasDFU) {
                 m_status = Status::DFU_CONNECT_MAIN;
             } else if (m_device->getBoard().shortName == "mini") {
                 // Minis dont't ever need to get reconnected.
                 m_status = Status::COMPLETE;
+                m_rf = false;
+                m_device = m_parent_device;
+                m_tmp_hex = NULL;
+                m_parent_device->writeConfig();
+                m_parent_device = NULL;
+                break;
             } else {
                 m_status = Status::DISCONNECT_AVRDUDE;
             }
-            m_device->bootloader();
-            m_device->bootloader();
+            if (!m_rf) {
+                m_device->bootloader();
+                m_device->bootloader();
+            } else {
+                m_tmp_hex = NULL;
+            }
             break;
     }
     emit statusChanged(m_status);

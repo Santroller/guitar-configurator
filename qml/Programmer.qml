@@ -9,6 +9,10 @@ import net.tangentmc 1.0
 ColumnLayout {
     id: column
     property var selected: programmer.rf ? devices.model[devices.currentIndex] : scanner.selected
+    property var isGeneric
+    Component.onCompleted: {
+        isGeneric = selected.boardName === "generic"
+    }
     Label {
         text:""
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -61,7 +65,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.fillWidth: true
         ColumnLayout {
-            visible: selected.boardName === "generic" && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
+            visible: column.isGeneric && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
@@ -113,7 +117,7 @@ ColumnLayout {
             }
         }
         ColumnLayout {
-            visible: (selected.boardName === "a-micro" ||selected.boardName === "micro" || selected.boardName === "leonardo") && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
+            visible: !column.isGeneric && (selected.boardName === "a-micro" ||selected.boardName === "micro" || selected.boardName === "leonardo") && (!selected.isArdwiino || !selected.ready) && programmer.status === Status.NOT_PROGRAMMING
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Label {
@@ -123,6 +127,11 @@ ColumnLayout {
 
             Label {
                 text: qsTr("Please select the board that you are using")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+
+            Label {
+                text: column.isGeneric ? "true" : "false"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
 
