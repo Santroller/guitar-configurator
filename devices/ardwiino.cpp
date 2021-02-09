@@ -18,6 +18,7 @@ bool Ardwiino::open() {
     m_board = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board.cpuFrequency = info.cpu_freq;
     memcpy(&info, m_usbDevice.read(COMMAND_GET_RF_CPU_INFO).data(), sizeof(info));
+    QString err = QString::fromUtf8((char*)&info);
     if (QString::fromUtf8(info.board).isEmpty()) {
         memcpy(&info, m_usbDevice.read(COMMAND_GET_RF_CPU_INFO).data() + 1, sizeof(info));
     }
