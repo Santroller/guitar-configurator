@@ -76,7 +76,7 @@ Dialog {
             standardButtons: Dialog.Cancel
             ColumnLayout {
                 Label {
-                    text: "Ground the pin you would like to assign to "+pinDialog.labels[pinDialog.currentPin]
+                    text: "Toggle the pin you would like to assign to "+pinDialog.labels[pinDialog.currentPin]
                 }
             }
             onRejected: {
