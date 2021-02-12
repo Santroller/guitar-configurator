@@ -5,13 +5,11 @@ git reset --hard origin/master
 git submodule init
 git submodule update
 git describe --abbrev=0 --tags > output/version
+mkdir -p build
+cd build
+rm -rf firmware
+cmake ..
 make clean
-rm -r src/uno/usb/obj
-rm -r src/uno/main/obj
-rm -r src/micro/obj
-rm -r src/uno/usb/bin
-rm -r src/uno/main/bin
-rm -r src/micro/bin
-make build-all -j5
-cp -rf output/* ../../firmware/
-cd ../../
+make -j12
+cp -rf firmware/*.hex ../../../firmware
+cd ../../../
