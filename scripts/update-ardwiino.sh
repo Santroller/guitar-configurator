@@ -10,6 +10,7 @@ cd build
 rm -rf firmware
 cmake ..
 make clean
-make -j12
+make -j`nproc`
 cp -rf firmware/*.hex ../../../firmware
+cp -rf firmware/*.uf2 ../../../firmware
 cd ../../../

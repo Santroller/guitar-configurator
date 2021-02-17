@@ -9,7 +9,7 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QtEndian>
-
+#include "picoboot_connection_cxx.h"
 #include "devices/serialdevice.h"
 Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
 }
