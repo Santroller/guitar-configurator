@@ -75,7 +75,7 @@ void Ardwiino::writeConfig() {
     } else if (m_configuration->isGuitar()) {
         st = REAL_GUITAR_SUBTYPE;
     }
-    m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, config.main.subType));
+    m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, st));
     QThread::currentThread()->msleep(150);
     m_usbDevice.write(COMMAND_REBOOT, {});
     // m_hiddev = NULL;

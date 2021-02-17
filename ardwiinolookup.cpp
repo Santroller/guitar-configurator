@@ -52,7 +52,7 @@ const board_t ArdwiinoLookup::boards[19] = {
     {"megaadk-atmega16u2", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "arduino", "atmega328p", 16000000, "/images/ArduinoMegaADK.svg", true, false},
-    {"generic", "generic", "Generic Serial Device", 57600, {0x2FEF}, "arduino", "atmega16u2", 16000000, "/images/ArduinoUno.svg", false, false},
+    {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
 
 auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
