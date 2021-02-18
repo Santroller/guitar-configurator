@@ -24,7 +24,11 @@
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_LIBUSB_1_0
+#ifdef __APPLE__
 #include <libusb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
 #else
 #include <usb.h>
 #endif
