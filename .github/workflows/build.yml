@@ -50,7 +50,7 @@ jobs:
           cp -rf binaries/* guitar-configurator.app/Contents/MacOS/Frameworks
           cp -rf *.json guitar-configurator.app/Contents/MacOS
           cp -rf firmware guitar-configurator.app/Contents/MacOS
-          macdeployqt guitar-configurator.app -qmldir=../
+          macdeployqt guitar-configurator.app -qmldir=../qml
           codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
           mkdir artifacts
           cp ../resources/appdmg.json .
