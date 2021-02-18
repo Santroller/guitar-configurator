@@ -15,12 +15,13 @@
 #define SONY_VID 0x12ba
 #define HARMONIX_VID 0x1bad
 #define SWITCH_VID 0x0f0d
+#define RASPBERRY_PI_VID 0x2e8a
 
 class ArdwiinoLookup : public QObject {
     Q_OBJECT
    public:
     static ArdwiinoLookup* getInstance();
-    static const board_t boards[19];
+    static const board_t boards[20];
     static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject* parent = nullptr);
