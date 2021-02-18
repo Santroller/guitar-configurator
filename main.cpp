@@ -14,7 +14,7 @@
 #include "hotplug/winhotplug.h"
 
 extern "C" {
-    #ifdef Q_OS_MACOS
+    #ifdef __APPLE__
     #include <libusb.h>
     #else
     #include <libusb-1.0/libusb.h>
