@@ -12,97 +12,14 @@
 
 #include "devices/serialdevice.h"
 #include "picoboot_connection_cxx.h"
-extern "C" {
-#include "arguments.h"
-#include "atmel.h"
-#include "commands.h"
-#include "dfu-device.h"
-#include "dfu.h"
-int debug = 1000;
-libusb_context* usbcontext = NULL;
-void dfu_debug(const char* file, const char* function, const int line,
-               const int level, const char* format, ...) {
-    qDebug() << level;
-    if (level < debug) {
-        va_list va_arg;
 
-        va_start(va_arg, format);
-        QString s;
-        s.sprintf("%s:%d: ", file, line);
-        qDebug() << s;
-        s.vsprintf(format, va_arg);
-        qDebug() << s;
-        va_end(va_arg);
-    }
-}
-}
-#define DFU_DEBUG_THRESHOLD 100
-#define DFU_TRACE_THRESHOLD 200
-#define DFU_MESSAGE_DEBUG_THRESHOLD 300
-#define DEBUG(...) dfu_debug(__FILE__, __FUNCTION__, __LINE__, DFU_DEBUG_THRESHOLD, __VA_ARGS__)
 Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
 }
 void Programmer::prepareRF(Ardwiino* device) {
     m_rf = true;
     m_parent_device = device;
 }
-void initDFUDevice(UsbDevice_t devt, dfu_device_t* dfu_device) {
-    auto device = devt.dev;
-    int32_t tmp;
-    DEBUG("found device at USB:%d,%d\n", libusb_get_bus_number(device), libusb_get_device_address(device));
-    /* We found a device that looks like it matches...
-             * let's try to find the DFU interface, open the device
-             * and claim it. */
-
-    struct libusb_device_descriptor descriptor;
-
-    if (libusb_get_device_descriptor(device, &descriptor)) {
-        DEBUG("Failed in libusb_get_device_descriptor\n");
-        return;
-    }
-    tmp = dfu_find_interface(device, false,
-                             descriptor.bNumConfigurations);
-
-    if (0 <= tmp) { /* The interface is valid. */
-        dfu_device->interface = tmp;
-
-        if (0 == libusb_open(device, &dfu_device->handle)) {
-            DEBUG("opened interface %d...\n", tmp);
-            if (0 == libusb_set_configuration(dfu_device->handle, 1)) {
-                DEBUG("set configuration %d...\n", 1);
-                if (0 == libusb_claim_interface(dfu_device->handle, dfu_device->interface)) {
-                    DEBUG("claimed interface %d...\n", dfu_device->interface);
-
-                    switch (dfu_make_idle(dfu_device, true)) {
-                        case 0:
-                            DEBUG("Success.\n");
-                            return;
-                    }
-
-                    DEBUG("Failed to put the device in dfuIDLE mode.\n");
-                    libusb_release_interface(dfu_device->handle, dfu_device->interface);
-                } else {
-                    DEBUG("Failed to claim the DFU interface.\n");
-                }
-            } else {
-                DEBUG("Failed to set configuration.\n");
-            }
-
-            libusb_close(dfu_device->handle);
-        }
-    }
-}
 void Programmer::deviceAdded(DfuArduino* device) {
-    qDebug() << "device";
-    auto devt = device->getUSBDevice();
-    dfu_device_t dev;
-    initDFUDevice(devt, &dev);
-    programmer_arguments arg;
-    arg.command = com_launch;
-    arg.com_launch_config.noreset = false;
-    arg.device_type = ADC_AVR;
-    execute_command(&dev, &arg);
-    libusb_release_interface(dev.handle, dev.interface);
     if (m_status != Status::NOT_PROGRAMMING) {
         QString board = m_device->getBoard().shortName;
         if (!board.contains("-")) {

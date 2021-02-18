@@ -83,7 +83,8 @@
         "dfu.h": "c",
         "qregularexpression": "cpp",
         "qtendian": "cpp",
-        "libusb.h": "c"
+        "libusb.h": "c",
+        "unistd.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
