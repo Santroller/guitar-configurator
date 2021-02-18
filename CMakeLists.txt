@@ -148,6 +148,19 @@ target_link_libraries(
   boot_picoboot_headers
   pico_platform_headers
   picoboot_connection_cxx
+  dfu_programmer
   ${LIBUSB1_STATIC_LDFLAGS}
   ${WIN_LINK_LIBRARIES})
 include_directories(${LIBUSB1_INCLUDE_DIRS})
+add_library(dfu_programmer INTERFACE)
+set(SRC ${CMAKE_CURRENT_LIST_DIR}/libraries/dfu-programmer/src)
+target_sources(
+  dfu_programmer INTERFACE ${SRC}/atmel.c ${SRC}/commands.c
+                           ${SRC}/dfu.c ${SRC}/intel_hex.c ${SRC}/stm32.c)
+target_link_libraries(
+  dfu_programmer
+  INTERFACE
+  ${LIBUSB1_STATIC_LDFLAGS}
+  ${WIN_LINK_LIBRARIES})
+target_compile_definitions(dfu_programmer INTERFACE HAVE_CONFIG_H)
+target_include_directories(dfu_programmer INTERFACE ${SRC})

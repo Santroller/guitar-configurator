@@ -7,3 +7,9 @@
 [submodule "libraries/pico-sdk"]
 	path = libraries/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk
+[submodule "libraries/avrdude/avrdude"]
+	path = libraries/avrdude/avrdude
+	url = https://github.com/sigmike/avrdude
+[submodule "libraries/dfu-programmer/dfu-programmer"]
+	path = libraries/dfu-programmer/dfu-programmer
+	url = https://github.com/dfu-programmer/dfu-programmer

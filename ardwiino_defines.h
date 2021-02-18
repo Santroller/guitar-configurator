@@ -15,8 +15,6 @@ class ArdwiinoDefines : public QObject {
     Q_OBJECT
    public:
 #include "submodules/Ardwiino/src/shared/config/defines.h"
-#include "submodules/Ardwiino/src/shared/input/inputs/ps2_cnt.h"
-#include "submodules/Ardwiino/src/shared/input/inputs/wii_ext.h"
     static ArdwiinoDefines* getInstance();
     static QString fixKey(QString string) {
         auto sentence = string.toLower().split("_");

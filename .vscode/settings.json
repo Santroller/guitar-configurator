@@ -79,7 +79,8 @@
         "qlist": "cpp",
         "unordered_set": "cpp",
         "qstringlist": "cpp",
-        "qqueue": "cpp"
+        "qqueue": "cpp",
+        "dfu.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
