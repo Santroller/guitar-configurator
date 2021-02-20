@@ -19,6 +19,7 @@
 #include <memory>
 #include <numeric>
 #include <set>
+#include <sstream>
 #include <vector>
 
 #include "ardwiinolookup.h"
