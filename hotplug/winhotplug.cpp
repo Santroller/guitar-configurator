@@ -216,7 +216,7 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                     } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
                         QString drive = ToDriveName(volume.dbcv_unitmask);
-                        QTimer::singleShot(100, [this, dev]() {
+                        QTimer::singleShot(100, [this, dev, drive]() {
                             QFile file(drive.filePath("INFO_UF2.txt"));
                             if (file.exists()) {
                                 file.open(QIODevice::ReadOnly);
@@ -247,7 +247,7 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                     } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
                         QString drive = ToDriveName(volume.dbcv_unitmask);
-                        QTimer::singleShot(100, [this, dev]() {
+                        QTimer::singleShot(100, [this, dev, drive]() {
                             QFile file(drive.filePath("INFO_UF2.txt"));
                             if (file.exists()) {
                                 file.open(QIODevice::ReadOnly);
