@@ -474,20 +474,20 @@ void PicobootDevice::program(QFile *file, std::function<void(long, long, int, in
                 file_buf.insert(file_buf.begin(), read_range.from - aligned_range.from, 0);
                 file_buf.insert(file_buf.end(), aligned_range.to - read_range.to, 0);
                 assert(file_buf.size() == FLASH_SECTOR_ERASE_SIZE);
-                // con.exit_xip();
-                // con.flash_erase(aligned_range.from, FLASH_SECTOR_ERASE_SIZE);
-                // raw_access.write_vector(aligned_range.from, file_buf);
+                con.exit_xip();
+                con.flash_erase(aligned_range.from, FLASH_SECTOR_ERASE_SIZE);
+                raw_access.write_vector(aligned_range.from, file_buf);
                 base = read_range.to;  // about to add batch_size
             } else {
                 file_access.read_into_vector(base, this_batch, file_buf);
-                // raw_access.write_vector(base, file_buf);
+                raw_access.write_vector(base, file_buf);
                 base += this_batch;
             }
             progress(base - mem_range.from, mem_range.to - mem_range.from, currentSection, totalCount);
         }
         currentSection++;
         // Verify
-        bool ok = true;
+        ok = true;
         // progress_bar bar("Verifying " + memory_names[type] + ":    ");
         uint32_t batch_size = FLASH_SECTOR_ERASE_SIZE;
         std::vector<uint8_t> file_buf;
@@ -496,7 +496,7 @@ void PicobootDevice::program(QFile *file, std::function<void(long, long, int, in
         for (uint32_t base = mem_range.from; base < mem_range.to && ok; base += batch_size) {
             uint32_t this_batch = std::min(mem_range.to - base, batch_size);
             file_access.read_into_vector(base, this_batch, file_buf);
-            // raw_access.read_into_vector(base, this_batch, device_buf);
+            raw_access.read_into_vector(base, this_batch, device_buf);
             assert(file_buf.size() == device_buf.size());
             for (uint i = 0; i < this_batch; i++) {
                 if (file_buf[i] != device_buf[i]) {
@@ -523,5 +523,5 @@ void PicobootDevice::program(QFile *file, std::function<void(long, long, int, in
     if (!start) {
         fail(ERROR_FORMAT, "Cannot execute as file does not contain a valid RP2 executable image");
     }
-    // con.reboot(flash == get_memory_type(start) ? 0 : start, SRAM_END, 500);
+    con.reboot(flash == get_memory_type(start) ? 0 : start, SRAM_END, 500);
 }
