@@ -178,6 +178,15 @@ WinHotplug::WinHotplug(PortScanner* scanner) : scanner(scanner) {
     }
     SetupDiDestroyDeviceInfoList(handle);
 }
+QString ToDriveName(int Mask) {
+    int i = 0;
+    for (i = 0; i < 26; ++i) {
+        if ((Mask & 0x1) == 0x1) break;
+        Mask = Mask >> 1;
+    }
+    char cLetter = (char)(i + 'A');
+    return QString::fromLatin1(cLetter) + ":\\";
+}
 bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, long* result) {
     if (eventType == "windows_generic_MSG") {
         MSG* msg = reinterpret_cast<MSG*>(message);
@@ -204,6 +213,19 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         QTimer::singleShot(isArdwiino ? 1000 : 100, [this, dev]() {
                             scanner->add(dev);
                         });
+                    } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
+                        PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
+                        QString drive = ToDriveName(volume.dbcv_unitmask);
+                        QTimer::singleShot(100, [this, dev]() {
+                            QFile file(drive.filePath("INFO_UF2.txt"));
+                            if (file.exists()) {
+                                file.open(QIODevice::ReadOnly);
+                                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                                    scanner->picoDetected(drive);
+                                }
+                                file.close();
+                            }
+                        });
                     }
                     break;
                 case DBT_DEVICEREMOVECOMPLETE:
@@ -222,6 +244,19 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         UsbDevice_t dev = {};
                         lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                         scanner->remove(dev);
+                    } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
+                        PDEV_BROADCAST_VOLUME_W lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME_W>(lpdb);
+                        QString drive = ToDriveName(volume.dbcv_unitmask);
+                        QTimer::singleShot(100, [this, dev]() {
+                            QFile file(drive.filePath("INFO_UF2.txt"));
+                            if (file.exists()) {
+                                file.open(QIODevice::ReadOnly);
+                                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                                    scanner->picoDetected(drive);
+                                }
+                                file.close();
+                            }
+                        });
                     }
             }
         }
@@ -247,8 +282,15 @@ void WinHotplug::init(WId wid) {
     NotificationFilter3.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
     NotificationFilter3.dbcc_classguid = GUID_DEVINTERFACE_USB_DEVICE;
 
+    DEV_BROADCAST_DEVICEINTERFACE NotificationFilter4;
+    ZeroMemory(&NotificationFilter, sizeof(NotificationFilter));
+    NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
+    NotificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+    NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_VOLUME;
+
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter2, DEVICE_NOTIFY_WINDOW_HANDLE);
+    RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter3, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter3, DEVICE_NOTIFY_WINDOW_HANDLE);
 }
 #endif
