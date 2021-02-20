@@ -59,6 +59,7 @@ set(guitar-configurator_SRCS
     devices/null_device.cpp
     devices/ardwiino.cpp
     devices/arduino.cpp
+    devices/picoboot_device.cpp
     deviceconfiguration.cpp)
 
 set(guitar-configurator_RSCS resources.qrc)

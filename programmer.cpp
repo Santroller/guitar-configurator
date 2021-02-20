@@ -9,17 +9,27 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QtEndian>
+#include <algorithm>
+#include <array>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <numeric>
+#include <set>
+#include <vector>
 
-#include "devices/serialdevice.h"
-#include "picoboot_connection_cxx.h"
-
-Programmer::Programmer(QObject* parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
+Programmer::Programmer(QObject *parent) : QObject(parent), m_status(Status::NOT_PROGRAMMING), m_device(nullptr), m_restore(false), m_rf(false) {
 }
-void Programmer::prepareRF(Ardwiino* device) {
+void Programmer::prepareRF(Ardwiino *device) {
     m_rf = true;
     m_parent_device = device;
 }
-void Programmer::deviceAdded(DfuArduino* device) {
+void Programmer::deviceAdded(DfuArduino *device) {
     if (m_status != Status::NOT_PROGRAMMING) {
         QString board = m_device->getBoard().shortName;
         if (!board.contains("-")) {
@@ -41,9 +51,9 @@ void Programmer::deviceAdded(DfuArduino* device) {
     emit statusChanged(m_status);
     emit statusVChanged(getStatusDescription());
 }
-void Programmer::deviceAdded(Ardwiino* device) {
+void Programmer::deviceAdded(Ardwiino *device) {
     m_device = device;
-    if (m_status == Status::DFU_DISCONNECT_MAIN || m_status == Status::DISCONNECT_AVRDUDE) {
+    if (m_status == Status::DFU_DISCONNECT_MAIN || m_status == Status::DISCONNECT_AVRDUDE || m_status == Status::DISCONNECT_PICOBOOT) {
         m_status = Status::COMPLETE;
         if (m_rf) {
             m_rf = false;
@@ -55,7 +65,24 @@ void Programmer::deviceAdded(Ardwiino* device) {
         emit statusVChanged(getStatusDescription());
     }
 }
-void Programmer::deviceAdded(Arduino* device) {
+
+void Programmer::programPico() {
+    auto dir = QDir(QCoreApplication::applicationDirPath());
+    dir.cd("firmware");
+    QFile file = QFile(dir.filePath("ardwiino-pico-rp2040.uf2"));
+    auto f = [=](long a, long b, int step, int stepCount) {
+        return this->setPercentage(a, b, step, stepCount);
+    };
+    ((PicobootDevice *)m_device)->program(&file, f);
+}
+void Programmer::deviceAdded(PicobootDevice *device) {
+    m_device = device;
+    if (m_status == Status::WAIT_PICOBOOT) {
+        m_status = Status::PICOBOOT;
+        programPico();
+    }
+}
+void Programmer::deviceAdded(Arduino *device) {
     if (m_device && !m_device->getBoard().hasDFU) {
         device->setBoardType(m_device->getBoard().shortName, m_device->getBoard().cpuFrequency);
     }
@@ -188,7 +215,7 @@ void Programmer::programAvrDude() {
         "-b",
         QString::number(board.baudRate),
         "-P",
-        static_cast<SerialDevice*>(m_device)->getLocation(),
+        static_cast<SerialDevice *>(m_device)->getLocation(),
         "-U",
         "flash:w:" + file + ":a",
     };
@@ -199,11 +226,25 @@ void Programmer::programAvrDude() {
     connect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
     m_process->start(dir.filePath("avrdude"), l);
 }
-auto Programmer::program(Device* port) -> bool {
+auto Programmer::program(Device *port) -> bool {
+    count = 0;
     m_device = port;
     if (m_status == Status::WAIT) {
-        if (m_device->getBoard().hasDFU) {
-            DfuArduino* dfu = dynamic_cast<DfuArduino*>(m_device);
+        if (m_device->getBoard().protocol == "pico") {
+            QTimer::singleShot(100, [&]() {
+                programPico();
+                m_status = Status::DISCONNECT_PICOBOOT;
+                emit statusChanged(m_status);
+                emit statusVChanged(getStatusDescription());
+            });
+            m_status = Status::PICOBOOT;
+        } else if (m_device->getBoard().hasDFU) {
+            if (m_restore) {
+                steps = 1;
+            } else {
+                steps = 6;
+            }
+            DfuArduino *dfu = dynamic_cast<DfuArduino *>(m_device);
             if (dfu) {
                 m_status = Status::DFU_ERASE_AVRDUDE;
                 programDFU();
@@ -212,6 +253,7 @@ auto Programmer::program(Device* port) -> bool {
                 m_status = Status::DFU_CONNECT_AVRDUDE;
             }
         } else {
+            steps = 1;
             if (port->getBoard().inBootloader) {
                 programAvrDude();
             } else {
@@ -232,6 +274,8 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
     QObject::disconnect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::disconnect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
     QObject::disconnect(qApp, SIGNAL(aboutToQuit()), m_process, SLOT(terminate()));
+    count = 0;
+    step++;
     switch (m_status) {
         case Status::DFU_ERASE_AVRDUDE:
             m_status = Status::DFU_FLASH_AVRDUDE;
@@ -278,21 +322,18 @@ void Programmer::complete(int exitCode, QProcess::ExitStatus exitStatus) {
 
 void Programmer::onReady() {
     QString out = m_process->readAllStandardOutput();
-    QString out2 = m_process->readAllStandardError();
-    m_process_out += out2;
+    QString outErr = m_process->readAllStandardError();
+    m_process_out += outErr;
     m_process_out += out;
-    if (m_restore) {
-        m_process_percent += out2.count('#') * ((100.0 / 50.0) / 300.0);
-        m_process_percent += out2.count('>') * ((100.0 / 32.0) / 200.0);
-    } else {
-        bool hasDfu = m_device->getBoard().hasDFU;
-        //For avrdude, each # counts for 2%, and there are 4 steps, so 400% total. 2/400 rescales that back to 100%.
-        //For dfu, there are a total of 32 >'s per line, and there are two steps.
-        //There are three different processes, two dfu and one avrdude. we need 100%, so we can do two 33s and one 34.
-        m_process_percent += out2.count('#') * ((100.0 / 50.0) / 300.0) * (hasDfu ? 0.34 : 1);
-        m_process_percent += out2.count('>') * ((100.0 / 32.0) / 200.0) * (hasDfu ? 0.33 : 0);
+    if (outErr.contains('#')) {
+        count += outErr.count('#');
+        //For Avrdude, each # counts for 2%, and there are 3 steps. (read flags, write flash, verify flash)
+        setPercentage(count, 50 * 3, step, steps);
+    } else if (outErr.contains('>')) {
+        count += outErr.count('>');
+        //For Dfu Programmer, there are a total of 32 >'s per line, and there are two steps (write flash, verify flash)
+        setPercentage(count, 32 * 2, step, steps);
     }
+    setPercentage(m_process_percent);
     emit processOutChanged(m_process_out);
-    emit processPercentChanged(m_process_percent);
-    emit statusVChanged(getStatusDescription());
 }

@@ -260,6 +260,8 @@ ColumnLayout {
             id: progressBar
             Layout.fillWidth: true
             value: programmer.process_percent
+            from: 0
+            to: 100
         }
 
         ScrollView {

@@ -8,9 +8,10 @@
 
 #include "devices/arduino.h"
 #include "devices/ardwiino.h"
-#include "devices/dfu_arduino.h"
-#include "status.h"
 #include "devices/device.h"
+#include "devices/dfu_arduino.h"
+#include "devices/picoboot_device.h"
+#include "status.h"
 
 class Programmer : public QObject {
     Q_OBJECT
@@ -36,7 +37,7 @@ class Programmer : public QObject {
     void onReady();
     void complete(int exitCode, QProcess::ExitStatus exitStatus);
     QString getStatusDescription() {
-        return QString("Programming Status: %1 (%2%)").arg(Status::toString(m_status)).arg(QString::number(m_process_percent * 100, 'f', 2));
+        return QString("Programming Status: %1 (%2%)").arg(Status::toString(m_status)).arg(QString::number(m_process_percent, 'f', 2));
     }
     bool getRestore() {
         return m_restore;
@@ -47,31 +48,43 @@ class Programmer : public QObject {
     void setRestoring(bool restore) {
         m_restore = restore;
         m_process_out = "";
-        m_process_percent = 0;
+        setPercentage(0);
         m_status = Status::NOT_PROGRAMMING;
         emit restoreChanged(restore);
         emit statusChanged(m_status);
-        emit statusVChanged(getStatusDescription());
         emit processOutChanged(m_process_out);
-        emit processPercentChanged(m_process_percent);
     }
     void startProgramming() {
         m_status = Status::WAIT;
         emit statusChanged(m_status);
-        emit statusVChanged(getStatusDescription());
+        setPercentage(0);
     }
 
    public:
     void deviceAdded(DfuArduino* device);
     void deviceAdded(Ardwiino* device);
     void deviceAdded(Arduino* device);
+    void deviceAdded(PicobootDevice* device);
+    void setPercentage(long dividend, long divisor, int step, int stepCount) {
+        double perc = divisor ? ((100.0 * dividend) / divisor) : 100.0;
+        setPercentage(((100.0 * step) / stepCount) + (perc / stepCount));
+    }
+    void setPercentage(double percentage) {
+        m_process_percent = percentage;
+        emit statusVChanged(getStatusDescription());
+        emit processPercentChanged(m_process_percent);
+    }
 
    private:
     void programDFU();
     void programAvrDude();
+    void programPico();
     QProcess* m_process{};
     QString m_process_out;
     double m_process_percent{};
+    int count;
+    int step;
+    int steps;
     Status::Value m_status;
     Device* m_device;
     bool m_restore;

@@ -16,6 +16,7 @@
 #define HARMONIX_VID 0x1bad
 #define SWITCH_VID 0x0f0d
 #define RASPBERRY_PI_VID 0x2e8a
+#define PICOBOOT_PID 0x0003
 
 class ArdwiinoLookup : public QObject {
     Q_OBJECT

@@ -13,6 +13,7 @@
 
 #include "devices/dfu_arduino.h"
 #include "devices/null_device.h"
+#include "devices/picoboot_device.h"
 #define PID_8U2 0x2FF7
 #define VID_8U2 0x03eb
 #define PID_16U2 0x2FEF
@@ -68,6 +69,11 @@ void PortScanner::add(UsbDevice_t device) {
         Ardwiino* adev = new Ardwiino(device);
         if (add(adev)) {
             m_programmer->deviceAdded(adev);
+        }
+    } else if (device.vid == RASPBERRY_PI_VID && device.pid == PICOBOOT_PID) {
+        auto pdev = new PicobootDevice(device);
+        if (add(pdev)) {
+            m_programmer->deviceAdded(pdev);
         }
     } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
         dev = new DfuArduino("at90usb82", device);

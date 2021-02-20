@@ -84,7 +84,17 @@
         "qregularexpression": "cpp",
         "qtendian": "cpp",
         "libusb.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "iomanip": "cpp",
+        "cassert": "cpp",
+        "cerrno": "cpp",
+        "cfloat": "cpp",
+        "climits": "cpp",
+        "ios": "cpp",
+        "locale": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "cstdbool": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

@@ -8,6 +8,9 @@ class Status : public QObject {
         NOT_PROGRAMMING,
         WAIT,
         WAIT_AVRDUDE,
+        WAIT_PICOBOOT,
+        PICOBOOT,
+        DISCONNECT_PICOBOOT,
         AVRDUDE,
         DISCONNECT_AVRDUDE,
         DFU_CONNECT_AVRDUDE,
@@ -29,15 +32,20 @@ class Status : public QObject {
                 return "Not Programming";
             case Value::WAIT:
                 return "Waiting";
+            case Value::WAIT_PICOBOOT:
+                return "Waiting for Pico";
             case Value::WAIT_AVRDUDE:
                 return "Waiting for Avrdude";
             case Value::DFU_CONNECT_AVRDUDE:
             case Value::DFU_CONNECT_MAIN:
                 return "Waiting for DFU Mode";
+            case Value::PICOBOOT:
+                return "Programming";
             case Value::AVRDUDE:
                 return "Programming Main Controller";
             case Value::DFU_DISCONNECT_MAIN:
             case Value::DFU_DISCONNECT_AVRDUDE:
+            case Value::DISCONNECT_PICOBOOT:
                 return "Waiting for Reconnection";
             case Value::COMPLETE:
                 return "Finished Programming";

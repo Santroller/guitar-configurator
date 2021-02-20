@@ -52,10 +52,9 @@ const board_t ArdwiinoLookup::boards[20] = {
     {"megaadk-atmega16u2", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "arduino", "atmega328p", 16000000, "/images/ArduinoMegaADK.svg", true, false},
-    {"pico", "pico", "Raspberry PI Pico (Picoboot)", 0, {0x0003}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pico", "pico", "Raspberry PI Pico (Picoboot)", 0, {PICOBOOT_PID}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
-
 auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
     // the mini is always in bootloader mode
     if (board_name == "mini") inBootloader = true;
