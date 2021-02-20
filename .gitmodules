@@ -1,15 +1,3 @@
 [submodule "submodules/Ardwiino"]
 	path = submodules/Ardwiino
 	url = https://github.com/sanjay900/Ardwiino
-[submodule "libraries/picotool"]
-	path = libraries/picotool
-	url = https://github.com/raspberrypi/picotool
-[submodule "libraries/pico-sdk"]
-	path = libraries/pico-sdk
-	url = https://github.com/raspberrypi/pico-sdk
-[submodule "libraries/avrdude/avrdude"]
-	path = libraries/avrdude/avrdude
-	url = https://github.com/sigmike/avrdude
-[submodule "libraries/dfu-programmer/dfu-programmer"]
-	path = libraries/dfu-programmer/dfu-programmer
-	url = https://github.com/dfu-programmer/dfu-programmer

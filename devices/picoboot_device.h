@@ -8,6 +8,7 @@
 #include <QSerialPort>
 #include <QFile>
 #include <QSerialPortInfo>
+#include "devices/ardwiino.h"
 
 #include "device.h"
 class PicobootDevice : public Device {
@@ -19,7 +20,7 @@ class PicobootDevice : public Device {
     virtual void close();
     virtual bool open();
     virtual void bootloader();
-    void program(QFile* firmware, std::function<void(long, long, int, int)> progress);
+    void program(QFile* firmware, Ardwiino* parent, std::function<void(long, long, int, int)> progress);
     inline virtual bool isConfigurable() {
         return false;
     }
@@ -29,7 +30,7 @@ class PicobootDevice : public Device {
 
    private:
     inline virtual bool isEqual(const Device& other) const {
-        return true;
+        return m_deviceID.drivePath == other.getUSBDevice().drivePath;
     }
 };
 

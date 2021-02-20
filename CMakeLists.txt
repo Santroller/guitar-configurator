@@ -120,13 +120,13 @@ elseif(WIN32)
   set(RESOURCE_FILES resources/project.rc)
   set(OS_BUNDLE WIN32)
 endif()
-add_subdirectory(libraries/picotool/picoboot_connection)
-add_subdirectory(libraries/pico-sdk/src/common/pico_binary_info
-                 pico_binary_info)
-add_subdirectory(libraries/pico-sdk/src/common/boot_uf2 boot_uf2_headers)
-add_subdirectory(libraries/pico-sdk/src/common/boot_picoboot
-                 boot_picoboot_headers)
-add_subdirectory(libraries/pico-sdk/src/host/pico_platform pico_platform)
+# add_subdirectory(libraries/picotool/picoboot_connection)
+# add_subdirectory(libraries/pico-sdk/src/common/pico_binary_info
+#                  pico_binary_info)
+# add_subdirectory(libraries/pico-sdk/src/common/boot_uf2 boot_uf2_headers)
+# add_subdirectory(libraries/pico-sdk/src/common/boot_picoboot
+#                  boot_picoboot_headers)
+# add_subdirectory(libraries/pico-sdk/src/host/pico_platform pico_platform)
 file(COPY ${BINARIES} DESTINATION binaries)
 add_executable(
   ${PROJECT_NAME}
@@ -145,11 +145,11 @@ target_link_libraries(
   Qt5::QuickControls2
   Qt5::Svg
   Threads::Threads
-  pico_binary_info
-  boot_uf2_headers
-  boot_picoboot_headers
-  pico_platform_headers
-  picoboot_connection_cxx
+  # pico_binary_info
+  # boot_uf2_headers
+  # boot_picoboot_headers
+  # pico_platform_headers
+  # picoboot_connection_cxx
   ${LIBUSB1_STATIC_LDFLAGS}
   ${WIN_LINK_LIBRARIES})
 include_directories(${LIBUSB1_INCLUDE_DIRS})

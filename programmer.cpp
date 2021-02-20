@@ -69,11 +69,12 @@ void Programmer::deviceAdded(Ardwiino *device) {
 void Programmer::programPico() {
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
-    QFile file(dir.filePath("ardwiino-pico-rp2040.uf2"));
+    QString uf2File = "ardwiino-pico-rp2040";
+    QFile file(dir.filePath(uf2File + (m_rf ? "-rf" : "") + ".uf2"));
     auto f = [=](long a, long b, int step, int stepCount) {
         return this->setPercentage(a, b, step, stepCount);
     };
-    ((PicobootDevice *)m_device)->program(&file, f);
+    ((PicobootDevice *)m_device)->program(&file, m_parent_device, f);
 }
 void Programmer::deviceAdded(PicobootDevice *device) {
     m_device = device;

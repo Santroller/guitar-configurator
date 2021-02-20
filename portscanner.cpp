@@ -28,6 +28,7 @@ PortScanner::PortScanner(Programmer* programmer, QObject* parent) : QObject(pare
         m_graphical = true;
     }
     setSelected(nullptr);
+    new PicobootDevice(UsbDevice_t());
 }
 bool PortScanner::add(Device* device) {
     if (std::find_if(m_model.begin(), m_model.end(), [device](QObject* f) { return *static_cast<Device*>(f) == *device; }) != m_model.end()) {
@@ -63,17 +64,25 @@ bool PortScanner::remove(Device* device) {
     update();
     return true;
 }
+void PortScanner::picoDetected(const QString& path) {
+    UsbDevice_t devt;
+    devt.drivePath = path;
+    auto pdev = new PicobootDevice(devt);
+    if (add(pdev)) {
+        m_programmer->deviceAdded(pdev);
+    }
+}
+void PortScanner::picoUnplugged(const QString& path) {
+    UsbDevice_t devt;
+    devt.drivePath = path;
+    remove(new PicobootDevice(devt));
+}
 void PortScanner::add(UsbDevice_t device) {
     DfuArduino* dev = NULL;
     if (ArdwiinoLookup::isArdwiino(device)) {
         Ardwiino* adev = new Ardwiino(device);
         if (add(adev)) {
             m_programmer->deviceAdded(adev);
-        }
-    } else if (device.vid == RASPBERRY_PI_VID && device.pid == PICOBOOT_PID) {
-        auto pdev = new PicobootDevice(device);
-        if (add(pdev)) {
-            m_programmer->deviceAdded(pdev);
         }
     } else if (device.vid == VID_8U2 && device.pid == PID_8U2) {
         dev = new DfuArduino("at90usb82", device);
@@ -98,6 +107,7 @@ void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
         add(new OutdatedArdwiino(serialPortInfo));
     } else {
         auto board = ArdwiinoLookup::detectBoard(serialPortInfo);
+        // We don't care about the Serial device exposed by the pico - instead we use picoboot
         if (board.name != "" && board.protocol != "pico") {
             Arduino* dev = new Arduino(serialPortInfo);
             if (add(dev)) {

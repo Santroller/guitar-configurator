@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <QDir>
 #include <QFile>
+#include <QStorageInfo>
 #include <QThread>
 #include <QTimer>
 static void getDevSerial(libusb_device* dev, uint8_t index, UsbDevice_t* devt) {
@@ -30,7 +32,7 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
         QTimer::singleShot(1000, [event, sc, dev]() {
             struct libusb_device_descriptor desc;
             (void)libusb_get_device_descriptor(dev, &desc);
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), desc.idVendor, desc.idProduct, desc.bcdDevice, NULL, "", dev};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), desc.idVendor, desc.idProduct, desc.bcdDevice, NULL, "", "", dev};
             auto delay = 0;
             if (ArdwiinoLookup::isArdwiino(devt) && event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
                 getDevSerial(dev, desc.iSerialNumber, &devt);
@@ -48,16 +50,17 @@ UnixHotplug::UnixHotplug(PortScanner* scanner, QObject* parent) : QObject(parent
     watcher->addPath("/dev");
     // setup signal and slot
     connect(watcher, &QFileSystemWatcher::directoryChanged, this, &UnixHotplug::deviceChanged);
+    deviceChanged("");
     // // msec
     // timer->start(10);
-    for (const auto& a : QSerialPortInfo::availablePorts()) {
-#if defined Q_OS_MAC
-        if (a.portName().startsWith("cu"))
-            continue;
-#endif
-        m_port_list.push_back(a);
-        scanner->serialDeviceDetected(a);
-    }
+    //     for (const auto& a : QSerialPortInfo::availablePorts()) {
+    // #if defined Q_OS_MAC
+    //         if (a.portName().startsWith("cu"))
+    //             continue;
+    // #endif
+    //         m_port_list.push_back(a);
+    //         scanner->serialDeviceDetected(a);
+    //     }
     libusb_hotplug_callback_handle callback_handle;
     libusb_init(NULL);
     int rc;
@@ -90,7 +93,7 @@ UnixHotplug::UnixHotplug(PortScanner* scanner, QObject* parent) : QObject(parent
         for (int i = 0; i < cnt; i++) {
             libusb_device* dev = devs[i];
             struct libusb_device_descriptor desc;
-            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, 0, NULL, "", dev};
+            UsbDevice_t devt = {libusb_get_bus_number(dev), libusb_get_device_address(dev), 0, 0, 0, NULL, "", "", dev};
 
             (void)libusb_get_device_descriptor(dev, &desc);
             devt.vid = desc.idVendor;
@@ -152,4 +155,33 @@ void UnixHotplug::deviceChanged(const QString& path) {
         scanner->serialDeviceUnplugged(p);
     }
     m_port_list = newSp;
+
+    std::vector<QString> newDrv;
+    foreach (const QStorageInfo& storage, QStorageInfo::mountedVolumes()) {
+        if (storage.isValid() && storage.isReady()) {
+            QDir drive(storage.displayName());
+            QFile file(drive.filePath("INFO_UF2.txt"));
+            if (file.exists()) {
+                file.open(QIODevice::ReadOnly);
+                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                    newDrv.push_back(storage.displayName());
+                }
+                file.close();
+            }
+        }
+    }
+    std::vector<QString> diffDrv;
+    std::sort(m_drive_list.begin(), m_drive_list.end());
+    std::sort(newDrv.begin(), newDrv.end());
+    //Ports in new list that aren't in old (connected ports)
+    std::set_difference(newDrv.begin(), newDrv.end(), m_drive_list.begin(), m_drive_list.end(), std::inserter(diffDrv, diffDrv.begin()));
+    for (const auto& drv : diffDrv) {
+        scanner->picoDetected(drv);
+    }
+    diffDrv.clear();
+    //Ports in old list that aren't in new (disconnected ports)
+    std::set_difference(m_drive_list.begin(), m_drive_list.end(), newDrv.begin(), newDrv.end(), std::inserter(diffDrv, diffDrv.begin()));
+    for (const auto& drv : diffDrv) {
+        scanner->picoUnplugged(drv);
+    }
 }

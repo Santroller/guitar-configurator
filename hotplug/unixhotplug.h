@@ -35,6 +35,7 @@ class UnixHotplug : public QObject {
     QTimer *timer;
     bool m_hasHotplug;
     QList<QSerialPortInfo> m_port_list;
+    QList<QString> m_drive_list;
     PortScanner *scanner;
     QFileSystemWatcher *watcher;
 };

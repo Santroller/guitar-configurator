@@ -10,6 +10,7 @@
 #include "submodules/Ardwiino/src/shared/config/config.h"
 #include "ardwiino_defines.h"
 #include "ledhandler.h"
+#include <QApplication>
 #ifdef Q_OS_WIN
 #include "hotplug/winhotplug.h"
 
@@ -33,7 +34,7 @@ auto main(int argc, char *argv[]) -> int
     QCoreApplication::setOrganizationName("TangentMC");
     QCoreApplication::setOrganizationDomain("tangentmc.net");
     QCoreApplication::setApplicationName("Guitar Configurator");
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QQuickStyle::setStyle("universal");
     QQmlApplicationEngine engine;
     qmlRegisterUncreatableType<Status>("net.tangentmc", 1, 0, "Status",

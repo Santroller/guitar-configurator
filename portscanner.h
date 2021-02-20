@@ -38,6 +38,8 @@ class PortScanner : public QObject {
     void update();
     void serialDeviceDetected(const QSerialPortInfo& port);
     void serialDeviceUnplugged(const QSerialPortInfo& port);
+    void picoDetected(const QString& port);
+    void picoUnplugged(const QString& port);
     void fixLinux();
     void toggleGraphics();
     void clearImages();
