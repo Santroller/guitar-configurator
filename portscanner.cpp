@@ -98,7 +98,7 @@ void PortScanner::serialDeviceDetected(const QSerialPortInfo& serialPortInfo) {
         add(new OutdatedArdwiino(serialPortInfo));
     } else {
         auto board = ArdwiinoLookup::detectBoard(serialPortInfo);
-        if (board.name != "") {
+        if (board.name != "" && board.protocol != "pico") {
             Arduino* dev = new Arduino(serialPortInfo);
             if (add(dev)) {
                 m_programmer->deviceAdded(dev);
