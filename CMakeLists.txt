@@ -57,6 +57,7 @@ set(guitar-configurator_SRCS
     devices/serialdevice.cpp
     devices/dfu_arduino.cpp
     devices/null_device.cpp
+    devices/picoboot_device.cpp
     devices/ardwiino.cpp
     devices/arduino.cpp
     devices/picoboot_device.cpp

@@ -489,9 +489,8 @@ void PicobootDevice::program(QFile *file, std::function<void(long, long, int, in
         // Verify
         ok = true;
         // progress_bar bar("Verifying " + memory_names[type] + ":    ");
-        uint32_t batch_size = FLASH_SECTOR_ERASE_SIZE;
-        std::vector<uint8_t> file_buf;
-        std::vector<uint8_t> device_buf;
+        file_buf.clear();
+        device_buf.clear();
         uint32_t pos = mem_range.from;
         for (uint32_t base = mem_range.from; base < mem_range.to && ok; base += batch_size) {
             uint32_t this_batch = std::min(mem_range.to - base, batch_size);
