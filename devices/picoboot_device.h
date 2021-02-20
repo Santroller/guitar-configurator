@@ -30,7 +30,7 @@ class PicobootDevice : public Device {
 
    private:
     inline virtual bool isEqual(const Device& other) const {
-        return m_deviceID.drivePath == other.getUSBDevice().drivePath;
+        return true;
     }
 };
 

@@ -29,6 +29,7 @@ typedef struct UsbDevice_t {
     QString serial;
     libusb_device* dev;
     bool operator==(const UsbDevice_t& other) {
+        if (!drivePath.isEmpty()) return drivePath == other.drivePath;
         return port == other.port && bus == other.bus;
     }
 } UsbDevice_t;

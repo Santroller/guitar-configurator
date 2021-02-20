@@ -156,15 +156,15 @@ void UnixHotplug::deviceChanged(const QString& path) {
     }
     m_port_list = newSp;
 
-    std::vector<QString> newDrv;
+    QList<QString> newDrv;
     foreach (const QStorageInfo& storage, QStorageInfo::mountedVolumes()) {
         if (storage.isValid() && storage.isReady()) {
-            QDir drive(storage.displayName());
+            QDir drive(storage.rootPath());
             QFile file(drive.filePath("INFO_UF2.txt"));
             if (file.exists()) {
                 file.open(QIODevice::ReadOnly);
                 if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
-                    newDrv.push_back(storage.displayName());
+                    newDrv.push_back(storage.rootPath());
                 }
                 file.close();
             }
@@ -184,4 +184,5 @@ void UnixHotplug::deviceChanged(const QString& path) {
     for (const auto& drv : diffDrv) {
         scanner->picoUnplugged(drv);
     }
+    m_drive_list = newDrv;
 }
