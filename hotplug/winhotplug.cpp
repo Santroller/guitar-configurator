@@ -22,6 +22,7 @@ DEFINE_GUID(GUID_DEVINTERFACE_ARDWIINO,
 #include <Usbiodef.h>
 
 #include <QRegularExpression>
+#include <QDir>
 
 bool operator==(const QSerialPortInfo& lhs, const QSerialPortInfo& rhs) {
     return lhs.manufacturer() == rhs.manufacturer() && lhs.serialNumber() == rhs.serialNumber();
