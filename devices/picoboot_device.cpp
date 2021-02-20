@@ -40,13 +40,6 @@
 PicobootDevice::PicobootDevice(UsbDevice_t devt, QObject *parent) : Device(devt, parent) {
     m_board = ArdwiinoLookup::empty;
     setBoardType("pico");
-    auto dir = QDir(QCoreApplication::applicationDirPath());
-    dir.cd("firmware");
-    QFile file(dir.filePath("ardwiino-pico-rp2040.uf2"));
-    auto f = [=](long a, long b, int step, int stepCount) {
-        // return this->setPercentage(a, b, step, stepCount);
-    };
-    program(&file, NULL, f);
 }
 QString PicobootDevice::getDescription() {
     return "Raspberry PI Pico ("+m_deviceID.drivePath+")";
@@ -95,7 +88,7 @@ void PicobootDevice::program(QFile *file, Ardwiino *parent, std::function<void(l
                 }
             }
         }
-        tmp.write((char *)&block);
+        tmp.write((char *)&block, sizeof(uf2_block));
         pos += sizeof(uf2_block);
     } while (true);
     QDir drive(m_deviceID.drivePath);

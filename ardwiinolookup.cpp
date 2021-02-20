@@ -56,8 +56,8 @@ const board_t ArdwiinoLookup::boards[20] = {
     {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
 auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
-    // the mini is always in bootloader mode
-    if (board_name == "mini") inBootloader = true;
+    // the mini and pico are always in bootloader mode
+    if (board_name == "mini" || board_name == "pico") inBootloader = true;
     for (const auto &board : boards) {
         if (board.shortName == board_name && board.inBootloader == inBootloader) {
             return board;

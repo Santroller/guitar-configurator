@@ -231,6 +231,7 @@ auto Programmer::program(Device *port) -> bool {
     count = 0;
     m_device = port;
     if (m_status == Status::WAIT) {
+        qDebug() << m_device->getBoard().name;
         if (m_device->getBoard().protocol == "pico") {
             QTimer::singleShot(100, [&]() {
                 programPico();
