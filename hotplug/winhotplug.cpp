@@ -213,11 +213,11 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         QTimer::singleShot(isArdwiino ? 1000 : 100, [this, dev]() {
                             scanner->add(dev);
                         });
-                    } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
+                    } else if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
-                        QString drive = ToDriveName(volume.dbcv_unitmask);
-                        QTimer::singleShot(100, [this, dev, drive]() {
-                            QFile file(drive.filePath("INFO_UF2.txt"));
+                        QString drive = ToDriveName(lpdbv.dbcv_unitmask);
+                        QTimer::singleShot(100, [this, drive]() {
+                            QFile file(QDir(drive).filePath("INFO_UF2.txt"));
                             if (file.exists()) {
                                 file.open(QIODevice::ReadOnly);
                                 if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
@@ -244,11 +244,11 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         UsbDevice_t dev = {};
                         lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                         scanner->remove(dev);
-                    } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
+                    } else if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
-                        QString drive = ToDriveName(volume.dbcv_unitmask);
-                        QTimer::singleShot(100, [this, dev, drive]() {
-                            QFile file(drive.filePath("INFO_UF2.txt"));
+                        QString drive = ToDriveName(lpdbv.dbcv_unitmask);
+                        QTimer::singleShot(100, [this, drive]() {
+                            QFile file(QDir(drive).filePath("INFO_UF2.txt"));
                             if (file.exists()) {
                                 file.open(QIODevice::ReadOnly);
                                 if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
