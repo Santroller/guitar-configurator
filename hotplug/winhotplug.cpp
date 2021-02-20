@@ -184,8 +184,8 @@ QString ToDriveName(int Mask) {
         if ((Mask & 0x1) == 0x1) break;
         Mask = Mask >> 1;
     }
-    char cLetter = (char)(i + 'A');
-    return QString::fromLatin1(cLetter) + ":\\";
+    QString cLetter = (char)(i + 'A');
+    return cLetter + ":\\";
 }
 bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, long* result) {
     if (eventType == "windows_generic_MSG") {
