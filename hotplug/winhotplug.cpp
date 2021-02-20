@@ -245,7 +245,7 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         lookupUSBInfo(isArdwiino, lpdbv->dbcc_name, msg->hwnd, &dev);
                         scanner->remove(dev);
                     } else if (lpdb->dbch_devicetype == DBT_DEVP_VOLUME) {
-                        PDEV_BROADCAST_VOLUME_W lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME_W>(lpdb);
+                        PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
                         QString drive = ToDriveName(volume.dbcv_unitmask);
                         QTimer::singleShot(100, [this, dev]() {
                             QFile file(drive.filePath("INFO_UF2.txt"));
