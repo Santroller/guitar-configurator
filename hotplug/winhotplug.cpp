@@ -285,13 +285,13 @@ void WinHotplug::init(WId wid) {
 
     DEV_BROADCAST_DEVICEINTERFACE NotificationFilter4;
     ZeroMemory(&NotificationFilter, sizeof(NotificationFilter));
-    NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
-    NotificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+    NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_VOLUME);
+    NotificationFilter.dbcc_devicetype = DBT_DEVTYP_VOLUME;
     NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_VOLUME;
 
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter2, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter3, DEVICE_NOTIFY_WINDOW_HANDLE);
-    RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter3, DEVICE_NOTIFY_WINDOW_HANDLE);
+    RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter4, DEVICE_NOTIFY_WINDOW_HANDLE);
 }
 #endif
