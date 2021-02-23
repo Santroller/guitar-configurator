@@ -23,6 +23,7 @@ DEFINE_GUID(GUID_DEVINTERFACE_ARDWIINO,
 
 #include <QRegularExpression>
 #include <QDir>
+#include <QStorageInfo>
 
 bool operator==(const QSerialPortInfo& lhs, const QSerialPortInfo& rhs) {
     return lhs.manufacturer() == rhs.manufacturer() && lhs.serialNumber() == rhs.serialNumber();
@@ -109,6 +110,19 @@ WinHotplug::WinHotplug(PortScanner* scanner) : scanner(scanner) {
         m_port_list.push_back(a);
         scanner->serialDeviceDetected(a);
     }
+    foreach (const QStorageInfo& storage, QStorageInfo::mountedVolumes()) {
+        if (storage.isValid() && storage.isReady()) {
+            QDir drive(storage.rootPath());
+            QFile file(drive.filePath("INFO_UF2.txt"));
+            if (file.exists()) {
+                file.open(QIODevice::ReadOnly);
+                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                    scanner->picoDetected(storage.rootPath());
+                }
+                file.close();
+            }
+        }
+    }
     DWORD _index = 0;
     HDEVINFO handle = SetupDiGetClassDevsW(NULL, NULL, NULL, DIGCF_ALLCLASSES | DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
     SP_DEVICE_INTERFACE_DATA data;
@@ -179,14 +193,14 @@ WinHotplug::WinHotplug(PortScanner* scanner) : scanner(scanner) {
     }
     SetupDiDestroyDeviceInfoList(handle);
 }
-QString ToDriveName(int Mask) {
+QList<QString> ToDriveNames(int Mask) {
+    QList<QString> list;
     int i = 0;
     for (i = 0; i < 26; ++i) {
-        if ((Mask & 0x1) == 0x1) break;
+        if ((Mask & 0x1) == 0x1) list.push_back(QString(QChar((char)(i + 'A'))) + ":\\");
         Mask = Mask >> 1;
     }
-    QString cLetter = (char)(i + 'A');
-    return cLetter + ":\\";
+    return list;
 }
 bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, long* result) {
     if (eventType == "windows_generic_MSG") {
@@ -216,15 +230,18 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         });
                     } else if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
-                        QString drive = ToDriveName(lpdbv->dbcv_unitmask);
-                        QTimer::singleShot(100, [this, drive]() {
-                            QFile file(QDir(drive).filePath("INFO_UF2.txt"));
-                            if (file.exists()) {
-                                file.open(QIODevice::ReadOnly);
-                                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
-                                    scanner->picoDetected(drive);
+                        auto drives = ToDriveNames(lpdbv->dbcv_unitmask);
+                        QTimer::singleShot(100, [this, drives]() {
+                            for (auto drive: drives) {
+                                qDebug() << drive;
+                                QFile file(QDir(drive).filePath("INFO_UF2.txt"));
+                                if (file.exists()) {
+                                    file.open(QIODevice::ReadOnly);
+                                    if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                                        scanner->picoDetected(drive);
+                                    }
+                                    file.close();
                                 }
-                                file.close();
                             }
                         });
                     }
@@ -247,15 +264,17 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                         scanner->remove(dev);
                     } else if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
-                        QString drive = ToDriveName(lpdbv->dbcv_unitmask);
-                        QTimer::singleShot(100, [this, drive]() {
-                            QFile file(QDir(drive).filePath("INFO_UF2.txt"));
-                            if (file.exists()) {
-                                file.open(QIODevice::ReadOnly);
-                                if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
-                                    scanner->picoDetected(drive);
+                        auto drives = ToDriveNames(lpdbv->dbcv_unitmask);
+                        QTimer::singleShot(100, [this, drives]() {
+                            for (auto drive: drives) {
+                                QFile file(QDir(drive).filePath("INFO_UF2.txt"));
+                                if (file.exists()) {
+                                    file.open(QIODevice::ReadOnly);
+                                    if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
+                                        scanner->picoDetected(drive);
+                                    }
+                                    file.close();
                                 }
-                                file.close();
                             }
                         });
                     }
