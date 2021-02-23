@@ -265,18 +265,9 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                     } else if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME) {
                         PDEV_BROADCAST_VOLUME lpdbv = reinterpret_cast<PDEV_BROADCAST_VOLUME>(lpdb);
                         auto drives = ToDriveNames(lpdbv->dbcv_unitmask);
-                        QTimer::singleShot(100, [this, drives]() {
-                            for (auto drive: drives) {
-                                QFile file(QDir(drive).filePath("INFO_UF2.txt"));
-                                if (file.exists()) {
-                                    file.open(QIODevice::ReadOnly);
-                                    if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
-                                        scanner->picoUnplugged(drive);
-                                    }
-                                    file.close();
-                                }
-                            }
-                        });
+                        for (auto drive: drives) {
+                            scanner->picoUnplugged(drive);
+                        }
                     }
             }
         }
