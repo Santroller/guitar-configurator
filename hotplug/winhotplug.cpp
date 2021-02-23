@@ -271,7 +271,7 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
                                 if (file.exists()) {
                                     file.open(QIODevice::ReadOnly);
                                     if (QString(file.readAll()).toUpper().contains("RPI-RP2")) {
-                                        scanner->picoDetected(drive);
+                                        scanner->picoUnplugged(drive);
                                     }
                                     file.close();
                                 }
