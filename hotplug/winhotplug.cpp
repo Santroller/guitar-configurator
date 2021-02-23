@@ -265,33 +265,31 @@ bool WinHotplug::nativeEventFilter(const QByteArray& eventType, void* message, l
     return false;
 }
 void WinHotplug::init(WId wid) {
-    DEV_BROADCAST_DEVICEINTERFACE NotificationFilter;
-    ZeroMemory(&NotificationFilter, sizeof(NotificationFilter));
-    NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
-    NotificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
-    NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_COMPORT;
-
     DEV_BROADCAST_DEVICEINTERFACE NotificationFilter2;
-    ZeroMemory(&NotificationFilter2, sizeof(NotificationFilter));
+    ZeroMemory(&NotificationFilter2, sizeof(NotificationFilter2));
     NotificationFilter2.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
     NotificationFilter2.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
     NotificationFilter2.dbcc_classguid = GUID_DEVINTERFACE_ARDWIINO;
 
     DEV_BROADCAST_DEVICEINTERFACE NotificationFilter3;
-    ZeroMemory(&NotificationFilter3, sizeof(NotificationFilter));
+    ZeroMemory(&NotificationFilter3, sizeof(NotificationFilter3));
     NotificationFilter3.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
     NotificationFilter3.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
     NotificationFilter3.dbcc_classguid = GUID_DEVINTERFACE_USB_DEVICE;
 
-    DEV_BROADCAST_DEVICEINTERFACE NotificationFilter4;
-    ZeroMemory(&NotificationFilter, sizeof(NotificationFilter));
-    NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_VOLUME);
-    NotificationFilter.dbcc_devicetype = DBT_DEVTYP_VOLUME;
-    NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_VOLUME;
+    DEV_BROADCAST_VOLUME NotificationFilter4;
+    ZeroMemory(&NotificationFilter4, sizeof(NotificationFilter4));
+    NotificationFilter4.dbcv_size = sizeof(DEV_BROADCAST_VOLUME);
+    NotificationFilter4.dbcv_devicetype = DBT_DEVTYP_VOLUME;
 
-    RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
+    DEV_BROADCAST_PORT_W NotificationFilter5;
+    ZeroMemory(&NotificationFilter5, sizeof(NotificationFilter5));
+    NotificationFilter5.dbcp_size = sizeof(DEV_BROADCAST_PORT_W);
+    NotificationFilter5.dbcp_devicetype = DBT_DEVTYP_PORT;
+
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter2, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter3, DEVICE_NOTIFY_WINDOW_HANDLE);
     RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter4, DEVICE_NOTIFY_WINDOW_HANDLE);
+    RegisterDeviceNotification(reinterpret_cast<HWND>(wid), &NotificationFilter5, DEVICE_NOTIFY_WINDOW_HANDLE);
 }
 #endif
