@@ -82,14 +82,14 @@ class Programmer : public QObject {
     QProcess* m_process{};
     QString m_process_out;
     double m_process_percent{};
-    int count;
-    int step;
-    int steps;
     Status::Value m_status;
     Device* m_device;
     bool m_restore;
     bool m_rf;
     bool m_isGeneric;
+    int m_count;
+    int m_step;
+    int m_steps;
     Ardwiino* m_parent_device;
     QTemporaryFile* m_tmp_hex;
 };
