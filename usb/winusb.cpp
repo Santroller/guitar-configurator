@@ -47,7 +47,7 @@ int UsbDevice::write(int id, QByteArray data) {
     SetupPacket.RequestType = rt.B;
     SetupPacket.Request = REQ_HID_SET_REPORT;
     SetupPacket.Value = id;
-    SetupPacket.Index = 0;
+    SetupPacket.Index = 2;
     SetupPacket.Length = data.length();
 
     bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, (UCHAR*)data.data(), data.length(), &cbSent, 0);
@@ -72,7 +72,7 @@ QByteArray UsbDevice::read(int id) {
     SetupPacket.Request = REQ_HID_GET_REPORT;
     
     SetupPacket.Value = id;
-    SetupPacket.Index = 0;
+    SetupPacket.Index = 2;
     SetupPacket.Length = data.length();
 
     bResult = WinUsb_ControlTransfer(winusb_handle, SetupPacket, (UCHAR*)data.data(), data.length(), &cbSent, 0);
