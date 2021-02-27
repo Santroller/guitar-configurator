@@ -20,6 +20,17 @@ var pinLocations = {
             ...generatePins(4, 42, 61, 9.5, 18)
         ], r: 4
     },
+    "/images/Pico.svg": {
+        width: 138, height: 68, pins: [
+            ...generatePins(2, 109, 3, -9.5, 0),
+            ...generatePins(8, 70.5, 3, -9.6, 2),
+            { x: 3, y: 61, id: 10 },
+            { x: 12.75, y: 61, id: 16 },
+            { x: 22.25, y: 61, id: 14 },
+            { x: 32.25, y: 61, id: 15 },
+            ...generatePins(4, 42, 61, 9.5, 18)
+        ], r: 4
+    },
     "/images/ArduinoMicro.svg": {
         width: 143, height: 51, pins: [
             ...generatePins(2, 130.10, 1.64, -7.18, 16),
@@ -33,6 +44,7 @@ var pinLocations = {
     "/images/ArduinoLeonardo.svg": { width: 199, height: 150, pins: [...generatePins(8, 183, 5, -7, 0), ...generatePins(6, 121, 5, -7, 8), ...generatePins(6, 146, 141, 7, 18)], r: 4 },
 }
 var bindings = {
+    "/images/Pico.svg": { 255: "Disabled" },
     "/images/ArduinoUno.svg": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
     "/images/ArduinoProMicro.svg": { 0: "TXO", 1: "RXI", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
     "/images/ArduinoLeonardo.svg": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
@@ -43,6 +55,7 @@ var analog = {
     "/images/ArduinoProMicro.svg": [18, 19, 20, 21, 22, 23, 4, 6, 7, 8, 9, 10, 12],
     "/images/ArduinoMicro.svg": [18, 19, 20, 21, 22, 23, 4, 6, 7, 8, 9, 10, 12],
     "/images/ArudinoUno.svg": [14, 15, 16, 17, 18, 19],
+    "/images/Pico.svg": [26,27,28],
 }
 function checkValid(pin, board) {
     return analog[board].includes(pin);
