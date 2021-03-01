@@ -92,6 +92,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool isDrum READ isDrum NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isKeyboard READ isKeyboard NOTIFY mainSubTypeUpdated)
+    Q_PROPERTY(bool isXInput READ isXInput NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isRB READ isRB NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isWii READ isWii NOTIFY mainInputTypeUpdated)
     Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY mainSubTypeUpdated)
@@ -138,6 +139,9 @@ public slots:
     }
     bool isRB() {
         return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("rock");
+    }
+    bool isXInput() {
+        return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("xinput");
     }
     bool hasAddressableLEDs() {
         return getMainFretLEDMode() == ArdwiinoDefines::APA102;
