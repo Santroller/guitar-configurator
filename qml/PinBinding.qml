@@ -13,7 +13,7 @@ import "keys.js" as KeyInfo
 Dialog {
     id: pinDialog
     property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
-    property var labels: PinInfo.getLabels(scanner.selected.isGuitar, scanner.selected.isWii, scanner.selected.isLiveGuitar, scanner.selected.isRB, scanner.selected.isDrum, scanner.selected.isMouse);
+    property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
     property var currentPin: "";
     property var conflictingPin: "";
     property var currentValue: 0;
@@ -154,7 +154,7 @@ Dialog {
                 var isAnalog = scanner.selected.config.hasOwnProperty(`pins${pinDialog.currentPin}Inverted`);
                 //The tilt pin is weird, as it is sometimes analog and sometimes digital..
                 if (pinDialog.labels[pinDialog.currentPin] === "Tilt Axis") {
-                    isAnalog = scanner.selected.tiltType === ArdwiinoDefinesValues.ANALOGUE;
+                    isAnalog = scanner.selected.config.tiltType === ArdwiinoDefinesValues.ANALOGUE;
                 }
                 scanner.selected.startFind();
                 if (isAnalog) {

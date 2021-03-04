@@ -72,9 +72,9 @@ Page {
                 text: qsTr("Set Pin Binding")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: {
-                    var pins = scanner.selected.pins;
+                    var pins = scanner.selected.config.pins;
                     pins[scanner.selected.currentPin] = column.current;
-                    scanner.selected.pins = pins;
+                    scanner.selected.config.pins = pins;
                     scanner.selected.currentPin = "";
                     pinDialog.accept();
                 }
@@ -84,9 +84,9 @@ Page {
                 id: disable
                 text: qsTr("Disable Pin Binding")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: {var pins = scanner.selected.pins;
+                onClicked: {var pins = scanner.selected.config.pins;
                     pins[scanner.selected.currentPin] = 0xFF;
-                    scanner.selected.pins = pins;
+                    scanner.selected.config.pins = pins;
                     scanner.selected.currentPin = "";
                     pinDialog.accept();
                 }
@@ -97,7 +97,6 @@ Page {
                 text: qsTr("Cancel")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onClicked: {
-                    scanner.selected.loadPins();
                     scanner.selected.currentPin = "";
                     pinDialog.reject();
                 }

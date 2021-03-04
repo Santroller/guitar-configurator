@@ -11,9 +11,6 @@ import "defines.js" as Defines
 import "keys.js" as KeyInfo
 
 RowLayout {
-    function getColor() {
-        return "#"+(scanner.selected.ghColours[modelData]).toString(16).padStart(6,"0");
-    }
     id: root
     visible: scanner.selected.config.hasAddressableLEDs
     property bool checked;

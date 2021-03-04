@@ -131,7 +131,13 @@ QString Ardwiino::getDescription() {
     if (!m_configurable) {
         return "Ardwiino - Outdated - Continue to update";
     }
-    QString desc = "Ardwiino - " + m_board.name + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
+    QString bname = m_board.name;
+    if (m_board.cpuFrequency == 16000000) {
+        bname = bname + " (5V)";
+    } else if (m_board.cpuFrequency == 8000000) {
+        bname = bname + " (3.3V)";
+    }
+    QString desc = "Ardwiino - " + bname + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
     auto ext = m_usbDevice.read(COMMAND_GET_EXTENSION);
     m_extension = ext[0] | ext[1] >> 8;
     if (m_configuration->getMainInputType() == ArdwiinoDefines::WII) {
