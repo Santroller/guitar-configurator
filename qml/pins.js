@@ -1,9 +1,11 @@
 .pragma library
 
-function generatePins(count, x, y, width, startId) {
+function generatePins(count, x, y, width, startId, skipped) {
     var ret = [];
     for (var i = 0; i < count; i++) {
-        ret.push({ x: x + i * width, y: y, id: i + startId });
+        if(skipped && skipped.includes(i + startId)) x += width;
+        ret.push({ x: x, y: y, id: i + startId });
+        x += width;
     }
     return ret;
 }
@@ -21,15 +23,11 @@ var pinLocations = {
         ], r: 4
     },
     "/images/Pico.svg": {
-        width: 138, height: 68, pins: [
-            ...generatePins(2, 109, 3, -9.5, 0),
-            ...generatePins(8, 70.5, 3, -9.6, 2),
-            { x: 3, y: 61, id: 10 },
-            { x: 12.75, y: 61, id: 16 },
-            { x: 22.25, y: 61, id: 14 },
-            { x: 32.25, y: 61, id: 15 },
-            ...generatePins(4, 42, 61, 9.5, 18)
-        ], r: 4
+        width: 200, height: 80, pins: [
+            ...generatePins(16, 186, 4.5, -9.6, 0, [2, 6, 10, 13]),
+            ...generatePins(7, 4, 80-4.5-3, 9.6, 16, [18, 22]),
+            ...generatePins(3, 4+(10*9.6), 80-4.5-3, 9.6, 26, [28])
+        ], r: 3
     },
     "/images/ArduinoMicro.svg": {
         width: 143, height: 51, pins: [
