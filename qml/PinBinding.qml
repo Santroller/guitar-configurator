@@ -133,8 +133,12 @@ Dialog {
                         hoverEnabled: true
                         onClicked: pinDialog.currentValue = boardImage.pins[index].id
                     }
-                    ToolTip.visible: mouseArea.containsMouse && pinDialog.getPins().includes(boardImage.pins[index].id)
-                    ToolTip.text: Object.values(pinDialog.labels)[pinDialog.getPins().indexOf(boardImage.pins[index].id)] || ""
+                    ToolTip.visible: mouseArea.containsMouse
+                    ToolTip.text: {
+                        var binding = Object.values(pinDialog.labels)[pinDialog.getPins().indexOf(boardImage.pins[index].id)];
+                        binding = binding && binding + "\n" || ""
+                        return binding + pinDialog.pins(boardImage.pins[index].id)
+                    }
                 }
             }
         }

@@ -41,8 +41,10 @@ var pinLocations = {
     },
     "/images/ArduinoLeonardo.svg": { width: 199, height: 150, pins: [...generatePins(8, 183, 5, -7, 0), ...generatePins(6, 121, 5, -7, 8), ...generatePins(6, 146, 141, 7, 18)], r: 4 },
 }
+var picoBindings = Object.assign({}, [...Array(28).keys()].map(s => "GP"+s))
+picoBindings[255] = "Disabled"
 var bindings = {
-    "/images/Pico.svg": { 255: "Disabled" },
+    "/images/Pico.svg": picoBindings,
     "/images/ArduinoUno.svg": { 14: "A0", 15: "A1", 16: "A2", 17: "A3", 18: "A4", 19: "A5", 255: "Disabled" },
     "/images/ArduinoProMicro.svg": { 0: "TXO", 1: "RXI", 18: "A0", 19: "A1", 20: "A2", 21: "A3", 255: "Disabled" },
     "/images/ArduinoLeonardo.svg": { 18: "A0", 19: "A1", 20: "A2", 21: "A3", 22: "A4", 23: "A5", 255: "Disabled" },
