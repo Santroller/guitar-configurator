@@ -77,12 +77,8 @@ void LEDHandler::setStarPowerEnabled(bool hit) {
     starPowerEnabledChanged();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
-    gameFolder = gameFolder.replace("file://", "");
-#ifdef Q_OS_WIN
-    gameFolder = gameFolder.replace("file:///", "");
-#endif
-    m_gameFolder = gameFolder;
-    settings.setValue("cloneHeroDir", gameFolder);
+    m_gameFolder = QDir::toNativeSeparators(QUrl(gameFolder).toLocalFile());
+    settings.setValue("cloneHeroDir", m_gameFolder);
     findVersion();
     gameFolderChanged();
 }
