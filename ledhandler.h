@@ -28,6 +28,12 @@
 
 class LEDHandler : public QObject
 {
+    typedef struct {
+        QList<QString> files;
+        QString binary;
+        QString hash;
+        QString version;
+    } CloneHeroBundle;
     Q_OBJECT
     Q_PROPERTY(QString gameFolder READ getGameFolder WRITE setGameFolder NOTIFY gameFolderChanged)
     Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
@@ -85,8 +91,7 @@ private:
  QString binary;
  Q_PID pid;
  QString m_version;
- QMap<QString, QString> hashes;
- QList<QString> hashedFiles;
+ QList<CloneHeroBundle> bundles;
  QProcess process;
  PortScanner* scanner;
  int lastScore = 0;

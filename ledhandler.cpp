@@ -30,19 +30,17 @@ LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObje
         a->open(QFile::ReadOnly | QIODevice::Text);
         QJsonDocument doc = QJsonDocument::fromJson(a->readAll());
         QJsonArray arr = doc.array();
-        if (hashedFiles.empty()) {
-            for (auto hashObj : arr[0].toObject()["hash"].toArray()) {
-                hashedFiles.push_back(hashObj.toArray()[0].toString());
-            }
-            binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0, 1);
-        }
         for (auto v : arr) {
+            CloneHeroBundle bundle;
+            bundle.binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0, 1);
+            bundle.hash = "";
             auto o = v.toObject();
-            QString hash;
             for (auto hashObj : o["hash"].toArray()) {
-                hash += hashObj.toArray()[1].toString();
+                bundle.hash += hashObj.toArray()[1].toString();
+                bundle.files.push_back(hashObj.toArray()[0].toString());
             }
-            hashes[hash] = o["version"].toString();
+            bundle.version = o["version"].toString();
+            bundles.push_back(bundle);
         }
         a->close();
     }
@@ -136,23 +134,27 @@ void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
     dev->writeChunked(COMMAND_SET_LEDS, data);
 }
 void LEDHandler::findVersion() {
-    QString hash;
-    for (QString file : hashedFiles) {
-        QString filePath = m_gameFolder + file;
-        QFile f(filePath);
-        if (f.exists()) {
-            f.open(QFile::ReadOnly);
-            hash += QString(QCryptographicHash::hash(f.readAll(), QCryptographicHash::Md5).toHex());
+    for (CloneHeroBundle cb : bundles) {
+        QString hash;
+        for (QString file : cb.files) {
+            QString filePath = m_gameFolder + file;
+            QFile f(filePath);
+            if (f.exists()) {
+                f.open(QFile::ReadOnly);
+                hash += QString(QCryptographicHash::hash(f.readAll(), QCryptographicHash::Md5).toHex());
+                f.close();
+            } else {
+                m_version = "Unable to locate game executable";
+            }
             f.close();
-        } else {
-            m_version = "Unable to locate game executable";
         }
-        f.close();
-    }
-    if (hashes.contains(hash)) {
-        m_version = hashes[hash];
-    } else {
-        m_version = "Unknown version!";
+        if (cb.hash == hash) {
+            m_version = cb.version;
+            binary = cb.binary;
+            break;
+        } else {
+            m_version = "Unknown version!";
+        }
     }
     auto dir = QDir(QCoreApplication::applicationDirPath());
     QFile memLoc(dir.filePath("memory-locations.json"));
