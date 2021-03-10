@@ -12,6 +12,7 @@ import "keys.js" as KeyInfo
 
 Dialog {
     id: dialog
+    property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
     title: "Clone Hero Connector"
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
@@ -69,6 +70,7 @@ Dialog {
             }
             onCheckedChanged: ledhandler.openEnabled = checked
             onColorChanged: ledhandler.openColor = color
+            visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
             name: "Open Note"
         }
         CloneHeroDialogColorRow {
@@ -79,7 +81,20 @@ Dialog {
             }
             onCheckedChanged: ledhandler.starPowerEnabled = checked
             onColorChanged: ledhandler.starPowerColor = color
+            visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
             name: "Star Power"
+        }
+        PinBinding {
+            id: pinBinding
+            currentPin: "SP"
+        }
+        Button {
+            id: bindSP
+            text: qsTr("Set Star Power LED pin (Currently: "+dialog.pins(scanner.selected.config.pinsSP)+")")
+            // enabled: ledhandler.ready
+            visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.LEDS_INLINE
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            onClicked: pinBinding.open();
         }
 
     }

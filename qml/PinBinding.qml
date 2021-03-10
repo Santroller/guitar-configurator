@@ -23,7 +23,7 @@ Dialog {
     function getPins() {
         return Object.keys(pinDialog.labels).map(pin=>scanner.selected.config[`pins${pin}`]);
     }
-    title: "Select a Pin for: "+labels[currentPin]
+    title: "Select a Pin for: "+(labels[currentPin] || "Star Power LED")
     x: (parent.width - width) / 2
     y: {
         //Base position on the parent position, but bump the dialog up if it hits the bottom of the screen.

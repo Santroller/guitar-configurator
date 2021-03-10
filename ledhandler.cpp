@@ -9,8 +9,8 @@
 #include <proc/readproc.h>
 #include <proc/version.h>
 #elif defined(Q_OS_WIN)
-#include <Windows.h>
 #include <Psapi.h>
+#include <Windows.h>
 #endif
 LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner) {
 #ifdef Q_OS_WIN64
@@ -301,7 +301,7 @@ qint64 LEDHandler::readData(qint64 base, QList<qint64> &path, qint64 pathCount, 
     readFromProc(512, addr, buf);
     return (qint64)addr;
 }
-
+bool lastSP = false;
 void LEDHandler::tick() {
     qint64 buf[512];
     char *cbuf = (char *)buf;
@@ -317,6 +317,11 @@ void LEDHandler::tick() {
     if (score > lastScore && lastNote & 1 << 6) {
         shownNote = lastNote;
         countdown = 2;
+    }
+    if (lastSP != (noteIsStarPower || starPowerActivated)) {
+        lastSP = noteIsStarPower || starPowerActivated;
+        Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
+        dev->writeChunked(COMMAND_SET_SP, QByteArray(1, lastSP));
     }
     QMap<QString, uint32_t> data;
     QStringList names = {"A", "B", "Y", "X", "LB"};
