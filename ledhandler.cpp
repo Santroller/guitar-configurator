@@ -36,6 +36,7 @@ LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObje
             bundle.hash = "";
             auto o = v.toObject();
             for (auto hashObj : o["hash"].toArray()) {
+                if (hashObj.toArray()[0].toString().endsWith("level1") || hashObj.toArray()[0].toString().endsWith("globalgamemanagers")) continue;
                 bundle.hash += hashObj.toArray()[1].toString();
                 bundle.files.push_back(hashObj.toArray()[0].toString());
             }
