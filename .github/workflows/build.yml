@@ -96,6 +96,7 @@ jobs:
           cp guitar-configurator appdir/usr/bin
           cp -r firmware appdir/usr/bin
           cp -r binaries appdir/usr/bin
+          cp memory-locations.json appdir/usr/bin
           ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/guitar-configurator.desktop -appimage -qmldir=../ -extra-plugins=iconengines,platformthemes/libqgtk3.so
           mkdir artifacts
           mv Guitar_Configurator*.AppImage* artifacts/guitar-configurator-linux.AppImage
