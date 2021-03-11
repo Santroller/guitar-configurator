@@ -4,7 +4,7 @@ git fetch
 git reset --hard origin/master
 git submodule init
 git submodule update
-git describe --abbrev=0 --tags > output/version
+git describe --abbrev=0 --tags > ../../firmware/version
 mkdir -p build
 cd build
 rm -rf firmware
