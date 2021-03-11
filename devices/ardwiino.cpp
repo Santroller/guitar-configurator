@@ -1,8 +1,8 @@
 #include "ardwiino.h"
 
+#include <QRandomGenerator>
 #include <QSettings>
 #include <QThread>
-#include <QRandomGenerator>
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(&m_deviceID), m_isOpen(false), m_configurable(false) {
 }
 bool Ardwiino::open() {
@@ -25,18 +25,19 @@ bool Ardwiino::open() {
     m_board_rf = ArdwiinoLookup::findByBoard(QString::fromUtf8(info.board), false);
     m_board_rf.cpuFrequency = info.cpu_freq;
     m_rfID = info.rfID;
-    qDebug() << hex << m_rfID;
-    Configuration_t conf;
-    uint offset = 0;
-    uint offsetId = 0;
-    while (offset < sizeof(Configuration_t)) {
-        auto data = m_usbDevice.read(COMMAND_READ_CONFIG + offsetId);
-        memcpy(((uint8_t*)&conf) + offset, data.data(), data.length());
-        offset += data.length();
-        offsetId++;
-    }
-    m_configuration = new DeviceConfiguration(conf);
     m_configurable = !ArdwiinoLookup::isOutdatedArdwiino(m_deviceID.releaseNumber);
+    if (m_configurable) {
+        Configuration_t conf;
+        uint offset = 0;
+        uint offsetId = 0;
+        while (offset < sizeof(Configuration_t)) {
+            auto data = m_usbDevice.read(COMMAND_READ_CONFIG + offsetId);
+            memcpy(((uint8_t*)&conf) + offset, data.data(), data.length());
+            offset += data.length();
+            offsetId++;
+        }
+        m_configuration = new DeviceConfiguration(conf);
+    }
     emit configurationChanged();
     emit configurableChanged();
     emit boardImageChanged();
