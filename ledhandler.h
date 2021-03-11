@@ -1,33 +1,33 @@
 #ifndef CLONEHEROINFO_H
 #define CLONEHEROINFO_H
 
-#include <QObject>
 #include <QByteArray>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QGuiApplication>
-#include <QJsonDocument>
-#include <QTimer>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QProcess>
 #include <QFile>
-#include <QSettings>
-#include <QSet>
+#include <QGuiApplication>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMap>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QProcess>
+#include <QSet>
+#include <QSettings>
+#include <QTimer>
+
 #include "portscanner.h"
 
 #if defined Q_OS_MAC
-    #include <mach/host_info.h>
-    #include <mach/mach_host.h>
-    #include <mach/shared_region.h>
-    #include <mach/mach.h>
-    #include <mach-o/dyld.h>
+#include <mach-o/dyld.h>
+#include <mach/host_info.h>
+#include <mach/mach.h>
+#include <mach/mach_host.h>
+#include <mach/shared_region.h>
 #endif
 
-class LEDHandler : public QObject
-{
+class LEDHandler : public QObject {
     typedef struct {
         QList<QString> files;
         QString binary;
@@ -36,16 +36,16 @@ class LEDHandler : public QObject
     } CloneHeroBundle;
     Q_OBJECT
     Q_PROPERTY(QString gameFolder READ getGameFolder WRITE setGameFolder NOTIFY gameFolderChanged)
-    Q_PROPERTY(QString version MEMBER m_version NOTIFY versionChanged)
     Q_PROPERTY(bool ready MEMBER m_ready NOTIFY readyChanged)
+    Q_PROPERTY(QString version READ getVersion WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(bool openEnabled READ getOpenEnabled WRITE setOpenEnabled NOTIFY openEnabledChanged)
     Q_PROPERTY(bool starPowerEnabled READ getStarPowerEnabled WRITE setStarPowerEnabled NOTIFY starPowerEnabledChanged)
     Q_PROPERTY(int openColor READ getOpenColor WRITE setOpenColor NOTIFY openColorChanged)
     Q_PROPERTY(int starPowerColor READ getStarPowerColor WRITE setStarPowerColor NOTIFY starPowerColorChanged)
-public:
-    explicit LEDHandler(QGuiApplication* application, PortScanner* scanner, QObject *parent = nullptr);
+    Q_PROPERTY(QStringList supportedVersions MEMBER m_supportedVersions NOTIFY supportedVersionsChanged)
+   public:
+    explicit LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent = nullptr);
     QTimer *timer;
-    void findVersion();
     QString getGameFolder() {
         return m_gameFolder;
     }
@@ -61,7 +61,10 @@ public:
     int getStarPowerColor() {
         return m_star_power;
     }
-signals:
+    QString getVersion() {
+        return m_version;
+    }
+   signals:
     void gameFolderChanged();
     void versionChanged();
     void readyChanged();
@@ -71,65 +74,67 @@ signals:
     void starPowerColorChanged();
     void openColorChanged();
     void hitColorChanged();
-public slots:
+    void supportedVersionsChanged();
+   public slots:
     int gammaCorrect(int color);
     void startGame();
     void setColors(int color, QStringList buttons);
     void setColor(int rgb, QString button);
     void setColors(QMap<QString, uint32_t> colours);
-private slots:
- void tick();
- void setGameFolder(QString string);
- void setOpenEnabled(bool open);
- void setStarPowerEnabled(bool star);
- void setStarPowerColor(int color);
- void setOpenColor(int color);
+   private slots:
+    void tick();
+    void setGameFolder(QString string);
+    void setOpenEnabled(bool open);
+    void setStarPowerEnabled(bool star);
+    void setStarPowerColor(int color);
+    void setOpenColor(int color);
+    void setVersion(QString version);
 
-private:
- QSettings settings;
- QNetworkAccessManager m_WebCtrl;
- QString binary;
- Q_PID pid;
- QString m_version;
- QList<CloneHeroBundle> bundles;
- QProcess process;
- PortScanner* scanner;
- int lastScore = 0;
- int shownNote = 0;
- int countdown = 0;
- bool m_starPowerEnabled;
- bool m_openEnabled;
- bool m_ready;
- uint32_t m_star_power;
- uint32_t m_open;
- QString m_gameFolder;
- QMap<QString,uint32_t> lastData;
- qint64 base=0;
- qint64 readFromProc(quint64 , qint64 addr, qint64 *buf);
- qint64 readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf);
+   private:
+    QSettings settings;
+    QNetworkAccessManager m_WebCtrl;
+    QString binary;
+    Q_PID pid;
+    QString m_version;
+    QList<CloneHeroBundle> bundles;
+    QProcess process;
+    PortScanner *scanner;
+    int lastScore = 0;
+    int shownNote = 0;
+    int countdown = 0;
+    bool m_starPowerEnabled;
+    bool m_openEnabled;
+    bool m_ready;
+    uint32_t m_star_power;
+    uint32_t m_open;
+    QString m_gameFolder;
+    QMap<QString, uint32_t> lastData;
+    qint64 base = 0;
+    qint64 readFromProc(quint64, qint64 addr, qint64 *buf);
+    qint64 readData(qint64 base, QList<qint64> &path, qint64 pathCount, qint64 *buf);
+    void updateVersion();
+    QList<qint64> pointerPathBasePlayer;
+    QList<qint64> pointerPathCurrentNote;
+    QStringList m_supportedVersions;
 
- QList<qint64> pointerPathBasePlayer;
- QList<qint64> pointerPathCurrentNote;
+    QString platform;
+    QString lib;
+    // int32_t
+    int offsetButtonsPressed;
+    // bool
+    int offsetStarPowerActivated;
+    // bool
+    int offsetIsStarPower;
 
- QString platform;
- QString lib;
- // int32_t
- int offsetButtonsPressed;
- // bool
- int offsetStarPowerActivated;
- // bool
- int offsetIsStarPower;
-
- int offsetScore;
- // int32_t
- int offsetCurrentNote;
+    int offsetScore;
+    // int32_t
+    int offsetCurrentNote;
 #if defined Q_OS_LINUX
- QFile* inputFile;
+    QFile *inputFile;
 #endif
 #if defined Q_OS_MAC
- mach_port_t task;
+    mach_port_t task;
 #endif
-
 };
 
-#endif // CLONEHEROINFO_H
+#endif  // CLONEHEROINFO_H

@@ -19,15 +19,6 @@ Dialog {
     standardButtons: Dialog.Close
     modal: true
     ColumnLayout {
-        Label {
-            text: qsTr("Clone Hero Connector - Game Version: "+ledhandler.version)
-            fontSizeMode: Text.FixedSize
-            verticalAlignment: Text.AlignVCenter
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
         RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Label {
@@ -53,6 +44,30 @@ Dialog {
             title: "Please locate your game directory"
             selectFolder: true
             onAccepted: ledhandler.gameFolder = fileUrl
+        }
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Label {
+                text: qsTr("CloneHero Version")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            ComboBox {
+                id: versions
+                Layout.columnSpan: 1
+                Layout.rowSpan: 1
+                Layout.fillWidth: true
+                focusPolicy: Qt.TabFocus
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                model: ledhandler.supportedVersions
+                Binding { target: versions; property: "currentIndex"; value: versions.model.indexOf(ledhandler.version)}
+                onActivated: ledhandler.version = currentValue
+            }
         }
 
         Button {

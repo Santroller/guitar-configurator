@@ -12,7 +12,7 @@
 #include <Psapi.h>
 #include <Windows.h>
 #endif
-LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner) {
+LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner), m_gameFolder(""), m_version("") {
 #ifdef Q_OS_WIN64
     platform = "win64";
 #elif defined Q_OS_WIN32
@@ -22,38 +22,52 @@ LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObje
 #elif defined Q_OS_LINUX
     platform = "linux";
 #endif
-    auto dir = QDir(QCoreApplication::applicationDirPath());
-    QFile prod(dir.filePath("ch-index.json"));
-    QFile test(dir.filePath("ch-index-test.json"));
-    QFile *indices[] = {&prod, &test};
-    for (auto &a : indices) {
-        a->open(QFile::ReadOnly | QIODevice::Text);
-        QJsonDocument doc = QJsonDocument::fromJson(a->readAll());
-        QJsonArray arr = doc.array();
-        for (auto v : arr) {
-            CloneHeroBundle bundle;
-            bundle.binary = arr[0].toObject()["hash"].toArray()[0].toArray()[0].toString().remove(0, 1);
-            bundle.hash = "";
-            auto o = v.toObject();
-            for (auto hashObj : o["hash"].toArray()) {
-                if (hashObj.toArray()[0].toString().endsWith("level1") || hashObj.toArray()[0].toString().endsWith("globalgamemanagers")) continue;
-                bundle.hash += hashObj.toArray()[1].toString();
-                bundle.files.push_back(hashObj.toArray()[0].toString());
-            }
-            bundle.version = o["version"].toString();
-            bundles.push_back(bundle);
-        }
-        a->close();
-    }
     connect(application, &QGuiApplication::aboutToQuit, &process, &QProcess::terminate);
     if (settings.contains("cloneHeroDir")) {
         m_gameFolder = settings.value("cloneHeroDir").toString();
     }
+    if (settings.contains("version")) {
+        m_version = settings.value("version").toString();
+    }
+    auto dir = QDir(QCoreApplication::applicationDirPath());
+    QFile memLoc(dir.filePath("memory-locations.json"));
+    memLoc.open(QFile::ReadOnly | QIODevice::Text);
+    QJsonDocument doc = QJsonDocument::fromJson(memLoc.readAll());
+    QJsonObject obj = doc.object();
+    m_supportedVersions = obj.keys();
+    memLoc.close();
+    updateVersion();
     m_star_power = settings.value("led_star_power_color", QVariant(0x00BFFF)).toUInt();
     m_open = settings.value("led_open_color", QVariant(0xFF00FF)).toUInt();
     m_openEnabled = settings.contains("led_open") && settings.value("led_open").toBool();
     m_starPowerEnabled = settings.contains("led_star_power") && settings.value("led_star_power").toBool();
-    findVersion();
+}
+void readList(QJsonArray arr, QList<qint64> *list) {
+    for (auto a : arr) {
+        list->push_back(a.toVariant().toLongLong());
+    }
+}
+void LEDHandler::updateVersion() {
+    if (!m_gameFolder.isEmpty() && !m_version.isEmpty()) {
+        m_ready = true;
+        auto dir = QDir(QCoreApplication::applicationDirPath());
+        QFile memLoc(dir.filePath("memory-locations.json"));
+        memLoc.open(QFile::ReadOnly | QIODevice::Text);
+        QJsonDocument doc = QJsonDocument::fromJson(memLoc.readAll());
+        QJsonObject obj = doc.object();
+        obj = obj[m_version].toObject();
+        QJsonObject osObj = obj[platform].toObject();
+        lib = osObj["lib"].toString();
+        readList(osObj["pointerPathBasePlayer"].toArray(), &pointerPathBasePlayer);
+        readList(obj["pointerPathCurrentNote"].toArray(), &pointerPathCurrentNote);
+        offsetButtonsPressed = obj["offsetButtonsPressed"].toInt();
+        offsetStarPowerActivated = obj["offsetStarPowerActivated"].toInt();
+        offsetIsStarPower = obj["offsetIsStarPower"].toInt();
+        offsetScore = obj["offsetScore"].toInt();
+        offsetCurrentNote = obj["offsetCurrentNote"].toInt();
+        m_ready = true;
+        memLoc.close();
+    }
 }
 void LEDHandler::setOpenColor(int color) {
     m_open = color;
@@ -78,13 +92,20 @@ void LEDHandler::setStarPowerEnabled(bool hit) {
 void LEDHandler::setGameFolder(QString gameFolder) {
     m_gameFolder = QDir::toNativeSeparators(QUrl(gameFolder).toLocalFile());
     settings.setValue("cloneHeroDir", m_gameFolder);
-    findVersion();
     gameFolderChanged();
-}
-void readList(QJsonArray arr, QList<qint64> *list) {
-    for (auto a : arr) {
-        list->push_back(a.toVariant().toLongLong());
+    if (!m_gameFolder.isEmpty() && !m_version.isEmpty()) {
+        m_ready = true;
     }
+    readyChanged();
+}
+void LEDHandler::setVersion(QString version) {
+    m_version = version;
+    settings.setValue("version", version);
+    if (!m_gameFolder.isEmpty() && !m_version.isEmpty()) {
+        m_ready = true;
+    }
+    readyChanged();
+    versionChanged();
 }
 int LEDHandler::gammaCorrect(int color) {
     uint32_t ucolor = color;
@@ -133,54 +154,6 @@ void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
     }
     data.push_back('\0');
     dev->writeChunked(COMMAND_SET_LEDS, data);
-}
-void LEDHandler::findVersion() {
-    for (CloneHeroBundle cb : bundles) {
-        QString hash;
-        for (QString file : cb.files) {
-            QString filePath = m_gameFolder + file;
-            QFile f(filePath);
-            if (f.exists()) {
-                f.open(QFile::ReadOnly);
-                hash += QString(QCryptographicHash::hash(f.readAll(), QCryptographicHash::Md5).toHex());
-                f.close();
-            } else {
-                m_version = "Unable to locate game executable";
-            }
-            f.close();
-        }
-        if (cb.hash == hash) {
-            m_version = cb.version;
-            binary = cb.binary;
-            break;
-        } else {
-            m_version = "Unknown version!";
-        }
-    }
-    auto dir = QDir(QCoreApplication::applicationDirPath());
-    QFile memLoc(dir.filePath("memory-locations.json"));
-    memLoc.open(QFile::ReadOnly | QIODevice::Text);
-    QJsonDocument doc = QJsonDocument::fromJson(memLoc.readAll());
-    QJsonObject obj = doc.object();
-    if (obj.contains(m_version)) {
-        obj = obj[m_version].toObject();
-        QJsonObject osObj = obj[platform].toObject();
-        lib = osObj["lib"].toString();
-        readList(osObj["pointerPathBasePlayer"].toArray(), &pointerPathBasePlayer);
-        readList(obj["pointerPathCurrentNote"].toArray(), &pointerPathCurrentNote);
-        offsetButtonsPressed = obj["offsetButtonsPressed"].toInt();
-        offsetStarPowerActivated = obj["offsetStarPowerActivated"].toInt();
-        offsetIsStarPower = obj["offsetIsStarPower"].toInt();
-        offsetScore = obj["offsetScore"].toInt();
-        offsetCurrentNote = obj["offsetCurrentNote"].toInt();
-        m_ready = true;
-    } else {
-        m_version = "Unsupported Version: " + m_version;
-        m_ready = false;
-    }
-    memLoc.close();
-    readyChanged();
-    versionChanged();
 }
 
 void LEDHandler::startGame() {
