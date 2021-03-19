@@ -20,7 +20,7 @@ GridLayout {
         }
         return 0;
     }
-    columns: 2+scanner.selected.config.isKeyboard+scanner.selected.config.hasAddressableLEDs+(scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.config.isGuitar)
+    columns: 2+scanner.selected.config.isKeyboard+scanner.selected.config.hasAddressableLEDs+((scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.config.isGuitar) * 2)
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
     property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
     property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
@@ -151,6 +151,40 @@ GridLayout {
                 visible: enabled
                 checked: !!scanner.selected.config[`pins${modelData}Inverted`]
                 onCheckedChanged: scanner.selected.config[`pins${modelData}Inverted`] = checked
+            }
+        }
+    }
+    Label {
+        text: "Calibrate Axis"
+        enabled: scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || scanner.selected.config.isGuitar
+        font.pointSize: 15
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        wrapMode: Text.WordWrap
+    }
+    Repeater {
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        model: Object.keys(gl.labels)
+        RowLayout {
+            enabled: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) || scanner.selected.config.hasAddressableLEDs
+            Button {
+                Layout.preferredWidth: gl.pWidth/gl.columns
+                Layout.fillHeight: true
+                enabled: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
+                visible: enabled
+                text: "Calibrate " + gl.labels[modelData]
+                onClicked: {
+                    calibDialog.open()
+                }
+            }
+            CalibrationDialog {
+                id:calibDialog
+                pin: scanner.selected.config[`pins${modelData}`]
+                axis: modelData
+                isWhammy: gl.labels[modelData]==="Whammy"
+                onCalibrationChanged: {
+                    scanner.selected.config[`axisScale${modelData}Multiplier`] = mulFactor * 1000
+                    scanner.selected.config[`axisScale${modelData}Offset`] = min
+                }
             }
         }
     }

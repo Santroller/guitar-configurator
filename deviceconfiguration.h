@@ -94,6 +94,18 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool rfRfInEnabled READ getRfRfInEnabled WRITE setRfRfInEnabled NOTIFY rfRfInEnabledUpdated)
     Q_PROPERTY(int rfId READ getRfId WRITE setRfId NOTIFY rfIdUpdated)
     Q_PROPERTY(int pinsSP READ getPinsSP WRITE setPinsSP NOTIFY pinsSPUpdated)
+    Q_PROPERTY(float axisScaleLtMultiplier READ getAxisScaleLtMultiplier WRITE setAxisScaleLtMultiplier NOTIFY axisScaleLtMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLtOffset READ getAxisScaleLtOffset WRITE setAxisScaleLtOffset NOTIFY axisScaleLtOffsetUpdated)
+    Q_PROPERTY(float axisScaleRtMultiplier READ getAxisScaleRtMultiplier WRITE setAxisScaleRtMultiplier NOTIFY axisScaleRtMultiplierUpdated)
+    Q_PROPERTY(int axisScaleRtOffset READ getAxisScaleRtOffset WRITE setAxisScaleRtOffset NOTIFY axisScaleRtOffsetUpdated)
+    Q_PROPERTY(float axisScaleLXMultiplier READ getAxisScaleLXMultiplier WRITE setAxisScaleLXMultiplier NOTIFY axisScaleLXMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLXOffset READ getAxisScaleLXOffset WRITE setAxisScaleLXOffset NOTIFY axisScaleLXOffsetUpdated)
+    Q_PROPERTY(float axisScaleLYMultiplier READ getAxisScaleLYMultiplier WRITE setAxisScaleLYMultiplier NOTIFY axisScaleLYMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLYOffset READ getAxisScaleLYOffset WRITE setAxisScaleLYOffset NOTIFY axisScaleLYOffsetUpdated)
+    Q_PROPERTY(float axisScaleRXMultiplier READ getAxisScaleRXMultiplier WRITE setAxisScaleRXMultiplier NOTIFY axisScaleRXMultiplierUpdated)
+    Q_PROPERTY(int axisScaleRXOffset READ getAxisScaleRXOffset WRITE setAxisScaleRXOffset NOTIFY axisScaleRXOffsetUpdated)
+    Q_PROPERTY(float axisScaleRYMultiplier READ getAxisScaleRYMultiplier WRITE setAxisScaleRYMultiplier NOTIFY axisScaleRYMultiplierUpdated)
+    Q_PROPERTY(int axisScaleRYOffset READ getAxisScaleRYOffset WRITE setAxisScaleRYOffset NOTIFY axisScaleRYOffsetUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -681,6 +693,90 @@ public slots:
         m_config.pinsSP = (uint8_t)val;
         emit pinsSPUpdated();
     }
+    float getAxisScaleLtMultiplier() const {
+        return m_config.axisScale.lt.multiplier;
+    }
+    void setAxisScaleLtMultiplier(float val) {
+        m_config.axisScale.lt.multiplier = val;
+        emit axisScaleLtMultiplierUpdated();
+    }
+    int getAxisScaleLtOffset() const {
+        return (uint16_t)m_config.axisScale.lt.offset;
+    }
+    void setAxisScaleLtOffset(int val) {
+        m_config.axisScale.lt.offset = (uint16_t)val;
+        emit axisScaleLtOffsetUpdated();
+    }
+    float getAxisScaleRtMultiplier() const {
+        return m_config.axisScale.rt.multiplier;
+    }
+    void setAxisScaleRtMultiplier(float val) {
+        m_config.axisScale.rt.multiplier = val;
+        emit axisScaleRtMultiplierUpdated();
+    }
+    int getAxisScaleRtOffset() const {
+        return (uint16_t)m_config.axisScale.rt.offset;
+    }
+    void setAxisScaleRtOffset(int val) {
+        m_config.axisScale.rt.offset = (uint16_t)val;
+        emit axisScaleRtOffsetUpdated();
+    }
+    float getAxisScaleLXMultiplier() const {
+        return m_config.axisScale.l_x.multiplier;
+    }
+    void setAxisScaleLXMultiplier(float val) {
+        m_config.axisScale.l_x.multiplier = val;
+        emit axisScaleLXMultiplierUpdated();
+    }
+    int getAxisScaleLXOffset() const {
+        return (uint16_t)m_config.axisScale.l_x.offset;
+    }
+    void setAxisScaleLXOffset(int val) {
+        m_config.axisScale.l_x.offset = (uint16_t)val;
+        emit axisScaleLXOffsetUpdated();
+    }
+    float getAxisScaleLYMultiplier() const {
+        return m_config.axisScale.l_y.multiplier;
+    }
+    void setAxisScaleLYMultiplier(float val) {
+        m_config.axisScale.l_y.multiplier = val;
+        emit axisScaleLYMultiplierUpdated();
+    }
+    int getAxisScaleLYOffset() const {
+        return (uint16_t)m_config.axisScale.l_y.offset;
+    }
+    void setAxisScaleLYOffset(int val) {
+        m_config.axisScale.l_y.offset = (uint16_t)val;
+        emit axisScaleLYOffsetUpdated();
+    }
+    float getAxisScaleRXMultiplier() const {
+        return m_config.axisScale.r_x.multiplier;
+    }
+    void setAxisScaleRXMultiplier(float val) {
+        m_config.axisScale.r_x.multiplier = val;
+        emit axisScaleRXMultiplierUpdated();
+    }
+    int getAxisScaleRXOffset() const {
+        return (uint16_t)m_config.axisScale.r_x.offset;
+    }
+    void setAxisScaleRXOffset(int val) {
+        m_config.axisScale.r_x.offset = (uint16_t)val;
+        emit axisScaleRXOffsetUpdated();
+    }
+    float getAxisScaleRYMultiplier() const {
+        return m_config.axisScale.r_y.multiplier;
+    }
+    void setAxisScaleRYMultiplier(float val) {
+        m_config.axisScale.r_y.multiplier = val;
+        emit axisScaleRYMultiplierUpdated();
+    }
+    int getAxisScaleRYOffset() const {
+        return (uint16_t)m_config.axisScale.r_y.offset;
+    }
+    void setAxisScaleRYOffset(int val) {
+        m_config.axisScale.r_y.offset = (uint16_t)val;
+        emit axisScaleRYOffsetUpdated();
+    }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
         auto pin = pins.indexOf(key)+1;
@@ -823,6 +919,18 @@ signals:
     void rfRfInEnabledUpdated();
     void rfIdUpdated();
     void pinsSPUpdated();
+    void axisScaleLtMultiplierUpdated();
+    void axisScaleLtOffsetUpdated();
+    void axisScaleRtMultiplierUpdated();
+    void axisScaleRtOffsetUpdated();
+    void axisScaleLXMultiplierUpdated();
+    void axisScaleLXOffsetUpdated();
+    void axisScaleLYMultiplierUpdated();
+    void axisScaleLYOffsetUpdated();
+    void axisScaleRXMultiplierUpdated();
+    void axisScaleRXOffsetUpdated();
+    void axisScaleRYMultiplierUpdated();
+    void axisScaleRYOffsetUpdated();
 
 private:
     Configuration_t m_config;

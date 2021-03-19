@@ -103,6 +103,11 @@ void Ardwiino::findDigital(QJSValue callback) {
         }
     });
 }
+int Ardwiino::readAnalog(int pin) {
+    int16_t axis[XBOX_AXIS_COUNT];
+    memcpy(&axis, m_usbDevice.read(COMMAND_GET_VALUES).data(), sizeof(axis));
+    return axis[pin];
+}
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
     m_usbDevice.write(COMMAND_FIND_ANALOG, QByteArray(1, 0x00));

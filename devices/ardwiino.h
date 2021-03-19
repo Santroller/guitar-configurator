@@ -7,12 +7,12 @@
 #include <QQueue>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include "submodules/Ardwiino/src/shared/output/serial_commands.h"
 
-#include "usb/usbdevice.h"
-#include "device.h"
 #include "ardwiinolookup.h"
+#include "device.h"
 #include "deviceconfiguration.h"
+#include "submodules/Ardwiino/src/shared/output/serial_commands.h"
+#include "usb/usbdevice.h"
 class Ardwiino : public Device {
     Q_OBJECT
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
@@ -52,6 +52,7 @@ class Ardwiino : public Device {
     void resetConfig();
     void findDigital(QJSValue callback);
     void findAnalog(QJSValue callback);
+    int readAnalog(int pin);
     void cancelFind();
     void startFind();
     // When using rf, we need a way to get the board for the rf transmitter, not the receiver
@@ -84,6 +85,6 @@ class Ardwiino : public Device {
     uint32_t m_rfID;
     board_t m_board_rf;
     inline virtual bool isEqual(const Device& other) const {
-         return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
+        return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }
 };

@@ -9,6 +9,8 @@
         <file>qml/defines.js</file>
         <file>qml/ListController.qml</file>
         <file>qml/PinBinding.qml</file>
+        <file>qml/RangeBar.qml</file>
+        <file>qml/CalibrationDialog.qml</file>
         <file>qml/ButtonConfigDialog.qml</file>
         <file>qml/CloneHeroDialog.qml</file>
         <file>qml/CloneHeroDialogColorRow.qml</file>
