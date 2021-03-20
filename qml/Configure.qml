@@ -18,13 +18,6 @@ ColumnLayout {
         Layout.alignment: Qt.AlignRight | Qt.AlignTop
         text: " "
     }
-    Button {
-        Layout.alignment: Qt.AlignRight | Qt.AlignTop
-        icon.source: scanner.isGraphical?"/images/graphical.svg":"/images/list.svg"
-        onClicked: scanner.toggleGraphics()
-        ToolTip.visible: hovered
-        ToolTip.text: scanner.isGraphical?"Swap to List view":"Swap to Graphical view"
-    }
 
     CloneHeroDialog {
         id:cloneDialog
@@ -296,6 +289,12 @@ ColumnLayout {
             text: qsTr("Reset device config")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: scanner.selected.resetConfig();
+        }
+        
+        Button {
+            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            text: scanner.isGraphical?"Swap to List view":"Swap to Graphical view"
+            onClicked: scanner.toggleGraphics()
         }
     }
     Dialog {
