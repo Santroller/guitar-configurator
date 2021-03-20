@@ -58,7 +58,6 @@ Dialog {
         if (state == 2) {
             let minV = isWhammy ? 0 : minValue;
             mulFactor = (((maxValue-minV) / (max-min)))
-            console.log(mulFactor)
         } 
         if(state < 3) {
             reset()

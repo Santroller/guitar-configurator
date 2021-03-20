@@ -234,7 +234,7 @@ Dialog {
                         axis: modelData
                         isWhammy: buttonDialog.labels[modelData]==="Whammy"
                         onCalibrationChanged: {
-                            scanner.selected.config[`axisScale${modelData}Multiplier`] = mulFactor * 1000
+                            scanner.selected.config[`axisScale${modelData}Multiplier`] = mulFactor * 1024
                             scanner.selected.config[`axisScale${modelData}Offset`] = min
                         }
                     }

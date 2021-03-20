@@ -13,11 +13,6 @@ import "keys.js" as KeyInfo
 
 ColumnLayout {
     id: column
-    //Since the button is being pinned to the top of the page, we need to insert an empty line to overlap the version string
-    Label {
-        Layout.alignment: Qt.AlignRight | Qt.AlignTop
-        text: " "
-    }
 
     CloneHeroDialog {
         id:cloneDialog
