@@ -35,14 +35,14 @@ Dialog {
             } else if (state == 1) {
                 calibrationDialog.max = raw
             } else {
-                if (isWhammy) {
-                    value = (raw - min) * mulFactor
-                } else {
+                // if (isWhammy) {
+                //     value = (raw - min) * mulFactor
+                // } else {
                     value = (raw - min) * mulFactor + minValue
-                }
+                // }
             }
-            console.log(mulFactor)
-            console.log(min)
+            // console.log(mulFactor)
+            // console.log(min)
         }
     }
 
@@ -56,8 +56,8 @@ Dialog {
     onAccepted: {
         state++;
         if (state == 2) {
-            let minV = isWhammy ? 0 : minValue;
-            mulFactor = (((maxValue-minV) / (max-min)))
+            // let minV = isWhammy ? 0 : minValue;
+            mulFactor = (((maxValue-minValue) / (max-min)))
         } 
         if(state < 3) {
             reset()
