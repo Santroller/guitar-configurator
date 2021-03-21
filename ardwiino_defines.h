@@ -15,6 +15,7 @@ class ArdwiinoDefines : public QObject {
     Q_OBJECT
    public:
 #include "submodules/Ardwiino/src/shared/config/defines.h"
+#include "submodules/Ardwiino/src/shared/config/defaults.h"
     static ArdwiinoDefines* getInstance();
     static QString fixKey(QString string) {
         auto sentence = string.toLower().split("_");
@@ -83,6 +84,10 @@ class ArdwiinoDefines : public QObject {
         auto id = QMetaEnum::fromType<T>().valueToKey(arg);
         if (QString(id).isEmpty()) return "Unknown";
         return fixKey(id);
+    }
+    static Configuration_t getDefaultConfig() {
+        Configuration_t def = DEFAULT_CONFIG;
+        return def;
     }
 
    private:

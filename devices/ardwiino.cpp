@@ -3,6 +3,12 @@
 #include <QRandomGenerator>
 #include <QSettings>
 #include <QThread>
+#include <QFile>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QDir>
+
+#include "submodules/Ardwiino/src/shared/config/defaults.h"
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(&m_deviceID), m_isOpen(false), m_configurable(false) {
 }
 bool Ardwiino::open() {
@@ -37,6 +43,7 @@ bool Ardwiino::open() {
             offsetId++;
         }
         m_configuration = new DeviceConfiguration(conf);
+        m_default_configuration = new DeviceConfiguration(ArdwiinoDefines::getDefaultConfig());
     }
     emit configurationChanged();
     emit configurableChanged();
@@ -186,4 +193,53 @@ void Ardwiino::resetConfig() {
 }
 void Ardwiino::bootloader() {
     m_usbDevice.write(COMMAND_JUMP_BOOTLOADER, QByteArray(1, 0x00));
+}
+
+void Ardwiino::savePreset(QString name, QString config) {
+    QMap<QString, QVariant> configs;
+    if (settings.contains("presets")) {
+        configs = settings.value("presets").toMap();
+    }
+    configs[name] = config;
+    settings.setValue("presets", configs);
+    presetsChanged();
+}
+
+QStringList Ardwiino::getPresets() {
+    if (settings.contains("presets")) {
+        return settings.value("presets").toMap().keys();
+    }
+    return QStringList();
+}
+
+QString Ardwiino::getPreset(QString name) {
+    return settings.value("presets").toMap()[name].toString();
+}
+
+void Ardwiino::removePreset(QString name) {
+    if (settings.contains("presets")) {
+        settings.setValue("presets", settings.value("presets").toMap().remove(name));
+    }
+    presetsChanged();
+}
+void Ardwiino::importPreset(QString fileName) {
+    QMap<QString, QVariant> configs;
+    if (settings.contains("presets")) {
+        configs = settings.value("presets").toMap();
+    }
+    QFile file(QDir::toNativeSeparators(QUrl(fileName).toLocalFile()));
+    file.open(QIODevice::ReadOnly);
+    
+    QJsonObject doc = QJsonDocument::fromJson(file.readAll()).object();
+    configs[doc["name"].toString()] = doc["config"].toString();
+    settings.setValue("presets", configs);
+    presetsChanged();
+}
+void Ardwiino::exportPreset(QString name, QString fileName) {
+    QJsonObject save;
+    save["name"] = name;
+    save["config"] = settings.value("presets").toMap()[name].toString();
+    QFile file(QDir::toNativeSeparators(QUrl(fileName).toLocalFile()));
+    file.open(QIODevice::WriteOnly);
+    file.write(QJsonDocument(save).toJson());
 }

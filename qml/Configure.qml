@@ -261,6 +261,126 @@ ColumnLayout {
         }
         }
     }
+    Dialog {
+        id: presetLoadDialog
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Discard | Dialog.Cancel | Dialog.Apply | Dialog.Reset
+
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        ColumnLayout {
+            Label {
+                text: qsTr("Presets")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+
+            FileDialog {
+                id: saveDialog
+                title: "Export preset"
+                folder: shortcuts.home
+                selectExisting: false
+                onAccepted: {
+                    scanner.selected.exportPreset(c.currentValue, saveDialog.fileUrls)
+                }
+                nameFilters: [ "Preset file (*.json)" ]
+            }
+
+            FileDialog {
+                id: openDialog
+                title: "Import preset"
+                folder: shortcuts.home
+                onAccepted: {
+                    scanner.selected.importPreset(saveDialog.fileUrls)
+                }
+                nameFilters: [ "Preset file (*.json)" ]
+            }
+
+            ComboBox {
+                id: c
+                model: scanner.selected.presets
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+            }
+        }
+        onDiscarded: {
+            scanner.selected.removePreset(c.currentValue);
+        }
+        onApplied: {
+            saveDialog.open();
+        }
+        onReset: {
+            openDialog.open();
+        }
+        Component.onCompleted: {
+            presetLoadDialog.standardButton(Dialog.Ok).text = qsTrId("Load")
+            presetLoadDialog.standardButton(Dialog.Discard).text = qsTrId("Delete")
+            presetLoadDialog.standardButton(Dialog.Apply).text = qsTrId("Export")
+            presetLoadDialog.standardButton(Dialog.Reset).text = qsTrId("Import")
+        }
+        onAccepted: {
+            let preset = JSON.parse(scanner.selected.getPreset(c.currentValue));
+            let currentKeys = Object.keys(scanner.selected.config);
+            let presetKeys = Object.keys(preset);
+            for (let key of presetKeys) {
+                if (currentKeys.includes(key)) {
+                    try {
+                        scanner.selected.config[key] = preset[key];
+                    } catch (ex) {
+
+                    }
+                }
+            }
+            for (let key of currentKeys) {
+                if (!presetKeys.includes(key)) {
+                    try {
+                        scanner.selected.config[key] = scanner.selected.defaultConfig[key];
+                    } catch (ex) {
+
+                    }
+                }
+            }
+        }
+    }
+    Dialog {
+        id: presetDialog
+        modal: true
+        standardButtons: Dialog.Save | Dialog.Close
+
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        ColumnLayout {
+            Label {
+                text: qsTr("What would you like to name your preset")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+
+            TextField {
+                id: text
+                placeholderText: qsTr("")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+            }
+        }
+        onAccepted: {
+            if (text.text.length == 0) {
+                open();
+                text.forceActiveFocus()
+            } else {
+                scanner.selected.savePreset(text.text, JSON.stringify(scanner.selected.config))
+            }
+        }
+    }
+    
     RowLayout {
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Button {
@@ -336,6 +456,18 @@ ColumnLayout {
             Layout.alignment: Qt.AlignRight | Qt.AlignTop
             text: scanner.isGraphical?"Swap to List view":"Swap to Graphical view"
             onClicked: scanner.toggleGraphics()
+        }
+        
+        Button {
+            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            text: "Save Preset"
+            onClicked: presetDialog.open()
+        }
+        
+        Button {
+            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            text: "Load Preset"
+            onClicked: presetLoadDialog.open()
         }
     }
     Dialog {

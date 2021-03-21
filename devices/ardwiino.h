@@ -5,6 +5,7 @@
 #include <QJSValue>
 #include <QObject>
 #include <QQueue>
+#include <QSettings>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
@@ -17,6 +18,8 @@ class Ardwiino : public Device {
     Q_OBJECT
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(DeviceConfiguration* config MEMBER m_configuration NOTIFY configurationChanged)
+    Q_PROPERTY(DeviceConfiguration* defaultConfig MEMBER m_default_configuration NOTIFY configurationChanged)
+    Q_PROPERTY(QStringList presets READ getPresets NOTIFY presetsChanged)
    public:
     explicit Ardwiino(UsbDevice_t devt, QObject* parent = nullptr);
     QString getDescription();
@@ -62,11 +65,18 @@ class Ardwiino : public Device {
         }
         return m_board.image;
     }
+    void savePreset(QString name, QString config);
+    QStringList getPresets();
+    QString getPreset(QString name);
+    void removePreset(QString name);
+    void importPreset(QString file);
+    void exportPreset(QString name, QString file);
    signals:
     void readyChanged();
     void ledsChanged();
     void midiChanged();
     void configurationChanged();
+    void presetsChanged();
 
    protected:
     QString m_processor;
@@ -76,6 +86,7 @@ class Ardwiino : public Device {
     QByteArray readConfig();
     UsbDevice m_usbDevice;
     DeviceConfiguration* m_configuration;
+    DeviceConfiguration* m_default_configuration;
     bool m_isOpen;
     bool m_isOutdated;
     bool m_hasPinDetectionCallback;
@@ -84,6 +95,7 @@ class Ardwiino : public Device {
     uint16_t m_extension;
     uint32_t m_rfID;
     board_t m_board_rf;
+    QSettings settings;
     inline virtual bool isEqual(const Device& other) const {
         return m_deviceID.bus == other.getUSBDevice().bus && m_deviceID.port == other.getUSBDevice().port;
     }
