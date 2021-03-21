@@ -37,13 +37,13 @@ Dialog {
             } else if (state == 1) {
                 calibrationDialog.max = raw
             } else if (state == 2) {
-                raw = (raw - min) * mulFactor + minValue
-                if (!isTrigger && !isWhammy) {
-                    raw = Math.abs(raw);
-                }
-                calibrationDialog.deadZone = raw
-            } else {
                 value = (raw - min) * mulFactor + minValue
+                if (!isTrigger && !isWhammy) {
+                    value = Math.abs(value);
+                }
+                calibrationDialog.deadZone = value
+            } else {
+                calibrationDialog.value = (raw - min) * mulFactor + minValue
                 if (isTrigger || isWhammy) {
                     if (value < deadZone) {
                         value = minValue;
@@ -93,7 +93,7 @@ Dialog {
         visible: calibrationDialog.state < 2
         valueMin: calibrationDialog.min
         valueMax: calibrationDialog.max
-        minimum: minValue
+        minimum: minValue-1
         maximum: maxValue
     }
     RangeBar {
@@ -105,8 +105,8 @@ Dialog {
     }
     RangeBar {
         visible: calibrationDialog.state == 3
-        valueMin: value-5
-        valueMax: value+5
+        valueMin: value-1000
+        valueMax: value+1000
         minimum: minValue
         maximum: maxValue
     }
