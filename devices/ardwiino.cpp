@@ -97,7 +97,7 @@ qint32 Ardwiino::generateClientRFID() {
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;
     m_usbDevice.write(COMMAND_FIND_DIGITAL, QByteArray(1, 0x00));
-    QTimer::singleShot(100, [&]() {
+    QTimer::singleShot(300, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
             if (m_hasPinDetectionCallback) {
@@ -118,7 +118,7 @@ int Ardwiino::readAnalog(int pin) {
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
     m_usbDevice.write(COMMAND_FIND_ANALOG, QByteArray(1, 0x00));
-    QTimer::singleShot(100, [&]() {
+    QTimer::singleShot(300, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
             if (m_hasPinDetectionCallback) {
