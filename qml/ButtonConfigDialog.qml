@@ -236,6 +236,7 @@ Dialog {
                         onCalibrationChanged: {
                             scanner.selected.config[`axisScale${modelData}Multiplier`] = mulFactor * 1024
                             scanner.selected.config[`axisScale${modelData}Offset`] = min
+                            scanner.selected.config[`axisScale${modelData}Deadzone`] = deadZone
                         }
                     }
                 }

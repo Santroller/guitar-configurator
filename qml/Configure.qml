@@ -87,6 +87,46 @@ ColumnLayout {
             }
 
             Label {
+                text: qsTr("Button Debounce (0 means no debounce)")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            SpinBox {
+                id: spinboxbDB
+                Layout.fillWidth: true
+                value: scanner.selected.config.debounceButtons
+                from: 0
+                to: 100
+                onValueModified: {
+                    scanner.selected.config.debounceButtons = value
+                }
+            }
+
+            Label {
+                text: qsTr("Strum Debounce (0 means no debounce)")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            SpinBox {
+                id: spinboxsDB
+                Layout.fillWidth: true
+                value: scanner.selected.config.debounceStrum
+                from: 0
+                to: 100
+                onValueModified: {
+                    scanner.selected.config.debounceStrum = value
+                }
+            }
+
+            Label {
                 visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
                 text: qsTr("Note: You can not combine Playstation input and APA102 LEDs, due to them both using imcompatible connections.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

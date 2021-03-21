@@ -20,10 +20,12 @@ Dialog {
     property var axisRaw: 0;
     property var min: minValue;
     property var max: maxValue;
+    property var deadZone: 0;
     property var value: 0;
     property var state: 0;
     property var mulFactor: 0.0;
     property var isWhammy: false;
+    property var isTrigger: axisRaw < 2;
     signal calibrationChanged();
     width: 500
     Timer {
@@ -34,20 +36,34 @@ Dialog {
                 calibrationDialog.min = raw
             } else if (state == 1) {
                 calibrationDialog.max = raw
+            } else if (state == 2) {
+                raw = (raw - min) * mulFactor + minValue
+                if (!isTrigger && !isWhammy) {
+                    raw = Math.abs(raw);
+                }
+                calibrationDialog.deadZone = raw
             } else {
-                // if (isWhammy) {
-                //     value = (raw - min) * mulFactor
-                // } else {
-                    value = (raw - min) * mulFactor + minValue
-                // }
+                value = (raw - min) * mulFactor + minValue
+                if (isTrigger || isWhammy) {
+                    if (value < deadZone) {
+                        value = minValue;
+                    }
+                } else {
+                    if (value < deadZone && value > -deadZone) {
+                        value = 0;
+                    }
+                }
             }
-            // console.log(mulFactor)
-            // console.log(min)
         }
     }
 
     onOpened: {
         axisRaw = ["Lt", "Rt", "LX", "LY", "RX", "RY"].indexOf(axis)
+        if (state == 0) {
+            deadZone = 0
+            min = minValue
+            max = maxValue
+        }
     }
     onRejected: {
         state = 0
@@ -56,10 +72,14 @@ Dialog {
     onAccepted: {
         state++;
         if (state == 2) {
-            // let minV = isWhammy ? 0 : minValue;
             mulFactor = (((maxValue-minValue) / (max-min)))
         } 
-        if(state < 3) {
+        if (state == 3) {
+            // if (isTrigger) {
+            //     deadZone = -deadZone
+            // } 
+        }
+        if(state < 4) {
             reset()
             open()
         } else {
@@ -78,13 +98,20 @@ Dialog {
     }
     RangeBar {
         visible: calibrationDialog.state == 2
+        valueMin: (isTrigger || isWhammy) ? minValue : -deadZone
+        valueMax: deadZone
+        minimum: minValue
+        maximum: maxValue
+    }
+    RangeBar {
+        visible: calibrationDialog.state == 3
         valueMin: value-5
         valueMax: value+5
         minimum: minValue
         maximum: maxValue
     }
     standardButtons: Dialog.Ok | Dialog.Cancel
-    title: ["Move your axis to the minimum value", "Move your axis to the maximum value", "Test the value"][state]
+    title: ["Move your axis to the minimum value", "Move your axis to the maximum value", "Set the deadzone", "Test the value"][state]
     x: (parent.width - width) / 2
     y: {
         //Base position on the parent position, but bump the dialog up if it hits the bottom of the screen.

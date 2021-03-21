@@ -94,18 +94,26 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool rfRfInEnabled READ getRfRfInEnabled WRITE setRfRfInEnabled NOTIFY rfRfInEnabledUpdated)
     Q_PROPERTY(int rfId READ getRfId WRITE setRfId NOTIFY rfIdUpdated)
     Q_PROPERTY(int pinsSP READ getPinsSP WRITE setPinsSP NOTIFY pinsSPUpdated)
-    Q_PROPERTY(float axisScaleLtMultiplier READ getAxisScaleLtMultiplier WRITE setAxisScaleLtMultiplier NOTIFY axisScaleLtMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLtMultiplier READ getAxisScaleLtMultiplier WRITE setAxisScaleLtMultiplier NOTIFY axisScaleLtMultiplierUpdated)
     Q_PROPERTY(int axisScaleLtOffset READ getAxisScaleLtOffset WRITE setAxisScaleLtOffset NOTIFY axisScaleLtOffsetUpdated)
-    Q_PROPERTY(float axisScaleRtMultiplier READ getAxisScaleRtMultiplier WRITE setAxisScaleRtMultiplier NOTIFY axisScaleRtMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLtDeadzone READ getAxisScaleLtDeadzone WRITE setAxisScaleLtDeadzone NOTIFY axisScaleLtDeadzoneUpdated)
+    Q_PROPERTY(int axisScaleRtMultiplier READ getAxisScaleRtMultiplier WRITE setAxisScaleRtMultiplier NOTIFY axisScaleRtMultiplierUpdated)
     Q_PROPERTY(int axisScaleRtOffset READ getAxisScaleRtOffset WRITE setAxisScaleRtOffset NOTIFY axisScaleRtOffsetUpdated)
-    Q_PROPERTY(float axisScaleLXMultiplier READ getAxisScaleLXMultiplier WRITE setAxisScaleLXMultiplier NOTIFY axisScaleLXMultiplierUpdated)
+    Q_PROPERTY(int axisScaleRtDeadzone READ getAxisScaleRtDeadzone WRITE setAxisScaleRtDeadzone NOTIFY axisScaleRtDeadzoneUpdated)
+    Q_PROPERTY(int axisScaleLXMultiplier READ getAxisScaleLXMultiplier WRITE setAxisScaleLXMultiplier NOTIFY axisScaleLXMultiplierUpdated)
     Q_PROPERTY(int axisScaleLXOffset READ getAxisScaleLXOffset WRITE setAxisScaleLXOffset NOTIFY axisScaleLXOffsetUpdated)
-    Q_PROPERTY(float axisScaleLYMultiplier READ getAxisScaleLYMultiplier WRITE setAxisScaleLYMultiplier NOTIFY axisScaleLYMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLXDeadzone READ getAxisScaleLXDeadzone WRITE setAxisScaleLXDeadzone NOTIFY axisScaleLXDeadzoneUpdated)
+    Q_PROPERTY(int axisScaleLYMultiplier READ getAxisScaleLYMultiplier WRITE setAxisScaleLYMultiplier NOTIFY axisScaleLYMultiplierUpdated)
     Q_PROPERTY(int axisScaleLYOffset READ getAxisScaleLYOffset WRITE setAxisScaleLYOffset NOTIFY axisScaleLYOffsetUpdated)
-    Q_PROPERTY(float axisScaleRXMultiplier READ getAxisScaleRXMultiplier WRITE setAxisScaleRXMultiplier NOTIFY axisScaleRXMultiplierUpdated)
+    Q_PROPERTY(int axisScaleLYDeadzone READ getAxisScaleLYDeadzone WRITE setAxisScaleLYDeadzone NOTIFY axisScaleLYDeadzoneUpdated)
+    Q_PROPERTY(int axisScaleRXMultiplier READ getAxisScaleRXMultiplier WRITE setAxisScaleRXMultiplier NOTIFY axisScaleRXMultiplierUpdated)
     Q_PROPERTY(int axisScaleRXOffset READ getAxisScaleRXOffset WRITE setAxisScaleRXOffset NOTIFY axisScaleRXOffsetUpdated)
-    Q_PROPERTY(float axisScaleRYMultiplier READ getAxisScaleRYMultiplier WRITE setAxisScaleRYMultiplier NOTIFY axisScaleRYMultiplierUpdated)
+    Q_PROPERTY(int axisScaleRXDeadzone READ getAxisScaleRXDeadzone WRITE setAxisScaleRXDeadzone NOTIFY axisScaleRXDeadzoneUpdated)
+    Q_PROPERTY(int axisScaleRYMultiplier READ getAxisScaleRYMultiplier WRITE setAxisScaleRYMultiplier NOTIFY axisScaleRYMultiplierUpdated)
     Q_PROPERTY(int axisScaleRYOffset READ getAxisScaleRYOffset WRITE setAxisScaleRYOffset NOTIFY axisScaleRYOffsetUpdated)
+    Q_PROPERTY(int axisScaleRYDeadzone READ getAxisScaleRYDeadzone WRITE setAxisScaleRYDeadzone NOTIFY axisScaleRYDeadzoneUpdated)
+    Q_PROPERTY(int debounceButtons READ getDebounceButtons WRITE setDebounceButtons NOTIFY debounceButtonsUpdated)
+    Q_PROPERTY(int debounceStrum READ getDebounceStrum WRITE setDebounceStrum NOTIFY debounceStrumUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -693,89 +701,145 @@ public slots:
         m_config.pinsSP = (uint8_t)val;
         emit pinsSPUpdated();
     }
-    float getAxisScaleLtMultiplier() const {
-        return m_config.axisScale.lt.multiplier;
+    int getAxisScaleLtMultiplier() const {
+        return (int16_t)m_config.axisScale.lt.multiplier;
     }
-    void setAxisScaleLtMultiplier(float val) {
-        m_config.axisScale.lt.multiplier = val;
+    void setAxisScaleLtMultiplier(int val) {
+        m_config.axisScale.lt.multiplier = (int16_t)val;
         emit axisScaleLtMultiplierUpdated();
     }
     int getAxisScaleLtOffset() const {
-        return (uint16_t)m_config.axisScale.lt.offset;
+        return (int16_t)m_config.axisScale.lt.offset;
     }
     void setAxisScaleLtOffset(int val) {
-        m_config.axisScale.lt.offset = (uint16_t)val;
+        m_config.axisScale.lt.offset = (int16_t)val;
         emit axisScaleLtOffsetUpdated();
     }
-    float getAxisScaleRtMultiplier() const {
-        return m_config.axisScale.rt.multiplier;
+    int getAxisScaleLtDeadzone() const {
+        return (int16_t)m_config.axisScale.lt.deadzone;
     }
-    void setAxisScaleRtMultiplier(float val) {
-        m_config.axisScale.rt.multiplier = val;
+    void setAxisScaleLtDeadzone(int val) {
+        m_config.axisScale.lt.deadzone = (int16_t)val;
+        emit axisScaleLtDeadzoneUpdated();
+    }
+    int getAxisScaleRtMultiplier() const {
+        return (int16_t)m_config.axisScale.rt.multiplier;
+    }
+    void setAxisScaleRtMultiplier(int val) {
+        m_config.axisScale.rt.multiplier = (int16_t)val;
         emit axisScaleRtMultiplierUpdated();
     }
     int getAxisScaleRtOffset() const {
-        return (uint16_t)m_config.axisScale.rt.offset;
+        return (int16_t)m_config.axisScale.rt.offset;
     }
     void setAxisScaleRtOffset(int val) {
-        m_config.axisScale.rt.offset = (uint16_t)val;
+        m_config.axisScale.rt.offset = (int16_t)val;
         emit axisScaleRtOffsetUpdated();
     }
-    float getAxisScaleLXMultiplier() const {
-        return m_config.axisScale.l_x.multiplier;
+    int getAxisScaleRtDeadzone() const {
+        return (int16_t)m_config.axisScale.rt.deadzone;
     }
-    void setAxisScaleLXMultiplier(float val) {
-        m_config.axisScale.l_x.multiplier = val;
+    void setAxisScaleRtDeadzone(int val) {
+        m_config.axisScale.rt.deadzone = (int16_t)val;
+        emit axisScaleRtDeadzoneUpdated();
+    }
+    int getAxisScaleLXMultiplier() const {
+        return (int16_t)m_config.axisScale.l_x.multiplier;
+    }
+    void setAxisScaleLXMultiplier(int val) {
+        m_config.axisScale.l_x.multiplier = (int16_t)val;
         emit axisScaleLXMultiplierUpdated();
     }
     int getAxisScaleLXOffset() const {
-        return (uint16_t)m_config.axisScale.l_x.offset;
+        return (int16_t)m_config.axisScale.l_x.offset;
     }
     void setAxisScaleLXOffset(int val) {
-        m_config.axisScale.l_x.offset = (uint16_t)val;
+        m_config.axisScale.l_x.offset = (int16_t)val;
         emit axisScaleLXOffsetUpdated();
     }
-    float getAxisScaleLYMultiplier() const {
-        return m_config.axisScale.l_y.multiplier;
+    int getAxisScaleLXDeadzone() const {
+        return (int16_t)m_config.axisScale.l_x.deadzone;
     }
-    void setAxisScaleLYMultiplier(float val) {
-        m_config.axisScale.l_y.multiplier = val;
+    void setAxisScaleLXDeadzone(int val) {
+        m_config.axisScale.l_x.deadzone = (int16_t)val;
+        emit axisScaleLXDeadzoneUpdated();
+    }
+    int getAxisScaleLYMultiplier() const {
+        return (int16_t)m_config.axisScale.l_y.multiplier;
+    }
+    void setAxisScaleLYMultiplier(int val) {
+        m_config.axisScale.l_y.multiplier = (int16_t)val;
         emit axisScaleLYMultiplierUpdated();
     }
     int getAxisScaleLYOffset() const {
-        return (uint16_t)m_config.axisScale.l_y.offset;
+        return (int16_t)m_config.axisScale.l_y.offset;
     }
     void setAxisScaleLYOffset(int val) {
-        m_config.axisScale.l_y.offset = (uint16_t)val;
+        m_config.axisScale.l_y.offset = (int16_t)val;
         emit axisScaleLYOffsetUpdated();
     }
-    float getAxisScaleRXMultiplier() const {
-        return m_config.axisScale.r_x.multiplier;
+    int getAxisScaleLYDeadzone() const {
+        return (int16_t)m_config.axisScale.l_y.deadzone;
     }
-    void setAxisScaleRXMultiplier(float val) {
-        m_config.axisScale.r_x.multiplier = val;
+    void setAxisScaleLYDeadzone(int val) {
+        m_config.axisScale.l_y.deadzone = (int16_t)val;
+        emit axisScaleLYDeadzoneUpdated();
+    }
+    int getAxisScaleRXMultiplier() const {
+        return (int16_t)m_config.axisScale.r_x.multiplier;
+    }
+    void setAxisScaleRXMultiplier(int val) {
+        m_config.axisScale.r_x.multiplier = (int16_t)val;
         emit axisScaleRXMultiplierUpdated();
     }
     int getAxisScaleRXOffset() const {
-        return (uint16_t)m_config.axisScale.r_x.offset;
+        return (int16_t)m_config.axisScale.r_x.offset;
     }
     void setAxisScaleRXOffset(int val) {
-        m_config.axisScale.r_x.offset = (uint16_t)val;
+        m_config.axisScale.r_x.offset = (int16_t)val;
         emit axisScaleRXOffsetUpdated();
     }
-    float getAxisScaleRYMultiplier() const {
-        return m_config.axisScale.r_y.multiplier;
+    int getAxisScaleRXDeadzone() const {
+        return (int16_t)m_config.axisScale.r_x.deadzone;
     }
-    void setAxisScaleRYMultiplier(float val) {
-        m_config.axisScale.r_y.multiplier = val;
+    void setAxisScaleRXDeadzone(int val) {
+        m_config.axisScale.r_x.deadzone = (int16_t)val;
+        emit axisScaleRXDeadzoneUpdated();
+    }
+    int getAxisScaleRYMultiplier() const {
+        return (int16_t)m_config.axisScale.r_y.multiplier;
+    }
+    void setAxisScaleRYMultiplier(int val) {
+        m_config.axisScale.r_y.multiplier = (int16_t)val;
         emit axisScaleRYMultiplierUpdated();
     }
     int getAxisScaleRYOffset() const {
-        return (uint16_t)m_config.axisScale.r_y.offset;
+        return (int16_t)m_config.axisScale.r_y.offset;
     }
     void setAxisScaleRYOffset(int val) {
-        m_config.axisScale.r_y.offset = (uint16_t)val;
+        m_config.axisScale.r_y.offset = (int16_t)val;
         emit axisScaleRYOffsetUpdated();
+    }
+    int getAxisScaleRYDeadzone() const {
+        return (int16_t)m_config.axisScale.r_y.deadzone;
+    }
+    void setAxisScaleRYDeadzone(int val) {
+        m_config.axisScale.r_y.deadzone = (int16_t)val;
+        emit axisScaleRYDeadzoneUpdated();
+    }
+    int getDebounceButtons() const {
+        return (uint8_t)m_config.debounce.buttons;
+    }
+    void setDebounceButtons(int val) {
+        m_config.debounce.buttons = (uint8_t)val;
+        emit debounceButtonsUpdated();
+    }
+    int getDebounceStrum() const {
+        return (uint8_t)m_config.debounce.strum;
+    }
+    void setDebounceStrum(int val) {
+        m_config.debounce.strum = (uint8_t)val;
+        emit debounceStrumUpdated();
     }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
@@ -921,16 +985,24 @@ signals:
     void pinsSPUpdated();
     void axisScaleLtMultiplierUpdated();
     void axisScaleLtOffsetUpdated();
+    void axisScaleLtDeadzoneUpdated();
     void axisScaleRtMultiplierUpdated();
     void axisScaleRtOffsetUpdated();
+    void axisScaleRtDeadzoneUpdated();
     void axisScaleLXMultiplierUpdated();
     void axisScaleLXOffsetUpdated();
+    void axisScaleLXDeadzoneUpdated();
     void axisScaleLYMultiplierUpdated();
     void axisScaleLYOffsetUpdated();
+    void axisScaleLYDeadzoneUpdated();
     void axisScaleRXMultiplierUpdated();
     void axisScaleRXOffsetUpdated();
+    void axisScaleRXDeadzoneUpdated();
     void axisScaleRYMultiplierUpdated();
     void axisScaleRYOffsetUpdated();
+    void axisScaleRYDeadzoneUpdated();
+    void debounceButtonsUpdated();
+    void debounceStrumUpdated();
 
 private:
     Configuration_t m_config;
