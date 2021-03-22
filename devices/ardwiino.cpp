@@ -50,25 +50,23 @@ bool Ardwiino::open() {
     emit boardImageChanged();
     return true;
 }
-#define PACKET_SIZE 50
 void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
-    auto packet_size = PACKET_SIZE;
-    if (m_configuration->getRfRfInEnabled()) {
-        // Send smaller config packets so that they can fit within a single rf packet
-        // 30 byte packet, one byte for offset
-        packet_size = 29;
-    } else {
-        // set aside space for ids (is this needed?)
-        packet_size -= 3;
-    }
+    // auto packet_size = PACKET_SIZE;
+    // if (m_configuration->getRfRfInEnabled()) {
+    //     // Send smaller config packets so that they can fit within a single rf packet
+    //     // 30 byte packet, one byte for offset
+    //     packet_size = 29;
+    // } 
     uint offset = 0;
+    uint offsetId = 0;
     QByteArray data;
     while (offset < sizeof(Configuration_t)) {
         data.clear();
-        data.push_back(offset);
-        data.push_back(dataToWrite.mid(offset, packet_size));
+        data.push_back(offsetId);
+        data.push_back(dataToWrite.mid(offset, PACKET_SIZE));
         m_usbDevice.write(COMMAND_WRITE_CONFIG, data);
-        offset += packet_size;
+        offset += PACKET_SIZE;
+        offsetId++;
         QThread::currentThread()->msleep(100);
     }
 }
@@ -97,7 +95,7 @@ qint32 Ardwiino::generateClientRFID() {
 void Ardwiino::findDigital(QJSValue callback) {
     m_pinDetectionCallback = callback;
     m_usbDevice.write(COMMAND_FIND_DIGITAL, QByteArray(1, 0x00));
-    QTimer::singleShot(300, [&]() {
+    QTimer::singleShot(500, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
             if (m_hasPinDetectionCallback) {
@@ -118,7 +116,7 @@ int Ardwiino::readAnalog(int pin) {
 void Ardwiino::findAnalog(QJSValue callback) {
     m_pinDetectionCallback = callback;
     m_usbDevice.write(COMMAND_FIND_ANALOG, QByteArray(1, 0x00));
-    QTimer::singleShot(300, [&]() {
+    QTimer::singleShot(500, [&]() {
         uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
         if (pin == 0xFF) {
             if (m_hasPinDetectionCallback) {
