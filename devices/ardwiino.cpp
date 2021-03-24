@@ -1,12 +1,12 @@
 #include "ardwiino.h"
 
+#include <QDir>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QRandomGenerator>
 #include <QSettings>
 #include <QThread>
-#include <QFile>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QDir>
 
 #include "submodules/Ardwiino/src/shared/config/defaults.h"
 Ardwiino::Ardwiino(UsbDevice_t devt, QObject* parent) : Device(devt, parent), m_usbDevice(&m_deviceID), m_isOpen(false), m_configurable(false) {
@@ -87,41 +87,52 @@ qint32 Ardwiino::generateClientRFID() {
     return id;
 }
 void Ardwiino::findDigital(QJSValue callback) {
-    m_pinDetectionCallback = callback;
-    m_usbDevice.write(COMMAND_FIND_DIGITAL, QByteArray(1, 0x00));
-    QTimer::singleShot(500, [&]() {
-        uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
-        if (pin == 0xFF) {
-            if (m_hasPinDetectionCallback) {
-                findDigital(m_pinDetectionCallback);
+    if (isReady()) {
+        m_pinDetectionCallback = callback;
+        m_usbDevice.write(COMMAND_FIND_DIGITAL, QByteArray(1, 0x00));
+        QTimer::singleShot(500, [&]() {
+            if (isReady()) {
+                uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
+                if (pin == 0xFF) {
+                    if (m_hasPinDetectionCallback) {
+                        findDigital(m_pinDetectionCallback);
+                    }
+                } else {
+                    QJSValueList args;
+                    args << QJSValue(pin);
+                    m_pinDetectionCallback.call(args);
+                }
             }
-        } else {
-            QJSValueList args;
-            args << QJSValue(pin);
-            m_pinDetectionCallback.call(args);
-        }
-    });
+        });
+    }
 }
 int Ardwiino::readAnalog(int pin) {
-    int16_t axis[XBOX_AXIS_COUNT];
-    memcpy(&axis, m_usbDevice.read(COMMAND_GET_VALUES).data(), sizeof(axis));
-    return axis[pin];
+    if (isReady()) {
+        int16_t axis[XBOX_AXIS_COUNT];
+        memcpy(&axis, m_usbDevice.read(COMMAND_GET_VALUES).data(), sizeof(axis));
+        return axis[pin];
+    }
+    return 0;
 }
 void Ardwiino::findAnalog(QJSValue callback) {
-    m_pinDetectionCallback = callback;
-    m_usbDevice.write(COMMAND_FIND_ANALOG, QByteArray(1, 0x00));
-    QTimer::singleShot(500, [&]() {
-        uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
-        if (pin == 0xFF) {
-            if (m_hasPinDetectionCallback) {
-                findAnalog(m_pinDetectionCallback);
+    if (isReady()) {
+        m_pinDetectionCallback = callback;
+        m_usbDevice.write(COMMAND_FIND_ANALOG, QByteArray(1, 0x00));
+        QTimer::singleShot(500, [&]() {
+            if (isReady()) {
+                uint8_t pin = m_usbDevice.read(COMMAND_GET_FOUND)[0];
+                if (pin == 0xFF) {
+                    if (m_hasPinDetectionCallback) {
+                        findAnalog(m_pinDetectionCallback);
+                    }
+                } else {
+                    QJSValueList args;
+                    args << QJSValue(pin);
+                    m_pinDetectionCallback.call(args);
+                }
             }
-        } else {
-            QJSValueList args;
-            args << QJSValue(pin);
-            m_pinDetectionCallback.call(args);
-        }
-    });
+        });
+    }
 }
 void Ardwiino::startFind() {
     m_hasPinDetectionCallback = true;
@@ -176,6 +187,7 @@ void Ardwiino::close() {
     if (m_isOpen) {
         m_usbDevice.close();
     }
+    m_isOpen = false;
 }
 void Ardwiino::resetConfig() {
     m_usbDevice.write(COMMAND_RESET, QByteArray(1, 0x00));
@@ -221,7 +233,7 @@ void Ardwiino::importPreset(QString fileName) {
     }
     QFile file(QDir::toNativeSeparators(QUrl(fileName).toLocalFile()));
     file.open(QIODevice::ReadOnly);
-    
+
     QJsonObject doc = QJsonDocument::fromJson(file.readAll()).object();
     configs[doc["name"].toString()] = doc["config"].toString();
     settings.setValue("presets", configs);
