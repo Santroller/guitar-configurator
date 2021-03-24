@@ -754,6 +754,7 @@ ColumnLayout {
                 visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.DIGITAL && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 text: "Calibrate Tilt"
+                enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF
                 onClicked: {
                     calibDialog2.open()
                 }

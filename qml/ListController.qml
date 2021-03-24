@@ -169,8 +169,8 @@ GridLayout {
             Button {
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
-                enabled: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
-                visible: enabled
+                enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF && scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
+                visible: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
                 text: "Calibrate " + gl.labels[modelData]
                 onClicked: {
                     calibDialog.open()

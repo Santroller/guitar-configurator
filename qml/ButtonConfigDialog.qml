@@ -227,6 +227,7 @@ Dialog {
                         onClicked: {
                             calibDialog.open()
                         }
+                        enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF
                     }
                     CalibrationDialog {
                         id:calibDialog
