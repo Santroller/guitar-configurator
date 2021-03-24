@@ -9,19 +9,12 @@ bool UsbDevice::open() {
     if (libusb_open(m_devt->dev, &libusb_handle) != LIBUSB_SUCCESS) {
         return false;
     }
-    // There is no kernel driver for the config interface so we don't have to do this
-    // auto detach = libusb_detach_kernel_driver(libusb_handle,2);
-    // We need this to either succeed, or for there not to be a kernel driver to detach, and in that case it will return not found.
-    // if (detach != LIBUSB_SUCCESS && detach != LIBUSB_ERROR_NOT_FOUND) {
-    //     return false;
-    // }
     // We need to claim the config interface in order to read and write from it.
     return libusb_claim_interface(libusb_handle,2) == LIBUSB_SUCCESS;
 }
 
 void UsbDevice::close() {
     if (libusb_handle) {
-        libusb_attach_kernel_driver(libusb_handle, 2);
         libusb_close(libusb_handle);
     }
 }

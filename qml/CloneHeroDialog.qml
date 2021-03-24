@@ -106,8 +106,7 @@ Dialog {
         Button {
             id: bindSP
             text: qsTr("Set Star Power LED pin (Currently: "+dialog.pins(scanner.selected.config.pinsSP)+")")
-            // enabled: ledhandler.ready
-            visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.LEDS_INLINE
+            enabled: ledhandler.ready
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: pinBinding.open();
         }
