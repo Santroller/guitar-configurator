@@ -20,6 +20,7 @@ Dialog {
     property var axisRaw: 0;
     property var min: minValue;
     property var max: maxValue;
+    property var skipDeadzone: false;
     property var deadZone: 0;
     property var value: 0;
     property var state: 0;
@@ -75,6 +76,7 @@ Dialog {
             mulFactor = (((maxValue-minValue) / (max-min)))
         } 
         if (state == 3) {
+            if (skipDeadzone) state++;
             // if (isTrigger) {
             //     deadZone = -deadZone
             // } 

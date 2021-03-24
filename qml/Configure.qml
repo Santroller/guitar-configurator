@@ -665,35 +665,6 @@ ColumnLayout {
 
                 onCurrentIndexChanged: scanner.selected.config.axisMpu6050Orientation = orientationBox.model[orientationBox.currentIndex].value
             }
-
-            Label {
-                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
-                text: qsTr("Tilt Sensor Sensitivity: ")
-                fontSizeMode: Text.FixedSize
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                wrapMode: Text.WordWrap
-            }
-
-            Slider {
-                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
-                id: sliderTilt
-                Layout.fillWidth: true
-                to: 32767
-                from: -32767
-                Component.onCompleted: value = scanner.selected.config.axisTiltSensitivity
-                onValueChanged: scanner.selected.config.axisTiltSensitivity = sliderTilt.value
-                background: Rectangle {
-                    y: 15
-                    implicitWidth: 200
-                    implicitHeight: 4
-                    height: implicitHeight
-                    radius: 2
-                    color: "#bdbebf"
-                }
-            }
             Label {
                 text: "Pin Binding"
                 visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.MPU_6050 && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
@@ -765,7 +736,7 @@ ColumnLayout {
                 }
             }
             Label {
-                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.DIGITAL && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 text: "Invert Tilt Axis"
                 font.pointSize: 15
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -774,9 +745,30 @@ ColumnLayout {
             Switch {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: enabled && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.DIGITAL && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 checked: !!scanner.selected.config[`pins${"RY"}Inverted`]
                 onCheckedChanged: scanner.selected.config[`pins${"RY"}Inverted`] = checked
+            }
+
+            Button {
+                visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.DIGITAL && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                text: "Calibrate Tilt"
+                onClicked: {
+                    calibDialog2.open()
+                }
+            }
+            CalibrationDialog {
+                id: calibDialog2
+                pin: scanner.selected.config.pinsRY
+                axis: "RY"
+                isWhammy: false
+                skipDeadzone: true
+                onCalibrationChanged: {
+                    scanner.selected.config.axisScaleRYMultiplier = mulFactor * 1024
+                    scanner.selected.config.axisScaleRYOffset = min
+                    scanner.selected.config.axisScaleRYDeadzone = deadZone
+                }
             }
             Label {
                 visible: scanner.selected.config.hasAddressableLEDs
