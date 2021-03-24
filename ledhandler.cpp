@@ -15,12 +15,16 @@
 LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent) : QObject(parent), scanner(scanner), m_gameFolder(""), m_version("") {
 #ifdef Q_OS_WIN64
     platform = "win64";
+    binary = "Clone Hero.exe";
 #elif defined Q_OS_WIN32
     platform = "win32";
+    binary = "Clone Hero.exe";
 #elif defined Q_OS_MACOS
     platform = "mac";
+    binary = "Clone Hero.app/Contents/MacOS/Clone Hero";
 #elif defined Q_OS_LINUX
     platform = "linux";
+    binary = "clonehero";
 #endif
     connect(application, &QGuiApplication::aboutToQuit, &process, &QProcess::terminate);
     if (settings.contains("cloneHeroDir")) {

@@ -51,12 +51,6 @@ bool Ardwiino::open() {
     return true;
 }
 void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
-    // auto packet_size = PACKET_SIZE;
-    // if (m_configuration->getRfRfInEnabled()) {
-    //     // Send smaller config packets so that they can fit within a single rf packet
-    //     // 30 byte packet, one byte for offset
-    //     packet_size = 29;
-    // } 
     uint offset = 0;
     uint offsetId = 0;
     QByteArray data;
@@ -139,14 +133,14 @@ QString Ardwiino::getDescription() {
     if (!isReady()) {
         return "Ardwiino - Unable to communicate";
     }
-    if (!m_configurable) {
-        return "Ardwiino - Outdated - Continue to update";
-    }
     QString bname = m_board.name;
     if (m_board.cpuFrequency == 16000000) {
         bname = bname + " (5V)";
     } else if (m_board.cpuFrequency == 8000000) {
         bname = bname + " (3.3V)";
+    }
+    if (!m_configurable) {
+        return "Ardwiino - " + bname + " - Outdated - Continue to update";
     }
     QString desc = "Ardwiino - " + bname + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
     auto ext = m_usbDevice.read(COMMAND_GET_EXTENSION);
