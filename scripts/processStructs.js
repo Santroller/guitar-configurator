@@ -88,6 +88,7 @@ let out = (`
 #include "submodules/Ardwiino/src/shared/config/config.h"
 class DeviceConfiguration : public QObject {
     Q_OBJECT
+    Q_PROPERTY(bool hasChanged MEMBER m_hasChanged NOTIFY hasChangedUpdated)
     Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isDrum READ isDrum NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY mainSubTypeUpdated)
@@ -164,12 +165,21 @@ for (let path of paths) {
     }`);
         out += (`
     void set${path.func}ValueAt(int i, ${path.type} val) {
-        ${path.path}[i] = ${path.cast}val;
-        emit ${lowFirst(path.func)}Updated();
+        if (${path.path}[i] != ${path.cast}val) {
+            m_hasChanged = true;
+            ${path.path}[i] = ${path.cast}val;
+            emit ${lowFirst(path.func)}Updated();
+            emit hasChangedUpdated();
+        }
     }
     void set${path.func}Value(QString key, ${path.type} val) {
-        ${path.path}[pins.indexOf(key)] = ${path.cast}val;
-        emit ${lowFirst(path.func)}Updated();
+        if (${path.path}[pins.indexOf(key)] != ${path.cast}val) {
+            ${path.path}[pins.indexOf(key)] = ${path.cast}val;
+            m_hasChanged = true;
+            emit ${lowFirst(path.func)}Updated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }`);
      
     } else {
@@ -179,8 +189,12 @@ for (let path of paths) {
     }`);
         out += (`
     void set${path.func}(${path.type} val) {
-        ${path.path} = ${path.cast}val;
-        emit ${lowFirst(path.func)}Updated();
+        if (${path.path} != ${path.cast}val) {
+            ${path.path} = ${path.cast}val;
+            emit ${lowFirst(path.func)}Updated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }`);
     }
 }
@@ -196,6 +210,8 @@ out += (`
                 led.green = ucolor >> 8 & 0xff;
                 led.blue = ucolor & 0xff;
                 emit ledsUpdated();
+                m_hasChanged = true;
+                emit hasChangedUpdated();
                 return;
             }
         }
@@ -226,6 +242,8 @@ out += (`
         std::fill(a, std::end(m_config.leds), empty);
         std::copy(std::begin(m_config.leds), std::end(m_config.leds), std::begin(m_config.leds));
         emit ledsUpdated();
+        m_hasChanged = true;
+        emit hasChangedUpdated();
     }
     void moveLED(int from, int to) {
         if (from == to)
@@ -236,6 +254,8 @@ out += (`
         else
             std::rotate(b + to, b + from, b + from + 1);
         emit ledsUpdated();
+        m_hasChanged = true;
+        emit hasChangedUpdated();
     }
 
     QMap<QString, uint> getMappings() {
@@ -251,6 +271,7 @@ out += (`
         return map;
     }
 signals:
+    void hasChangedUpdated();
 `)
 for (let path of paths) {
     out += (`    void ${lowFirst(path.func)}Updated();
@@ -260,6 +281,7 @@ out += (`
 private:
     Configuration_t m_config;
     const static QStringList pins;
+    bool m_hasChanged;
 };`)
 
 fs.writeFileSync("../deviceconfiguration.h", out);

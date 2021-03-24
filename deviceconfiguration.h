@@ -7,6 +7,7 @@
 #include "submodules/Ardwiino/src/shared/config/config.h"
 class DeviceConfiguration : public QObject {
     Q_OBJECT
+    Q_PROPERTY(bool hasChanged MEMBER m_hasChanged NOTIFY hasChangedUpdated)
     Q_PROPERTY(bool isGuitar READ isGuitar NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isDrum READ isDrum NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY mainSubTypeUpdated)
@@ -156,484 +157,760 @@ public slots:
         return (ArdwiinoDefines::InputType)m_config.main.inputType;
     }
     void setMainInputType(ArdwiinoDefines::InputType val) {
-        m_config.main.inputType = (ArdwiinoDefines::InputType)val;
-        emit mainInputTypeUpdated();
+        if (m_config.main.inputType != (ArdwiinoDefines::InputType)val) {
+            m_config.main.inputType = (ArdwiinoDefines::InputType)val;
+            emit mainInputTypeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     ArdwiinoDefines::SubType getMainSubType() const {
         return (ArdwiinoDefines::SubType)m_config.main.subType;
     }
     void setMainSubType(ArdwiinoDefines::SubType val) {
-        m_config.main.subType = (ArdwiinoDefines::SubType)val;
-        emit mainSubTypeUpdated();
+        if (m_config.main.subType != (ArdwiinoDefines::SubType)val) {
+            m_config.main.subType = (ArdwiinoDefines::SubType)val;
+            emit mainSubTypeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     ArdwiinoDefines::TiltType getMainTiltType() const {
         return (ArdwiinoDefines::TiltType)m_config.main.tiltType;
     }
     void setMainTiltType(ArdwiinoDefines::TiltType val) {
-        m_config.main.tiltType = (ArdwiinoDefines::TiltType)val;
-        emit mainTiltTypeUpdated();
+        if (m_config.main.tiltType != (ArdwiinoDefines::TiltType)val) {
+            m_config.main.tiltType = (ArdwiinoDefines::TiltType)val;
+            emit mainTiltTypeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getMainPollRate() const {
         return (uint8_t)m_config.main.pollRate;
     }
     void setMainPollRate(int val) {
-        m_config.main.pollRate = (uint8_t)val;
-        emit mainPollRateUpdated();
+        if (m_config.main.pollRate != (uint8_t)val) {
+            m_config.main.pollRate = (uint8_t)val;
+            emit mainPollRateUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     ArdwiinoDefines::FretLedMode getMainFretLEDMode() const {
         return (ArdwiinoDefines::FretLedMode)m_config.main.fretLEDMode;
     }
     void setMainFretLEDMode(ArdwiinoDefines::FretLedMode val) {
-        m_config.main.fretLEDMode = (ArdwiinoDefines::FretLedMode)val;
-        emit mainFretLEDModeUpdated();
+        if (m_config.main.fretLEDMode != (ArdwiinoDefines::FretLedMode)val) {
+            m_config.main.fretLEDMode = (ArdwiinoDefines::FretLedMode)val;
+            emit mainFretLEDModeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getMainMapLeftJoystickToDPad() const {
         return m_config.main.mapLeftJoystickToDPad;
     }
     void setMainMapLeftJoystickToDPad(bool val) {
-        m_config.main.mapLeftJoystickToDPad = val;
-        emit mainMapLeftJoystickToDPadUpdated();
+        if (m_config.main.mapLeftJoystickToDPad != val) {
+            m_config.main.mapLeftJoystickToDPad = val;
+            emit mainMapLeftJoystickToDPadUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getMainMapStartSelectToHome() const {
         return m_config.main.mapStartSelectToHome;
     }
     void setMainMapStartSelectToHome(bool val) {
-        m_config.main.mapStartSelectToHome = val;
-        emit mainMapStartSelectToHomeUpdated();
+        if (m_config.main.mapStartSelectToHome != val) {
+            m_config.main.mapStartSelectToHome = val;
+            emit mainMapStartSelectToHomeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getMainMapNunchukAccelToRightJoy() const {
         return m_config.main.mapNunchukAccelToRightJoy;
     }
     void setMainMapNunchukAccelToRightJoy(bool val) {
-        m_config.main.mapNunchukAccelToRightJoy = val;
-        emit mainMapNunchukAccelToRightJoyUpdated();
+        if (m_config.main.mapNunchukAccelToRightJoy != val) {
+            m_config.main.mapNunchukAccelToRightJoy = val;
+            emit mainMapNunchukAccelToRightJoyUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     ArdwiinoDefines::FirmwareType getMainSignature() const {
         return (ArdwiinoDefines::FirmwareType)m_config.main.signature;
     }
     void setMainSignature(ArdwiinoDefines::FirmwareType val) {
-        m_config.main.signature = (ArdwiinoDefines::FirmwareType)val;
-        emit mainSignatureUpdated();
+        if (m_config.main.signature != (ArdwiinoDefines::FirmwareType)val) {
+            m_config.main.signature = (ArdwiinoDefines::FirmwareType)val;
+            emit mainSignatureUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getMainVersion() const {
         return (uint32_t)m_config.main.version;
     }
     void setMainVersion(int val) {
-        m_config.main.version = (uint32_t)val;
-        emit mainVersionUpdated();
+        if (m_config.main.version != (uint32_t)val) {
+            m_config.main.version = (uint32_t)val;
+            emit mainVersionUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsUp() const {
         return (uint8_t)m_config.pins.up;
     }
     void setPinsUp(int val) {
-        m_config.pins.up = (uint8_t)val;
-        emit pinsUpUpdated();
+        if (m_config.pins.up != (uint8_t)val) {
+            m_config.pins.up = (uint8_t)val;
+            emit pinsUpUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsDown() const {
         return (uint8_t)m_config.pins.down;
     }
     void setPinsDown(int val) {
-        m_config.pins.down = (uint8_t)val;
-        emit pinsDownUpdated();
+        if (m_config.pins.down != (uint8_t)val) {
+            m_config.pins.down = (uint8_t)val;
+            emit pinsDownUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLeft() const {
         return (uint8_t)m_config.pins.left;
     }
     void setPinsLeft(int val) {
-        m_config.pins.left = (uint8_t)val;
-        emit pinsLeftUpdated();
+        if (m_config.pins.left != (uint8_t)val) {
+            m_config.pins.left = (uint8_t)val;
+            emit pinsLeftUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRight() const {
         return (uint8_t)m_config.pins.right;
     }
     void setPinsRight(int val) {
-        m_config.pins.right = (uint8_t)val;
-        emit pinsRightUpdated();
+        if (m_config.pins.right != (uint8_t)val) {
+            m_config.pins.right = (uint8_t)val;
+            emit pinsRightUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsStart() const {
         return (uint8_t)m_config.pins.start;
     }
     void setPinsStart(int val) {
-        m_config.pins.start = (uint8_t)val;
-        emit pinsStartUpdated();
+        if (m_config.pins.start != (uint8_t)val) {
+            m_config.pins.start = (uint8_t)val;
+            emit pinsStartUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsBack() const {
         return (uint8_t)m_config.pins.back;
     }
     void setPinsBack(int val) {
-        m_config.pins.back = (uint8_t)val;
-        emit pinsBackUpdated();
+        if (m_config.pins.back != (uint8_t)val) {
+            m_config.pins.back = (uint8_t)val;
+            emit pinsBackUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLeftStick() const {
         return (uint8_t)m_config.pins.left_stick;
     }
     void setPinsLeftStick(int val) {
-        m_config.pins.left_stick = (uint8_t)val;
-        emit pinsLeftStickUpdated();
+        if (m_config.pins.left_stick != (uint8_t)val) {
+            m_config.pins.left_stick = (uint8_t)val;
+            emit pinsLeftStickUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRightStick() const {
         return (uint8_t)m_config.pins.right_stick;
     }
     void setPinsRightStick(int val) {
-        m_config.pins.right_stick = (uint8_t)val;
-        emit pinsRightStickUpdated();
+        if (m_config.pins.right_stick != (uint8_t)val) {
+            m_config.pins.right_stick = (uint8_t)val;
+            emit pinsRightStickUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLB() const {
         return (uint8_t)m_config.pins.LB;
     }
     void setPinsLB(int val) {
-        m_config.pins.LB = (uint8_t)val;
-        emit pinsLBUpdated();
+        if (m_config.pins.LB != (uint8_t)val) {
+            m_config.pins.LB = (uint8_t)val;
+            emit pinsLBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRB() const {
         return (uint8_t)m_config.pins.RB;
     }
     void setPinsRB(int val) {
-        m_config.pins.RB = (uint8_t)val;
-        emit pinsRBUpdated();
+        if (m_config.pins.RB != (uint8_t)val) {
+            m_config.pins.RB = (uint8_t)val;
+            emit pinsRBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsHome() const {
         return (uint8_t)m_config.pins.home;
     }
     void setPinsHome(int val) {
-        m_config.pins.home = (uint8_t)val;
-        emit pinsHomeUpdated();
+        if (m_config.pins.home != (uint8_t)val) {
+            m_config.pins.home = (uint8_t)val;
+            emit pinsHomeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsCapture() const {
         return (uint8_t)m_config.pins.capture;
     }
     void setPinsCapture(int val) {
-        m_config.pins.capture = (uint8_t)val;
-        emit pinsCaptureUpdated();
+        if (m_config.pins.capture != (uint8_t)val) {
+            m_config.pins.capture = (uint8_t)val;
+            emit pinsCaptureUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsA() const {
         return (uint8_t)m_config.pins.a;
     }
     void setPinsA(int val) {
-        m_config.pins.a = (uint8_t)val;
-        emit pinsAUpdated();
+        if (m_config.pins.a != (uint8_t)val) {
+            m_config.pins.a = (uint8_t)val;
+            emit pinsAUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsB() const {
         return (uint8_t)m_config.pins.b;
     }
     void setPinsB(int val) {
-        m_config.pins.b = (uint8_t)val;
-        emit pinsBUpdated();
+        if (m_config.pins.b != (uint8_t)val) {
+            m_config.pins.b = (uint8_t)val;
+            emit pinsBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsX() const {
         return (uint8_t)m_config.pins.x;
     }
     void setPinsX(int val) {
-        m_config.pins.x = (uint8_t)val;
-        emit pinsXUpdated();
+        if (m_config.pins.x != (uint8_t)val) {
+            m_config.pins.x = (uint8_t)val;
+            emit pinsXUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsY() const {
         return (uint8_t)m_config.pins.y;
     }
     void setPinsY(int val) {
-        m_config.pins.y = (uint8_t)val;
-        emit pinsYUpdated();
+        if (m_config.pins.y != (uint8_t)val) {
+            m_config.pins.y = (uint8_t)val;
+            emit pinsYUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLt() const {
         return (uint8_t)m_config.pins.lt.pin;
     }
     void setPinsLt(int val) {
-        m_config.pins.lt.pin = (uint8_t)val;
-        emit pinsLtUpdated();
+        if (m_config.pins.lt.pin != (uint8_t)val) {
+            m_config.pins.lt.pin = (uint8_t)val;
+            emit pinsLtUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsLtInverted() const {
         return m_config.pins.lt.inverted;
     }
     void setPinsLtInverted(bool val) {
-        m_config.pins.lt.inverted = val;
-        emit pinsLtInvertedUpdated();
+        if (m_config.pins.lt.inverted != val) {
+            m_config.pins.lt.inverted = val;
+            emit pinsLtInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRt() const {
         return (uint8_t)m_config.pins.rt.pin;
     }
     void setPinsRt(int val) {
-        m_config.pins.rt.pin = (uint8_t)val;
-        emit pinsRtUpdated();
+        if (m_config.pins.rt.pin != (uint8_t)val) {
+            m_config.pins.rt.pin = (uint8_t)val;
+            emit pinsRtUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsRtInverted() const {
         return m_config.pins.rt.inverted;
     }
     void setPinsRtInverted(bool val) {
-        m_config.pins.rt.inverted = val;
-        emit pinsRtInvertedUpdated();
+        if (m_config.pins.rt.inverted != val) {
+            m_config.pins.rt.inverted = val;
+            emit pinsRtInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLX() const {
         return (uint8_t)m_config.pins.l_x.pin;
     }
     void setPinsLX(int val) {
-        m_config.pins.l_x.pin = (uint8_t)val;
-        emit pinsLXUpdated();
+        if (m_config.pins.l_x.pin != (uint8_t)val) {
+            m_config.pins.l_x.pin = (uint8_t)val;
+            emit pinsLXUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsLXInverted() const {
         return m_config.pins.l_x.inverted;
     }
     void setPinsLXInverted(bool val) {
-        m_config.pins.l_x.inverted = val;
-        emit pinsLXInvertedUpdated();
+        if (m_config.pins.l_x.inverted != val) {
+            m_config.pins.l_x.inverted = val;
+            emit pinsLXInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsLY() const {
         return (uint8_t)m_config.pins.l_y.pin;
     }
     void setPinsLY(int val) {
-        m_config.pins.l_y.pin = (uint8_t)val;
-        emit pinsLYUpdated();
+        if (m_config.pins.l_y.pin != (uint8_t)val) {
+            m_config.pins.l_y.pin = (uint8_t)val;
+            emit pinsLYUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsLYInverted() const {
         return m_config.pins.l_y.inverted;
     }
     void setPinsLYInverted(bool val) {
-        m_config.pins.l_y.inverted = val;
-        emit pinsLYInvertedUpdated();
+        if (m_config.pins.l_y.inverted != val) {
+            m_config.pins.l_y.inverted = val;
+            emit pinsLYInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRX() const {
         return (uint8_t)m_config.pins.r_x.pin;
     }
     void setPinsRX(int val) {
-        m_config.pins.r_x.pin = (uint8_t)val;
-        emit pinsRXUpdated();
+        if (m_config.pins.r_x.pin != (uint8_t)val) {
+            m_config.pins.r_x.pin = (uint8_t)val;
+            emit pinsRXUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsRXInverted() const {
         return m_config.pins.r_x.inverted;
     }
     void setPinsRXInverted(bool val) {
-        m_config.pins.r_x.inverted = val;
-        emit pinsRXInvertedUpdated();
+        if (m_config.pins.r_x.inverted != val) {
+            m_config.pins.r_x.inverted = val;
+            emit pinsRXInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsRY() const {
         return (uint8_t)m_config.pins.r_y.pin;
     }
     void setPinsRY(int val) {
-        m_config.pins.r_y.pin = (uint8_t)val;
-        emit pinsRYUpdated();
+        if (m_config.pins.r_y.pin != (uint8_t)val) {
+            m_config.pins.r_y.pin = (uint8_t)val;
+            emit pinsRYUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getPinsRYInverted() const {
         return m_config.pins.r_y.inverted;
     }
     void setPinsRYInverted(bool val) {
-        m_config.pins.r_y.inverted = val;
-        emit pinsRYInvertedUpdated();
+        if (m_config.pins.r_y.inverted != val) {
+            m_config.pins.r_y.inverted = val;
+            emit pinsRYInvertedUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisTriggerThreshold() const {
         return (uint8_t)m_config.axis.triggerThreshold;
     }
     void setAxisTriggerThreshold(int val) {
-        m_config.axis.triggerThreshold = (uint8_t)val;
-        emit axisTriggerThresholdUpdated();
+        if (m_config.axis.triggerThreshold != (uint8_t)val) {
+            m_config.axis.triggerThreshold = (uint8_t)val;
+            emit axisTriggerThresholdUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisJoyThreshold() const {
         return (uint8_t)m_config.axis.joyThreshold;
     }
     void setAxisJoyThreshold(int val) {
-        m_config.axis.joyThreshold = (uint8_t)val;
-        emit axisJoyThresholdUpdated();
+        if (m_config.axis.joyThreshold != (uint8_t)val) {
+            m_config.axis.joyThreshold = (uint8_t)val;
+            emit axisJoyThresholdUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisDrumThreshold() const {
         return (uint8_t)m_config.axis.drumThreshold;
     }
     void setAxisDrumThreshold(int val) {
-        m_config.axis.drumThreshold = (uint8_t)val;
-        emit axisDrumThresholdUpdated();
+        if (m_config.axis.drumThreshold != (uint8_t)val) {
+            m_config.axis.drumThreshold = (uint8_t)val;
+            emit axisDrumThresholdUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     ArdwiinoDefines::GyroOrientation getAxisMpu6050Orientation() const {
         return (ArdwiinoDefines::GyroOrientation)m_config.axis.mpu6050Orientation;
     }
     void setAxisMpu6050Orientation(ArdwiinoDefines::GyroOrientation val) {
-        m_config.axis.mpu6050Orientation = (ArdwiinoDefines::GyroOrientation)val;
-        emit axisMpu6050OrientationUpdated();
+        if (m_config.axis.mpu6050Orientation != (ArdwiinoDefines::GyroOrientation)val) {
+            m_config.axis.mpu6050Orientation = (ArdwiinoDefines::GyroOrientation)val;
+            emit axisMpu6050OrientationUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisTiltSensitivity() const {
         return (int16_t)m_config.axis.tiltSensitivity;
     }
     void setAxisTiltSensitivity(int val) {
-        m_config.axis.tiltSensitivity = (int16_t)val;
-        emit axisTiltSensitivityUpdated();
+        if (m_config.axis.tiltSensitivity != (int16_t)val) {
+            m_config.axis.tiltSensitivity = (int16_t)val;
+            emit axisTiltSensitivityUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysUp() const {
         return (uint8_t)m_config.keys.up;
     }
     void setKeysUp(int val) {
-        m_config.keys.up = (uint8_t)val;
-        emit keysUpUpdated();
+        if (m_config.keys.up != (uint8_t)val) {
+            m_config.keys.up = (uint8_t)val;
+            emit keysUpUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysDown() const {
         return (uint8_t)m_config.keys.down;
     }
     void setKeysDown(int val) {
-        m_config.keys.down = (uint8_t)val;
-        emit keysDownUpdated();
+        if (m_config.keys.down != (uint8_t)val) {
+            m_config.keys.down = (uint8_t)val;
+            emit keysDownUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLeft() const {
         return (uint8_t)m_config.keys.left;
     }
     void setKeysLeft(int val) {
-        m_config.keys.left = (uint8_t)val;
-        emit keysLeftUpdated();
+        if (m_config.keys.left != (uint8_t)val) {
+            m_config.keys.left = (uint8_t)val;
+            emit keysLeftUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRight() const {
         return (uint8_t)m_config.keys.right;
     }
     void setKeysRight(int val) {
-        m_config.keys.right = (uint8_t)val;
-        emit keysRightUpdated();
+        if (m_config.keys.right != (uint8_t)val) {
+            m_config.keys.right = (uint8_t)val;
+            emit keysRightUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysStart() const {
         return (uint8_t)m_config.keys.start;
     }
     void setKeysStart(int val) {
-        m_config.keys.start = (uint8_t)val;
-        emit keysStartUpdated();
+        if (m_config.keys.start != (uint8_t)val) {
+            m_config.keys.start = (uint8_t)val;
+            emit keysStartUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysBack() const {
         return (uint8_t)m_config.keys.back;
     }
     void setKeysBack(int val) {
-        m_config.keys.back = (uint8_t)val;
-        emit keysBackUpdated();
+        if (m_config.keys.back != (uint8_t)val) {
+            m_config.keys.back = (uint8_t)val;
+            emit keysBackUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLeftStick() const {
         return (uint8_t)m_config.keys.left_stick;
     }
     void setKeysLeftStick(int val) {
-        m_config.keys.left_stick = (uint8_t)val;
-        emit keysLeftStickUpdated();
+        if (m_config.keys.left_stick != (uint8_t)val) {
+            m_config.keys.left_stick = (uint8_t)val;
+            emit keysLeftStickUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRightStick() const {
         return (uint8_t)m_config.keys.right_stick;
     }
     void setKeysRightStick(int val) {
-        m_config.keys.right_stick = (uint8_t)val;
-        emit keysRightStickUpdated();
+        if (m_config.keys.right_stick != (uint8_t)val) {
+            m_config.keys.right_stick = (uint8_t)val;
+            emit keysRightStickUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLB() const {
         return (uint8_t)m_config.keys.LB;
     }
     void setKeysLB(int val) {
-        m_config.keys.LB = (uint8_t)val;
-        emit keysLBUpdated();
+        if (m_config.keys.LB != (uint8_t)val) {
+            m_config.keys.LB = (uint8_t)val;
+            emit keysLBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRB() const {
         return (uint8_t)m_config.keys.RB;
     }
     void setKeysRB(int val) {
-        m_config.keys.RB = (uint8_t)val;
-        emit keysRBUpdated();
+        if (m_config.keys.RB != (uint8_t)val) {
+            m_config.keys.RB = (uint8_t)val;
+            emit keysRBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysHome() const {
         return (uint8_t)m_config.keys.home;
     }
     void setKeysHome(int val) {
-        m_config.keys.home = (uint8_t)val;
-        emit keysHomeUpdated();
+        if (m_config.keys.home != (uint8_t)val) {
+            m_config.keys.home = (uint8_t)val;
+            emit keysHomeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysCapture() const {
         return (uint8_t)m_config.keys.capture;
     }
     void setKeysCapture(int val) {
-        m_config.keys.capture = (uint8_t)val;
-        emit keysCaptureUpdated();
+        if (m_config.keys.capture != (uint8_t)val) {
+            m_config.keys.capture = (uint8_t)val;
+            emit keysCaptureUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysA() const {
         return (uint8_t)m_config.keys.a;
     }
     void setKeysA(int val) {
-        m_config.keys.a = (uint8_t)val;
-        emit keysAUpdated();
+        if (m_config.keys.a != (uint8_t)val) {
+            m_config.keys.a = (uint8_t)val;
+            emit keysAUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysB() const {
         return (uint8_t)m_config.keys.b;
     }
     void setKeysB(int val) {
-        m_config.keys.b = (uint8_t)val;
-        emit keysBUpdated();
+        if (m_config.keys.b != (uint8_t)val) {
+            m_config.keys.b = (uint8_t)val;
+            emit keysBUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysX() const {
         return (uint8_t)m_config.keys.x;
     }
     void setKeysX(int val) {
-        m_config.keys.x = (uint8_t)val;
-        emit keysXUpdated();
+        if (m_config.keys.x != (uint8_t)val) {
+            m_config.keys.x = (uint8_t)val;
+            emit keysXUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysY() const {
         return (uint8_t)m_config.keys.y;
     }
     void setKeysY(int val) {
-        m_config.keys.y = (uint8_t)val;
-        emit keysYUpdated();
+        if (m_config.keys.y != (uint8_t)val) {
+            m_config.keys.y = (uint8_t)val;
+            emit keysYUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLt() const {
         return (uint8_t)m_config.keys.lt;
     }
     void setKeysLt(int val) {
-        m_config.keys.lt = (uint8_t)val;
-        emit keysLtUpdated();
+        if (m_config.keys.lt != (uint8_t)val) {
+            m_config.keys.lt = (uint8_t)val;
+            emit keysLtUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRt() const {
         return (uint8_t)m_config.keys.rt;
     }
     void setKeysRt(int val) {
-        m_config.keys.rt = (uint8_t)val;
-        emit keysRtUpdated();
+        if (m_config.keys.rt != (uint8_t)val) {
+            m_config.keys.rt = (uint8_t)val;
+            emit keysRtUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLXNeg() const {
         return (uint8_t)m_config.keys.l_x.neg;
     }
     void setKeysLXNeg(int val) {
-        m_config.keys.l_x.neg = (uint8_t)val;
-        emit keysLXNegUpdated();
+        if (m_config.keys.l_x.neg != (uint8_t)val) {
+            m_config.keys.l_x.neg = (uint8_t)val;
+            emit keysLXNegUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLXPos() const {
         return (uint8_t)m_config.keys.l_x.pos;
     }
     void setKeysLXPos(int val) {
-        m_config.keys.l_x.pos = (uint8_t)val;
-        emit keysLXPosUpdated();
+        if (m_config.keys.l_x.pos != (uint8_t)val) {
+            m_config.keys.l_x.pos = (uint8_t)val;
+            emit keysLXPosUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLYNeg() const {
         return (uint8_t)m_config.keys.l_y.neg;
     }
     void setKeysLYNeg(int val) {
-        m_config.keys.l_y.neg = (uint8_t)val;
-        emit keysLYNegUpdated();
+        if (m_config.keys.l_y.neg != (uint8_t)val) {
+            m_config.keys.l_y.neg = (uint8_t)val;
+            emit keysLYNegUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysLYPos() const {
         return (uint8_t)m_config.keys.l_y.pos;
     }
     void setKeysLYPos(int val) {
-        m_config.keys.l_y.pos = (uint8_t)val;
-        emit keysLYPosUpdated();
+        if (m_config.keys.l_y.pos != (uint8_t)val) {
+            m_config.keys.l_y.pos = (uint8_t)val;
+            emit keysLYPosUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRXNeg() const {
         return (uint8_t)m_config.keys.r_x.neg;
     }
     void setKeysRXNeg(int val) {
-        m_config.keys.r_x.neg = (uint8_t)val;
-        emit keysRXNegUpdated();
+        if (m_config.keys.r_x.neg != (uint8_t)val) {
+            m_config.keys.r_x.neg = (uint8_t)val;
+            emit keysRXNegUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRXPos() const {
         return (uint8_t)m_config.keys.r_x.pos;
     }
     void setKeysRXPos(int val) {
-        m_config.keys.r_x.pos = (uint8_t)val;
-        emit keysRXPosUpdated();
+        if (m_config.keys.r_x.pos != (uint8_t)val) {
+            m_config.keys.r_x.pos = (uint8_t)val;
+            emit keysRXPosUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRYNeg() const {
         return (uint8_t)m_config.keys.r_y.neg;
     }
     void setKeysRYNeg(int val) {
-        m_config.keys.r_y.neg = (uint8_t)val;
-        emit keysRYNegUpdated();
+        if (m_config.keys.r_y.neg != (uint8_t)val) {
+            m_config.keys.r_y.neg = (uint8_t)val;
+            emit keysRYNegUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getKeysRYPos() const {
         return (uint8_t)m_config.keys.r_y.pos;
     }
     void setKeysRYPos(int val) {
-        m_config.keys.r_y.pos = (uint8_t)val;
-        emit keysRYPosUpdated();
+        if (m_config.keys.r_y.pos != (uint8_t)val) {
+            m_config.keys.r_y.pos = (uint8_t)val;
+            emit keysRYPosUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     QVariantMap getMidiType() const {
         QVariantMap l;
@@ -643,12 +920,21 @@ public slots:
         return l;
     }
     void setMidiTypeValueAt(int i, int val) {
-        m_config.midi.type[i] = (uint8_t)val;
-        emit midiTypeUpdated();
+        if (m_config.midi.type[i] != (uint8_t)val) {
+            m_hasChanged = true;
+            m_config.midi.type[i] = (uint8_t)val;
+            emit midiTypeUpdated();
+            emit hasChangedUpdated();
+        }
     }
     void setMidiTypeValue(QString key, int val) {
-        m_config.midi.type[pins.indexOf(key)] = (uint8_t)val;
-        emit midiTypeUpdated();
+        if (m_config.midi.type[pins.indexOf(key)] != (uint8_t)val) {
+            m_config.midi.type[pins.indexOf(key)] = (uint8_t)val;
+            m_hasChanged = true;
+            emit midiTypeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     QVariantMap getMidiNote() const {
         QVariantMap l;
@@ -658,12 +944,21 @@ public slots:
         return l;
     }
     void setMidiNoteValueAt(int i, int val) {
-        m_config.midi.note[i] = (uint8_t)val;
-        emit midiNoteUpdated();
+        if (m_config.midi.note[i] != (uint8_t)val) {
+            m_hasChanged = true;
+            m_config.midi.note[i] = (uint8_t)val;
+            emit midiNoteUpdated();
+            emit hasChangedUpdated();
+        }
     }
     void setMidiNoteValue(QString key, int val) {
-        m_config.midi.note[pins.indexOf(key)] = (uint8_t)val;
-        emit midiNoteUpdated();
+        if (m_config.midi.note[pins.indexOf(key)] != (uint8_t)val) {
+            m_config.midi.note[pins.indexOf(key)] = (uint8_t)val;
+            m_hasChanged = true;
+            emit midiNoteUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     QVariantMap getMidiChannel() const {
         QVariantMap l;
@@ -673,173 +968,274 @@ public slots:
         return l;
     }
     void setMidiChannelValueAt(int i, int val) {
-        m_config.midi.channel[i] = (uint8_t)val;
-        emit midiChannelUpdated();
+        if (m_config.midi.channel[i] != (uint8_t)val) {
+            m_hasChanged = true;
+            m_config.midi.channel[i] = (uint8_t)val;
+            emit midiChannelUpdated();
+            emit hasChangedUpdated();
+        }
     }
     void setMidiChannelValue(QString key, int val) {
-        m_config.midi.channel[pins.indexOf(key)] = (uint8_t)val;
-        emit midiChannelUpdated();
+        if (m_config.midi.channel[pins.indexOf(key)] != (uint8_t)val) {
+            m_config.midi.channel[pins.indexOf(key)] = (uint8_t)val;
+            m_hasChanged = true;
+            emit midiChannelUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     bool getRfRfInEnabled() const {
         return m_config.rf.rfInEnabled;
     }
     void setRfRfInEnabled(bool val) {
-        m_config.rf.rfInEnabled = val;
-        emit rfRfInEnabledUpdated();
+        if (m_config.rf.rfInEnabled != val) {
+            m_config.rf.rfInEnabled = val;
+            emit rfRfInEnabledUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getRfId() const {
         return (uint32_t)m_config.rf.id;
     }
     void setRfId(int val) {
-        m_config.rf.id = (uint32_t)val;
-        emit rfIdUpdated();
+        if (m_config.rf.id != (uint32_t)val) {
+            m_config.rf.id = (uint32_t)val;
+            emit rfIdUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getPinsSP() const {
         return (uint8_t)m_config.pinsSP;
     }
     void setPinsSP(int val) {
-        m_config.pinsSP = (uint8_t)val;
-        emit pinsSPUpdated();
+        if (m_config.pinsSP != (uint8_t)val) {
+            m_config.pinsSP = (uint8_t)val;
+            emit pinsSPUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLtMultiplier() const {
         return (int16_t)m_config.axisScale.lt.multiplier;
     }
     void setAxisScaleLtMultiplier(int val) {
-        m_config.axisScale.lt.multiplier = (int16_t)val;
-        emit axisScaleLtMultiplierUpdated();
+        if (m_config.axisScale.lt.multiplier != (int16_t)val) {
+            m_config.axisScale.lt.multiplier = (int16_t)val;
+            emit axisScaleLtMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLtOffset() const {
         return (int16_t)m_config.axisScale.lt.offset;
     }
     void setAxisScaleLtOffset(int val) {
-        m_config.axisScale.lt.offset = (int16_t)val;
-        emit axisScaleLtOffsetUpdated();
+        if (m_config.axisScale.lt.offset != (int16_t)val) {
+            m_config.axisScale.lt.offset = (int16_t)val;
+            emit axisScaleLtOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLtDeadzone() const {
         return (int16_t)m_config.axisScale.lt.deadzone;
     }
     void setAxisScaleLtDeadzone(int val) {
-        m_config.axisScale.lt.deadzone = (int16_t)val;
-        emit axisScaleLtDeadzoneUpdated();
+        if (m_config.axisScale.lt.deadzone != (int16_t)val) {
+            m_config.axisScale.lt.deadzone = (int16_t)val;
+            emit axisScaleLtDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRtMultiplier() const {
         return (int16_t)m_config.axisScale.rt.multiplier;
     }
     void setAxisScaleRtMultiplier(int val) {
-        m_config.axisScale.rt.multiplier = (int16_t)val;
-        emit axisScaleRtMultiplierUpdated();
+        if (m_config.axisScale.rt.multiplier != (int16_t)val) {
+            m_config.axisScale.rt.multiplier = (int16_t)val;
+            emit axisScaleRtMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRtOffset() const {
         return (int16_t)m_config.axisScale.rt.offset;
     }
     void setAxisScaleRtOffset(int val) {
-        m_config.axisScale.rt.offset = (int16_t)val;
-        emit axisScaleRtOffsetUpdated();
+        if (m_config.axisScale.rt.offset != (int16_t)val) {
+            m_config.axisScale.rt.offset = (int16_t)val;
+            emit axisScaleRtOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRtDeadzone() const {
         return (int16_t)m_config.axisScale.rt.deadzone;
     }
     void setAxisScaleRtDeadzone(int val) {
-        m_config.axisScale.rt.deadzone = (int16_t)val;
-        emit axisScaleRtDeadzoneUpdated();
+        if (m_config.axisScale.rt.deadzone != (int16_t)val) {
+            m_config.axisScale.rt.deadzone = (int16_t)val;
+            emit axisScaleRtDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLXMultiplier() const {
         return (int16_t)m_config.axisScale.l_x.multiplier;
     }
     void setAxisScaleLXMultiplier(int val) {
-        m_config.axisScale.l_x.multiplier = (int16_t)val;
-        emit axisScaleLXMultiplierUpdated();
+        if (m_config.axisScale.l_x.multiplier != (int16_t)val) {
+            m_config.axisScale.l_x.multiplier = (int16_t)val;
+            emit axisScaleLXMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLXOffset() const {
         return (int16_t)m_config.axisScale.l_x.offset;
     }
     void setAxisScaleLXOffset(int val) {
-        m_config.axisScale.l_x.offset = (int16_t)val;
-        emit axisScaleLXOffsetUpdated();
+        if (m_config.axisScale.l_x.offset != (int16_t)val) {
+            m_config.axisScale.l_x.offset = (int16_t)val;
+            emit axisScaleLXOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLXDeadzone() const {
         return (int16_t)m_config.axisScale.l_x.deadzone;
     }
     void setAxisScaleLXDeadzone(int val) {
-        m_config.axisScale.l_x.deadzone = (int16_t)val;
-        emit axisScaleLXDeadzoneUpdated();
+        if (m_config.axisScale.l_x.deadzone != (int16_t)val) {
+            m_config.axisScale.l_x.deadzone = (int16_t)val;
+            emit axisScaleLXDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLYMultiplier() const {
         return (int16_t)m_config.axisScale.l_y.multiplier;
     }
     void setAxisScaleLYMultiplier(int val) {
-        m_config.axisScale.l_y.multiplier = (int16_t)val;
-        emit axisScaleLYMultiplierUpdated();
+        if (m_config.axisScale.l_y.multiplier != (int16_t)val) {
+            m_config.axisScale.l_y.multiplier = (int16_t)val;
+            emit axisScaleLYMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLYOffset() const {
         return (int16_t)m_config.axisScale.l_y.offset;
     }
     void setAxisScaleLYOffset(int val) {
-        m_config.axisScale.l_y.offset = (int16_t)val;
-        emit axisScaleLYOffsetUpdated();
+        if (m_config.axisScale.l_y.offset != (int16_t)val) {
+            m_config.axisScale.l_y.offset = (int16_t)val;
+            emit axisScaleLYOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleLYDeadzone() const {
         return (int16_t)m_config.axisScale.l_y.deadzone;
     }
     void setAxisScaleLYDeadzone(int val) {
-        m_config.axisScale.l_y.deadzone = (int16_t)val;
-        emit axisScaleLYDeadzoneUpdated();
+        if (m_config.axisScale.l_y.deadzone != (int16_t)val) {
+            m_config.axisScale.l_y.deadzone = (int16_t)val;
+            emit axisScaleLYDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRXMultiplier() const {
         return (int16_t)m_config.axisScale.r_x.multiplier;
     }
     void setAxisScaleRXMultiplier(int val) {
-        m_config.axisScale.r_x.multiplier = (int16_t)val;
-        emit axisScaleRXMultiplierUpdated();
+        if (m_config.axisScale.r_x.multiplier != (int16_t)val) {
+            m_config.axisScale.r_x.multiplier = (int16_t)val;
+            emit axisScaleRXMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRXOffset() const {
         return (int16_t)m_config.axisScale.r_x.offset;
     }
     void setAxisScaleRXOffset(int val) {
-        m_config.axisScale.r_x.offset = (int16_t)val;
-        emit axisScaleRXOffsetUpdated();
+        if (m_config.axisScale.r_x.offset != (int16_t)val) {
+            m_config.axisScale.r_x.offset = (int16_t)val;
+            emit axisScaleRXOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRXDeadzone() const {
         return (int16_t)m_config.axisScale.r_x.deadzone;
     }
     void setAxisScaleRXDeadzone(int val) {
-        m_config.axisScale.r_x.deadzone = (int16_t)val;
-        emit axisScaleRXDeadzoneUpdated();
+        if (m_config.axisScale.r_x.deadzone != (int16_t)val) {
+            m_config.axisScale.r_x.deadzone = (int16_t)val;
+            emit axisScaleRXDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRYMultiplier() const {
         return (int16_t)m_config.axisScale.r_y.multiplier;
     }
     void setAxisScaleRYMultiplier(int val) {
-        m_config.axisScale.r_y.multiplier = (int16_t)val;
-        emit axisScaleRYMultiplierUpdated();
+        if (m_config.axisScale.r_y.multiplier != (int16_t)val) {
+            m_config.axisScale.r_y.multiplier = (int16_t)val;
+            emit axisScaleRYMultiplierUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRYOffset() const {
         return (int16_t)m_config.axisScale.r_y.offset;
     }
     void setAxisScaleRYOffset(int val) {
-        m_config.axisScale.r_y.offset = (int16_t)val;
-        emit axisScaleRYOffsetUpdated();
+        if (m_config.axisScale.r_y.offset != (int16_t)val) {
+            m_config.axisScale.r_y.offset = (int16_t)val;
+            emit axisScaleRYOffsetUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getAxisScaleRYDeadzone() const {
         return (int16_t)m_config.axisScale.r_y.deadzone;
     }
     void setAxisScaleRYDeadzone(int val) {
-        m_config.axisScale.r_y.deadzone = (int16_t)val;
-        emit axisScaleRYDeadzoneUpdated();
+        if (m_config.axisScale.r_y.deadzone != (int16_t)val) {
+            m_config.axisScale.r_y.deadzone = (int16_t)val;
+            emit axisScaleRYDeadzoneUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getDebounceButtons() const {
         return (uint8_t)m_config.debounce.buttons;
     }
     void setDebounceButtons(int val) {
-        m_config.debounce.buttons = (uint8_t)val;
-        emit debounceButtonsUpdated();
+        if (m_config.debounce.buttons != (uint8_t)val) {
+            m_config.debounce.buttons = (uint8_t)val;
+            emit debounceButtonsUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     int getDebounceStrum() const {
         return (uint8_t)m_config.debounce.strum;
     }
     void setDebounceStrum(int val) {
-        m_config.debounce.strum = (uint8_t)val;
-        emit debounceStrumUpdated();
+        if (m_config.debounce.strum != (uint8_t)val) {
+            m_config.debounce.strum = (uint8_t)val;
+            emit debounceStrumUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
     }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
@@ -852,6 +1248,8 @@ public slots:
                 led.green = ucolor >> 8 & 0xff;
                 led.blue = ucolor & 0xff;
                 emit ledsUpdated();
+                m_hasChanged = true;
+                emit hasChangedUpdated();
                 return;
             }
         }
@@ -882,6 +1280,8 @@ public slots:
         std::fill(a, std::end(m_config.leds), empty);
         std::copy(std::begin(m_config.leds), std::end(m_config.leds), std::begin(m_config.leds));
         emit ledsUpdated();
+        m_hasChanged = true;
+        emit hasChangedUpdated();
     }
     void moveLED(int from, int to) {
         if (from == to)
@@ -892,6 +1292,8 @@ public slots:
         else
             std::rotate(b + to, b + from, b + from + 1);
         emit ledsUpdated();
+        m_hasChanged = true;
+        emit hasChangedUpdated();
     }
 
     QMap<QString, uint> getMappings() {
@@ -907,6 +1309,7 @@ public slots:
         return map;
     }
 signals:
+    void hasChangedUpdated();
     void mainInputTypeUpdated();
     void mainSubTypeUpdated();
     void mainTiltTypeUpdated();
@@ -1007,4 +1410,5 @@ signals:
 private:
     Configuration_t m_config;
     const static QStringList pins;
+    bool m_hasChanged;
 };

@@ -20,6 +20,17 @@ ColumnLayout {
         text: "\n\n"
     }
 
+    Label {
+        text: qsTr("You have unwritten changes!")
+        fontSizeMode: Text.FixedSize
+        verticalAlignment: Text.AlignVCenter
+        font.bold: true
+        horizontalAlignment: Text.AlignHCenter
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        wrapMode: Text.WordWrap
+        visible: scanner.selected.config.hasChanged
+    }
+
     CloneHeroDialog {
         id:cloneDialog
     }
@@ -401,7 +412,10 @@ ColumnLayout {
             text: qsTr("Write")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             enabled: true
-            onClicked: scanner.selected.writeConfig();
+            onClicked: {
+                scanner.selected.config.hasChanged = false;
+                scanner.selected.writeConfig();
+            }
         }
         Button {
             id: returnMenu

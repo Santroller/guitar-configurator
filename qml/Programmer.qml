@@ -130,11 +130,6 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
 
-            Label {
-                text: column.isGeneric ? "true" : "false"
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            }
-
             Rectangle {
                 color: "#00000000"
                 border.color: "#00000000"
