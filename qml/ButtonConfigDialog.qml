@@ -136,7 +136,7 @@ Dialog {
                     }
                     Rectangle {
                         id: colorRect
-                        color: "#"+(scanner.selected.config.ledColours[modelData]).toString(16).padStart(6,"0")
+                        color: "#"+(scanner.selected.config.ledColours[modelData] || "").toString(16).padStart(6,"0")
                         width: colorBt.height
                         height: colorBt.height
                     }
@@ -222,13 +222,36 @@ Dialog {
 
                 RowLayout {
                     visible: buttonDialog.isAnalog
-                    Button {
-                        text: "Calibrate " + buttonDialog.labels[modelData]
-                        onClicked: {
-                            calibDialog.open()
+                    Rectangle{
+                        // Layout.fillHeight: true
+                        // Layout.fillWidth: true
+                        width: btTest.width
+                        height: btTest.height
+                        Button {
+                            id: btTest
+                            // anchors.fill: parent
+                            enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF && scanner.selected.config[`pins${modelData}`] == scanner.selected.lastConfig[`pins${modelData}`]
+                            text: "Calibrate " + buttonDialog.labels[modelData]
+                            onClicked: {
+                                calibDialog.open()
+                            }
                         }
-                        enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF
+                        MouseArea {
+                            enabled: !btTest.enabled
+                            anchors.fill: parent
+                            hoverEnabled: !btTest.enabled
+                            ToolTip.visible: containsMouse
+                            ToolTip.text: scanner.selected.config[`pins${modelData}`] === 0xFF ? qsTr("You need to select a pin to calibrate") : qsTr("You need to write your changes to calibrate")
+                        }
+                        color: "transparent"
                     }
+                    // Button {
+                    //     text: "Calibrate " + buttonDialog.labels[modelData]
+                    //     onClicked: {
+                    //         calibDialog.open()
+                    //     }
+                    //     enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF && scanner.selected.config[`pins${modelData}`] == scanner.selected.lastConfig[`pins${modelData}`]
+                    // }
                     CalibrationDialog {
                         id:calibDialog
                         pin: scanner.selected.config[`pins${modelData}`]

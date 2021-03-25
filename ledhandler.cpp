@@ -161,7 +161,6 @@ void LEDHandler::setColors(QMap<QString, uint32_t> buttons) {
 }
 
 void LEDHandler::startGame() {
-    qDebug() << "starting";
     if (process.pid() != 0) {
         return;
     }
@@ -320,6 +319,8 @@ void LEDHandler::tick() {
                 }
             } else if (starPowerActivated) {
                 data[names[i]] = m_star_power;
+            } else {
+                data[names[i]] = 0;
             }
         }
     }

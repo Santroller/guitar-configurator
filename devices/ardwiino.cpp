@@ -44,6 +44,7 @@ bool Ardwiino::open() {
         }
         m_configuration = new DeviceConfiguration(conf);
         m_default_configuration = new DeviceConfiguration(ArdwiinoDefines::getDefaultConfig());
+        m_last_configuration = new DeviceConfiguration(conf);
     }
     emit configurationChanged();
     emit configurableChanged();
@@ -58,10 +59,13 @@ void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
         data.clear();
         data.push_back(offsetId);
         data.push_back(dataToWrite.mid(offset, PACKET_SIZE));
-        m_usbDevice.write(COMMAND_WRITE_CONFIG, data);
+        m_usbDevice.write(cmd, data);
         offset += PACKET_SIZE;
         offsetId++;
-        QThread::currentThread()->msleep(100);
+        if (cmd == COMMAND_WRITE_CONFIG) {
+            // Delay to give time to write to eeprom
+            QThread::currentThread()->msleep(100);
+        }
     }
 }
 void Ardwiino::writeConfig() {

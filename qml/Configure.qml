@@ -418,6 +418,14 @@ ColumnLayout {
             }
         }
         Button {
+            text: qsTr("Revert changes")
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            enabled: true
+            onClicked: {
+                scanner.selected.config = scanner.selected.lastConfig;
+            }
+        }
+        Button {
             id: returnMenu
             text: qsTr("Program a different device")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -754,7 +762,7 @@ ColumnLayout {
                 visible: scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.DIGITAL && scanner.selected.config.mainTiltType !== ArdwiinoDefinesValues.NO_TILT;
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 text: "Calibrate Tilt"
-                enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF
+                enabled: scanner.selected.config[`pinsRY`] !== 0xFF && scanner.selected.config[`pinsRY`] == scanner.selected.lastConfig[`pinsRY`]
                 onClicked: {
                     calibDialog2.open()
                 }

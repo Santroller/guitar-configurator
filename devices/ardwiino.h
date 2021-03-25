@@ -18,6 +18,7 @@ class Ardwiino : public Device {
     Q_OBJECT
     Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
     Q_PROPERTY(DeviceConfiguration* config MEMBER m_configuration NOTIFY configurationChanged)
+    Q_PROPERTY(DeviceConfiguration* lastConfig MEMBER m_last_configuration NOTIFY configurationChanged)
     Q_PROPERTY(DeviceConfiguration* defaultConfig MEMBER m_default_configuration NOTIFY configurationChanged)
     Q_PROPERTY(QStringList presets READ getPresets NOTIFY presetsChanged)
    public:
@@ -86,6 +87,7 @@ class Ardwiino : public Device {
     QByteArray readConfig();
     UsbDevice m_usbDevice;
     DeviceConfiguration* m_configuration;
+    DeviceConfiguration* m_last_configuration;
     DeviceConfiguration* m_default_configuration;
     bool m_isOpen;
     bool m_isOutdated;

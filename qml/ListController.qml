@@ -166,15 +166,27 @@ GridLayout {
         model: Object.keys(gl.labels)
         RowLayout {
             enabled: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) || scanner.selected.config.hasAddressableLEDs
-            Button {
+            Rectangle{
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
-                enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF && scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
                 visible: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
-                text: "Calibrate " + gl.labels[modelData]
-                onClicked: {
-                    calibDialog.open()
+                Button {
+                    id: btTest
+                    anchors.fill: parent
+                    enabled: scanner.selected.config[`pins${modelData}`] !== 0xFF && parent.visible && scanner.selected.config[`pins${modelData}`] == scanner.selected.lastConfig[`pins${modelData}`]
+                    text: "Calibrate " + gl.labels[modelData]
+                    onClicked: {
+                        calibDialog.open()
+                    }
                 }
+                MouseArea {
+                    enabled: !btTest.enabled
+                    anchors.fill: parent
+                    hoverEnabled: !btTest.enabled
+                    ToolTip.visible: containsMouse
+                    ToolTip.text: scanner.selected.config[`pins${modelData}`] === 0xFF ? qsTr("You need to select a pin to calibrate") : qsTr("You need to write your changes to calibrate")
+                }
+                color: "transparent"
             }
             CalibrationDialog {
                 id:calibDialog
