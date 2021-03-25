@@ -42,6 +42,7 @@ Dialog {
                 if (!isTrigger && !isWhammy) {
                     value = Math.abs(value);
                 }
+                if (value < minValue) value = minValue;
                 calibrationDialog.deadZone = value
             } else {
                 calibrationDialog.value = (raw - min) * mulFactor + minValue
@@ -68,6 +69,7 @@ Dialog {
     }
     onRejected: {
         state = 0
+        deadZone = 0;
         max = maxValue
     }
     onAccepted: {
