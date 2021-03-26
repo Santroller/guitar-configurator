@@ -52,19 +52,22 @@ bool Ardwiino::open() {
     return true;
 }
 void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
-    uint offset = 0;
-    uint offsetId = 0;
-    QByteArray data;
-    while (offset < sizeof(Configuration_t)) {
-        data.clear();
-        data.push_back(offsetId);
-        data.push_back(dataToWrite.mid(offset, PACKET_SIZE));
-        m_usbDevice.write(cmd, data);
-        offset += PACKET_SIZE;
-        offsetId++;
-        if (cmd == COMMAND_WRITE_CONFIG) {
-            // Delay to give time to write to eeprom
-            QThread::currentThread()->msleep(100);
+    // If the guitar has been unplugged do not attempt to send it any data
+    if (isReady()) {
+        uint offset = 0;
+        uint offsetId = 0;
+        QByteArray data;
+        while (offset < sizeof(Configuration_t)) {
+            data.clear();
+            data.push_back(offsetId);
+            data.push_back(dataToWrite.mid(offset, PACKET_SIZE));
+            m_usbDevice.write(cmd, data);
+            offset += PACKET_SIZE;
+            offsetId++;
+            if (cmd == COMMAND_WRITE_CONFIG) {
+                // Delay to give time to write to eeprom
+                QThread::currentThread()->msleep(100);
+            }
         }
     }
 }

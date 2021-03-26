@@ -221,7 +221,7 @@ Dialog {
                 }
 
                 RowLayout {
-                    visible: buttonDialog.isAnalog
+                    visible: buttonDialog.isAnalog && !(modelData == "RY" && scanner.selected.config.isGuitar && scanner.selected.config.mainTiltType === ArdwiinoDefinesValues.DIGITAL)
                     Rectangle{
                         // Layout.fillHeight: true
                         // Layout.fillWidth: true

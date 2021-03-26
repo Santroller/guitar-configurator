@@ -302,6 +302,7 @@ void LEDHandler::tick() {
         Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
         dev->writeChunked(COMMAND_SET_SP, QByteArray(1, lastSP));
     }
+    // TODO: maybe make this stuff configurable. We should atleast make it optional that the pin activates when hitting a star power phrase
     QMap<QString, uint32_t> data;
     QStringList names = {"A", "B", "Y", "X", "LB"};
     Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
@@ -331,6 +332,10 @@ void LEDHandler::tick() {
         inputFile->close();
         inputFile = nullptr;
 #endif
+        for (int i = 0; i < 5; i++) {
+            data[names[i]] = 0;
+            dev->writeChunked(COMMAND_SET_SP, QByteArray(1, 0));
+        }
         disconnect(timer, &QTimer::timeout, this, &LEDHandler::tick);
     }
     if (lastData.values() != data.values()) {

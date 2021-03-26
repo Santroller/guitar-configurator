@@ -169,7 +169,7 @@ GridLayout {
             Rectangle{
                 Layout.preferredWidth: gl.pWidth/gl.columns
                 Layout.fillHeight: true
-                visible: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar)) 
+                visible: scanner.selected.config.hasOwnProperty(`pins${modelData}Inverted`) && (scanner.selected.config.mainInputType === ArdwiinoDefinesValues.DIRECT || (modelData == "RY" && scanner.selected.config.isGuitar))  && !(modelData == "RY" && scanner.selected.config.isGuitar && scanner.selected.config.mainTiltType === ArdwiinoDefinesValues.DIGITAL)
                 Button {
                     id: btTest
                     anchors.fill: parent
