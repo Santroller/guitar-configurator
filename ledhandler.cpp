@@ -194,14 +194,12 @@ void LEDHandler::startGame() {
 #if defined Q_OS_WIN
     HMODULE handles[2048];
     DWORD needed;
-    EnumProcessModules(pid->hProcess, handles, sizeof(handles), &needed);
+    EnumProcessModulesEx(pid->hProcess, handles, sizeof(handles), &needed, LIST_MODULES_ALL);
     for (uint i = 0; i < needed / sizeof(handles[0]); i++) {
-        MODULEINFO info;
         char name[1024];
         GetModuleBaseNameA(pid->hProcess, handles[i], name, sizeof(name));
         if (QString(name).endsWith(lib)) {
-            GetModuleInformation(pid->hProcess, handles[i], &info, sizeof(info));
-            base = (qint64)info.lpBaseOfDll;
+            base = (qint64) handles[i];
             break;
         }
     }
@@ -251,7 +249,11 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf) {
 
 #if defined Q_OS_WIN
     SIZE_T read;
-    if (!ReadProcessMemory(pid->hProcess, reinterpret_cast<const char *>(addr), buf, size, &read)) {
+    if (!ReadProcessMemory(pid->hProcess, (void*)addr, buf, size, &read)) {
+        auto err = GetLastError();
+        if (err == ERROR_PARTIAL_COPY) {
+            return qint64(read);
+        }
         return -1;
     }
     return qint64(read);
@@ -302,7 +304,6 @@ void LEDHandler::tick() {
         Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());
         dev->writeChunked(COMMAND_SET_SP, QByteArray(1, lastSP));
     }
-    // TODO: maybe make this stuff configurable. We should atleast make it optional that the pin activates when hitting a star power phrase
     QMap<QString, uint32_t> data;
     QStringList names = {"A", "B", "Y", "X", "LB"};
     Ardwiino *dev = static_cast<Ardwiino *>(scanner->getSelected());

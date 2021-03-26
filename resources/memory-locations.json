@@ -13,8 +13,8 @@
     },
     "v0.23.2.2": {
         "linux": {"lib": "clonehero", "pointerPathBasePlayer": [29483520, 0, 16, 48, 72, 40, 24, 0]},
-        "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [20016424, 0, 16, 48, 56, 40, 0]},
-        "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [20016424, 0, 16, 48, 56, 40, 0]},
+        "win32": {"lib": "UnityPlayer.dll", "pointerPathBasePlayer": [22113576, 0, 16, 48, 56, 168, 40, 0]},
+        "win64": {"lib": "UnityPlayer.dll","pointerPathBasePlayer": [22113576, 0, 16, 48, 56, 168, 40, 0]},
         "mac": {"lib": "UnityPlayer.dylib", "pointerPathBasePlayer": [23062912, 0, 16, 48, 56, 216, 40, 0]},
         "pointerPathCurrentNote": [168,32,0],
         "offsetButtonsPressed": 200,
