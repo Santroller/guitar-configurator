@@ -277,6 +277,8 @@ for (let path of paths) {
     out += (`    void ${lowFirst(path.func)}Updated();
 `);
 }
+// There is an extra SP pin that isnt part of Pins_t, so add it manually
+pins.push(`"SP"`);
 out += (`
 private:
     Configuration_t m_config;

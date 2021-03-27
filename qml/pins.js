@@ -80,6 +80,7 @@ var drumLabels = {
     "RB": "Kick Pedal",
     "LX": "Joystick X Axis",
     "LY": "Joystick Y Axis",
+    "SP": "Star Power Output"
 }
 var guitarLabels = {
     "Up": "Strum Up",
@@ -98,6 +99,7 @@ var guitarLabels = {
     "LY": "Joystick Y Axis",
     "RX": "Whammy",
     "RY": "Tilt Axis",
+    "SP": "Star Power Output"
 }
 
 var guitarRBLabels = {
@@ -118,6 +120,7 @@ var guitarRBLabels = {
     "LY": "Joystick Y Axis",
     "RX": "Whammy",
     "RY": "Tilt",
+    "SP": "Star Power Output"
 }
 
 var guitarLiveLabels = {
@@ -138,6 +141,7 @@ var guitarLiveLabels = {
     "LY": "Joystick Y Axis",
     "RX": "Whammy",
     "RY": "Tilt Axis",
+    "SP": "Star Power Output"
 }
 var wiiLabels = {
     "Lt": "Left Shoulder Axis",
@@ -152,6 +156,7 @@ var wiiGuitarLabels = {
     "LY": "Joystick Y Axis",
     "RX": "Whammy",
     "RY": "Tilt Axis",
+    "SP": "Star Power Output"
 }
 var mouseLabels = {
     "A": "Left Click",
