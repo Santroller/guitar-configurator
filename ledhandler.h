@@ -40,8 +40,10 @@ class LEDHandler : public QObject {
     Q_PROPERTY(QString version READ getVersion WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(bool openEnabled READ getOpenEnabled WRITE setOpenEnabled NOTIFY openEnabledChanged)
     Q_PROPERTY(bool starPowerEnabled READ getStarPowerEnabled WRITE setStarPowerEnabled NOTIFY starPowerEnabledChanged)
+    Q_PROPERTY(bool starPowerPhraseEnabled READ getStarPowerPhraseEnabled WRITE setStarPowerPhraseEnabled NOTIFY starPowerPhraseEnabledChanged)
     Q_PROPERTY(int openColor READ getOpenColor WRITE setOpenColor NOTIFY openColorChanged)
     Q_PROPERTY(int starPowerColor READ getStarPowerColor WRITE setStarPowerColor NOTIFY starPowerColorChanged)
+    Q_PROPERTY(int starPowerPhraseColor READ getStarPowerPhraseColor WRITE setStarPowerPhraseColor NOTIFY starPowerPhraseColorChanged)
     Q_PROPERTY(QStringList supportedVersions MEMBER m_supportedVersions NOTIFY supportedVersionsChanged)
    public:
     explicit LEDHandler(QGuiApplication *application, PortScanner *scanner, QObject *parent = nullptr);
@@ -52,6 +54,9 @@ class LEDHandler : public QObject {
     bool getStarPowerEnabled() {
         return m_starPowerEnabled;
     }
+    bool getStarPowerPhraseEnabled() {
+        return m_starPowerPhraseEnabled;
+    }
     bool getOpenEnabled() {
         return m_openEnabled;
     }
@@ -60,6 +65,9 @@ class LEDHandler : public QObject {
     }
     int getStarPowerColor() {
         return m_star_power;
+    }
+    int getStarPowerPhraseColor() {
+        return m_star_power_phrase;
     }
     QString getVersion() {
         return m_version;
@@ -70,8 +78,11 @@ class LEDHandler : public QObject {
     void readyChanged();
     void colorChanged();
     void starPowerEnabledChanged();
+    void starPowerPhraseEnabledChanged();
+
     void openEnabledChanged();
     void starPowerColorChanged();
+    void starPowerPhraseColorChanged();
     void openColorChanged();
     void hitColorChanged();
     void supportedVersionsChanged();
@@ -86,6 +97,8 @@ class LEDHandler : public QObject {
     void setGameFolder(QString string);
     void setOpenEnabled(bool open);
     void setStarPowerEnabled(bool star);
+    void setStarPowerPhraseEnabled(bool star);
+    void setStarPowerPhraseColor(int color);
     void setStarPowerColor(int color);
     void setOpenColor(int color);
     void setVersion(QString version);
@@ -103,9 +116,11 @@ class LEDHandler : public QObject {
     int shownNote = 0;
     int countdown = 0;
     bool m_starPowerEnabled;
+    bool m_starPowerPhraseEnabled;
     bool m_openEnabled;
     bool m_ready;
     uint32_t m_star_power;
+    uint32_t m_star_power_phrase;
     uint32_t m_open;
     QString m_gameFolder;
     QMap<QString, uint32_t> lastData;

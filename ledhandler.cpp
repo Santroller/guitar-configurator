@@ -42,9 +42,11 @@ LEDHandler::LEDHandler(QGuiApplication *application, PortScanner *scanner, QObje
     memLoc.close();
     updateVersion();
     m_star_power = settings.value("led_star_power_color", QVariant(0x00BFFF)).toUInt();
+    m_star_power_phrase = settings.value("led_star_power_phrase_color", QVariant(0x00BFFF)).toUInt();
     m_open = settings.value("led_open_color", QVariant(0xFF00FF)).toUInt();
     m_openEnabled = settings.contains("led_open") && settings.value("led_open").toBool();
     m_starPowerEnabled = settings.contains("led_star_power") && settings.value("led_star_power").toBool();
+    m_starPowerPhraseEnabled = settings.contains("led_star_power_phrase") && settings.value("led_star_power_phrase").toBool();
 }
 void readList(QJsonArray arr, QList<qint64> *list) {
     for (auto a : arr) {
@@ -83,6 +85,11 @@ void LEDHandler::setStarPowerColor(int color) {
     settings.setValue("led_star_power_color", color);
     starPowerColorChanged();
 }
+void LEDHandler::setStarPowerPhraseColor(int color) {
+    m_star_power_phrase = color;
+    settings.setValue("led_star_power_phrase_color", color);
+    starPowerPhraseColorChanged();
+}
 void LEDHandler::setOpenEnabled(bool open) {
     m_openEnabled = open;
     settings.setValue("led_open", open);
@@ -92,6 +99,11 @@ void LEDHandler::setStarPowerEnabled(bool hit) {
     m_starPowerEnabled = hit;
     settings.setValue("led_star_power", hit);
     starPowerEnabledChanged();
+}
+void LEDHandler::setStarPowerPhraseEnabled(bool hit) {
+    m_starPowerPhraseEnabled = hit;
+    settings.setValue("led_star_power_phrase", hit);
+    starPowerPhraseEnabledChanged();
 }
 void LEDHandler::setGameFolder(QString gameFolder) {
     m_gameFolder = QDir::toNativeSeparators(QUrl(gameFolder).toLocalFile());
@@ -199,7 +211,7 @@ void LEDHandler::startGame() {
         char name[1024];
         GetModuleBaseNameA(pid->hProcess, handles[i], name, sizeof(name));
         if (QString(name).endsWith(lib)) {
-            base = (qint64) handles[i];
+            base = (qint64)handles[i];
             break;
         }
     }
@@ -249,7 +261,7 @@ qint64 LEDHandler::readFromProc(quint64 size, qint64 addr, qint64 *buf) {
 
 #if defined Q_OS_WIN
     SIZE_T read;
-    if (!ReadProcessMemory(pid->hProcess, (void*)addr, buf, size, &read)) {
+    if (!ReadProcessMemory(pid->hProcess, (void *)addr, buf, size, &read)) {
         auto err = GetLastError();
         if (err == ERROR_PARTIAL_COPY) {
             return qint64(read);
@@ -310,14 +322,26 @@ void LEDHandler::tick() {
     for (int i = 0; i < 5; i++) {
         if (addr > 0) {
             if (countdown > 0 && shownNote & 1 << 6) {
-                data[names[i]] = (noteIsStarPower || starPowerActivated) ? m_star_power : m_open;
+                if (starPowerActivated) {
+                    data[names[i]] = m_star_power;
+                } else if (noteIsStarPower) {
+                    data[names[i]] = m_star_power_phrase;
+                } else {
+                    data[names[i]] = m_open;
+                }
             } else if (buttons & 1 << i) {
                 if (score > lastScore && lastNote & 1 << i) {
                     shownNote = lastNote;
                     countdown = 0;
                 }
                 if (shownNote & 1 << i) {
-                    data[names[i]] = (noteIsStarPower && !starPowerActivated) ? m_star_power : dev->getConfig()->getLEDColours()[names[i]].toUInt();
+                    if (starPowerActivated) {
+                        data[names[i]] = m_star_power;
+                    } else if (noteIsStarPower) {
+                        data[names[i]] = m_star_power_phrase;
+                    } else {
+                        data[names[i]] = dev->getConfig()->getLEDColours()[names[i]].toUInt();
+                    }
                 }
             } else if (starPowerActivated) {
                 data[names[i]] = m_star_power;

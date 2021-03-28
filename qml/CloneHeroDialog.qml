@@ -99,6 +99,17 @@ Dialog {
             visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
             name: "Star Power"
         }
+        CloneHeroDialogColorRow {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Component.onCompleted: {
+                color = ledhandler.starPowerPhraseColor;
+                checked = ledhandler.starPowerPhraseEnabled;
+            }
+            onCheckedChanged: ledhandler.starPowerEnabled = checked
+            onColorChanged: ledhandler.starPowerColor = color
+            visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
+            name: "Star Power Phrase"
+        }
         PinBinding {
             id: pinBinding
             currentPin: "SP"
