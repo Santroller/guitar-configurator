@@ -224,6 +224,9 @@ void Programmer::programAvrDude() {
         "-U",
         "flash:w:" + file + ":a",
     };
+    if (board.processor == "atmega2560") {
+        l.push_back("-D");
+    }
     QObject::connect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);
