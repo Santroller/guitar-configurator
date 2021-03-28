@@ -84,9 +84,11 @@ void Programmer::deviceAdded(PicobootDevice *device) {
     }
 }
 void Programmer::deviceAdded(Arduino *device) {
-    if (m_status != Status::NOT_PROGRAMMING) {
-        if (m_device && !m_device->getBoard().hasDFU) {
+    if (m_status != Status::NOT_PROGRAMMING && m_device) {
+        if (!m_device->getBoard().hasDFU) {
             device->setBoardType(m_device->getBoard().shortName, m_device->getBoard().cpuFrequency);
+        } else {
+            device->setBoardType(m_device->getBoard().shortName.split("-")[0], m_device->getBoard().cpuFrequency);
         }
     }
     m_device = device;
@@ -222,7 +224,6 @@ void Programmer::programAvrDude() {
         "-U",
         "flash:w:" + file + ":a",
     };
-    qDebug() << l;
     QObject::connect(m_process, &QProcess::readyReadStandardOutput, this, &Programmer::onReady);
     QObject::connect(m_process, &QProcess::readyReadStandardError, this, &Programmer::onReady);
     QObject::connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &Programmer::complete);

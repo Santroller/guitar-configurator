@@ -191,7 +191,7 @@ ColumnLayout {
                     ListElement { key: "Arduino Mega ADK"; board: "megaadk"; freq: "16000000" }
                 }
                 onActivated: {
-                    selected.setBoardType(modelUno.get(currentIndex).board, modelUno.get(currentIndex).freq);
+                    selected.setBoardType(modelUno.get(currentIndex).board +"-"+ selected.boardName.split("-")[1], modelUno.get(currentIndex).freq);
                 }
             }
         }

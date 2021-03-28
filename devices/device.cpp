@@ -9,6 +9,7 @@ void Device::setBoardType(QString board) {
     emit boardNameChanged();
 }
 void Device::setBoardType(QString board, uint freq) {
+    qDebug() << board << freq;
     m_board = ArdwiinoLookup::findByBoard(board, m_board.inBootloader);
     m_board.cpuFrequency = freq;
     emit boardImageChanged();
