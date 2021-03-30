@@ -144,6 +144,27 @@ ColumnLayout {
             }
 
             Label {
+                visible: scanner.selected.config.isDrum
+                text: qsTr("Drum Trigger Threshold")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            SpinBox {
+                visible: scanner.selected.config.isDrum
+                Layout.fillWidth: true
+                value: scanner.selected.config.axisDrumThreshold
+                from: 0
+                to: 255
+                onValueModified: {
+                    scanner.selected.config.axisDrumThreshold = value
+                }
+            }
+
+            Label {
                 visible: scanner.selected.config.mainFretLEDMode == ArdwiinoDefinesValues.APA102
                 text: qsTr("Note: You can not combine Playstation input and APA102 LEDs, due to them both using imcompatible connections.")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
