@@ -574,6 +574,10 @@
         <file>images/ArduinoMicro.svg</file>
         <file>images/ArduinoUno.svg</file>
         <file>images/ArduinoUnoDFU.svg</file>
+        <file>images/ArduinoMega.svg</file>
+        <file>images/ArduinoMegaADK.svg</file>
+        <file>images/ArduinoMegaDFU.svg</file>
+        <file>images/ArduinoMegaADKDFU.svg</file>
         <file>images/Pico.svg</file>
         <file>images/graphical.svg</file>
         <file>images/list.svg</file>

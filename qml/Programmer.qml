@@ -207,7 +207,7 @@ ColumnLayout {
             Image {
                 id: dfuImg
                 Layout.alignment: Qt.AlignHCenter
-                source: "/images/ArduinoUnoDFU.svg"
+                source: selected.boardName.includes("adk") ? "/images/ArduinoMegaADKDFU.svg" : (selected.boardName.includes("uno") ? "/images/ArduinoUnoDFU.svg" :  "/images/ArduinoMegaDFU.svg")
                 fillMode: Image.PreserveAspectFit
                 Layout.maximumHeight: applicationWindow.height/3
                 Layout.maximumWidth: applicationWindow.width/3
