@@ -713,7 +713,7 @@ ColumnLayout {
                     text: tiltConfig.pins(scanner.selected.config[`pins${"RY"}`])
                     onClicked: pinBinding.open()
                     ToolTip.visible: hovered
-                    ToolTip.text: tiltConfig.labels["RY"]
+                    ToolTip.text: tiltConfig.labels["RY"] || ""
                 }
             }
             Label {

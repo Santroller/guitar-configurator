@@ -159,7 +159,7 @@ for (let path of paths) {
     QVariantMap get${path.func}() const {
         QVariantMap l;
         for (auto pin: pins) {
-            l[pin] = ${path.cast2}${path.path};
+            l[pin] = ${path.cast2}${path.path}[pins.indexOf(pin)];
         }
         return l;
     }`);

@@ -915,7 +915,7 @@ public slots:
     QVariantMap getMidiType() const {
         QVariantMap l;
         for (auto pin: pins) {
-            l[pin] = m_config.midi.type;
+            l[pin] = m_config.midi.type[pins.indexOf(pin)];
         }
         return l;
     }
@@ -939,7 +939,7 @@ public slots:
     QVariantMap getMidiNote() const {
         QVariantMap l;
         for (auto pin: pins) {
-            l[pin] = m_config.midi.note;
+            l[pin] = m_config.midi.note[pins.indexOf(pin)];
         }
         return l;
     }
@@ -963,7 +963,7 @@ public slots:
     QVariantMap getMidiChannel() const {
         QVariantMap l;
         for (auto pin: pins) {
-            l[pin] = m_config.midi.channel;
+            l[pin] = m_config.midi.channel[pins.indexOf(pin)];
         }
         return l;
     }
