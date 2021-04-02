@@ -66,7 +66,7 @@ void Ardwiino::writeChunked(uint8_t cmd, QByteArray dataToWrite) {
             offsetId++;
             if (cmd == COMMAND_WRITE_CONFIG) {
                 // Delay to give time to write to eeprom
-                QThread::currentThread()->msleep(100);
+                QThread::currentThread()->msleep(200);
             }
         }
     }
