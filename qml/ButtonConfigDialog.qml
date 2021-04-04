@@ -159,7 +159,7 @@ Dialog {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         model: Defines.fillCombobox("MidiType")
                         currentIndex: Math.max(0,model.findIndex(s => s.value === scanner.selected.config.midiType[modelData]))
-                        onActivated: scanner.selected.config.setMidiType(modelData,model[currentIndex].value)
+                        onActivated: scanner.selected.config.setMidiTypeValue(modelData,model[currentIndex].value)
                     }
                 }
 
