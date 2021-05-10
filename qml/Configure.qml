@@ -144,6 +144,22 @@ ColumnLayout {
             }
 
             Label {
+                text: qsTr("Combine Strum Debounce")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.debounceCombinedStrum
+                onCheckedChanged: scanner.selected.config.debounceCombinedStrum = checked
+            }
+
+            Label {
                 visible: scanner.selected.config.isDrum
                 text: qsTr("Drum Trigger Threshold")
                 fontSizeMode: Text.FixedSize

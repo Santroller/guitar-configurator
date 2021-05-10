@@ -115,6 +115,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(int axisScaleRYDeadzone READ getAxisScaleRYDeadzone WRITE setAxisScaleRYDeadzone NOTIFY axisScaleRYDeadzoneUpdated)
     Q_PROPERTY(int debounceButtons READ getDebounceButtons WRITE setDebounceButtons NOTIFY debounceButtonsUpdated)
     Q_PROPERTY(int debounceStrum READ getDebounceStrum WRITE setDebounceStrum NOTIFY debounceStrumUpdated)
+    Q_PROPERTY(bool debounceCombinedStrum READ getDebounceCombinedStrum WRITE setDebounceCombinedStrum NOTIFY debounceCombinedStrumUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -1237,6 +1238,17 @@ public slots:
             emit hasChangedUpdated();
         }
     }
+    bool getDebounceCombinedStrum() const {
+        return m_config.debounce.combinedStrum;
+    }
+    void setDebounceCombinedStrum(bool val) {
+        if (m_config.debounce.combinedStrum != val) {
+            m_config.debounce.combinedStrum = val;
+            emit debounceCombinedStrumUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
         auto pin = pins.indexOf(key)+1;
@@ -1406,6 +1418,7 @@ signals:
     void axisScaleRYDeadzoneUpdated();
     void debounceButtonsUpdated();
     void debounceStrumUpdated();
+    void debounceCombinedStrumUpdated();
 
 private:
     Configuration_t m_config;
