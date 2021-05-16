@@ -26,6 +26,10 @@ void Arduino::bootloader() {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     m_serialPort->setSettingsRestoredOnClose(false);
+    if (m_serialPort->open(QIODevice::WriteOnly)) {
+        m_serialPort->setDataTerminalReady(true);
+    }
+    m_serialPort->close();
 #pragma GCC diagnostic pop
     if (m_serialPort->open(QIODevice::WriteOnly)) {
         m_serialPort->setDataTerminalReady(false);
