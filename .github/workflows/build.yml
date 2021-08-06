@@ -183,7 +183,6 @@ jobs:
       - name: Append version to release
         run: |
           mv ./windows/*.exe ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
-          mv ./mac/*.dmg ./mac/guitar-configurator-mac-${GITHUB_REF##*/}.dmg
           mv ./linux/*.AppImage ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -191,7 +190,6 @@ jobs:
         with:
           files: |
             ./windows/*.exe
-            ./mac/*.dmg
             ./linux/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
