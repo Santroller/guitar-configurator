@@ -77,9 +77,9 @@ void Ardwiino::writeConfig() {
     writeChunked(COMMAND_WRITE_CONFIG, QByteArray::fromRawData(configCh, sizeof(Configuration_t)));
 
     uint8_t st = config.main.subType;
-    if (m_configuration->isDrum() && !m_configuration->isXInput()) {
+    if (m_configuration->isDrum() && m_configuration->isXInput()) {
         st = REAL_DRUM_SUBTYPE;
-    } else if (m_configuration->isGuitar() && !m_configuration->isXInput()) {
+    } else if (m_configuration->isGuitar() && m_configuration->isXInput()) {
         st = REAL_GUITAR_SUBTYPE;
     }
     m_usbDevice.write(COMMAND_WRITE_SUBTYPE, QByteArray(1, st));
