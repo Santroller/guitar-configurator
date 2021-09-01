@@ -5,6 +5,7 @@ git reset --hard origin/master
 git submodule init
 git submodule update
 git describe --abbrev=0 --tags > ../../firmware/version
+rm -r build
 mkdir -p build
 cd build
 rm -rf firmware
