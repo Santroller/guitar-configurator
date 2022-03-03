@@ -64,7 +64,7 @@ jobs:
   #         path: build/artifacts
   build-linux:
     name: Build (Linux)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Cache Qt
         id: cache-qt
