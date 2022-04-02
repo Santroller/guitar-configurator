@@ -97,7 +97,7 @@ var analog = {
     "/images/ArduinoProMicro.svg": [18, 19, 20, 21, 22, 23, 4, 6, 7, 8, 9, 10, 12],
     "/images/ArduinoMicro.svg": [18, 19, 20, 21, 22, 23, 4, 6, 7, 8, 9, 10, 12],
     "/images/ArudinoUno.svg": [14, 15, 16, 17, 18, 19],
-    "/images/Pico.svg": [26, 27, 28],
+    "/images/Pico.svg": [26, 27, 28, 29],
     "/images/ArduinoMega.svg": megaBindingsAnalog,
     "/images/ArduinoMegaADK.svg": megaBindingsAnalog,
 }
