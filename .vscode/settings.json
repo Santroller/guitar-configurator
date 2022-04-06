@@ -95,7 +95,23 @@
         "queue": "cpp",
         "stack": "cpp",
         "cstdbool": "cpp",
-        "qjsonobject": "cpp"
+        "qjsonobject": "cpp",
+        "csignal": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "charconv": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "coroutine": "cpp",
+        "source_location": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "shared_mutex": "cpp",
+        "typeindex": "cpp",
+        "*.ipp": "cpp"
     },
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "sonarlint.pathToCompileCommands": "/home/sanjay/Code/guitar-configurator/build/compile_commands.json"
 }

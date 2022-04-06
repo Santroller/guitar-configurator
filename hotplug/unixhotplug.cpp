@@ -27,6 +27,7 @@ int c = 0;
 static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* dev, libusb_hotplug_event event, void* user_data) {
     (void)ctx;
     UnixHotplug* sc = (UnixHotplug*)user_data;
+    libusb_ref_device(dev);
     QMetaObject::invokeMethod(sc, [sc, dev, event] {
         // We need a small delay as we want to wait for the device to initialise
         QTimer::singleShot(1000, [event, sc, dev]() {
@@ -41,6 +42,7 @@ static int LIBUSB_CALL hotplug_callback_c(libusb_context* ctx, libusb_device* de
             QTimer::singleShot(delay, [event, sc, dev, devt]() {
                 sc->hotplug_callback(devt, event);
             });
+            libusb_unref_device(dev);
         });
     });
     return 0;

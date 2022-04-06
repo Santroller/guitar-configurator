@@ -80,7 +80,14 @@ void Programmer::deviceAdded(PicobootDevice *device) {
     m_device = device;
     if (m_status == Status::WAIT_PICOBOOT) {
         m_status = Status::PICOBOOT;
-        programPico();
+        emit statusChanged(m_status);
+        emit statusVChanged(getStatusDescription());
+        QTimer::singleShot(100, [&]() {
+            programPico();
+            m_status = Status::DISCONNECT_PICOBOOT;
+            emit statusChanged(m_status);
+            emit statusVChanged(getStatusDescription());
+        });
     }
 }
 void Programmer::deviceAdded(Arduino *device) {
@@ -238,14 +245,18 @@ auto Programmer::program(Device *port) -> bool {
     m_device = port;
     if (m_status == Status::WAIT) {
         if (m_device->getBoard().protocol == "pico") {
-            port->bootloader();
-            QTimer::singleShot(100, [&]() {
-                programPico();
-                m_status = Status::DISCONNECT_PICOBOOT;
-                emit statusChanged(m_status);
-                emit statusVChanged(getStatusDescription());
-            });
-            m_status = Status::PICOBOOT;
+            if (m_device->getBoard().inBootloader) {
+                m_status = Status::PICOBOOT;
+                QTimer::singleShot(100, [&]() {
+                    programPico();
+                    m_status = Status::DISCONNECT_PICOBOOT;
+                    emit statusChanged(m_status);
+                    emit statusVChanged(getStatusDescription());
+                });
+            } else {
+                port->bootloader();
+                m_status = Status::WAIT_PICOBOOT;
+            }
         } else if (m_device->getBoard().hasDFU) {
             if (m_restore) {
                 m_steps = 1;
