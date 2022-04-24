@@ -162,7 +162,7 @@ QString Ardwiino::getDescription() {
     }
     QString desc = "Ardwiino - " + bname + " - " + ArdwiinoDefines::getName(m_configuration->getMainSubType());
     auto ext = m_usbDevice.read(COMMAND_GET_EXTENSION);
-    m_extension = ext[0] | ext[1] >> 8;
+    m_extension = ext[0] | (ext[1] << 8);
     if (m_configuration->getMainInputType() == ArdwiinoDefines::WII) {
         auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::WiiExtType)m_extension);
         if (extName == "Unknown") {

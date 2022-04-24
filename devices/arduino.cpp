@@ -1,7 +1,5 @@
 #include "arduino.h"
-#include "ceSerial.h"
 #include <QThread>
-using namespace ce;
 Arduino::Arduino(const QSerialPortInfo &serialPortInfo, QObject *parent) : SerialDevice(serialPortInfo, parent) {
     m_board = ArdwiinoLookup::detectBoard(serialPortInfo);
 }
