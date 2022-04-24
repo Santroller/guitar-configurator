@@ -41,6 +41,7 @@ set(guitar-configurator_HDRS
     board.h)
 
 set(guitar-configurator_SRCS
+    ceSerial.cpp
     usb/unixusb.cpp
     usb/winusb.cpp
     arduino_defines.cpp

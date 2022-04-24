@@ -20,7 +20,6 @@ class Arduino : public SerialDevice {
     bool isReady();
     QString versionCmd;
     QString freqCmd;
-    virtual void close();
     virtual bool open();
     virtual void bootloader();
     inline virtual bool isConfigurable() {
