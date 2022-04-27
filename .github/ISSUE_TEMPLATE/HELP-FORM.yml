@@ -1,14 +1,8 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
-assignees:
-  - octocat
+name: Help Form
+description: Please fill out this form so I can properly help you!
+title: "[Help]: "
+labels: ["help", "triage"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
   - type: input
     id: contact
     attributes:
@@ -20,43 +14,38 @@ body:
   - type: textarea
     id: what-happened
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      label: Please describe your issue.
+      placeholder: describe issue here
     validations:
       required: true
   - type: dropdown
     id: version
     attributes:
       label: Version
-      description: What version of our software are you running?
+      description: Is your configurator up to date?
       options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
+        - yes
+        - no
     validations:
       required: true
   - type: dropdown
-    id: browsers
+    id: operating system
     attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
+      label: What operating system are you using?
       options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  - type: textarea
-    id: logs
+        - Windows 10
+        - Windows 11
+        - Linux
+        - Mac OS
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: os other
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
+      label: os other
+      description: If you are using a different operating system, what is it?
+      placeholder: ex. Windows 7
+    validations:
+      required: false
+  
