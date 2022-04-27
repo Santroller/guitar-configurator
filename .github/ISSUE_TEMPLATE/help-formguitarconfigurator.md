@@ -1,5 +1,5 @@
 ---
-name: Help Form
+name: Help Form Guitar Configurator
 about: Please fill out this form so I can have the information needed to properly
   help you with issues.
 title: ''
