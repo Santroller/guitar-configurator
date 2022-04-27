@@ -64,7 +64,7 @@ body:
         - arduino mega ADK
     validations:
       required: true
-  - type: dropdown
+ - type: dropdown
     id: controller-type
     attributes:
       label: How is your controller programmed?
