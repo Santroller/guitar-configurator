@@ -24,8 +24,8 @@ body:
       label: Version
       description: Is your configurator up to date?
       options:
-        - yes
-        - no
+        - "yes"
+        - "no"
     validations:
       required: true
   - type: dropdown
