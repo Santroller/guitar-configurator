@@ -12,7 +12,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: what happened
+    id: what-happened
     attributes:
       label: Please describe your issue.
       placeholder: describe issue here
@@ -29,7 +29,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: operating system
+    id: operating-system
     attributes:
       label: What operating system are you using?
       options:
@@ -41,9 +41,9 @@ body:
     validations:
       required: true
   - type: input
-    id: os other
+    id: osother
     attributes:
-      label: os other
+      label: os-other
       description: If you are using a different operating system, what is it?
       placeholder: ex. Windows 7
     validations:
