@@ -48,7 +48,7 @@ body:
       placeholder: ex. Windows 7
     validations:
       required: false
- - type: dropdown
+  - type: dropdown
     id: microcontroller-type
     attributes:
       label: What microcontroller are you using?
@@ -64,7 +64,7 @@ body:
         - arduino mega ADK
     validations:
       required: true
- - type: dropdown
+  - type: dropdown
     id: controller-type
     attributes:
       label: How is your controller programmed?
