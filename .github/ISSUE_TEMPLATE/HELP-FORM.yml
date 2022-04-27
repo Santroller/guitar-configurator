@@ -63,7 +63,7 @@ body:
       options:
         - Direct
         - Wii
-        - PS3
+        - PS2
         - other issue not controller related or I have not gotten this far
     validations:
       required: true
