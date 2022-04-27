@@ -48,4 +48,30 @@ body:
       placeholder: ex. Windows 7
     validations:
       required: false
-  
+ - type: dropdown
+    id: microcontroller-type
+    attributes:
+      label: What microcontroller are you using?
+      options:
+        - pi pico
+        - arduino pro micro 3.3V
+        - arduino pro micro 5V
+        - arduino micro 5V
+        - arduino leonardo 3.3V
+        - arduino leonardo 5V
+        - arduino uno
+        - arduino mega 2560
+        - arduino mega ADK
+    validations:
+      required: true
+  - type: dropdown
+    id: controller-type
+    attributes:
+      label: How is your controller programmed?
+      options:
+        - Direct
+        - Wii
+        - PS3
+        - other issue not controller related or I have not gotten this far
+    validations:
+      required: true
