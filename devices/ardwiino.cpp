@@ -172,6 +172,7 @@ QString Ardwiino::getDescription() {
     } else if (m_configuration->getMainInputType() == ArdwiinoDefines::PS2) {
         auto extName = ArdwiinoDefines::getName((ArdwiinoDefines::PsxControllerType)m_extension);
         desc += " - " + extName;
+        qDebug() << m_extension;
     } else {
         desc += " - " + ArdwiinoDefines::getName(m_configuration->getMainInputType());
     }

@@ -24,6 +24,7 @@ class ArdwiinoDefines : public QObject {
         }
         return sentence.join(" ")
             .replace("Psx", "PlayStation")
+            .replace("Psproto", "PlayStation")
             .replace("Ps3", "PS3")
             .replace("Apa102", "APA102")
             .replace("Midi", "MIDI")
