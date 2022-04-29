@@ -11,10 +11,8 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain: certs
-      - name: Enable Certs
-        run: |
-          security unlock-keychain -p "${{ steps.codesign.outputs.keychain-password }}" /Users/runner/Library/Keychains/certs.keychain-db
+          keychain: ${{ github.run_id }}
+          keychain-password: ${{ github.run_id }}
       - name: Install Libs
         run: |
           npm i -g appdmg
@@ -51,13 +49,13 @@ jobs:
           cp -rf *.json guitar-configurator.app/Contents/MacOS
           cp -rf firmware guitar-configurator.app/Contents/MacOS
           macdeployqt guitar-configurator.app -qmldir=../qml
-          codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "guitar-configurator.app" --deep
+          codesign --entitlements ../resources/entitlements.xml -f -s "guitar-configurator" "guitar-configurator.app" --deep
           mkdir artifacts
           cp ../resources/appdmg.json .
           cp ../images/icons/icon.icns .
           cp ../images/icons/dmg-background.png .
           appdmg appdmg.json artifacts/guitar-configurator-macOS.dmg
-          codesign --entitlements ../resources/entitlements.xml -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
+          codesign --entitlements ../resources/entitlements.xml -f -s "guitar-configurator" "artifacts/guitar-configurator-macOS.dmg" --deep
       - uses: actions/upload-artifact@v1
         with:
           name: mac
