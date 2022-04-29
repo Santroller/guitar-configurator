@@ -184,7 +184,7 @@ jobs:
         run: |
           mv ./windows/*.exe ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
           mv ./linux/*.AppImage ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage
-          mv ./mac/*.dmg ./windows/guitar-configurator-macOS-${GITHUB_REF##*/}.dmg
+          mv ./mac/*.dmg ./mac/guitar-configurator-macOS-${GITHUB_REF##*/}.dmg
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
