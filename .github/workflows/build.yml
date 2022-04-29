@@ -184,6 +184,7 @@ jobs:
         run: |
           mv ./windows/*.exe ./windows/guitar-configurator-win-${GITHUB_REF##*/}.exe
           mv ./linux/*.AppImage ./linux/guitar-configurator-linux-${GITHUB_REF##*/}.AppImage
+          mv ./mac/*.dmg ./windows/guitar-configurator-macOS-${GITHUB_REF##*/}.dmg
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -191,6 +192,7 @@ jobs:
           files: |
             ./windows/*.exe
             ./linux/*.AppImage
+            ./mac/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Cleanup windows directory for pages
