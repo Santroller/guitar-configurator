@@ -52,10 +52,17 @@ Dialog {
             modal: true
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
-            standardButtons: Dialog.Ok | Dialog.Cancel
+            standardButtons: Dialog.Ok | Dialog.Cancel | Dialog.Apply
             onAccepted: {
                 scanner.selected.config[`pins${pinDialog.conflictingPin}`] = 0xFF
                 pinDialog.accept()
+            }
+            onApplied: {
+                pinDialog.accept()
+                overrideDialog.close()
+            }
+            Component.onCompleted: {
+                overrideDialog.standardButton(Dialog.Apply).text = qsTrId("Keep both")
             }
             ColumnLayout {
                 Label {
