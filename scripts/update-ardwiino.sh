@@ -7,11 +7,8 @@ git submodule update
 git describe --abbrev=0 --tags > ../../firmware/version
 rm -r build
 mkdir -p build
-cd build
-rm -rf firmware
-cmake ..
-make clean
-make -j`nproc`
-cp -rf firmware/*.hex ../../../firmware
-cp -rf firmware/*.uf2 ../../../firmware
+./build.sh
+
+cp -rf build/firmware/*.hex ../../firmware
+cp -rf build/firmware/*.uf2 ../../firmware
 cd ../../../

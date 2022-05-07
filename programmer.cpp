@@ -69,7 +69,7 @@ void Programmer::deviceAdded(Ardwiino *device) {
 void Programmer::programPico() {
     auto dir = QDir(QCoreApplication::applicationDirPath());
     dir.cd("firmware");
-    QString uf2File = "ardwiino-pico-rp2040";
+    QString uf2File = "ardwiino-"+m_device->getBoard().hexFile+"-rp2040";
     QFile file(dir.filePath(uf2File + (m_rf ? "-rf" : "") + ".uf2"));
     auto f = [=](long a, long b, int step, int stepCount) {
         return this->setPercentage(a, b, step, stepCount);

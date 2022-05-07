@@ -24,7 +24,7 @@ auto ArdwiinoLookup::isOutdatedArdwiino(const unsigned short releaseID) -> bool 
 auto ArdwiinoLookup::isOldAPIArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
     return isArdwiino(serialPortInfo) && serialPortInfo.serialNumber() == "1.2";
 }
-//Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
+// Ardwino PS3 Controllers use sony vids. No other sony controller should expose a serial port however, so we should be fine doing this.
 auto ArdwiinoLookup::isArdwiino(const QSerialPortInfo &serialPortInfo) -> bool {
     return serialPortInfo.vendorIdentifier() == HARMONIX_VID || serialPortInfo.vendorIdentifier() == SONY_VID || serialPortInfo.vendorIdentifier() == SWITCH_VID || (serialPortInfo.vendorIdentifier() == ARDWIINO_VID && serialPortInfo.productIdentifier() == ARDWIINO_PID);
 }
@@ -33,7 +33,7 @@ auto ArdwiinoLookup::isArdwiino(const UsbDevice_t &usbDeviceId) -> bool {
 }
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false, false};
-const board_t ArdwiinoLookup::boards[21] = {
+const board_t ArdwiinoLookup::boards[69] = {
     {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno", "uno-main", "Arduino Uno", 115200, {0x0043, 0x7523, 0x0001, 0xea60, 0x0243}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", true, false},
@@ -53,6 +53,54 @@ const board_t ArdwiinoLookup::boards[21] = {
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "wiring", "atmega2560", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"pico", "pico", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_feather_rp2040", "adafruit_feather_rp2040", "Adafruit Feather RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_itsybitsy_rp2040", "adafruit_itsybitsy_rp2040", "Adafruit ItsyBitsy RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_feather_rp2040", "adafruit_feather_rp2040", "Adafruit KB2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_qtpy_rp2040", "adafruit_qtpy_rp2040", "Adafruit QT Py RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_trinkey_qt2040", "adafruit_trinkey_qt2040", "Adafruit Trinkey QT2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"arduino_nano_rp2040_connect", "arduino_nano_rp2040_connect", "Arduino Nano RP2040 Connect", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"melopero_shake_rp2040", "melopero_shake_rp2040", "Melopero Shake RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_interstate75_rp2040", "pimoroni_interstate75", "Pimoroni Interstate 75", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_keybow2040", "pimoroni_keybow2040", "Pimoroni Keybow 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_pga2040", "pimoroni_pga2040", "Pimoroni PGA2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_picolipo_4mb", "pimoroni_picolipo_4mb", "Pimoroni Pico LiPo (4MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_picolipo_16mb", "pimoroni_picolipo_16mb", "Pimoroni Pico LiPo (16MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_picosystem_rp2040", "pimoroni_picosystem", "Pimoroni PicoSystem", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_plasma2040", "pimoroni_plasma2040", "Pimoroni Plasma 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pimoroni_tiny2040", "pimoroni_tiny2040", "Pimoroni Tiny 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pybstick26_rp2040", "pybstick26_rp2040", "RP2040 PYBStick", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"sparkfun_micromod_rp2040", "sparkfun_micromod", "SparkFun MicroMod - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"sparkfun_promicro_rp2040", "sparkfun_promicro", "SparkFun Pro Micro - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"sparkfun_thingplus_rp2040", "sparkfun_thingplus", "SparkFun Thing Plus - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"vgaboard_rp2040", "vgaboard", "Pimoroni Pico VGA Demo Base", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"waveshare_rp2040_lcd_0.96", "waveshare_rp2040_lcd_0.96", "Waveshare RP2040-LCD-0.96", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"waveshare_rp2040_plus_4mb", "waveshare_rp2040_plus_4mb", "Waveshare RP2040-Plus (4MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"waveshare_rp2040_plus_16mb", "waveshare_rp2040_plus_16mb", "Waveshare RP2040-Plus (16MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"waveshare_rp2040_zero", "waveshare_rp2040_zero", "Waveshare RP2040-Zero", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"adafruit_feather_rp2040_bootloader", "adafruit_feather_rp2040", "Adafruit Feather RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"adafruit_itsybitsy_rp2040_bootloader", "adafruit_itsybitsy_rp2040", "Adafruit ItsyBitsy RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"adafruit_feather_rp2040_bootloader", "adafruit_feather_rp2040", "Adafruit KB2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"adafruit_qtpy_rp2040_bootloader", "adafruit_qtpy_rp2040", "Adafruit QT Py RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"adafruit_trinkey_qt2040_bootloader", "adafruit_trinkey_qt2040", "Adafruit Trinkey QT2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"arduino_nano_rp2040_connect_bootloader", "arduino_nano_rp2040_connect", "Arduino Nano RP2040 Connect", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"melopero_shake_rp2040_bootloader", "melopero_shake_rp2040", "Melopero Shake RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_interstate75_rp2040_bootloader", "pimoroni_interstate75", "Pimoroni Interstate 75", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_keybow2040_bootloader", "pimoroni_keybow2040", "Pimoroni Keybow 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_pga2040_bootloader", "pimoroni_pga2040", "Pimoroni PGA2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_picolipo_4mb_bootloader", "pimoroni_picolipo_4mb", "Pimoroni Pico LiPo (4MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_picolipo_16mb_bootloader", "pimoroni_picolipo_16mb", "Pimoroni Pico LiPo (16MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_picosystem_rp2040_bootloader", "pimoroni_picosystem", "Pimoroni PicoSystem", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_plasma2040_bootloader", "pimoroni_plasma2040", "Pimoroni Plasma 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pimoroni_tiny2040_bootloader", "pimoroni_tiny2040", "Pimoroni Tiny 2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pybstick26_rp2040_bootloader", "pybstick26_rp2040", "RP2040 PYBStick", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"sparkfun_micromod_rp2040_bootloader", "sparkfun_micromod", "SparkFun MicroMod - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"sparkfun_promicro_rp2040_bootloader", "sparkfun_promicro", "SparkFun Pro Micro - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"sparkfun_thingplus_rp2040_bootloader", "sparkfun_thingplus", "SparkFun Thing Plus - RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"vgaboard_rp2040_bootloader", "vgaboard", "Pimoroni Pico VGA Demo Base", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"waveshare_rp2040_lcd_0.96_bootloader", "waveshare_rp2040_lcd_0.96", "Waveshare RP2040-LCD-0.96", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"waveshare_rp2040_plus_4mb_bootloader", "waveshare_rp2040_plus_4mb", "Waveshare RP2040-Plus (4MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"waveshare_rp2040_plus_16mb_bootloader", "waveshare_rp2040_plus_16mb", "Waveshare RP2040-Plus (16MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"waveshare_rp2040_zero_bootloader", "waveshare_rp2040_zero", "Waveshare RP2040-Zero", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"pico-bootloader", "pico", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
