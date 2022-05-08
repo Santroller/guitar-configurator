@@ -229,7 +229,9 @@ QString Ardwiino::getPreset(QString name) {
 
 void Ardwiino::removePreset(QString name) {
     if (settings.contains("presets")) {
-        settings.setValue("presets", settings.value("presets").toMap().remove(name));
+        auto map = settings.value("presets").toMap();
+        map.remove(name);
+        settings.setValue("presets", map);
     }
     presetsChanged();
 }
