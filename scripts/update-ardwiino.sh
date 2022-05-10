@@ -7,8 +7,20 @@ git submodule update
 git describe --abbrev=0 --tags > ../../firmware/version
 rm -r build
 mkdir -p build
-./build.sh
+cd build
+cmake .. -DBOARD=
+make -j`nproc`
 
-cp -rf build/firmware/*.hex ../../firmware
-cp -rf build/firmware/*.uf2 ../../firmware
+cp -rf firmware/*.hex ../../../firmware
+
+for filename in ../submodules/pico-sdk/src/boards/include/boards/*.h; do
+    filename=`basename -s .h ${filename}`
+    if [ "$filename" != "none" ]; then
+        cmake .. -DBOARD=${filename}
+        make -j`nproc`
+        cp -rf firmware/*.uf2 ../../../firmware
+    fi
+done
+cmake .. -DBOARD=
+
 cd ../../../
