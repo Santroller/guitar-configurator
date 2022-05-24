@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/sanjay/Code/guitar-configurator'
+make: Leaving directory '/home/sanjay/Code/guitar-configurator'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

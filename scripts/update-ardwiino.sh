@@ -1,7 +1,7 @@
 #!/bin/bash
 cd submodules/Ardwiino
 git fetch
-git reset --hard origin/master
+git reset --hard origin/v1
 git submodule init
 git submodule update
 git describe --abbrev=0 --tags > ../../firmware/version
