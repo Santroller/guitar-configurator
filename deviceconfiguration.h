@@ -15,6 +15,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool isXInput READ isXInput NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isRB READ isRB NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isWii READ isWii NOTIFY mainInputTypeUpdated)
+    Q_PROPERTY(bool isDirect READ isDirect NOTIFY mainInputTypeUpdated)
     Q_PROPERTY(bool isMIDI READ isMIDI NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isMouse READ isMouse NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool hasAddressableLEDs READ hasAddressableLEDs NOTIFY mainFretLEDModeUpdated)
@@ -116,6 +117,11 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(int debounceButtons READ getDebounceButtons WRITE setDebounceButtons NOTIFY debounceButtonsUpdated)
     Q_PROPERTY(int debounceStrum READ getDebounceStrum WRITE setDebounceStrum NOTIFY debounceStrumUpdated)
     Q_PROPERTY(bool debounceCombinedStrum READ getDebounceCombinedStrum WRITE setDebounceCombinedStrum NOTIFY debounceCombinedStrumUpdated)
+    Q_PROPERTY(bool neckWtNeck READ getNeckWtNeck WRITE setNeckWtNeck NOTIFY neckWtNeckUpdated)
+    Q_PROPERTY(bool neckGh5Neck READ getNeckGh5Neck WRITE setNeckGh5Neck NOTIFY neckGh5NeckUpdated)
+    Q_PROPERTY(bool neckGh5NeckBar READ getNeckGh5NeckBar WRITE setNeckGh5NeckBar NOTIFY neckGh5NeckBarUpdated)
+    Q_PROPERTY(bool neckWiiNeck READ getNeckWiiNeck WRITE setNeckWiiNeck NOTIFY neckWiiNeckUpdated)
+    Q_PROPERTY(bool neckPs2Neck READ getNeckPs2Neck WRITE setNeckPs2Neck NOTIFY neckPs2NeckUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -140,6 +146,9 @@ public slots:
     }
     bool isWii() {
         return getMainInputType() == ArdwiinoDefines::WII;
+    }
+    bool isDirect() {
+        return getMainInputType() == ArdwiinoDefines::DIRECT;
     }
     bool isRB() {
         return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("rock");
@@ -1249,6 +1258,61 @@ public slots:
             emit hasChangedUpdated();
         }
     }
+    bool getNeckWtNeck() const {
+        return m_config.neck.wtNeck;
+    }
+    void setNeckWtNeck(bool val) {
+        if (m_config.neck.wtNeck != val) {
+            m_config.neck.wtNeck = val;
+            emit neckWtNeckUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
+    bool getNeckGh5Neck() const {
+        return m_config.neck.gh5Neck;
+    }
+    void setNeckGh5Neck(bool val) {
+        if (m_config.neck.gh5Neck != val) {
+            m_config.neck.gh5Neck = val;
+            emit neckGh5NeckUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
+    bool getNeckGh5NeckBar() const {
+        return m_config.neck.gh5NeckBar;
+    }
+    void setNeckGh5NeckBar(bool val) {
+        if (m_config.neck.gh5NeckBar != val) {
+            m_config.neck.gh5NeckBar = val;
+            emit neckGh5NeckBarUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
+    bool getNeckWiiNeck() const {
+        return m_config.neck.wiiNeck;
+    }
+    void setNeckWiiNeck(bool val) {
+        if (m_config.neck.wiiNeck != val) {
+            m_config.neck.wiiNeck = val;
+            emit neckWiiNeckUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
+    bool getNeckPs2Neck() const {
+        return m_config.neck.ps2Neck;
+    }
+    void setNeckPs2Neck(bool val) {
+        if (m_config.neck.ps2Neck != val) {
+            m_config.neck.ps2Neck = val;
+            emit neckPs2NeckUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
     void setLED(QString key, int color) {
         uint32_t ucolor = color;
         auto pin = pins.indexOf(key)+1;
@@ -1419,6 +1483,11 @@ signals:
     void debounceButtonsUpdated();
     void debounceStrumUpdated();
     void debounceCombinedStrumUpdated();
+    void neckWtNeckUpdated();
+    void neckGh5NeckUpdated();
+    void neckGh5NeckBarUpdated();
+    void neckWiiNeckUpdated();
+    void neckPs2NeckUpdated();
 
 private:
     Configuration_t m_config;

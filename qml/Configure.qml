@@ -268,6 +268,82 @@ ColumnLayout {
                 checked: scanner.selected.config.mainMapStartSelectToHome
                 onCheckedChanged: scanner.selected.config.mainMapStartSelectToHome = checked
             }
+            ColumnLayout {
+                visible: scanner.selected.config.isWii
+                Label {
+                    text: qsTr("Map Tap Bar to Frets")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    checked: scanner.selected.config.neckWiiNeck
+                    onCheckedChanged: scanner.selected.config.neckWiiNeck = checked
+                }
+            }
+            ColumnLayout {
+                visible: scanner.selected.config.isDirect
+                Label {
+                    text: qsTr("Map GH5 Neck to frets")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    checked: scanner.selected.config.neckGh5Neck
+                    onCheckedChanged: {
+                        scanner.selected.config.neckGh5Neck = checked
+                        if (checked) {
+                            scanner.selected.config.neckGh5NeckBar = false
+                        }
+                    }
+                }
+                Label {
+                    text: qsTr("Map GH5 Neck to Frets (With Tap Bar)")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    checked: scanner.selected.config.neckGh5NeckBar
+                    onCheckedChanged: {
+                        scanner.selected.config.neckGh5NeckBar = checked
+                        if (checked) {
+                            scanner.selected.config.neckGh5Neck = false
+                        }
+                    }
+                }
+                Label {
+                    text: qsTr("Map WT Tap Bar to Frets")
+                    fontSizeMode: Text.FixedSize
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    wrapMode: Text.WordWrap
+                }
+                Switch {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    checked: scanner.selected.config.neckWtNeck
+                    onCheckedChanged: scanner.selected.config.neckWtNeck = checked
+                }
+            }
         }
     }
     Dialog {
