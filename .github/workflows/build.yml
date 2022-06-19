@@ -117,7 +117,7 @@ jobs:
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
-          tools: tools_ifw,4.3.0,qt.tools.ifw.43
+          tools: tools_ifw,4.4.0,qt.tools.ifw.44
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
