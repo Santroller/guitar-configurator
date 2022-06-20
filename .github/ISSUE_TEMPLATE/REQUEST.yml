@@ -1,7 +1,7 @@
 name: Request
 description: Request for a new feature
 title: "[Request]: "
-labels: ["request", "triage"]
+labels: ["request"]
 body:
   - type: textarea
     id: what-feature

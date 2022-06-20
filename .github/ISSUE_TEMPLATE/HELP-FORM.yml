@@ -1,7 +1,7 @@
-name: Help Form
-description: Please fill out this form so I can properly help you!
-title: "[Help]: "
-labels: ["help", "triage"]
+name: Issue
+description: Raise an issue
+title: "[Issue]: "
+labels: ["issue"]
 body:
   - type: textarea
     id: what-happened
