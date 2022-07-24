@@ -10,5 +10,6 @@ Component.prototype.createOperationsForArchive = function(archive)
     }
     pnputil = windir + "\\sysnative\\pnputil.exe";
     file = installer.value("TargetDir").replace(/\//g, '\\') + "\\drivers\\atmel_usb_dfu.inf"
+    file = '"'+file+'"'
     component.addElevatedOperation("Execute", pnputil, "-i", "-a", file);
 }
