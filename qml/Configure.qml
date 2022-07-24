@@ -308,23 +308,26 @@ ColumnLayout {
                         }
                     }
                 }
-                Label {
-                    text: qsTr("Map GH5 Neck to Frets (With Tap Bar)")
-                    fontSizeMode: Text.FixedSize
-                    verticalAlignment: Text.AlignVCenter
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    wrapMode: Text.WordWrap
-                }
-                Switch {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    checked: scanner.selected.config.neckGh5NeckBar
-                    onCheckedChanged: {
-                        scanner.selected.config.neckGh5NeckBar = checked
-                        if (checked) {
-                            scanner.selected.config.neckGh5Neck = false
+                ColumnLayout {
+                    visible: scanner.selected.boardName !== "uno"
+                    Label {
+                        text: qsTr("Map GH5 Neck to Frets (With Tap Bar)")
+                        fontSizeMode: Text.FixedSize
+                        verticalAlignment: Text.AlignVCenter
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                        wrapMode: Text.WordWrap
+                    }
+                    Switch {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        checked: scanner.selected.config.neckGh5NeckBar
+                        onCheckedChanged: {
+                            scanner.selected.config.neckGh5NeckBar = checked
+                            if (checked) {
+                                scanner.selected.config.neckGh5Neck = false
+                            }
                         }
                     }
                 }
