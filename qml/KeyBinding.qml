@@ -22,6 +22,7 @@ Dialog {
     onAccepted: {
         scanner.selected.config[`keys${currentKey}`] = currentValue
     }
+    closePolicy: Popup.CloseOnPressOutside
 
     onRejected: currentValue = scanner.selected.config[`keys${currentKey}`]
     onOpened: currentValue = scanner.selected.config[`keys${currentKey}`]
