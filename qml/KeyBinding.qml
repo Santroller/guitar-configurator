@@ -20,9 +20,7 @@ Dialog {
     y: (parent.height - height) / 2
     modal: true
     onAccepted: {
-        var keys = scanner.selected.config.keys;
-        keys[currentKey] = currentValue;
-        scanner.selected.config.keys = keys;
+        scanner.selected.config[`keys${currentKey}`] = currentValue
     }
 
     onRejected: currentValue = scanner.selected.config[`keys${currentKey}`]
@@ -36,9 +34,7 @@ Dialog {
                 modal: true
                 standardButtons: Dialog.Ok | Dialog.Cancel
                 onAccepted: {
-                    var keys = scanner.selected.config.keys;
-                    keys[keyDialog.existingKey] = 0xFF;
-                    scanner.selected.config.keys = keys;
+                    scanner.selected.config[`keys${keyDialog.existingKey}`] = 0xFF
                     keyDialog.accept();
 
                 }
@@ -70,7 +66,7 @@ Dialog {
                 onClicked: {
                     if (keyDialog.currentValue !== 0xFF) {
                         //We need to make sure we compare numbers, as we have qt enums here for keys, and those are not directly equivilant
-                        keyDialog.existingKey = Object.keys(scanner.selected.config.keys).find(m => Number(scanner.selected.config[`keys${m}`]) === Number(keyDialog.currentValue));
+                        keyDialog.existingKey = Object.keys(PinInfo.defLabels).find(m => Number(scanner.selected.config[`keys${m}`]) === Number(keyDialog.currentValue));
                         if (keyDialog.existingKey) {
                             keyOverrideDialog.open();
                             return;
