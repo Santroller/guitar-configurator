@@ -13,7 +13,7 @@ import "keys.js" as KeyInfo
 Dialog {
     id: pinDialog
     property var pins: PinInfo.getBindings(scanner.selected.getDirectBoardImage());
-    property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse);
+    property var labels: PinInfo.getLabels(scanner.selected.config.isGuitar, scanner.selected.config.isWii, scanner.selected.config.isLiveGuitar, scanner.selected.config.isRB, scanner.selected.config.isDrum, scanner.selected.config.isMouse, scanner.selected.config.isDJ);
     property var currentPin: "";
     property var conflictingPin: "";
     property var currentValue: 0;

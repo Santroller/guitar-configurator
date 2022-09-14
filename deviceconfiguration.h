@@ -12,6 +12,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool isDrum READ isDrum NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isLiveGuitar READ isLiveGuitar NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isKeyboard READ isKeyboard NOTIFY mainSubTypeUpdated)
+    Q_PROPERTY(bool isDJ READ isDJ NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isXInput READ isXInput NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isRB READ isRB NOTIFY mainSubTypeUpdated)
     Q_PROPERTY(bool isWii READ isWii NOTIFY mainInputTypeUpdated)
@@ -140,6 +141,9 @@ public slots:
     }
     bool isMouse() {
         return getMainSubType() == ArdwiinoDefines::MOUSE;
+    }
+    bool isDJ() {
+        return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("turntable");
     }
     bool isLiveGuitar() {
         return getMainSubType() == ArdwiinoDefines::XINPUT_LIVE_GUITAR;

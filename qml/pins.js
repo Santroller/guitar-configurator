@@ -145,7 +145,23 @@ var guitarLabels = {
     "RY": "Tilt Axis",
     "SP": "Star Power Output"
 }
-
+var djLabels = {
+    "Up": "D-pad Up",
+    "Down": "D-pad Down",
+    "Left": "D-pad Left",
+    "Right": "D-pad Right",
+    "Start": "Start Button",
+    "Back": "Back Button",
+    "Home": "Home Button",
+    "A": "A Button",
+    "B": "B Button",
+    "X": "X Button",
+    "Y": "Y Button",
+    "LeftStick": "Euphoria Button",
+    "RX": "Crossfader",
+    "RY": "Effects knob",
+    "SP": "Euphoria Output"
+}
 var guitarRBLabels = {
     "Up": "Strum Up",
     "Down": "Strum Down",
@@ -235,9 +251,9 @@ var defLabels = {
     "RY": "Right Joystick Y Axis",
 }
 
-function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
+function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse, isDJ) {
     let unused = [];
-    let labels = getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse);
+    let labels = getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse, isDJ);
     if (labels === defLabels) return unused;
     for (let label in defLabels) {
         if (!(label in labels)) {
@@ -247,7 +263,7 @@ function getUnused(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
     return unused;
 }
 
-function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
+function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse, isDJ) {
     if (isMouse) {
         return mouseLabels;
     }
@@ -255,6 +271,7 @@ function getLabels(isGuitar, isWii, isLiveGuitar, isRB, isDrum, isMouse) {
         if (isGuitar) return wiiGuitarLabels;
         return wiiLabels;
     }
+    if (isDJ) return djLabels;
     if (isDrum) return drumLabels;
     if (isRB) return guitarRBLabels;
     if (isLiveGuitar) return guitarLiveLabels;
