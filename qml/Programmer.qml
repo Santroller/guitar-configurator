@@ -196,6 +196,7 @@ ColumnLayout {
                 model: ListModel {
                     id: modelPico
                     ListElement { key: "Raspberry Pi Pico"; board: "pico-bootloader"; }
+                    ListElement { key: "Raspberry Pi Pico W"; board: "pico_w-bootloader"; }
                     ListElement { key: "Adafruit Feather RP2040"; board: "adafruit_feather_rp2040_bootloader"; }
                     ListElement { key: "Adafruit ItsyBitsy RP2040"; board: "adafruit_itsybitsy_rp2040_bootloader"; }
                     ListElement { key: "Adafruit KB2040"; board: "adafruit_feather_rp2040_bootloader"; }

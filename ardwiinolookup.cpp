@@ -53,6 +53,7 @@ const board_t ArdwiinoLookup::boards[69] = {
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "wiring", "atmega2560", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"pico", "pico", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
+    {"pico_w", "pico_w", "Raspberry PI Pico W", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
     {"adafruit_feather_rp2040", "adafruit_feather_rp2040", "Adafruit Feather RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
     {"adafruit_itsybitsy_rp2040", "adafruit_itsybitsy_rp2040", "Adafruit ItsyBitsy RP2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
     {"adafruit_feather_rp2040", "adafruit_feather_rp2040", "Adafruit KB2040", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
@@ -102,6 +103,7 @@ const board_t ArdwiinoLookup::boards[69] = {
     {"waveshare_rp2040_plus_16mb_bootloader", "waveshare_rp2040_plus_16mb", "Waveshare RP2040-Plus (16MB)", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"waveshare_rp2040_zero_bootloader", "waveshare_rp2040_zero", "Waveshare RP2040-Zero", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"pico-bootloader", "pico", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pico_w-bootloader", "pico_w", "Raspberry PI Pico W", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
 auto ArdwiinoLookup::findByBoard(const QString &board_name, bool inBootloader) -> const board_t {
