@@ -120,8 +120,8 @@ var drumLabels = {
     "B": "Red Drum",
     "Y": "Yellow Drum",
     "X": "Blue Drum",
-    "LB": "Orange Drum",
-    "RB": "Kick Pedal",
+    "LB": "Kick Pedal",
+    "RB": "Orange Drum",
     "LX": "Joystick X Axis",
     "LY": "Joystick Y Axis",
     "SP": "Star Power Output"
