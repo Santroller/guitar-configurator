@@ -110,7 +110,8 @@
         "semaphore": "cpp",
         "shared_mutex": "cpp",
         "typeindex": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "span": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "sonarlint.pathToCompileCommands": "/home/sanjay/Code/guitar-configurator/build/compile_commands.json"
