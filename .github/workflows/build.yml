@@ -124,7 +124,6 @@ jobs:
       - name: Build
         run: |
           tree -- ..\Qt\Tools
-          ..\Qt\Tools\QtInstallerFramework\*\bin\binarycreator
           mkdir release
           cd release
           cmake ..\
