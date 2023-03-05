@@ -113,11 +113,11 @@ jobs:
           path: ../Qt
           key: QtCacheTools-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
-          tools: tools_ifw,4.5.1,qt.tools.ifw.45
+          tools: tools_ifw
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
