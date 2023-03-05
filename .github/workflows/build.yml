@@ -106,14 +106,18 @@ jobs:
     name: Build (Windows)
     runs-on: windows-latest
     steps:
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCacheTools-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v2
         with: 
-          cache: true
-          version: '5.15.2'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          modules: qtserialport qtquickcontrols2 
+          tools: tools_ifw,4.5.1,qt.tools.ifw.45
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
@@ -123,15 +127,12 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Build
         run: |
-          tree ..
           mkdir release
           cd release
           cmake ..\
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo copy firmware
           mkdir deploy
