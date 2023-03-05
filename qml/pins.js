@@ -190,6 +190,7 @@ var guitarLiveLabels = {
     "Right": "D-pad Right",
     "Start": "Start Button",
     "Back": "Select Button",
+    "LeftStick": "GHTV Button",
     "Home": "Home Button",
     "A": "Black 1",
     "B": "Black 2",
