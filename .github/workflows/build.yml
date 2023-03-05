@@ -116,8 +116,13 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-          modules: qtserialport qtquickcontrols2 
-          tools: tools_ifw
+          aqtversion: '==3.1.*'
+          version: '6.5.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtserialport'
+          tools: 'tools_ifw'
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
