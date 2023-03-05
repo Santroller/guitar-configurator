@@ -110,12 +110,10 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with: 
           cache: true
-          version: '6.5.0'
+          version: '5.15.2'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
-          modules: 'qtserialport'
-          tools: 'tools_ifw'
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
