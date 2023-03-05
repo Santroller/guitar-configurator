@@ -123,13 +123,13 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Build
         run: |
-          tree -- ${Env:IQTA_TOOLS}
-          ${Env:IQTA_TOOLS}\QtInstallerFramework\*\bin\binarycreator
+          tree -- ..\Qt\Tools
+          ..\Qt\Tools\QtInstallerFramework\*\bin\binarycreator
           mkdir release
           cd release
           cmake ..\
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
-        shell: cmd
+        shell: pwsh
       - name: Bundle
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -146,12 +146,11 @@ jobs:
           robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e /njh /njs /ndl /nc /ns /nfl
           mkdir artifacts
           echo inst script
-          powershell ".\installer\script.ps1"
+          ".\installer\script.ps1"
           echo binarycreator
-          tree -- ${Env:IQTA_TOOLS}
-          ${Env:IQTA_TOOLS}\QtInstallerFramework\*\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
+          ..\Qt\Tools\QtInstallerFramework\*\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           echo repogen
-          ${Env:IQTA_TOOLS}\QtInstallerFramework\*\bin\repogen -p installer\packages artifacts\repository
+          ..\Qt\Tools\QtInstallerFramework\*\bin\repogen -p installer\packages artifacts\repository
         shell: pwsh
       - uses: actions/upload-artifact@v1
         with:
