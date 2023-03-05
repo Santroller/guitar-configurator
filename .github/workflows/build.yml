@@ -123,12 +123,12 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Build
         run: |
-          tree -- ..\Qt\Tools
+          tree ..
           mkdir release
           cd release
           cmake ..\
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
-        shell: pwsh
+        shell: cmd
       - name: Bundle
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -145,12 +145,12 @@ jobs:
           robocopy ".\deploy" ".\installer\packages\net.tangentmc.guitar_configurator\data" /e /njh /njs /ndl /nc /ns /nfl
           mkdir artifacts
           echo inst script
-          ".\installer\script.ps1"
+          powershell ".\installer\script.ps1"
           echo binarycreator
-          ..\Qt\Tools\QtInstallerFramework\*\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
+          ..\Qt\Tools\QtInstallerFramework\4.5\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           echo repogen
-          ..\Qt\Tools\QtInstallerFramework\*\bin\repogen -p installer\packages artifacts\repository
-        shell: pwsh
+          ..\Qt\Tools\QtInstallerFramework\4.5\bin\repogen -p installer\packages artifacts\repository
+        shell: cmd
       - uses: actions/upload-artifact@v1
         with:
           name: windows
