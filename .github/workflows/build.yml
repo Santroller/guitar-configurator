@@ -123,6 +123,8 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Build
         run: |
+          tree -- ${Env:IQTA_TOOLS}
+          ${Env:IQTA_TOOLS}\QtInstallerFramework\*\bin\binarycreator
           mkdir release
           cd release
           cmake ..\
@@ -132,8 +134,6 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tree -- ${Env:IQTA_TOOLS}
-          ${Env:IQTA_TOOLS}\QtInstallerFramework\*\bin\binarycreator
           echo copy firmware
           mkdir deploy
           robocopy ".\firmware" ".\deploy\firmware" /e /njh /njs /ndl /nc /ns /nfl
