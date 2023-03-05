@@ -130,6 +130,8 @@ jobs:
           msbuild guitar-configurator.vcxproj /t:Build /p:Configuration=Release
         shell: cmd
       - name: Bundle
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo copy firmware
           mkdir deploy
