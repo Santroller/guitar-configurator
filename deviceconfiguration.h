@@ -146,7 +146,7 @@ public slots:
         return ArdwiinoDefines::getName(getMainSubType()).toLower().contains("turntable");
     }
     bool isLiveGuitar() {
-        return getMainSubType() == ArdwiinoDefines::XINPUT_LIVE_GUITAR;
+        return getMainSubType() == ArdwiinoDefines::XINPUT_LIVE_GUITAR || getMainSubType() == ArdwiinoDefines::PS3_LIVE_GUITAR;
     }
     bool isWii() {
         return getMainInputType() == ArdwiinoDefines::WII;
