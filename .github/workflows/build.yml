@@ -15,6 +15,7 @@ jobs:
           keychain-password: ${{ github.run_id }}
       - name: Install Libs
         run: |
+          security find-identity
           npm i -g appdmg
           brew install pkgconfig
           brew install libusb
