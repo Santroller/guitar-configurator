@@ -25,6 +25,7 @@ class ArdwiinoLookup : public QObject {
     static const board_t boards[37];
     static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
+    static const board_t pico;
     explicit ArdwiinoLookup(QObject* parent = nullptr);
     static const board_t findByBoard(const QString& board, bool inBootloader);
    public slots:

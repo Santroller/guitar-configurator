@@ -38,9 +38,8 @@
 #define CONFIG_SECTION FLASH_START + (256 * 1024)
 #define RF_SECTION FLASH_START + (512 * 1024)
 PicobootDevice::PicobootDevice(UsbDevice_t devt, QObject *parent) : Device(devt, parent) {
-    m_board = ArdwiinoLookup::empty;
+    m_board = ArdwiinoLookup::pico;
     m_board.inBootloader = true;
-    setBoardType("pico-bootloader");
 }
 QString PicobootDevice::getDescription() {
     return "Raspberry PI Pico ("+m_deviceID.drivePath+")";

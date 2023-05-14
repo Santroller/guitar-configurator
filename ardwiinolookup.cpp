@@ -33,6 +33,7 @@ auto ArdwiinoLookup::isArdwiino(const UsbDevice_t &usbDeviceId) -> bool {
 }
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false, false};
+const board_t ArdwiinoLookup::pico = {"pico", "adafruit_feather_rp2040", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true};
 const board_t ArdwiinoLookup::boards[37] = {
     {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
@@ -53,7 +54,7 @@ const board_t ArdwiinoLookup::boards[37] = {
     {"megaadk-at90usb82", "megaadk-usb", "Arduino Mega ADK", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"megaadk", "megaadk-main", "Arduino Mega ADK", 115200, {0x003f, 0x0044}, "wiring", "atmega2560", 16000000, "/images/ArduinoMegaADK.svg", true, false},
     {"pico", "adafruit_feather_rp2040", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, false},
-    {"pico", "pico", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
+    {"pico", "adafruit_feather_rp2040", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true},
     {"generic", "generic", "Generic Serial Device", 0, {}, "arduino", "", 0, "/images/ArduinoUno.svg", false, false},
 };
 const QString pico_boards[] = {
