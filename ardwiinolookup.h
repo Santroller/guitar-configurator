@@ -22,7 +22,7 @@ class ArdwiinoLookup : public QObject {
     Q_OBJECT
    public:
     static ArdwiinoLookup* getInstance();
-    static const board_t boards[71];
+    static const board_t boards[37];
     static const board_t detectBoard(const QSerialPortInfo& serialPortInfo);
     static const board_t empty;
     explicit ArdwiinoLookup(QObject* parent = nullptr);

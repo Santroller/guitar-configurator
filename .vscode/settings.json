@@ -111,7 +111,12 @@
         "shared_mutex": "cpp",
         "typeindex": "cpp",
         "*.ipp": "cpp",
-        "span": "c"
+        "span": "c",
+        "ccomplex": "cpp",
+        "ciso646": "cpp",
+        "forward_list": "cpp",
+        "filesystem": "cpp",
+        "version": "cpp"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "sonarlint.pathToCompileCommands": "/home/sanjay/Code/guitar-configurator/build/compile_commands.json"

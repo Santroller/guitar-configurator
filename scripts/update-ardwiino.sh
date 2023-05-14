@@ -12,15 +12,6 @@ cmake .. -DBOARD=
 make -j`nproc`
 
 cp -rf firmware/*.hex ../../../firmware
-
-for filename in ../submodules/pico-sdk/src/boards/include/boards/*.h; do
-    filename=`basename -s .h ${filename}`
-    if [ "$filename" != "none" ]; then
-        cmake .. -DBOARD=${filename}
-        make -j`nproc`
-        cp -rf firmware/*.uf2 ../../../firmware
-    fi
-done
-cmake .. -DBOARD=
+cp -rf firmware/*.uf2 ../../../firmware
 
 cd ../../../
