@@ -123,6 +123,7 @@ class DeviceConfiguration : public QObject {
     Q_PROPERTY(bool neckGh5NeckBar READ getNeckGh5NeckBar WRITE setNeckGh5NeckBar NOTIFY neckGh5NeckBarUpdated)
     Q_PROPERTY(bool neckWiiNeck READ getNeckWiiNeck WRITE setNeckWiiNeck NOTIFY neckWiiNeckUpdated)
     Q_PROPERTY(bool neckPs2Neck READ getNeckPs2Neck WRITE setNeckPs2Neck NOTIFY neckPs2NeckUpdated)
+    Q_PROPERTY(bool deque READ getDeque WRITE setDeque NOTIFY dequeUpdated)
 
 public:
     explicit DeviceConfiguration(Configuration_t config, QObject* parent = nullptr);
@@ -1376,6 +1377,18 @@ public slots:
         emit hasChangedUpdated();
     }
 
+    bool getDeque() const {
+        return m_config.deque;
+    }
+    void setDeque(bool val) {
+        if (m_config.deque != val) {
+            m_config.deque = val;
+            emit dequeUpdated();
+            m_hasChanged = true;
+            emit hasChangedUpdated();
+        }
+    }
+
     QMap<QString, uint> getMappings() {
         QMap<QString, uint> map;
         PinsCombined_t* combined = reinterpret_cast<PinsCombined_t*>(&m_config.pins);
@@ -1492,6 +1505,7 @@ signals:
     void neckGh5NeckBarUpdated();
     void neckWiiNeckUpdated();
     void neckPs2NeckUpdated();
+    void dequeUpdated();
 
 private:
     Configuration_t m_config;

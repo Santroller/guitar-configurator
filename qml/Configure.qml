@@ -102,6 +102,21 @@ ColumnLayout {
                     scanner.selected.config.mainPollRate = value
                 }
             }
+            Label {
+                text: qsTr("Queue based inputs")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.deque
+                onCheckedChanged: scanner.selected.config.deque = checked
+            }
 
             Label {
                 text: qsTr("Button Debounce (0 means no debounce)")
