@@ -133,6 +133,9 @@ ColumnLayout {
                     if (checked && scanner.selected.config.mainPollRate < 1) {
                         scanner.selected.config.mainPollRate = 1;
                     }
+                    if (!checked) {
+                        scanner.selected.config.debounceButtons = Math.round(scanner.selected.config.debounceButtons / 10) * 10;
+                    }
                 }
             }
 
@@ -150,10 +153,10 @@ ColumnLayout {
                 value: scanner.selected.config.debounceButtons
                 from: 0
                 to: 100
-                stepSize: 1
+                stepSize: 10
                 visible: !scanner.selected.config.deque
                 textFromValue: function(value, locale) {
-                    return parseFloat(value*1/10).toFixed(1)
+                    return parseFloat(value*1/10).toFixed(0)
                 }
                 onValueModified: {
                     scanner.selected.config.debounceButtons = value
@@ -189,9 +192,9 @@ ColumnLayout {
                 value: scanner.selected.config.debounceStrum
                 from: 0
                 to: 100
-                stepSize: 1
+                stepSize: 10
                 textFromValue: function(value, locale) {
-                    return parseFloat(value*1/10).toFixed(1)
+                    return parseFloat(value*1/10).toFixed(0)
                 }
                 onValueModified: {
                     scanner.selected.config.debounceStrum = value
