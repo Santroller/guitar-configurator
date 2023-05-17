@@ -93,11 +93,21 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
             }
             SpinBox {
-                id: spinbox
                 Layout.fillWidth: true
                 value: scanner.selected.config.mainPollRate
                 from: 0
                 to: 10
+                visible: !scanner.selected.config.deque
+                onValueModified: {
+                    scanner.selected.config.mainPollRate = value
+                }
+            }
+            SpinBox {
+                Layout.fillWidth: true
+                value: scanner.selected.config.mainPollRate
+                from: 1
+                to: 10
+                visible: scanner.selected.config.deque
                 onValueModified: {
                     scanner.selected.config.mainPollRate = value
                 }
@@ -115,7 +125,15 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 checked: scanner.selected.config.deque
-                onCheckedChanged: scanner.selected.config.deque = checked
+                onCheckedChanged: {
+                    scanner.selected.config.deque = checked
+                    if (checked && scanner.selected.config.debounceButtons < 5) {
+                        scanner.selected.config.debounceButtons = 5;
+                    }
+                    if (checked && scanner.selected.config.mainPollRate < 1) {
+                        scanner.selected.config.mainPollRate = 1;
+                    }
+                }
             }
 
             Label {
@@ -128,11 +146,29 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
             }
             SpinBox {
-                id: spinboxbDB
                 Layout.fillWidth: true
                 value: scanner.selected.config.debounceButtons
                 from: 0
                 to: 100
+                stepSize: 1
+                visible: !scanner.selected.config.deque
+                textFromValue: function(value, locale) {
+                    return parseFloat(value*1/10).toFixed(1)
+                }
+                onValueModified: {
+                    scanner.selected.config.debounceButtons = value
+                }
+            }
+            SpinBox {
+                Layout.fillWidth: true
+                value: scanner.selected.config.debounceButtons
+                from: 5
+                to: 100
+                stepSize: 1
+                visible: scanner.selected.config.deque
+                textFromValue: function(value, locale) {
+                    return parseFloat(value*1/10).toFixed(1)
+                }
                 onValueModified: {
                     scanner.selected.config.debounceButtons = value
                 }
@@ -153,6 +189,10 @@ ColumnLayout {
                 value: scanner.selected.config.debounceStrum
                 from: 0
                 to: 100
+                stepSize: 1
+                textFromValue: function(value, locale) {
+                    return parseFloat(value*1/10).toFixed(1)
+                }
                 onValueModified: {
                     scanner.selected.config.debounceStrum = value
                 }
