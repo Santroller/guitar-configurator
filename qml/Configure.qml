@@ -91,6 +91,17 @@ ColumnLayout {
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 wrapMode: Text.WordWrap
+                visible: !scanner.selected.config.deque
+            }
+            Label {
+                visible: scanner.selected.config.deque
+                text: qsTr("Dequeue Rate")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
             }
             SpinBox {
                 Layout.fillWidth: true
