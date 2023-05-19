@@ -110,7 +110,7 @@ ColumnLayout {
             }
 
             Label {
-                text: qsTr("Controller Poll Rate (0 means as fast as possible)")
+                text: qsTr("Controller Poll Rate (0 means as fast as possible) (" + ((1 / Math.max(scanner.selected.config.mainPollRate, 1)) * 1000).toFixed(0) + "hz)")
                 fontSizeMode: Text.FixedSize
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
@@ -121,7 +121,7 @@ ColumnLayout {
             }
             Label {
                 visible: scanner.selected.config.deque
-                text: qsTr("Dequeue Rate")
+                text: qsTr("Dequeue Rate (" + ((1 / scanner.selected.config.mainPollRate) * 1000).toFixed(0) + "+ fps required)")
                 fontSizeMode: Text.FixedSize
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
