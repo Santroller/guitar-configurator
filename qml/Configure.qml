@@ -175,7 +175,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 value: scanner.selected.config.debounceButtons
                 from: 0
-                to: 100
+                to: 250
                 stepSize: 10
                 visible: !scanner.selected.config.deque
                 textFromValue: function(value, locale) {
@@ -189,7 +189,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 value: scanner.selected.config.debounceButtons
                 from: 5
-                to: 100
+                to: 250
                 stepSize: 1
                 visible: scanner.selected.config.deque
                 textFromValue: function(value, locale) {
