@@ -157,6 +157,18 @@ ColumnLayout {
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                visible: !scanner.selected.config.deque
+                wrapMode: Text.WordWrap
+            }
+
+            Label {
+                text: qsTr("Button Debounce")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                visible: scanner.selected.config.deque
                 wrapMode: Text.WordWrap
             }
             SpinBox {
