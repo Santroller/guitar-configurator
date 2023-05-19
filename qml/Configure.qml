@@ -82,6 +82,32 @@ ColumnLayout {
 
                 onCurrentIndexChanged: scanner.selected.config.mainInputType = inputBox.model[inputBox.currentIndex].value
             }
+            Label {
+                text: qsTr("Queue based inputs")
+                fontSizeMode: Text.FixedSize
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                wrapMode: Text.WordWrap
+            }
+            Switch {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                checked: scanner.selected.config.deque
+                onCheckedChanged: {
+                    scanner.selected.config.deque = checked
+                    if (checked && scanner.selected.config.debounceButtons < 5) {
+                        scanner.selected.config.debounceButtons = 5;
+                    }
+                    if (checked && scanner.selected.config.mainPollRate < 1) {
+                        scanner.selected.config.mainPollRate = 1;
+                    }
+                    if (!checked) {
+                        scanner.selected.config.debounceButtons = Math.round(scanner.selected.config.debounceButtons / 10) * 10;
+                    }
+                }
+            }
 
             Label {
                 text: qsTr("Controller Poll Rate (0 means as fast as possible)")
@@ -121,32 +147,6 @@ ColumnLayout {
                 visible: scanner.selected.config.deque
                 onValueModified: {
                     scanner.selected.config.mainPollRate = value
-                }
-            }
-            Label {
-                text: qsTr("Queue based inputs")
-                fontSizeMode: Text.FixedSize
-                verticalAlignment: Text.AlignVCenter
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                wrapMode: Text.WordWrap
-            }
-            Switch {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                checked: scanner.selected.config.deque
-                onCheckedChanged: {
-                    scanner.selected.config.deque = checked
-                    if (checked && scanner.selected.config.debounceButtons < 5) {
-                        scanner.selected.config.debounceButtons = 5;
-                    }
-                    if (checked && scanner.selected.config.mainPollRate < 1) {
-                        scanner.selected.config.mainPollRate = 1;
-                    }
-                    if (!checked) {
-                        scanner.selected.config.debounceButtons = Math.round(scanner.selected.config.debounceButtons / 10) * 10;
-                    }
                 }
             }
 
