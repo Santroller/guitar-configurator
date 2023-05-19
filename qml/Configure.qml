@@ -214,7 +214,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 value: scanner.selected.config.debounceStrum
                 from: 0
-                to: 100
+                to: 250
                 stepSize: 10
                 textFromValue: function(value, locale) {
                     return parseFloat(value*1/10).toFixed(0)
