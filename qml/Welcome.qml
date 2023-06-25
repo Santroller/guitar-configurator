@@ -114,7 +114,7 @@ Page {
         RowLayout {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Button {
-                text: qsTr("Sponser Project via GitHub Sponsers")
+                text: qsTr("Sponser Project via GitHub Sponsors")
                 onClicked: Qt.openUrlExternally("https://github.com/sponsors/sanjay900")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
