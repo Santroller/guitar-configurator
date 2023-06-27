@@ -34,7 +34,7 @@ auto ArdwiinoLookup::isArdwiino(const UsbDevice_t &usbDeviceId) -> bool {
 ArdwiinoLookup *ArdwiinoLookup::instance = nullptr;
 const board_t ArdwiinoLookup::empty = {"", "", "", 0, {}, "", "", 0, "", false, false};
 const board_t ArdwiinoLookup::pico = {"pico", "adafruit_feather_rp2040", "Raspberry PI Pico", 0, {}, "pico", "rp2040", 0, "/images/Pico.svg", false, true};
-const board_t ArdwiinoLookup::boards[37] = {
+const board_t ArdwiinoLookup::boards[21] = {
     {"uno-atmega16u2", "uno-usb", "Arduino Uno", 57600, {0x2FEF}, "dfu", "atmega16u2", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno-at90usb82", "uno-usb", "Arduino Uno", 57600, {0x2FF7}, "dfu", "at90usb82", 16000000, "/images/ArduinoUno.svg", true, false},
     {"uno", "uno-main", "Arduino Uno", 115200, {0x0043, 0x7523, 0x0001, 0xea60, 0x0243}, "arduino", "atmega328p", 16000000, "/images/ArduinoUno.svg", true, false},
@@ -150,7 +150,7 @@ auto ArdwiinoLookup::detectBoard(const QSerialPortInfo &serialPortInfo) -> const
             }
         }
     }
-    return board_t(boards[(sizeof(boards) / sizeof(board_t)) - 1]);
+    return boards[(sizeof(boards) / sizeof(board_t)) - 1];
 }
 auto ArdwiinoLookup::getInstance() -> ArdwiinoLookup * {
     if (!ArdwiinoLookup::instance) {
