@@ -41,4 +41,4 @@ sudo usermod -a -G lock $USER
 
 To run the tool, simply run `./guitar-configurator-linux-v9.1.7.AppImage`
 
-Note that if you are on wayland, you may need to run the tool with `GDK_BACKEND=x11 ./guitar-configurator-linux-v9.1.7.AppImage`.
+Note that if you are on wayland (if the tool is crashing this likley applies to you), you may need to run the tool with `GDK_BACKEND=x11 ./guitar-configurator-linux-v9.1.7.AppImage`.
