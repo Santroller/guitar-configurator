@@ -4,7 +4,7 @@ layout: default
 
 The Ardwiino Guitar Configurator tool allows you to program Arduinos for your own custom controllers.
 
-[![alt text](assets/images/main-screen-graphical.png){: width="250" }](assets/images/main-screen-graphical.png)
+[![alt text](assets/images/main-screen-graphical.png)](assets/images/main-screen-graphical.png)
 
 # Features
 * Controllers can emulate a variety of different controllers, including XInput, PS3, Nintendo Wii Rockband Controllers, PS4/PS5 Rockband Controllers and even a Nintendo Switch Pro Controller
@@ -48,10 +48,10 @@ Click [![Here](https://github.com/sanjay900/guitar-configurator/releases/latest)
 
 # Gallery
 {% include youtube.html id=H73McH5abes %}
-<img src="assets/images/adaptor.jpg" height="315">
-<img src="assets/images/adaptor-ps2.jpg" height="315">
-<img src="assets/images/direct.jpg" height="315">
-<img src="assets/images/inline-led.jpg" height="315">
+[![alt text](assets/images/adaptor.jpg){: height="315" }](assets/images/adaptor.jpg)
+[![alt text](assets/images/adaptor-ps2.jpg){: height="315" }](assets/images/adaptor-ps2.jpg)
+[![alt text](assets/images/direct.jpg){: height="315" }](assets/images/direct.jpg)
+[![alt text](assets/images/inline-led.jpg){: height="315" }](assets/images/inline-led.jpg)
 
 <!-- 
 We can do this, but currently it isnt useful as we dont have proper descriptions
