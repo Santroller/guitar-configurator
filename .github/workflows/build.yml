@@ -152,9 +152,9 @@ jobs:
           echo inst script
           powershell ".\installer\script.ps1"
           echo binarycreator
-          binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
+          binarycreator.exe -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           echo repogen
-          repogen -p installer\packages artifacts\repository
+          repogen.exe -p installer\packages artifacts\repository
         shell: cmd
       - uses: actions/upload-artifact@v1
         with:
