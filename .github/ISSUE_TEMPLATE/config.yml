@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Santroller
+    url: https://github.com/Santroller/Santroller/issues
+    about: Guitar configurator is being discontinued and replaced with Santroller.
