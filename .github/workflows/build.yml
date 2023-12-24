@@ -115,11 +115,12 @@ jobs:
           path: ../Qt
           key: QtCacheTools-${{ runner.os }}-5.12.8
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with: 
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
           modules: qtserialport qtquickcontrols2 
-          tools: tools_ifw
+          tools: tools_ifw,4.6.1,qt.tools.ifw.46
+          add-tools-to-path: true
       - name: git configure long path
         run: git config --global core.longpaths true
       - uses: actions/checkout@v2
@@ -152,9 +153,9 @@ jobs:
           echo inst script
           powershell ".\installer\script.ps1"
           echo binarycreator
-          ..\Qt\Tools\QtInstallerFramework\4.6.1\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
+          binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           echo repogen
-          ..\Qt\Tools\QtInstallerFramework\4.6.1\bin\repogen -p installer\packages artifacts\repository
+          repogen -p installer\packages artifacts\repository
         shell: cmd
       - uses: actions/upload-artifact@v1
         with:
