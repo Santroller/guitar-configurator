@@ -152,9 +152,9 @@ jobs:
           echo inst script
           powershell ".\installer\script.ps1"
           echo binarycreator
-          ..\Qt\Tools\QtInstallerFramework\4.6\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
+          ..\Qt\Tools\QtInstallerFramework\4.6.1\bin\binarycreator -c installer\config\config.xml -p installer\packages artifacts\guitar-configurator-win.exe -f
           echo repogen
-          ..\Qt\Tools\QtInstallerFramework\4.6\bin\repogen -p installer\packages artifacts\repository
+          ..\Qt\Tools\QtInstallerFramework\4.6.1\bin\repogen -p installer\packages artifacts\repository
         shell: cmd
       - uses: actions/upload-artifact@v1
         with:
