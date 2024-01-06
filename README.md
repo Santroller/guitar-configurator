@@ -1,7 +1,7 @@
 Welcome to the Ardwiino Guitar Configuration Tool
 =================================================
 
-This project will be archived soon, as it is being replaced with https://github.com/Santroller/Santroller.
+This project has been replaced by https://github.com/Santroller/Santroller.
 
 This tool allows for programming arduinos to behave like xinput devices on windows, linux and mac, or PS3 compatible controllers, or switch compatible controllers. It provides an interfaces for configuring a controller and programming one.
 
